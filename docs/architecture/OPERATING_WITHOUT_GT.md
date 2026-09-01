@@ -12,7 +12,7 @@ The client will not provide detailed flows/SME upfront. SME GT may arrive later.
 | Discover pages/modules/components | Yes | Bounded crawler → KB candidates |
 | Map flows from navigation + recordings | Yes | Candidate flows in KB |
 | Catch technical failures | Yes | Rules: ORA errors, 5xx, session dead, stuck/modal timeout |
-| Natural-language “explore / sanity probe” | Yes | Route → discover/sanity tools |
+| Natural-language “explore / sanity / list flows” | Yes | Route → discover / sanity / flow_catalog |
 | Business PASS/FAIL (“order total correct”) | **No** | Needs GT or explicit rule |
 | Honest stop | Yes | `UNKNOWN` / `INSUFFICIENT_EVIDENCE` — **never loop until success** |
 
