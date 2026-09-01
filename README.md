@@ -70,4 +70,11 @@ SME GT later only increases deterministic PASS/FAIL coverage — it does not red
 
 ## Status
 
-Base Agent runtime v0.2: enterprise crawler skill, APEX flow KB patterns, Azure→OCI packaging stubs, unit tests green with LLM disabled.
+Base Agent runtime v0.2 + **Apex QA Console** (`qa-console/`) for client-facing automation, knowledge dump, traces, schedules, channels, and usage.
+
+```bash
+cd qa-console && npm install && npm run dev
+# → http://127.0.0.1:43123
+```
+
+QA skills on the runtime today: discover / live crawl / sanity / flow catalog. LLM models are **API-gateway selectable** (not hardcoded); default path stays deterministic.
