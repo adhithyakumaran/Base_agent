@@ -1,4 +1,4 @@
-# Base Agent Runtime — Week 1 Technical Proposal
+# Base Agent Runtime — Technical Proposal
 
 **Document type:** Detailed technical proposal (design, not QA product implementation)  
 **Scope:** Reusable Base Agent / agent runtime only  
