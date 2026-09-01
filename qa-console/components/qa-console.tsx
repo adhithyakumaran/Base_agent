@@ -317,18 +317,22 @@ export function QaConsole() {
                       {data.knowledge.map((k) => {
                         const on = selectedPills.includes(k.id);
                         return (
-                          <button
-                            key={k.id}
-                            className={`qa-pill ${on ? "on" : ""}`}
-                            onClick={() =>
-                              setSelectedPills((prev) =>
-                                on ? prev.filter((id) => id !== k.id) : [...prev, k.id]
-                              )
-                            }
-                          >
+                          <label key={k.id} className={`qa-pill ${on ? "on" : ""}`}>
+                            <input
+                              type="checkbox"
+                              className="mr-1"
+                              checked={on}
+                              onChange={(e) =>
+                                setSelectedPills((prev) =>
+                                  e.target.checked
+                                    ? [...prev.filter((id) => id !== k.id), k.id]
+                                    : prev.filter((id) => id !== k.id)
+                                )
+                              }
+                            />
                             {k.title}
                             <span className="opacity-60">· {k.format}</span>
-                          </button>
+                          </label>
                         );
                       })}
                     </div>

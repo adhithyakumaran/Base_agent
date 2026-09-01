@@ -45,7 +45,9 @@ export async function POST(req: Request) {
     const idx = state.runs.findIndex((r) => r.id === runId);
     if (idx < 0) return;
     let run = state.runs[idx];
-    const pills = state.knowledge.filter((k) => knowledgeIds.includes(k.id));
+    const ids = [...new Set([...(knowledgeIds || []), ...(run.knowledgePillIds || [])])];
+    const pills = state.knowledge.filter((k) => ids.includes(k.id));
+    run.knowledgePillIds = ids;
     run = await executeRun(run, pills, async (updated) => {
       const s = state;
       const i = s.runs.findIndex((r) => r.id === updated.id);
