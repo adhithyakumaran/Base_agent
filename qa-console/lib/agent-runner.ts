@@ -105,7 +105,7 @@ export async function executeRun(
   if (extracted.length) {
     await push(
       "info",
-      `Extracted ${extracted.length} knowledge dump pill(s) before automation`,
+      f"Extracted {extracted.length} context packet(s) before automation",
       JSON.stringify(
         extracted.map((p) => ({ id: p.id, title: p.title, extracted: p.extracted })),
         null,
@@ -113,7 +113,7 @@ export async function executeRun(
       )
     );
   } else {
-    await push("info", "No knowledge dump pills attached — proceeding with KB + rules");
+    await push("info", "No context packets attached — proceeding with KB + rules");
   }
   await sleep(200);
 

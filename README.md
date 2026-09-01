@@ -70,11 +70,13 @@ SME GT later only increases deterministic PASS/FAIL coverage — it does not red
 
 ## Status
 
-Base Agent runtime v0.2 + **Apex QA Console** (`qa-console/`) for client-facing automation, knowledge dump, traces, schedules, channels, and usage.
+Base Agent + enterprise QA skills (health, login, page/component probe, flow replay, report) + dark **Apex QA Console**.
+
+Demo channels: `adhithyakumaran2005@gmail.com` · WhatsApp `+919965985951` · Teams via webhook secret later.
 
 ```bash
 cd qa-console && npm install && npm run dev
 # → http://127.0.0.1:43123
 ```
 
-QA skills on the runtime today: discover / live crawl / sanity / flow catalog. LLM models are **API-gateway selectable** (not hardcoded); default path stays deterministic.
+Morning patrol: `python scripts/morning_patrol.py` (Azure cron 08:00 IST).
