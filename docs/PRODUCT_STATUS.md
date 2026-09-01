@@ -1,20 +1,17 @@
 # Product status — Base Agent + QA Console
 
-## Phase: CLOSED (pause) — resume later
+## Phase: CLOSED (pause) — **simplify next**
 
-See [PHASE_COMPLETE.md](PHASE_COMPLETE.md).
-
-## Honest readiness
+See [PHASE_COMPLETE.md](PHASE_COMPLETE.md) and **[SIMPLIFIED_QA_ARCHITECTURE.md](architecture/SIMPLIFIED_QA_ARCHITECTURE.md)**.
 
 | Area | Status |
 |---|---|
-| Base Agent control plane (budgets, no loop-until-success, UNKNOWN) | **Ready** |
-| Folder layout vs Base Agent proposal §23 | **Followed** (plugins outside core) |
-| QA skills (health, mission pack, probes, crawl, …) | **Local-demo ready**; deeper live APEX still pending |
-| LLM | **Off by default** (API gateway optional later) |
-| Console (dark) + warm local agent | **Ready** |
-| SME Ground Truth | **Pending** (~1 week) |
-| Azure / OCI production cutover | **Deferred** (local-first) |
+| Base Agent control plane | Built (may be **too heavy** for QA v1 hot path) |
+| **Recommended product path** | **LLM planner + OpenClaw execution + KB + reports** |
+| QA micro-skills / custom crawler | **Deprioritize** — OpenClaw does navigation |
+| Deterministic validation | **Light pre-GT**; **strong post-GT** when SME approves |
+| Console | Keep — sanity/adhoc/schedule/channels |
+| SME Ground Truth | Pending (~1 week) |
 
 ## LLM model posture
 

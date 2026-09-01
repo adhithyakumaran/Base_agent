@@ -31,11 +31,17 @@ Core rule held: **no APEX/QA browser logic inside `src/base_agent`** — skills 
 
 Default **off**. No model called until gateway enabled. Catalog placeholders only: `gpt-4o-mini` / `gpt-4o`.
 
-## Resume later
+## Resume later — simplified direction
 
-1. Local live UAT crawl with `APEX_*` env  
-2. Deeper browser skills (Customer Order, LOV, IG)  
-3. SME approve GT checklist  
-4. Then Azure/OCI delivery when ready  
+**Pivot agreed:** see [architecture/SIMPLIFIED_QA_ARCHITECTURE.md](architecture/SIMPLIFIED_QA_ARCHITECTURE.md).
 
-Local run: see `docs/architecture/LOCAL_RUN.md`.
+Next build (GTM):
+
+1. OpenClaw adapter (browser execution + record)  
+2. LLM planner (sanity + adhoc from KB)  
+3. Phase A validator (technical + NEEDS_REVIEW)  
+4. Phase B GT compare when SME approves  
+
+Deprioritize: custom Playwright crawler + KB-only micro-skills on product hot path.
+
+Local run (current stack until cutover): `docs/architecture/LOCAL_RUN.md`.
