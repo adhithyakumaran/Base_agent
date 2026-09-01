@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Activity,
+  ArrowUp,
   BookOpen,
   Clock,
   Download,
@@ -30,16 +31,17 @@ import { formatTokens } from "@/lib/utils";
 type StatePayload = AppState & {
   models: ModelOption[];
   prebuiltFlows: { id: string; label: string; goal: string }[];
+  locked?: boolean;
 };
 
 const NAV = [
-  { id: "run", label: "Automate", icon: Play },
-  { id: "knowledge", label: "Knowledge dump", icon: BookOpen },
-  { id: "schedule", label: "Daily sanity", icon: Clock },
-  { id: "channels", label: "Report channels", icon: Mail },
-  { id: "history", label: "History", icon: HistoryIcon },
-  { id: "usage", label: "Usage", icon: Activity },
-  { id: "settings", label: "Models", icon: Settings2 },
+  { id: "run", label: "Command center", icon: Play },
+  { id: "knowledge", label: "Context library", icon: BookOpen },
+  { id: "schedule", label: "Morning patrol", icon: Clock },
+  { id: "channels", label: "Alert routes", icon: Mail },
+  { id: "history", label: "Activity history", icon: HistoryIcon },
+  { id: "usage", label: "Token usage", icon: Activity },
+  { id: "settings", label: "Model gateway", icon: Settings2 },
 ] as const;
 
 type NavId = (typeof NAV)[number]["id"];
@@ -55,14 +57,13 @@ function conclusionTone(c?: string): "ok" | "bad" | "warn" | "info" | "neutral" 
 export function QaConsole() {
   const [tab, setTab] = useState<NavId>("run");
   const [data, setData] = useState<StatePayload | null>(null);
-  const [goal, setGoal] = useState("sanity check endless aisle home and login");
+  const [goal, setGoal] = useState("health check endless aisle technical readiness");
   const [selectedPills, setSelectedPills] = useState<string[]>([]);
-  const [notifyChannels, setNotifyChannels] = useState<string[]>(["email"]);
+  const [notifyChannels, setNotifyChannels] = useState<string[]>(["email", "whatsapp"]);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Knowledge form
   const [pillTitle, setPillTitle] = useState("");
   const [pillFormat, setPillFormat] = useState<KnowledgePill["format"]>("text");
   const [pillContent, setPillContent] = useState("");
@@ -70,23 +71,24 @@ export function QaConsole() {
   const refresh = useCallback(async () => {
     const res = await fetch("/api/state", { cache: "no-store" });
     const json = (await res.json()) as StatePayload;
-    setData(json);
-    return json;
+    const locked = json.runs?.some((r) => r.status === "running" || r.status === "queued");
+    setData({ ...json, locked });
+    return { ...json, locked };
   }, []);
 
   useEffect(() => {
     refresh().catch((e) => setError(String(e)));
   }, [refresh]);
 
-  // Poll active run traces lightly
   useEffect(() => {
-    if (!activeRunId) return;
+    if (!activeRunId && !busy) return;
     const t = setInterval(() => {
       refresh().catch(() => undefined);
-    }, 1500);
+    }, 1200);
     return () => clearInterval(t);
-  }, [activeRunId, refresh]);
+  }, [activeRunId, busy, refresh]);
 
+  const locked = Boolean(busy || data?.locked);
   const activeRun: AgentRun | null = useMemo(() => {
     if (!data) return null;
     return data.runs.find((r) => r.id === activeRunId) || data.runs[0] || null;
@@ -97,6 +99,10 @@ export function QaConsole() {
     type: AgentRun["type"];
     channels?: string[];
   }) {
+    if (locked) {
+      setError("A command is already in progress. Wait for it to finish.");
+      return;
+    }
     setBusy(true);
     setError(null);
     setTab("run");
@@ -112,13 +118,19 @@ export function QaConsole() {
         }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Run failed");
+      if (res.status === 409) {
+        setError(json.error || "Another command is running.");
+        await refresh();
+        return;
+      }
+      if (!res.ok) throw new Error(json.error || "Command failed");
       setActiveRunId(json.run.id);
       await refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
+      await refresh();
     }
   }
 
@@ -129,7 +141,7 @@ export function QaConsole() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: pillTitle || "Client dump",
+          title: pillTitle || "Client context",
           format: pillFormat,
           content: pillContent,
           tags: ["client"],
@@ -169,8 +181,8 @@ export function QaConsole() {
 
   if (!data) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-[var(--muted-foreground)]">
-        Loading QA console…
+      <div className="flex min-h-screen items-center justify-center text-sm text-zinc-400">
+        Booting command center…
       </div>
     );
   }
@@ -182,7 +194,7 @@ export function QaConsole() {
           <div className="qa-mark" aria-hidden />
           <div>
             <div className="qa-brand-name">Apex QA</div>
-            <div className="qa-brand-sub">Base Agent Console</div>
+            <div className="qa-brand-sub">Enterprise Agent Console</div>
           </div>
         </div>
         <nav className="qa-nav-list">
@@ -202,32 +214,30 @@ export function QaConsole() {
           })}
         </nav>
         <div className="qa-nav-foot">
-          <div className="text-xs text-[var(--muted-foreground)]">Token usage</div>
-          <div className="font-mono text-sm">
+          <div className="text-xs text-zinc-500">Tokens consumed</div>
+          <div className="font-mono text-sm text-zinc-100">
             {formatTokens(data.usageTotal.tokensIn + data.usageTotal.tokensOut)}
           </div>
-          <div className="text-[11px] text-[var(--muted-foreground)]">{data.usageTotal.runs} runs</div>
+          <div className="text-[11px] text-zinc-500">{data.usageTotal.runs} missions</div>
         </div>
       </aside>
 
       <main className="qa-main">
         <header className="qa-top">
           <div>
-            <h1 className="qa-title">
-              {NAV.find((n) => n.id === tab)?.label}
-            </h1>
+            <h1 className="qa-title">{NAV.find((n) => n.id === tab)?.label}</h1>
             <p className="qa-desc">
-              Deterministic-first automation · Sanity & ad-hoc · Live traces · Report delivery
+              Deterministic-first QA · live traces · report delivery · no loop-until-success
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="info">Model: {data.selectedModel}</Badge>
+            <Badge tone="info">Gateway: {data.selectedModel}</Badge>
             <Badge tone={data.schedule.enabled ? "ok" : "neutral"}>
-              Daily {data.schedule.timeLocal} {data.schedule.timezone}
+              Patrol {data.schedule.timeLocal} {data.schedule.timezone}
             </Badge>
             <Button
               size="sm"
-              disabled={busy}
+              disabled={locked}
               onClick={() =>
                 triggerRun({
                   goal: data.schedule.goal,
@@ -236,11 +246,16 @@ export function QaConsole() {
                 })
               }
             >
-              <Radio size={14} /> Run morning sanity now
+              <Radio size={14} /> Run morning patrol
             </Button>
           </div>
         </header>
 
+        {locked && (
+          <div className="qa-lock">
+            Execution lock active — finish the current command before starting another.
+          </div>
+        )}
         {error && <div className="qa-error">{error}</div>}
 
         <div className="qa-body">
@@ -249,24 +264,36 @@ export function QaConsole() {
               <div className="space-y-6">
                 <div className="qa-panel">
                   <div className="qa-panel-h">
-                    <Sparkles size={16} /> Prompt automation
+                    <Sparkles size={16} /> Issue a command
                   </div>
-                  <Textarea
-                    value={goal}
-                    onChange={(e) => setGoal(e.target.value)}
-                    placeholder="Describe what to automate — e.g. sanity check find-price with sample SKU…"
-                    className="min-h-[110px] font-[family-name:var(--font-geist-sans)]"
-                  />
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Button
-                      disabled={busy || !goal.trim()}
+                  <div className="qa-prompt-wrap">
+                    <Textarea
+                      value={goal}
+                      onChange={(e) => setGoal(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !locked && goal.trim()) {
+                          e.preventDefault();
+                          triggerRun({ goal, type: "adhoc" });
+                        }
+                      }}
+                      placeholder="Example: health check endless aisle · replay flow find_price · component probe P6_SKU"
+                      className="min-h-[120px]"
+                      disabled={locked}
+                    />
+                    <button
+                      className="qa-go"
+                      title="Run command"
+                      aria-label="Run command"
+                      disabled={locked || !goal.trim()}
                       onClick={() => triggerRun({ goal, type: "adhoc" })}
                     >
-                      <Play size={14} /> Run ad-hoc
-                    </Button>
+                      <ArrowUp size={18} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <Button
                       variant="secondary"
-                      disabled={busy}
+                      disabled={locked}
                       onClick={() =>
                         triggerRun({
                           goal: goal.includes("sanity") ? goal : `sanity check ${goal}`,
@@ -274,43 +301,56 @@ export function QaConsole() {
                         })
                       }
                     >
-                      Sanity check
+                      Quick sanity
                     </Button>
                     <Button
                       variant="outline"
-                      disabled={busy}
+                      disabled={locked}
                       onClick={() =>
                         triggerRun({ goal: "discover the application map", type: "discover" })
                       }
                     >
-                      Discover map
+                      Map application
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={locked}
+                      onClick={() =>
+                        triggerRun({
+                          goal: "health check endless aisle technical readiness",
+                          type: "sanity",
+                        })
+                      }
+                    >
+                      Full health pack
                     </Button>
                   </div>
+                  <p className="mt-2 text-[11px] text-zinc-500">⌘/Ctrl + Enter also launches the command.</p>
                 </div>
 
                 <div className="qa-panel">
-                  <div className="qa-panel-h">Prebuilt flow CTAs</div>
+                  <div className="qa-panel-h">Mission presets</div>
                   <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {data.prebuiltFlows.map((f) => (
                       <button
                         key={f.id}
                         className="qa-flow-btn"
-                        disabled={busy}
+                        disabled={locked}
                         onClick={() => triggerRun({ goal: f.goal, type: "flow" })}
                       >
                         <span className="font-medium">{f.label}</span>
-                        <span className="text-[11px] text-[var(--muted-foreground)]">{f.id}</span>
+                        <span className="text-[11px] text-zinc-500">{f.id}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div className="qa-panel">
-                  <div className="qa-panel-h">Attach knowledge pills</div>
+                  <div className="qa-panel-h">Attach context packets</div>
                   {data.knowledge.length === 0 ? (
-                    <p className="text-sm text-[var(--muted-foreground)]">
-                      Dump specs, CSVs, JSON, or URLs in Knowledge dump — they become data pills before
-                      runs.
+                    <p className="text-sm text-zinc-500">
+                      Add specs, tables, or URLs in Context library. Before each mission the agent
+                      extracts them as structured packets (not KB-only).
                     </p>
                   ) : (
                     <div className="flex flex-wrap gap-2">
@@ -322,6 +362,7 @@ export function QaConsole() {
                               type="checkbox"
                               className="mr-1"
                               checked={on}
+                              disabled={locked}
                               onChange={(e) =>
                                 setSelectedPills((prev) =>
                                   e.target.checked
@@ -340,13 +381,14 @@ export function QaConsole() {
                 </div>
 
                 <div className="qa-panel">
-                  <div className="qa-panel-h">Notify channels on report</div>
-                  <div className="flex flex-wrap gap-3 text-sm">
-                    {["email", "teams", "whatsapp", "slack"].map((c) => (
+                  <div className="qa-panel-h">Deliver report to</div>
+                  <div className="flex flex-wrap gap-3 text-sm text-zinc-300">
+                    {["email", "whatsapp", "teams", "slack"].map((c) => (
                       <label key={c} className="inline-flex items-center gap-2">
                         <input
                           type="checkbox"
                           checked={notifyChannels.includes(c)}
+                          disabled={locked}
                           onChange={(e) =>
                             setNotifyChannels((prev) =>
                               e.target.checked ? [...prev, c] : prev.filter((x) => x !== c)
@@ -357,6 +399,9 @@ export function QaConsole() {
                       </label>
                     ))}
                   </div>
+                  <p className="mt-2 text-[11px] text-zinc-500">
+                    Test routes: {data.channels.email.join(", ")} · WhatsApp {data.channels.whatsapp}
+                  </p>
                 </div>
               </div>
             )}
@@ -365,38 +410,38 @@ export function QaConsole() {
               <div className="space-y-6">
                 <div className="qa-panel">
                   <div className="qa-panel-h">
-                    <Upload size={16} /> Client knowledge dump
+                    <Upload size={16} /> Ingest client context
                   </div>
-                  <p className="mb-3 text-sm text-[var(--muted-foreground)]">
-                    Feed data in multiple formats. Before automation, the agent extracts each dump as a
-                    data pill and uses it with KB — not KB-only.
+                  <p className="mb-3 text-sm text-zinc-500">
+                    Drop operational truth here — SOPs, SKU lists, URLs, JSON contracts. The agent
+                    turns each upload into a context packet before automation starts.
                   </p>
                   <div className="grid gap-3">
                     <Input
-                      placeholder="Title"
+                      placeholder="Packet title"
                       value={pillTitle}
                       onChange={(e) => setPillTitle(e.target.value)}
                     />
                     <select
-                      className="h-9 rounded-md border border-[var(--border)] bg-transparent px-3 text-sm"
+                      className="h-9 rounded-md border border-zinc-800 bg-zinc-950 px-3 text-sm text-zinc-100"
                       value={pillFormat}
                       onChange={(e) => setPillFormat(e.target.value as KnowledgePill["format"])}
                     >
-                      <option value="text">Text / prompt notes</option>
-                      <option value="markdown">Markdown</option>
-                      <option value="json">JSON</option>
-                      <option value="csv">CSV</option>
+                      <option value="text">Plain notes</option>
+                      <option value="markdown">Markdown brief</option>
+                      <option value="json">JSON contract</option>
+                      <option value="csv">CSV table</option>
                       <option value="url">URL list</option>
-                      <option value="pdf_note">PDF notes (paste)</option>
+                      <option value="pdf_note">PDF excerpt (paste)</option>
                     </select>
                     <Textarea
-                      placeholder="Paste content, JSON, CSV rows, or URLs…"
+                      placeholder="Paste content…"
                       value={pillContent}
                       onChange={(e) => setPillContent(e.target.value)}
                       className="min-h-[160px] font-mono text-xs"
                     />
-                    <Button disabled={busy || !pillContent.trim()} onClick={addKnowledge}>
-                      Extract as data pill
+                    <Button disabled={!pillContent.trim()} onClick={addKnowledge}>
+                      Extract context packet
                     </Button>
                   </div>
                 </div>
@@ -407,7 +452,7 @@ export function QaConsole() {
                         <div className="font-medium">{k.title}</div>
                         <Badge>{k.format}</Badge>
                       </div>
-                      <pre className="mt-2 max-h-28 overflow-auto text-[11px] text-[var(--muted-foreground)]">
+                      <pre className="mt-2 max-h-28 overflow-auto text-[11px] text-zinc-500">
                         {k.content.slice(0, 500)}
                       </pre>
                     </div>
@@ -418,59 +463,57 @@ export function QaConsole() {
 
             {tab === "schedule" && (
               <div className="qa-panel space-y-4">
-                <div className="qa-panel-h">Daily morning sanity (client-set)</div>
+                <div className="qa-panel-h">Morning patrol schedule</div>
+                <p className="text-sm text-zinc-500">
+                  Azure Pipelines cron on OCI fires this mission daily and routes the report to your
+                  alert channels.
+                </p>
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     checked={data.schedule.enabled}
                     onChange={(e) => saveSettings({ schedule: { enabled: e.target.checked } })}
                   />
-                  Enabled
+                  Armed
                 </label>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-xs text-[var(--muted-foreground)]">Time</label>
+                    <label className="mb-1 block text-xs text-zinc-500">Local time</label>
                     <Input
                       type="time"
                       value={data.schedule.timeLocal}
-                      onChange={(e) =>
-                        saveSettings({ schedule: { timeLocal: e.target.value } })
-                      }
+                      onChange={(e) => saveSettings({ schedule: { timeLocal: e.target.value } })}
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs text-[var(--muted-foreground)]">Timezone</label>
+                    <label className="mb-1 block text-xs text-zinc-500">Timezone</label>
                     <Input
                       value={data.schedule.timezone}
-                      onChange={(e) =>
-                        saveSettings({ schedule: { timezone: e.target.value } })
-                      }
+                      onChange={(e) => saveSettings({ schedule: { timezone: e.target.value } })}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-[var(--muted-foreground)]">Goal</label>
+                  <label className="mb-1 block text-xs text-zinc-500">Mission goal</label>
                   <Textarea
                     value={data.schedule.goal}
                     onChange={(e) => saveSettings({ schedule: { goal: e.target.value } })}
                   />
                 </div>
-                <p className="text-sm text-[var(--muted-foreground)]">
-                  Azure Pipeline / OCI cron will fire at this time; reports go to configured channels
-                  automatically.
-                </p>
               </div>
             )}
 
             {tab === "channels" && (
               <div className="qa-panel space-y-4">
                 <div className="qa-panel-h">
-                  <MessageSquare size={16} /> Communication points
+                  <MessageSquare size={16} /> Alert routes
                 </div>
+                <p className="text-sm text-zinc-500">
+                  Test destinations are prefilled. Swap to client production values later. Teams
+                  needs a webhook URL from Azure/OCI secrets.
+                </p>
                 <div>
-                  <label className="mb-1 block text-xs text-[var(--muted-foreground)]">
-                    Email (comma-separated)
-                  </label>
+                  <label className="mb-1 block text-xs text-zinc-500">Email</label>
                   <Input
                     value={data.channels.email.join(", ")}
                     onChange={(e) =>
@@ -486,29 +529,22 @@ export function QaConsole() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-[var(--muted-foreground)]">
-                    Microsoft Teams webhook
-                  </label>
+                  <label className="mb-1 block text-xs text-zinc-500">WhatsApp</label>
                   <Input
-                    placeholder="https://…"
-                    value={data.channels.teamsWebhook}
-                    onChange={(e) => saveSettings({ channels: { teamsWebhook: e.target.value } })}
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-xs text-[var(--muted-foreground)]">
-                    WhatsApp destination
-                  </label>
-                  <Input
-                    placeholder="+91…"
                     value={data.channels.whatsapp}
                     onChange={(e) => saveSettings({ channels: { whatsapp: e.target.value } })}
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-[var(--muted-foreground)]">
-                    Slack webhook
-                  </label>
+                  <label className="mb-1 block text-xs text-zinc-500">Microsoft Teams webhook</label>
+                  <Input
+                    placeholder="https://outlook.office.com/webhook/… (from Azure/OCI secret)"
+                    value={data.channels.teamsWebhook}
+                    onChange={(e) => saveSettings({ channels: { teamsWebhook: e.target.value } })}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-zinc-500">Slack webhook</label>
                   <Input
                     value={data.channels.slackWebhook}
                     onChange={(e) => saveSettings({ channels: { slackWebhook: e.target.value } })}
@@ -521,11 +557,11 @@ export function QaConsole() {
               <div className="space-y-2">
                 {data.history.map((h) => (
                   <div key={h.id} className="qa-hist">
-                    <div className="font-mono text-[11px] text-[var(--muted-foreground)]">
+                    <div className="font-mono text-[11px] text-zinc-500">
                       {new Date(h.at).toLocaleString()}
                     </div>
                     <div className="text-sm font-medium">{h.action}</div>
-                    <div className="text-xs text-[var(--muted-foreground)]">by {h.actor}</div>
+                    <div className="text-xs text-zinc-500">by {h.actor}</div>
                   </div>
                 ))}
               </div>
@@ -542,14 +578,14 @@ export function QaConsole() {
                   <div className="qa-stat-v">{formatTokens(data.usageTotal.tokensOut)}</div>
                 </div>
                 <div className="qa-stat">
-                  <div className="qa-stat-l">Runs</div>
+                  <div className="qa-stat-l">Missions</div>
                   <div className="qa-stat-v">{data.usageTotal.runs}</div>
                 </div>
                 <div className="qa-panel sm:col-span-3">
-                  <div className="qa-panel-h">Per-run usage</div>
+                  <div className="qa-panel-h">Per-mission usage</div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
-                      <thead className="text-xs text-[var(--muted-foreground)]">
+                      <thead className="text-xs text-zinc-500">
                         <tr>
                           <th className="py-2">Run</th>
                           <th>Model</th>
@@ -561,7 +597,7 @@ export function QaConsole() {
                       </thead>
                       <tbody>
                         {data.runs.map((r) => (
-                          <tr key={r.id} className="border-t border-[var(--border)]">
+                          <tr key={r.id} className="border-t border-zinc-800">
                             <td className="py-2 font-mono text-xs">{r.id}</td>
                             <td>{r.model}</td>
                             <td>{r.usage.llmCalls}</td>
@@ -579,10 +615,10 @@ export function QaConsole() {
 
             {tab === "settings" && (
               <div className="qa-panel space-y-3">
-                <div className="qa-panel-h">LLM models (API gateway)</div>
-                <p className="text-sm text-[var(--muted-foreground)]">
-                  Enterprise posture: API-only via gateway (Azure OpenAI / OpenAI / Anthropic / OCI).
-                  Crawl & sanity stay deterministic-first; LLM is consultant when enabled.
+                <div className="qa-panel-h">Model gateway (API only)</div>
+                <p className="text-sm text-zinc-500">
+                  Pick the consultant model. Crawl, health, and sanity stay deterministic-first.
+                  Default for demo: Deterministic only.
                 </p>
                 <div className="grid gap-2">
                   {data.models.map((m) => (
@@ -592,7 +628,7 @@ export function QaConsole() {
                       onClick={() => saveSettings({ selectedModel: m.id })}
                     >
                       <div className="font-medium">{m.label}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">
+                      <div className="text-xs text-zinc-500">
                         {m.provider} · role {m.role}
                       </div>
                     </button>
@@ -613,41 +649,37 @@ export function QaConsole() {
               )}
             </div>
             {!activeRun ? (
-              <p className="p-4 text-sm text-[var(--muted-foreground)]">
-                Trigger a run to watch agent steps here — like a CI pipeline panel.
+              <p className="p-4 text-sm text-zinc-500">
+                Launch a command to watch every control-plane step here.
               </p>
             ) : (
               <>
-                <div className="border-b border-[var(--border)] px-4 py-3 text-xs">
-                  <div className="font-mono text-[var(--muted-foreground)]">{activeRun.id}</div>
-                  <div className="mt-1 line-clamp-2 text-sm">{activeRun.goal}</div>
+                <div className="border-b border-zinc-800 px-4 py-3 text-xs">
+                  <div className="font-mono text-zinc-500">{activeRun.id}</div>
+                  <div className="mt-1 line-clamp-2 text-sm text-zinc-200">{activeRun.goal}</div>
                 </div>
                 <div className="qa-traces">
                   {activeRun.traces.map((t) => (
                     <div key={t.id} className="qa-trace">
                       <div className="qa-trace-k">{t.kind}</div>
-                      <div className="text-sm">{t.message}</div>
+                      <div className="text-sm text-zinc-200">{t.message}</div>
                       {t.detail && (
-                        <pre className="mt-1 max-h-24 overflow-auto text-[10px] text-[var(--muted-foreground)]">
+                        <pre className="mt-1 max-h-24 overflow-auto text-[10px] text-zinc-500">
                           {t.detail.slice(0, 600)}
                         </pre>
                       )}
-                      <div className="mt-1 font-mono text-[10px] text-[var(--muted-foreground)]">
+                      <div className="mt-1 font-mono text-[10px] text-zinc-600">
                         {new Date(t.at).toLocaleTimeString()}
                       </div>
                     </div>
                   ))}
                 </div>
                 {activeRun.report && (
-                  <div className="border-t border-[var(--border)] p-3">
-                    <div className="mb-2 text-xs font-medium">Export report</div>
+                  <div className="border-t border-zinc-800 p-3">
+                    <div className="mb-2 text-xs font-medium text-zinc-300">Export evidence</div>
                     <div className="flex flex-wrap gap-2">
                       {(["json", "md", "csv", "txt"] as const).map((fmt) => (
-                        <a
-                          key={fmt}
-                          className="inline-flex"
-                          href={`/api/export?runId=${activeRun.id}&format=${fmt}`}
-                        >
+                        <a key={fmt} className="inline-flex" href={`/api/export?runId=${activeRun.id}&format=${fmt}`}>
                           <Button size="sm" variant="outline">
                             <Download size={12} /> {fmt.toUpperCase()}
                           </Button>
@@ -659,8 +691,8 @@ export function QaConsole() {
               </>
             )}
 
-            <div className="border-t border-[var(--border)] p-3">
-              <div className="mb-2 text-xs font-medium">Recent runs</div>
+            <div className="border-t border-zinc-800 p-3">
+              <div className="mb-2 text-xs font-medium text-zinc-300">Recent missions</div>
               <div className="space-y-1">
                 {data.runs.slice(0, 8).map((r) => (
                   <button

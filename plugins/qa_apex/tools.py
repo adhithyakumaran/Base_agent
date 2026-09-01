@@ -297,6 +297,21 @@ def register_qa_apex(registry: ToolRegistry, kb: InMemoryKnowledgeProvider | Non
     registry.register(ApexDiscoverTool(kb))
     registry.register(ApexSanityProbeTool(kb))
     registry.register(ApexFlowCatalogTool(kb))
+    from plugins.qa_apex.skills import (
+        ApexComponentProbeTool,
+        ApexFlowReplayTool,
+        ApexHealthCheckTool,
+        ApexLoginProbeTool,
+        ApexPageProbeTool,
+        ApexReportBundleTool,
+    )
+
+    registry.register(ApexHealthCheckTool(kb))
+    registry.register(ApexPageProbeTool(kb))
+    registry.register(ApexComponentProbeTool(kb))
+    registry.register(ApexFlowReplayTool(kb))
+    registry.register(ApexLoginProbeTool(kb))
+    registry.register(ApexReportBundleTool(kb))
 
 
 def load_kb_docs_from_dir(kb: InMemoryKnowledgeProvider, path: str) -> int:

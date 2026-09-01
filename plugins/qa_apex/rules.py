@@ -22,21 +22,26 @@ def evaluate_technical_rules(payload: dict[str, Any]) -> list[dict[str, Any]]:
     else:
         checks.append({"id": "rule.apex.error_page", "outcome": "pass", "detail": "no ORA/APEX error text"})
 
-    # Session
-    session_ok = False
-    for p in pages:
-        if isinstance(p, dict) and p.get("session"):
-            session_ok = True
-            break
+    # Session — only assert when live crawl pages expose session fields
+    session_fields = [p for p in pages if isinstance(p, dict) and ("session" in p or "url" in p and "ords" in str(p.get("url") or ""))]
+    session_ok = any(isinstance(p, dict) and p.get("session") for p in session_fields)
     apex = payload.get("apex") or {}
     if apex.get("session_captured"):
         session_ok = True
-    if pages:
+    if session_fields:
         checks.append(
             {
                 "id": "rule.session.present",
                 "outcome": "pass" if session_ok else "fail",
                 "detail": "session query captured on crawled pages",
+            }
+        )
+    elif pages:
+        checks.append(
+            {
+                "id": "rule.session.present",
+                "outcome": "insufficient",
+                "detail": "KB page maps only — live session not in scope",
             }
         )
     else:

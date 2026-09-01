@@ -88,10 +88,44 @@ export const MODEL_OPTIONS: ModelOption[] = [
 ];
 
 export const PREBUILT_FLOWS = [
-  { id: "flow.login_home", label: "Login → Home", goal: "sanity check login to home flow" },
-  { id: "flow.item_sku_search", label: "Item SKU search", goal: "discover and sanity probe item SKU search P6_SKU" },
-  { id: "flow.find_price", label: "Find Price", goal: "discover find-price flow P31_ITEM P31_LOTNO" },
-  { id: "flow.stock_visibility", label: "Stock visibility", goal: "sanity check stock visibility P47_SKU" },
-  { id: "flow.standard_product_browse", label: "Standard product browse", goal: "discover standard product browse map" },
-  { id: "flow.rivaah_trousseau", label: "Rivaah trousseau", goal: "discover rivaah wedding trousseau flow" },
+  {
+    id: "skill.health",
+    label: "Morning health pack",
+    goal: "health check endless aisle technical readiness",
+  },
+  {
+    id: "skill.login",
+    label: "Login readiness",
+    goal: "login probe for endless aisle",
+  },
+  {
+    id: "flow.item_sku_search",
+    label: "Item SKU search",
+    goal: "component probe P6_SKU",
+  },
+  {
+    id: "flow.find_price",
+    label: "Find Price",
+    goal: "replay flow find_price",
+  },
+  {
+    id: "flow.stock_visibility",
+    label: "Stock visibility",
+    goal: "component probe P47_SKU",
+  },
+  {
+    id: "flow.standard_product_browse",
+    label: "Product browse map",
+    goal: "discover standard product browse map",
+  },
+  {
+    id: "skill.report",
+    label: "Evidence report",
+    goal: "assemble report bundle for endless aisle",
+  },
+  {
+    id: "flow.rivaah_trousseau",
+    label: "Rivaah trousseau",
+    goal: "replay flow rivaah_trousseau",
+  },
 ];

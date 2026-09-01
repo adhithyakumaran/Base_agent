@@ -122,6 +122,26 @@ class DecisionEngine:
                 m = re.search(r"add\b[:\s]+(-?\d+)\s*,\s*(-?\d+)", goal.raw_text, re.I)
                 if m:
                     tool_input["a"], tool_input["b"] = m.group(1), m.group(2)
+            if route.tool_name.endswith("page_probe") and not tool_input.get("page"):
+                import re
+
+                m = re.search(r"page(?:\s+probe)?[:\s]+([\w\-]+)", goal.raw_text, re.I)
+                if m:
+                    tool_input["page"] = m.group(1)
+            if route.tool_name.endswith("component_probe") and not tool_input.get("item"):
+                import re
+
+                m = re.search(r"(?:component probe|probe (?:component|item))[:\s]+([\w\-]+)", goal.raw_text, re.I)
+                if not m:
+                    m = re.search(r"\b(P\d+_[A-Z0-9]+)\b", goal.raw_text, re.I)
+                if m:
+                    tool_input["item"] = m.group(1)
+            if route.tool_name.endswith("flow_replay") and not tool_input.get("flow"):
+                import re
+
+                m = re.search(r"(?:replay flow|flow replay|run flow)[:\s]+([\w\-\s]+)$", goal.raw_text, re.I)
+                if m:
+                    tool_input["flow"] = m.group(1).strip()
             return Decision(
                 action=DecisionAction.CALL_TOOL.value,
                 reason_code=route.reason_code,

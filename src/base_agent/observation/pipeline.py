@@ -73,7 +73,15 @@ class ObservationPipeline:
                 validation_outcome="fail",
                 reason_code="rule.apex.technical_fail",
             )
-        if tech == "pass" and tool_name.endswith("sanity_probe"):
+        if tech == "pass" and (
+            tool_name.endswith("sanity_probe")
+            or tool_name.endswith("health_check")
+            or tool_name.endswith("login_probe")
+            or tool_name.endswith("report_bundle")
+            or tool_name.endswith("flow_replay")
+            or tool_name.endswith("page_probe")
+            or tool_name.endswith("component_probe")
+        ):
             # Technical pass is not business PASS — still insufficient for GT-backed claims
             return Observation(
                 id=obs_id,

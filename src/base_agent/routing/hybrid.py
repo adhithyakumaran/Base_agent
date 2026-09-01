@@ -12,6 +12,36 @@ ALIAS_RULES: list[tuple[re.Pattern[str], str, str]] = [
     (re.compile(r"^\s*echo\b[:\s]+(?P<text>.+)$", re.I), "demo.echo", "mock.demo.echo"),
     (re.compile(r"^\s*add\b[:\s]+(?P<a>-?\d+)\s*,\s*(?P<b>-?\d+)\s*$", re.I), "demo.add", "mock.demo.add"),
     (
+        re.compile(r"\b(health check|technical health|system health)\b", re.I),
+        "qa.health",
+        "qa.apex.health_check",
+    ),
+    (
+        re.compile(r"\b(login probe|auth probe|login readiness)\b", re.I),
+        "qa.auth",
+        "qa.apex.login_probe",
+    ),
+    (
+        re.compile(r"\b(page probe|probe page)\b[:\s]*(?P<page>[\w\-]+)?", re.I),
+        "qa.probe",
+        "qa.apex.page_probe",
+    ),
+    (
+        re.compile(r"\b(component probe|probe component|probe item)\b[:\s]*(?P<item>[\w\-]+)?", re.I),
+        "qa.probe",
+        "qa.apex.component_probe",
+    ),
+    (
+        re.compile(r"\b(replay flow|flow replay|run flow)\b[:\s]*(?P<flow>[\w\-\s]+)?", re.I),
+        "qa.flow",
+        "qa.apex.flow_replay",
+    ),
+    (
+        re.compile(r"\b(report bundle|evidence report|assemble report)\b", re.I),
+        "qa.report",
+        "qa.apex.report_bundle",
+    ),
+    (
         re.compile(r"\b(flow catalog|list flows|application flows|apex flows)\b", re.I),
         "qa.discover",
         "qa.apex.flow_catalog",

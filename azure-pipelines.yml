@@ -1,5 +1,5 @@
-# Azure Pipelines — Base Agent / QA APEX plugin
-# Builds, tests (LLM off), packages container for OCI registry push.
+# Azure Pipelines — Base Agent + QA Console → OCI
+# Daily morning patrol + report delivery to test channels.
 
 trigger:
   branches:
@@ -12,15 +12,30 @@ pr:
     include:
       - main
 
+schedules:
+  - cron: "30 2 * * *" # 08:00 Asia/Kolkata (IST = UTC+5:30)
+    displayName: Morning QA patrol
+    branches:
+      include:
+        - main
+    always: true
+
 variables:
-  pythonVersion: "3.12"
-  imageName: "base-agent"
-  # Set in Azure variable group / Key Vault-backed vars — never commit secrets
-  # OCI_REGISTRY, OCI_TENANCY, etc.
+  - name: pythonVersion
+    value: "3.12"
+  - name: imageName
+    value: "base-agent"
+  - name: REPORT_EMAIL
+    value: "adhithyakumaran2005@gmail.com"
+  - name: REPORT_WHATSAPP
+    value: "+919965985951"
+  # Link Azure Library variable group `apex-qa-secrets` in the UI for:
+  # SMTP_URL, TWILIO_*, TEAMS_WEBHOOK_URL, APEX_TARGET_URL, APEX_USERNAME, APEX_PASSWORD
+
 
 stages:
   - stage: Test
-    displayName: Lint and unit tests
+    displayName: Unit tests + skill smoke
     jobs:
       - job: pytest
         pool:
@@ -32,28 +47,54 @@ stages:
           - script: |
               python -m pip install -U pip
               python -m pip install -e '.[dev,browser]'
-            displayName: Install package
+            displayName: Install Base Agent
           - script: |
               export LLM_ENABLED=false
               python -m pytest tests/unit -q --tb=short
-            displayName: Unit tests (deterministic, LLM off)
+            displayName: Unit tests (LLM off)
           - script: |
-              python -m base_agent.api "echo pipeline smoke" --kb-dir discovery/uat_ea/kb
-              python -m base_agent.api "discover the application map" --kb-dir discovery/uat_ea/kb
-              python -m base_agent.api "list application flows" --kb-dir discovery/uat_ea/kb
-            displayName: CLI smoke (KB-only, no live UAT)
+              python -m base_agent.api "health check endless aisle" --kb-dir discovery/uat_ea/kb
+              python -m base_agent.api "login probe" --kb-dir discovery/uat_ea/kb
+              python -m base_agent.api "component probe P6_SKU" --kb-dir discovery/uat_ea/kb
+              python -m base_agent.api "replay flow find_price" --kb-dir discovery/uat_ea/kb
+              python -m base_agent.api "assemble report bundle" --kb-dir discovery/uat_ea/kb
+            displayName: Enterprise QA skill smoke
+
+  - stage: MorningPatrol
+    displayName: Scheduled morning patrol + report queue
+    dependsOn: []
+    condition: eq(variables['Build.Reason'], 'Schedule')
+    jobs:
+      - job: patrol
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+          - script: |
+              python -m pip install -e '.[dev]'
+              export LLM_ENABLED=false
+              export REPORT_EMAIL="$(REPORT_EMAIL)"
+              export REPORT_WHATSAPP="$(REPORT_WHATSAPP)"
+              python scripts/morning_patrol.py
+            displayName: Run health pack and write report artifact
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: $(Build.SourcesDirectory)/artifacts/morning_report
+              artifact: morning-qa-report
 
   - stage: Package
-    displayName: Build OCI-ready image
+    displayName: Build OCI-ready images
     dependsOn: Test
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), ne(variables['Build.Reason'], 'Schedule'))
     jobs:
       - job: docker
         pool:
           vmImage: ubuntu-latest
         steps:
           - task: Docker@2
-            displayName: Build image
+            displayName: Build runtime image
             inputs:
               command: build
               repository: $(imageName)
@@ -61,13 +102,15 @@ stages:
               tags: |
                 $(Build.BuildId)
                 latest
-          # Push step: wire to OCI Container Registry or ACR mirror approved by client
-          # - task: Docker@2
-          #   inputs:
-          #     command: push
-          #     containerRegistry: $(OCI_SERVICE_CONNECTION)
-          #     repository: $(imageName)
-          #     tags: $(Build.BuildId)
+          - task: Docker@2
+            displayName: Build QA console image
+            inputs:
+              command: build
+              repository: apex-qa-console
+              Dockerfile: qa-console/Dockerfile
+              tags: |
+                $(Build.BuildId)
+                latest
 
   - stage: DeployOCI
     displayName: Deploy to client OCI (manual gate)
@@ -81,7 +124,9 @@ stages:
             deploy:
               steps:
                 - script: |
-                    echo "Deploy $(imageName):$(Build.BuildId) to OCI Container Instances / OKE"
-                    echo "Inject secrets from Key Vault / OCI Vault: TARGET_URL, credentials, LLM gateway"
-                    echo "Runtime default: LLM_ENABLED=false for crawl/sanity"
-                  displayName: Placeholder OCI deploy
+                    echo "Deploy base-agent + apex-qa-console to OCI"
+                    echo "Inject vault secrets: APEX_TARGET_URL, APEX_USERNAME, APEX_PASSWORD"
+                    echo "Report channels: REPORT_EMAIL=$(REPORT_EMAIL) REPORT_WHATSAPP=$(REPORT_WHATSAPP)"
+                    echo "Optional: SMTP_URL TWILIO_* TEAMS_WEBHOOK_URL"
+                    echo "LLM_ENABLED=false for patrol; enable gateway only when needed"
+                  displayName: OCI deploy checklist
