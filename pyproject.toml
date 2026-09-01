@@ -7,7 +7,7 @@ name = "base-agent"
 version = "0.1.0"
 description = "Deterministic-first enterprise agent runtime for QA/Security plugins"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 license = { text = "Proprietary" }
 authors = [{ name = "Base Agent Team" }]
 dependencies = [

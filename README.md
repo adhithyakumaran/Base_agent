@@ -14,6 +14,8 @@ Oracle APEX Endless Aisle (Titan/Tanishq UAT) is the first target application. G
 
 ## Quick start
 
+Needs **Python 3.10+** (3.11/3.12 recommended) and Node 20+ for the console.
+
 ```bash
 python3 -m pip install -e '.[dev,browser]'
 python3 -m pytest tests/unit -q
