@@ -1,0 +1,2 @@
+[console_scripts]
+base-agent = base_agent.api:main

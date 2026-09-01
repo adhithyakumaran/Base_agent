@@ -1,0 +1,46 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.component.product_detail.size_variants",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "8f942f4e7d9c16c3"
+  },
+  "body": {
+    "type": "component",
+    "title": "Size Variants",
+    "summary": "Field/control on product-detail",
+    "details": {
+      "id": "kb.component.product_detail.size_variants",
+      "page": "product-detail",
+      "name": "Size Variants",
+      "label": "Size Variants dialog",
+      "actions": [
+        "Close",
+        "Back to Products"
+      ],
+      "observed_values": [
+        "12.8",
+        "44",
+        "WOMEN"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

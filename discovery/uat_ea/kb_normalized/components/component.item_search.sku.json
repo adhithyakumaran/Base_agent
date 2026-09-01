@@ -1,0 +1,41 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.component.item_search.sku",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "0d9c2706421a0539"
+  },
+  "body": {
+    "type": "component",
+    "title": "P6_SKU",
+    "summary": "Field/control on product-detail-item-search",
+    "details": {
+      "id": "kb.component.item_search.sku",
+      "page": "product-detail-item-search",
+      "name": "P6_SKU",
+      "label": "Enter item code or scan the QR",
+      "actions": [
+        "#btn_search",
+        "Scan"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.flow.best_deal_detail",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "a1421924eea41ee6"
+  },
+  "body": {
+    "type": "flow",
+    "title": "best_deal_product_detail",
+    "summary": "Candidate flow from browser recording merge.",
+    "details": {
+      "name": "best_deal_product_detail",
+      "steps": [
+        {
+          "page": "home",
+          "action": "best_deal_or_product_discount"
+        },
+        {
+          "page": "product-discount",
+          "action": "open_product_image"
+        },
+        {
+          "page": "discount-product-details-all-store",
+          "action": "view_details"
+        },
+        {
+          "page": "product-discount",
+          "action": "back_to_products"
+        }
+      ],
+      "source": "report_58aa.md",
+      "observed_messages": [
+        "The Gold rate may change depending on the actual rate during the time of booking"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

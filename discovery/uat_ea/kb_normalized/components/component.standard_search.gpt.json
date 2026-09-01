@@ -1,0 +1,41 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.component.standard_search.gpt",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "c662d556afd22381"
+  },
+  "body": {
+    "type": "component",
+    "title": "P4_GPT_SEARCH",
+    "summary": "Field/control on standard-product-search",
+    "details": {
+      "id": "kb.component.standard_search.gpt",
+      "page": "standard-product-search",
+      "name": "P4_GPT_SEARCH",
+      "label": "Enter keyword or scan",
+      "actions": [
+        "#B129446122125873817"
+      ],
+      "source": "report_8d0d.md"
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

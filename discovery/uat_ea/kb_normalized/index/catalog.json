@@ -1,0 +1,411 @@
+{
+  "generated_at": "2026-09-01T18:33:53Z",
+  "schema_version": "1.0",
+  "app": {
+    "name": "Endless Aisle",
+    "workspace": "tjdcom",
+    "apps": [
+      "ea",
+      "ea1",
+      "gc"
+    ],
+    "apex_app_id": "1002"
+  },
+  "count": 64,
+  "documents": [
+    {
+      "id": "kb.app.endless_aisle.overview",
+      "type": "business_note",
+      "status": "candidate",
+      "path": "business/app.endless_aisle.overview.json"
+    },
+    {
+      "id": "kb.component.find_price.item",
+      "type": "component",
+      "status": "candidate",
+      "path": "components/component.find_price.item.json"
+    },
+    {
+      "id": "kb.component.find_price.lotno",
+      "type": "component",
+      "status": "candidate",
+      "path": "components/component.find_price.lotno.json"
+    },
+    {
+      "id": "kb.component.item_search.sku",
+      "type": "component",
+      "status": "candidate",
+      "path": "components/component.item_search.sku.json"
+    },
+    {
+      "id": "kb.component.product_detail.size_variants",
+      "type": "component",
+      "status": "candidate",
+      "path": "components/component.product_detail.size_variants.json"
+    },
+    {
+      "id": "kb.component.standard_search.gpt",
+      "type": "component",
+      "status": "candidate",
+      "path": "components/component.standard_search.gpt.json"
+    },
+    {
+      "id": "kb.component.stock_visibility.sku",
+      "type": "component",
+      "status": "candidate",
+      "path": "components/component.stock_visibility.sku.json"
+    },
+    {
+      "id": "kb.flow.best_deal_detail",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.best_deal_detail.json"
+    },
+    {
+      "id": "kb.flow.browse_all_products",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.browse_all_products.json"
+    },
+    {
+      "id": "kb.flow.category_earrings",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.category_earrings.json"
+    },
+    {
+      "id": "kb.flow.find_price",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.find_price.json"
+    },
+    {
+      "id": "kb.flow.item_search",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.item_search.json"
+    },
+    {
+      "id": "kb.flow.item_sku_search",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.item_sku_search.json"
+    },
+    {
+      "id": "kb.flow.login_home",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.login_home.json"
+    },
+    {
+      "id": "kb.flow.reports_menu",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.reports_menu.json"
+    },
+    {
+      "id": "kb.flow.rivaah_browse",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.rivaah_browse.json"
+    },
+    {
+      "id": "kb.flow.rivaah_trousseau",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.rivaah_trousseau.json"
+    },
+    {
+      "id": "kb.flow.standard_product_browse",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.standard_product_browse.json"
+    },
+    {
+      "id": "kb.flow.stock_visibility",
+      "type": "flow",
+      "status": "candidate",
+      "path": "flows/flow.stock_visibility.json"
+    },
+    {
+      "id": "kb.nav.home_modules",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/nav.home_modules.json"
+    },
+    {
+      "id": "kb.page.administration",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.administration.json"
+    },
+    {
+      "id": "kb.page.ea.customer-wish-list1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.customer-wish-list1.json"
+    },
+    {
+      "id": "kb.page.ea.dashboard-tile",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.dashboard-tile.json"
+    },
+    {
+      "id": "kb.page.ea.discount-product-details-all-store",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.discount-product-details-all-store.json"
+    },
+    {
+      "id": "kb.page.ea.dream-list-product1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.dream-list-product1.json"
+    },
+    {
+      "id": "kb.page.ea1.101",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.101.json"
+    },
+    {
+      "id": "kb.page.ea1.102",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.102.json"
+    },
+    {
+      "id": "kb.page.ea1.200",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.200.json"
+    },
+    {
+      "id": "kb.page.ea1.22",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.22.json"
+    },
+    {
+      "id": "kb.page.ea1.47",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.47.json"
+    },
+    {
+      "id": "kb.page.ea1.51",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.51.json"
+    },
+    {
+      "id": "kb.page.ea1.57",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.57.json"
+    },
+    {
+      "id": "kb.page.ea1.61",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.61.json"
+    },
+    {
+      "id": "kb.page.ea1.63",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.63.json"
+    },
+    {
+      "id": "kb.page.ea1.estimation-slip",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.estimation-slip.json"
+    },
+    {
+      "id": "kb.page.ea1.grid-bills-test",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.grid-bills-test.json"
+    },
+    {
+      "id": "kb.page.ea1.look-of-the-week-product-detail",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.look-of-the-week-product-detail.json"
+    },
+    {
+      "id": "kb.page.ea1.manual-bills-book",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.manual-bills-book.json"
+    },
+    {
+      "id": "kb.page.ea1.new-collections",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.new-collections.json"
+    },
+    {
+      "id": "kb.page.ea1.product-detail",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.product-detail.json"
+    },
+    {
+      "id": "kb.page.ea1.product-discount",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.product-discount.json"
+    },
+    {
+      "id": "kb.page.ea1.rakhi-collections-product-details1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.rakhi-collections-product-details1.json"
+    },
+    {
+      "id": "kb.page.ea1.silver-collections1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.silver-collections1.json"
+    },
+    {
+      "id": "kb.page.ea1.size-based-search",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.size-based-search.json"
+    },
+    {
+      "id": "kb.page.ea1.testing1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea1.testing1.json"
+    },
+    {
+      "id": "kb.page.ea.estimation-slip",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.estimation-slip.json"
+    },
+    {
+      "id": "kb.page.ea.find-price",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.find-price.json"
+    },
+    {
+      "id": "kb.page.gc.store-gold-coin-new",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.gc.store-gold-coin-new.json"
+    },
+    {
+      "id": "kb.page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent.json"
+    },
+    {
+      "id": "kb.page.ea.gold-coin-stock-visibility",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.gold-coin-stock-visibility.json"
+    },
+    {
+      "id": "kb.page.ea.home",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.home.json"
+    },
+    {
+      "id": "kb.page.ea.kvi-fmc-lcg",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.kvi-fmc-lcg.json"
+    },
+    {
+      "id": "kb.page.ea.login",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.login.json"
+    },
+    {
+      "id": "kb.page.ea.product-catalogue",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.product-catalogue.json"
+    },
+    {
+      "id": "kb.page.ea.product-detail-item-search",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.product-detail-item-search.json"
+    },
+    {
+      "id": "kb.page.ea.product-detail",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.product-detail.json"
+    },
+    {
+      "id": "kb.page.ea.product-discount",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.product-discount.json"
+    },
+    {
+      "id": "kb.page.ea.rivaah",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.rivaah.json"
+    },
+    {
+      "id": "kb.page.ea.select-category",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.select-category.json"
+    },
+    {
+      "id": "kb.page.ea.smart-image-search1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.smart-image-search1.json"
+    },
+    {
+      "id": "kb.page.ea.solitaire-uin-search",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.solitaire-uin-search.json"
+    },
+    {
+      "id": "kb.page.ea.standard-product-search",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.standard-product-search.json"
+    },
+    {
+      "id": "kb.page.ea.wedding-trousseau-details1",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.wedding-trousseau-details1.json"
+    },
+    {
+      "id": "kb.page.ea.wedding-trousseau",
+      "type": "page_map",
+      "status": "candidate",
+      "path": "pages/page.ea.wedding-trousseau.json"
+    }
+  ],
+  "operating_mode_without_gt": {
+    "allowed_conclusions": [
+      "UNKNOWN",
+      "INSUFFICIENT_EVIDENCE",
+      "BLOCKED",
+      "FAIL(rule)",
+      "PASS(rule)"
+    ],
+    "forbidden": "Invent business PASS/FAIL from KB alone"
+  }
+}

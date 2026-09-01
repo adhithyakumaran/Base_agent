@@ -1,0 +1,40 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.component.stock_visibility.sku",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "e134c0c4e64cf8ad"
+  },
+  "body": {
+    "type": "component",
+    "title": "P47_SKU",
+    "summary": "Field/control on ea1/47",
+    "details": {
+      "id": "kb.component.stock_visibility.sku",
+      "page": "ea1/47",
+      "name": "P47_SKU",
+      "label": "P47_SKU",
+      "actions": [
+        "Search"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

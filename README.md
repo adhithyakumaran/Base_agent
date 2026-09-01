@@ -1,50 +1,55 @@
-# Base Agent — Week 1 Technical Proposal
+# Base Agent — Enterprise Runtime
 
-This repository contains the **Week 1 technical proposal** for a reusable **Base Agent runtime**.
+Deterministic-first agent runtime for **QA Agent** and **Security Agent** plugins.
 
-It is **not** a design for the complete QA Agent.
+Oracle APEX Endless Aisle (Titan/Tanishq UAT) is the first target application. Ground Truth from SME is **optional later** — the runtime must perform well before GT exists, using KB + deterministic rules, and must **never loop until success**.
 
-Client documents describe an AI QA product that discovers an application from URL + credentials, learns business behaviour, executes natural-language tests, generates automation, and reports results. Those capabilities belong to **Week 2 plugins/skills**. Week 1 builds only the **deterministic-first agent core** that those plugins will attach to.
+## Principles
 
-## What is in scope
+- **Deterministic-first + LLM-when-required** (LLM is not the kernel)
+- Structured results: `PASS` | `FAIL` | `BLOCKED` | `UNKNOWN` | `INSUFFICIENT_EVIDENCE`
+- Hard budgets: steps / tools / LLM / pages / cycle detection
+- Plugins: Mock Demo + QA APEX (discovery/sanity) on top of the core
+- Deploy path: Azure Pipelines → OCI (see docs)
 
-- Reusable agent runtime (goal → state → route → execute → observe → decide → result)
-- Plugin / skill / capability / tool contracts
-- Tool registry and executor
-- Hybrid routing (deterministic first, LLM only when required)
-- Knowledge Base and Ground Truth **provider interfaces**
-- Context management, decision engine, retries, loop prevention
-- LangGraph/LangChain usage boundaries
-- Observability and security foundations
-- Test and evaluation strategy for the runtime, using **mock** plugins
+## Quick start
 
-## What is out of scope
+```bash
+python3 -m pip install -e '.[dev]'
+python3 -m pytest tests/unit -q
+python3 -m base_agent.api "echo hello"
+python3 -m base_agent.api "discover the application map" --kb-dir discovery/uat_ea/kb
+```
 
-- QA skills, security testing skills
-- Browser / Playwright, API testing, database testing
-- Oracle APEX-specific logic
-- Full product features from the attached client requirement PDFs
+## Repo map
 
-## Documents
-
-| Doc | Purpose |
+| Path | Purpose |
 |---|---|
-| [docs/BASE_AGENT_TECHNICAL_PROPOSAL.md](docs/BASE_AGENT_TECHNICAL_PROPOSAL.md) | Week 1 Base Agent runtime proposal |
-| [docs/APEX_GT_KB_COLLECTION_SPEC.md](docs/APEX_GT_KB_COLLECTION_SPEC.md) | How to collect Knowledge + Ground Truth for Oracle APEX inventory (playground, schemas, approval) |
+| `src/base_agent/` | Runtime core (state, router, executor, decision, GT/KB interfaces, LangGraph) |
+| `plugins/mock_demo/` | Deterministic mock tools |
+| `plugins/qa_apex/` | APEX discover/sanity tools (bounded, anti-stuck metadata) |
+| `discovery/uat_ea/` | Live UAT KB candidates + approval checklist + recordings merge |
+| `docs/BASE_AGENT_TECHNICAL_PROPOSAL.md` | Full runtime proposal |
+| `docs/APEX_GT_KB_COLLECTION_SPEC.md` | KB/GT schemas |
+| `docs/architecture/OPERATING_WITHOUT_GT.md` | How we run before SME GT |
+| `docs/architecture/APEX_CRAWLER_PERFORMANCE.md` | Crawler anti-stuck / APEX notes |
+| `docs/architecture/AZURE_OCI_DEPLOYMENT.md` | Azure Pipelines → OCI |
 
-Source context (client requirements, used only to bound Week 2 vs Week 1):
+## Without Ground Truth — what works now
 
-- `uploads/QA_Agent_High_Level_Client_Requirements_4f8c.pdf`
-- `uploads/Requirement_Overview_0c0a.pdf`
+- Discover/map Endless Aisle from KB + future live crawler skill
+- Technical FAIL via rules (ORA/error pages, authz, budgets)
+- Honest `UNKNOWN` when business expectation is missing
+- Zero LLM on echo/discover happy paths
+
+SME GT later only increases deterministic PASS/FAIL coverage — it does not redesign the agent.
+
+## UAT discovery artifacts
+
+- [discovery/uat_ea/APPROVAL_CHECKLIST.md](discovery/uat_ea/APPROVAL_CHECKLIST.md)
+- [discovery/uat_ea/kb_normalized/](discovery/uat_ea/kb_normalized/) (schema-normalized KB)
+- Recordings merged under `discovery/uat_ea/recordings/`
 
 ## Status
 
-This repository currently delivers **planning documents** (Base Agent proposal + APEX GT/KB collection spec). Implementation of the Python runtime starts after proposal acceptance.
-
-## UAT discovery (Endless Aisle)
-
-First authenticated discovery pack (KB candidates + GT approval checklist):
-
-- [discovery/uat_ea/APPROVAL_CHECKLIST.md](discovery/uat_ea/APPROVAL_CHECKLIST.md)
-- [discovery/uat_ea/kb/](discovery/uat_ea/kb/)
-- [discovery/uat_ea/candidate_gt/candidates.json](discovery/uat_ea/candidate_gt/candidates.json)
+Base Agent runtime v0.1 is implemented and unit-tested. Next: live Playwright crawler skill wired to budgets, Azure pipeline YAML, OCI image packaging.

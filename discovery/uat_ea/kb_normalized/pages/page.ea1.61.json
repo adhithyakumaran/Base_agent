@@ -1,0 +1,41 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.page.ea1.61",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "03b64c7f9b0285a5"
+  },
+  "body": {
+    "type": "page_map",
+    "title": "ea1/61",
+    "summary": "Observed in browser recording(s); hit_count=1.",
+    "details": {
+      "workspace": "tjdcom",
+      "app_alias": "ea1",
+      "page_alias": "61",
+      "url_path": "/ords/r/tjdcom/ea1/61",
+      "sources": [
+        "report_58aa.md"
+      ],
+      "hit_count": 1
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

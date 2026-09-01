@@ -1,0 +1,63 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.nav.home_modules",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ],
+    "content_hash": "cee180d542e1a297"
+  },
+  "body": {
+    "type": "page_map",
+    "title": "Home navigation modules",
+    "summary": "Modules observed on Endless Aisle home for user BALA.",
+    "details": {
+      "page_alias": "home",
+      "modules_observed": [
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Customer Order",
+        "Best Deal",
+        "Smart Image Search",
+        "Find Price",
+        "Estimation Slip",
+        "Solitaire UIN",
+        "Crown Eye",
+        "Gold Coin Stock Visibility",
+        "Stock Visibility",
+        "My Store Stock",
+        "Open IBT Action - Urgent",
+        "Store Orders",
+        "Report",
+        "Customer Wishlist",
+        "Solitaire Products",
+        "New Collections",
+        "High Value Studded"
+      ],
+      "chrome_buttons": [
+        "Main Navigation",
+        "Store: Chennai - Anna Nagar (ABO) - L2",
+        "ORSO Recommendation",
+        "Customer ( Click to Select )",
+        "bala",
+        "\u2726 STORE STOCK"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

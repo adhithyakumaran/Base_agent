@@ -1,0 +1,57 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.flow.find_price",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "4a2e7d60ba873f0f"
+  },
+  "body": {
+    "type": "flow",
+    "title": "find_price_lookup",
+    "summary": "Candidate flow from browser recording merge.",
+    "details": {
+      "name": "find_price_lookup",
+      "steps": [
+        {
+          "page": "home",
+          "action": "find_price"
+        },
+        {
+          "page": "find-price",
+          "action": "enter_P31_ITEM"
+        },
+        {
+          "page": "find-price",
+          "action": "enter_P31_LOTNO"
+        },
+        {
+          "page": "find-price",
+          "action": "search"
+        }
+      ],
+      "source": "report_58aa.md",
+      "fields": [
+        "P31_ITEM",
+        "P31_LOTNO"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

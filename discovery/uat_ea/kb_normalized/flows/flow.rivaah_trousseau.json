@@ -1,0 +1,53 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.flow.rivaah_trousseau",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "4a336dea14236733"
+  },
+  "body": {
+    "type": "flow",
+    "title": "rivaah_wedding_trousseau",
+    "summary": "Candidate flow from browser recording merge.",
+    "details": {
+      "name": "rivaah_wedding_trousseau",
+      "steps": [
+        {
+          "page": "home",
+          "action": "rivaah"
+        },
+        {
+          "page": "rivaah",
+          "action": "open_card"
+        },
+        {
+          "page": "wedding-trousseau",
+          "action": "optional_in_store_trousseau"
+        },
+        {
+          "page": "wedding-trousseau-details1",
+          "action": "view_detail"
+        }
+      ],
+      "source": "report_58aa.md + report_8d0d.md"
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

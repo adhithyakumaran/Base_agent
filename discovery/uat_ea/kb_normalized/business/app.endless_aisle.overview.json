@@ -1,0 +1,41 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.app.endless_aisle.overview",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ],
+    "content_hash": "d17ea2532fc84e22"
+  },
+  "body": {
+    "type": "business_note",
+    "title": "Endless Aisle application overview",
+    "summary": "Oracle APEX Endless Aisle UAT for store-assisted jewellery retail (Titan/Tanishq).",
+    "details": {
+      "login_url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/login",
+      "home_url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+      "apex_app_id": "1002",
+      "workspace": "tjdcom",
+      "app_alias": "ea",
+      "theme_hint": "apex-theme-vita-tanishq",
+      "observed_store_context": "Chennai - Anna Nagar (ABO) - L2",
+      "observed_user": "BALA",
+      "apex_version_hint": "26.1.0"
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

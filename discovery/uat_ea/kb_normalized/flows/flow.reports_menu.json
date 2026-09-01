@@ -1,0 +1,56 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.flow.reports_menu",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "ee16311198728f69"
+  },
+  "body": {
+    "type": "flow",
+    "title": "reports_submenu_browse",
+    "summary": "Candidate flow from browser recording merge.",
+    "details": {
+      "name": "reports_submenu_browse",
+      "steps": [
+        {
+          "page": "home",
+          "action": "reports"
+        },
+        {
+          "page": "ea1/51",
+          "action": "open_report_type"
+        },
+        {
+          "page": "ea1/200|101|102|57",
+          "action": "view_report"
+        }
+      ],
+      "source": "report_8d0d.md",
+      "report_types_observed": [
+        "Order Status",
+        "Request Status",
+        "Logged in Users",
+        "PDF/WhatsApp Export Report",
+        "Best Deal - Hit Rate"
+      ]
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

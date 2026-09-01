@@ -1,0 +1,38 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.component.find_price.lotno",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "480b910232fe23b5"
+  },
+  "body": {
+    "type": "component",
+    "title": "P31_LOTNO",
+    "summary": "Field/control on find-price",
+    "details": {
+      "id": "kb.component.find_price.lotno",
+      "page": "find-price",
+      "name": "P31_LOTNO",
+      "label": "P31_LOTNO",
+      "actions": []
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}

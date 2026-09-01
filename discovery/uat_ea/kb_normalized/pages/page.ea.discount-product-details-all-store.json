@@ -1,0 +1,41 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.page.ea.discount-product-details-all-store",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:33:53Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ],
+    "content_hash": "f696d251ccd08af4"
+  },
+  "body": {
+    "type": "page_map",
+    "title": "ea/discount-product-details-all-store",
+    "summary": "Observed in browser recording(s); hit_count=3.",
+    "details": {
+      "workspace": "tjdcom",
+      "app_alias": "ea",
+      "page_alias": "discount-product-details-all-store",
+      "url_path": "/ords/r/tjdcom/ea/discount-product-details-all-store",
+      "sources": [
+        "report_58aa.md"
+      ],
+      "hit_count": 3
+    },
+    "related_ids": [],
+    "stale_after": null
+  }
+}
