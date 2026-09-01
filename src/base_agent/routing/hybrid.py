@@ -12,6 +12,11 @@ ALIAS_RULES: list[tuple[re.Pattern[str], str, str]] = [
     (re.compile(r"^\s*echo\b[:\s]+(?P<text>.+)$", re.I), "demo.echo", "mock.demo.echo"),
     (re.compile(r"^\s*add\b[:\s]+(?P<a>-?\d+)\s*,\s*(?P<b>-?\d+)\s*$", re.I), "demo.add", "mock.demo.add"),
     (
+        re.compile(r"\b(mission pack|deep mission|full mission|local mission)\b", re.I),
+        "qa.mission",
+        "qa.apex.mission_pack",
+    ),
+    (
         re.compile(r"\b(health check|technical health|system health)\b", re.I),
         "qa.health",
         "qa.apex.health_check",

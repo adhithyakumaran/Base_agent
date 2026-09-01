@@ -89,6 +89,11 @@ export const MODEL_OPTIONS: ModelOption[] = [
 
 export const PREBUILT_FLOWS = [
   {
+    id: "skill.mission",
+    label: "Deep local mission",
+    goal: "mission pack full mission for endless aisle",
+  },
+  {
     id: "skill.health",
     label: "Morning health pack",
     goal: "health check endless aisle technical readiness",

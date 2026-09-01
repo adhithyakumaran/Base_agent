@@ -372,7 +372,7 @@ class ApexFlowReplayTool:
                 },
             )
 
-        steps = (match.get("steps") or [])[: payload["max_steps"]]
+        steps = (match.get("steps") or [])[: int(payload.get("max_steps") or 20)]
         step_results = []
         for i, step in enumerate(steps):
             page = str((step or {}).get("page") or "").lower()
@@ -493,10 +493,11 @@ class ApexReportBundleTool:
 
     def execute(self, payload: dict[str, Any], ctx: ExecutionContext) -> RawToolResult:
         pages = _pages(self.kb)
-        flows = _flows(self.kb) if payload["include_flows"] else []
+        flows = _flows(self.kb) if payload.get("include_flows", True) else []
         components = _components(self.kb)
+        title = str(payload.get("title") or "QA Evidence Report")
         md = [
-            f"# {payload['title']}",
+            f"# {title}",
             "",
             f"- Pages: **{len(pages)}**",
             f"- Flows/patterns: **{len(flows)}**",
@@ -513,7 +514,7 @@ class ApexReportBundleTool:
         return RawToolResult(
             ok=True,
             data={
-                "title": payload["title"],
+                "title": title,
                 "markdown": "\n".join(md),
                 "stats": {"pages": len(pages), "flows": len(flows), "components": len(components)},
                 "technical_aggregate": "pass" if pages else "fail",
@@ -527,5 +528,93 @@ class ApexReportBundleTool:
                 "body_text": "",
                 "pages": pages[:20],
                 "summary": f"Report bundle ready ({len(pages)} pages)",
+            },
+        )
+
+
+class ApexMissionPackTool:
+    """Deeper local mission: health + login + key components + critical flows in one tool call.
+
+    Efficient for local demo — one capability invocation, richer evidence, still no live UAT required.
+    Depth beyond this needs live browser session + SME GT.
+    """
+
+    definition = ToolDefinition(
+        name="qa.apex.mission_pack",
+        description="Run a deeper local QA mission pack (health, login, key fields, critical flows)",
+        plugin_id="qa.apex",
+        capability="qa.mission",
+        permissions=["tool.execute:qa.apex.*"],
+        timeout_ms=90_000,
+        tags=["qa", "apex", "mission", "local"],
+        metadata={"llm_required": False, "gt_required": False, "demo_ready": True},
+    )
+
+    def __init__(self, kb: InMemoryKnowledgeProvider | None = None) -> None:
+        self.kb = kb
+        self.health = ApexHealthCheckTool(kb)
+        self.login = ApexLoginProbeTool(kb)
+        self.component = ApexComponentProbeTool(kb)
+        self.flow = ApexFlowReplayTool(kb)
+        self.report = ApexReportBundleTool(kb)
+
+    def validate_input(self, payload: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "items": payload.get("items")
+            or ["P6_SKU", "P31_ITEM", "P31_LOTNO", "P47_SKU"],
+            "flows": payload.get("flows")
+            or ["login_home", "find_price", "item_sku_search", "stock_visibility"],
+        }
+
+    def validate_output(self, raw: Any) -> dict[str, Any]:
+        return raw if isinstance(raw, dict) else {"value": raw}
+
+    def execute(self, payload: dict[str, Any], ctx: ExecutionContext) -> RawToolResult:
+        sections: list[dict[str, Any]] = []
+        health = self.health.execute({}, ctx)
+        sections.append({"name": "health", "data": health.data})
+        login = self.login.execute({}, ctx)
+        sections.append({"name": "login", "data": login.data})
+
+        for item in payload.get("items") or ["P6_SKU", "P31_ITEM", "P31_LOTNO", "P47_SKU"]:
+            c = self.component.execute({"item": str(item)}, ctx)
+            sections.append({"name": f"component:{item}", "data": c.data})
+
+        for flow in payload.get("flows") or ["login_home", "find_price", "item_sku_search", "stock_visibility"]:
+            f = self.flow.execute({"flow": str(flow), "max_steps": 20}, ctx)
+            sections.append({"name": f"flow:{flow}", "data": f.data})
+
+        report = self.report.execute({"title": "Local Mission Pack Evidence", "include_flows": True}, ctx)
+        sections.append({"name": "report", "data": report.data})
+
+        all_checks: list[dict[str, Any]] = []
+        for s in sections:
+            all_checks.extend((s["data"] or {}).get("checks") or [])
+
+        fails = [c for c in all_checks if c.get("outcome") == "fail"]
+        agg = "fail" if fails else "pass"
+        return RawToolResult(
+            ok=True,
+            data={
+                "sections": [
+                    {
+                        "name": s["name"],
+                        "summary": (s["data"] or {}).get("summary"),
+                        "technical_aggregate": (s["data"] or {}).get("technical_aggregate"),
+                        "found": (s["data"] or {}).get("found"),
+                    }
+                    for s in sections
+                ],
+                "checks": all_checks,
+                "fail_count": len(fails),
+                "technical_aggregate": agg,
+                "gt_required_for_business_passfail": True,
+                "depth_note": (
+                    "Local KB+rules depth. Live APEX interaction (Customer Order, LOVs, IG edits) "
+                    "needs authenticated browser session; business PASS needs SME GT."
+                ),
+                "body_text": "",
+                "pages": (health.data or {}).get("pages") or [],
+                "summary": f"Mission pack aggregate={agg} · sections={len(sections)} · fails={len(fails)}",
             },
         )

@@ -4,10 +4,7 @@ import type { AgentRun, KnowledgePill, TraceEvent } from "@/lib/types";
 import { uid } from "@/lib/utils";
 
 const REPO_ROOT = path.resolve(process.cwd(), "..");
-
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
-}
+const LOCAL_AGENT_URL = process.env.LOCAL_AGENT_URL || "http://127.0.0.1:43124";
 
 function extractPills(pills: KnowledgePill[]) {
   return pills.map((p) => {
@@ -38,10 +35,41 @@ function extractPills(pills: KnowledgePill[]) {
   });
 }
 
-async function invokePythonAgent(goal: string): Promise<{
+async function invokeWarmAgent(goal: string): Promise<{
   ok: boolean;
   result?: Record<string, unknown>;
   error?: string;
+  via?: string;
+}> {
+  try {
+    const res = await fetch(`${LOCAL_AGENT_URL}/run`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal }),
+      signal: AbortSignal.timeout(45_000),
+    });
+    if (!res.ok) {
+      return { ok: false, error: `warm_agent_http_${res.status}`, via: "warm" };
+    }
+    const json = (await res.json()) as { ok?: boolean; result?: Record<string, unknown>; error?: string };
+    if (!json.ok || !json.result) {
+      return { ok: false, error: json.error || "warm_agent_bad_payload", via: "warm" };
+    }
+    return { ok: true, result: json.result, via: "warm" };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : String(e),
+      via: "warm",
+    };
+  }
+}
+
+async function invokePythonAgentSpawn(goal: string): Promise<{
+  ok: boolean;
+  result?: Record<string, unknown>;
+  error?: string;
+  via?: string;
 }> {
   return new Promise((resolve) => {
     const py = spawn(
@@ -49,33 +77,50 @@ async function invokePythonAgent(goal: string): Promise<{
       ["-m", "base_agent.api", goal, "--kb-dir", "discovery/uat_ea/kb"],
       {
         cwd: REPO_ROOT,
-        env: { ...process.env, PYTHONPATH: path.join(REPO_ROOT, "src") + ":" + REPO_ROOT },
-        timeout: 60_000,
+        env: {
+          ...process.env,
+          LLM_ENABLED: "false",
+          PYTHONPATH: path.join(REPO_ROOT, "src") + ":" + REPO_ROOT,
+        },
       }
     );
     let stdout = "";
     let stderr = "";
+    const timer = setTimeout(() => {
+      py.kill("SIGKILL");
+      resolve({ ok: false, error: "spawn_timeout", via: "spawn" });
+    }, 60_000);
     py.stdout.on("data", (d) => {
       stdout += d.toString();
     });
     py.stderr.on("data", (d) => {
       stderr += d.toString();
     });
-    py.on("error", (err) => resolve({ ok: false, error: err.message }));
+    py.on("error", (err) => {
+      clearTimeout(timer);
+      resolve({ ok: false, error: err.message, via: "spawn" });
+    });
     py.on("close", (code) => {
+      clearTimeout(timer);
       if (code !== 0) {
-        resolve({ ok: false, error: stderr || `exit ${code}` });
+        resolve({ ok: false, error: stderr || `exit ${code}`, via: "spawn" });
         return;
       }
       try {
         const jsonStart = stdout.indexOf("{");
         const parsed = JSON.parse(jsonStart >= 0 ? stdout.slice(jsonStart) : stdout);
-        resolve({ ok: true, result: parsed });
+        resolve({ ok: true, result: parsed, via: "spawn" });
       } catch {
-        resolve({ ok: false, error: "Failed to parse agent JSON", result: { raw: stdout } });
+        resolve({ ok: false, error: "Failed to parse agent JSON", result: { raw: stdout }, via: "spawn" });
       }
     });
   });
+}
+
+async function invokePythonAgent(goal: string) {
+  const warm = await invokeWarmAgent(goal);
+  if (warm.ok) return warm;
+  return invokePythonAgentSpawn(goal);
 }
 
 export async function executeRun(
@@ -97,15 +142,14 @@ export async function executeRun(
 
   run.status = "running";
   await onUpdate(run);
-  await push("info", "Run accepted by Base Agent control plane");
-  await sleep(250);
+  await push("info", "Run accepted — local deterministic control plane (LLM off by default)");
 
   const extracted = extractPills(pills);
   run.knowledgePillIds = extracted.map((p) => p.id);
   if (extracted.length) {
     await push(
       "info",
-      f"Extracted {extracted.length} context packet(s) before automation",
+      `Extracted ${extracted.length} context packet(s) before automation`,
       JSON.stringify(
         extracted.map((p) => ({ id: p.id, title: p.title, extracted: p.extracted })),
         null,
@@ -115,21 +159,20 @@ export async function executeRun(
   } else {
     await push("info", "No context packets attached — proceeding with KB + rules");
   }
-  await sleep(200);
 
-  await push("decision", "Deterministic-first routing (LLM consultant only if required)");
-  await push("tool", `Selected capability for goal: ${run.goal.slice(0, 80)}`);
-  await sleep(300);
+  await push("decision", "Route skill deterministically (no LLM kernel)");
+  await push("tool", `Goal → ${run.goal.slice(0, 100)}`);
 
   const agentGoal =
     run.type === "sanity"
-      ? run.goal.includes("sanity")
+      ? run.goal.includes("sanity") || run.goal.includes("health")
         ? run.goal
         : `sanity check ${run.goal}`
       : run.goal;
 
-  await push("tool", "Invoking Base Agent runtime (Python)", agentGoal);
+  await push("tool", "Invoking local Base Agent", agentGoal);
   const invoked = await invokePythonAgent(agentGoal);
+  await push("info", `Agent bridge via ${invoked.via || "unknown"}`);
 
   if (invoked.ok && invoked.result) {
     const r = invoked.result;
@@ -140,29 +183,28 @@ export async function executeRun(
     run.usage.llmCalls = Number(r.llm_calls || 0);
     run.usage.tokensIn = Number(r.tokens_in || 0);
     run.usage.tokensOut = Number(r.tokens_out || 0);
-    await push("observe", `Observation complete → ${run.conclusion}`, run.reasonCode);
+    const local = (r.local as Record<string, unknown> | undefined) || undefined;
+    await push(
+      "observe",
+      `Observation complete → ${run.conclusion}`,
+      JSON.stringify({ reason: run.reasonCode, local }, null, 2)
+    );
     await push("decision", "Complete — no loop-until-success");
   } else {
-    // Still produce enterprise report from console orchestration
     run.conclusion = "UNKNOWN";
     run.reasonCode = "console.agent_bridge_fallback";
     run.usage = {
-      tokensIn: run.llmEnabled && run.model !== "disabled" ? 420 : 0,
-      tokensOut: run.llmEnabled && run.model !== "disabled" ? 180 : 0,
-      toolCalls: 1,
-      steps: 2,
-      llmCalls: run.llmEnabled && run.model !== "disabled" ? 1 : 0,
+      tokensIn: 0,
+      tokensOut: 0,
+      toolCalls: 0,
+      steps: 1,
+      llmCalls: 0,
     };
     await push(
       "error",
-      "Python bridge unavailable or failed — console completed with fallback report",
+      "Local agent bridge failed — start scripts/local_agent_server.py for fast path",
       invoked.error
     );
-  }
-
-  // Simulated token accounting when LLM role selected (gateway would report real usage)
-  if (run.llmEnabled && run.model !== "disabled" && run.usage.llmCalls === 0) {
-    run.usage.llmCalls = 0; // keep honest: deterministic path used 0
   }
 
   const md = [
@@ -173,11 +215,11 @@ export async function executeRun(
     `- **Goal:** ${run.goal}`,
     `- **Conclusion:** ${run.conclusion}`,
     `- **Reason:** ${run.reasonCode || "n/a"}`,
-    `- **Model:** ${run.model} (LLM ${run.llmEnabled ? "enabled" : "off"})`,
+    `- **Model mode:** deterministic (LLM off unless gateway enabled)`,
     `- **Tool calls:** ${run.usage.toolCalls} · **Steps:** ${run.usage.steps} · **LLM calls:** ${run.usage.llmCalls}`,
     `- **Tokens:** in ${run.usage.tokensIn} / out ${run.usage.tokensOut}`,
     ``,
-    `## Knowledge pills used`,
+    `## Context packets`,
     extracted.length
       ? extracted.map((p) => `- **${p.title}** (\`${p.format}\`) — ${p.content.slice(0, 120)}…`).join("\n")
       : "_None attached_",
@@ -203,10 +245,11 @@ export async function executeRun(
       knowledgePillIds: run.knowledgePillIds,
       agent: invoked.result || null,
       bridgeError: invoked.error || null,
+      bridgeVia: invoked.via || null,
     },
   };
 
-  await push("report", "Report generated — ready for channel delivery");
+  await push("report", "Report generated");
   run.status =
     run.conclusion === "FAIL"
       ? "failed"

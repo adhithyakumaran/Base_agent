@@ -25,6 +25,12 @@ class DecisionEngine:
         last_obs: Observation | None = state.get("last_observation")
         if isinstance(last_obs, dict):
             last_obs = Observation.model_validate(last_obs)
+        if last_obs is None:
+            obs_list = state.get("observations") or []
+            if obs_list:
+                last_obs = obs_list[-1]
+                if isinstance(last_obs, dict):
+                    last_obs = Observation.model_validate(last_obs)
         routing = state.get("routing")
         route = RoutingDecision.model_validate(routing) if routing else None
 

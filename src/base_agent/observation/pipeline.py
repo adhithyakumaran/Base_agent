@@ -81,6 +81,7 @@ class ObservationPipeline:
             or tool_name.endswith("flow_replay")
             or tool_name.endswith("page_probe")
             or tool_name.endswith("component_probe")
+            or tool_name.endswith("mission_pack")
         ):
             # Technical pass is not business PASS — still insufficient for GT-backed claims
             return Observation(

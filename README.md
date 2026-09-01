@@ -32,6 +32,18 @@ export APEX_PASSWORD='…'
 python3 -m base_agent.api "discover and crawl the application" --kb-dir discovery/uat_ea/kb
 ```
 
+## Local-first (preferred now)
+
+```bash
+# Terminal 1 — warm agent (fast, LLM off)
+PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+
+# Terminal 2 — console
+cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
+```
+
+**LLM:** default **off** (`disabled`). No model is called until you enable the API gateway. See `docs/architecture/LOCAL_RUN.md`.
+
 ## Repo map
 
 | Path | Purpose |

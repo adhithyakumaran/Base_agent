@@ -302,6 +302,7 @@ def register_qa_apex(registry: ToolRegistry, kb: InMemoryKnowledgeProvider | Non
         ApexFlowReplayTool,
         ApexHealthCheckTool,
         ApexLoginProbeTool,
+        ApexMissionPackTool,
         ApexPageProbeTool,
         ApexReportBundleTool,
     )
@@ -312,6 +313,7 @@ def register_qa_apex(registry: ToolRegistry, kb: InMemoryKnowledgeProvider | Non
     registry.register(ApexFlowReplayTool(kb))
     registry.register(ApexLoginProbeTool(kb))
     registry.register(ApexReportBundleTool(kb))
+    registry.register(ApexMissionPackTool(kb))
 
 
 def load_kb_docs_from_dir(kb: InMemoryKnowledgeProvider, path: str) -> int:

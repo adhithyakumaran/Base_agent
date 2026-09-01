@@ -42,6 +42,12 @@ def test_report_bundle(runtime):
     assert result.llm_calls == 0
 
 
+def test_mission_pack(runtime):
+    result = runtime.run("mission pack full mission")
+    assert result.llm_calls == 0
+    assert result.tool_calls == 1
+
+
 def test_all_qa_skills_registered():
     kb = InMemoryKnowledgeProvider()
     load_kb_docs_from_dir(kb, "discovery/uat_ea/kb")
@@ -58,6 +64,7 @@ def test_all_qa_skills_registered():
         "qa.apex.flow_replay",
         "qa.apex.login_probe",
         "qa.apex.report_bundle",
+        "qa.apex.mission_pack",
     }:
         assert required in names
 
