@@ -25,11 +25,12 @@ Client documents describe an AI QA product that discovers an application from UR
 - Oracle APEX-specific logic
 - Full product features from the attached client requirement PDFs
 
-## Document
+## Documents
 
-Read the full proposal:
-
-**[docs/BASE_AGENT_TECHNICAL_PROPOSAL.md](docs/BASE_AGENT_TECHNICAL_PROPOSAL.md)**
+| Doc | Purpose |
+|---|---|
+| [docs/BASE_AGENT_TECHNICAL_PROPOSAL.md](docs/BASE_AGENT_TECHNICAL_PROPOSAL.md) | Week 1 Base Agent runtime proposal |
+| [docs/APEX_GT_KB_COLLECTION_SPEC.md](docs/APEX_GT_KB_COLLECTION_SPEC.md) | How to collect Knowledge + Ground Truth for Oracle APEX inventory (playground, schemas, approval) |
 
 Source context (client requirements, used only to bound Week 2 vs Week 1):
 
@@ -38,4 +39,4 @@ Source context (client requirements, used only to bound Week 2 vs Week 1):
 
 ## Status
 
-This repository currently delivers the **proposal**. Implementation of the Python runtime is the next step after proposal acceptance, following the staged roadmap in the document.
+This repository currently delivers **planning documents** (Base Agent proposal + APEX GT/KB collection spec). Implementation of the Python runtime starts after proposal acceptance.
