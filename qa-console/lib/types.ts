@@ -79,9 +79,11 @@ export type AppState = {
 };
 
 export const MODEL_OPTIONS: ModelOption[] = [
+  { id: "groq/llama-3.1-8b-instant", label: "Groq Llama 3.1 8B (fast)", role: "fast", provider: "Groq" },
+  { id: "groq/llama-3.3-70b-versatile", label: "Groq Llama 3.3 70B (reasoning)", role: "reasoning", provider: "Groq" },
+  { id: "claude-sonnet-4-20250514", label: "Claude Sonnet (reasoning)", role: "reasoning", provider: "Anthropic API" },
   { id: "gpt-4o-mini", label: "GPT-4o mini (fast)", role: "fast", provider: "OpenAI API" },
   { id: "gpt-4o", label: "GPT-4o (reasoning)", role: "reasoning", provider: "OpenAI API" },
-  { id: "claude-sonnet-4", label: "Claude Sonnet (reasoning)", role: "reasoning", provider: "Anthropic API" },
   { id: "azure-gpt-4o", label: "Azure OpenAI GPT-4o", role: "reasoning", provider: "Azure OpenAI" },
   { id: "oci-cohere-command", label: "OCI Generative AI", role: "fast", provider: "Oracle OCI" },
   { id: "disabled", label: "Deterministic only (LLM off)", role: "fast", provider: "None" },
@@ -89,48 +91,28 @@ export const MODEL_OPTIONS: ModelOption[] = [
 
 export const PREBUILT_FLOWS = [
   {
-    id: "skill.mission",
-    label: "Deep local mission",
-    goal: "mission pack full mission for endless aisle",
+    id: "sanity.morning",
+    label: "Morning sanity",
+    goal: "sanity check endless aisle login and home modules",
   },
   {
-    id: "skill.health",
-    label: "Morning health pack",
-    goal: "health check endless aisle technical readiness",
-  },
-  {
-    id: "skill.login",
-    label: "Login readiness",
-    goal: "login probe for endless aisle",
-  },
-  {
-    id: "flow.item_sku_search",
-    label: "Item SKU search",
-    goal: "component probe P6_SKU",
-  },
-  {
-    id: "flow.find_price",
+    id: "adhoc.find_price",
     label: "Find Price",
-    goal: "replay flow find_price",
+    goal: "check find price module on endless aisle",
   },
   {
-    id: "flow.stock_visibility",
+    id: "adhoc.sku_search",
+    label: "Item SKU search",
+    goal: "check item sku search on endless aisle",
+  },
+  {
+    id: "adhoc.stock",
     label: "Stock visibility",
-    goal: "component probe P47_SKU",
+    goal: "check stock visibility module",
   },
   {
-    id: "flow.standard_product_browse",
-    label: "Product browse map",
-    goal: "discover standard product browse map",
-  },
-  {
-    id: "skill.report",
-    label: "Evidence report",
-    goal: "assemble report bundle for endless aisle",
-  },
-  {
-    id: "flow.rivaah_trousseau",
-    label: "Rivaah trousseau",
-    goal: "replay flow rivaah_trousseau",
+    id: "adhoc.login",
+    label: "Login readiness",
+    goal: "verify login page and authentication flow",
   },
 ];

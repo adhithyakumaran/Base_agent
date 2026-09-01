@@ -35,7 +35,10 @@ function extractPills(pills: KnowledgePill[]) {
   });
 }
 
-async function invokeWarmAgent(goal: string): Promise<{
+async function invokeWarmAgent(
+  goal: string,
+  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[] }
+): Promise<{
   ok: boolean;
   result?: Record<string, unknown>;
   error?: string;
@@ -45,8 +48,13 @@ async function invokeWarmAgent(goal: string): Promise<{
     const res = await fetch(`${LOCAL_AGENT_URL}/run`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ goal }),
-      signal: AbortSignal.timeout(45_000),
+      body: JSON.stringify({
+        goal,
+        run_type: opts.runType,
+        model: opts.model === "disabled" ? null : opts.model,
+        context_packets: opts.contextPackets,
+      }),
+      signal: AbortSignal.timeout(120_000),
     });
     if (!res.ok) {
       return { ok: false, error: `warm_agent_http_${res.status}`, via: "warm" };
@@ -65,31 +73,42 @@ async function invokeWarmAgent(goal: string): Promise<{
   }
 }
 
-async function invokePythonAgentSpawn(goal: string): Promise<{
+async function invokePythonAgentSpawn(
+  goal: string,
+  opts: { runType: string; model: string }
+): Promise<{
   ok: boolean;
   result?: Record<string, unknown>;
   error?: string;
   via?: string;
 }> {
   return new Promise((resolve) => {
-    const py = spawn(
-      "python3",
-      ["-m", "base_agent.api", goal, "--kb-dir", "discovery/uat_ea/kb"],
-      {
-        cwd: REPO_ROOT,
-        env: {
-          ...process.env,
-          LLM_ENABLED: "false",
-          PYTHONPATH: path.join(REPO_ROOT, "src") + ":" + REPO_ROOT,
-        },
-      }
-    );
+    const args = [
+      "-m",
+      "qa_orchestrator.api",
+      goal,
+      "--kb-dir",
+      "discovery/uat_ea/kb",
+      "--type",
+      opts.runType,
+    ];
+    if (opts.model && opts.model !== "disabled") {
+      args.push("--model", opts.model);
+    }
+    const py = spawn("python3", args, {
+      cwd: REPO_ROOT,
+      env: {
+        ...process.env,
+        LLM_ENABLED: opts.model === "disabled" ? "false" : "true",
+        PYTHONPATH: path.join(REPO_ROOT, "src") + ":" + REPO_ROOT,
+      },
+    });
     let stdout = "";
     let stderr = "";
     const timer = setTimeout(() => {
       py.kill("SIGKILL");
       resolve({ ok: false, error: "spawn_timeout", via: "spawn" });
-    }, 60_000);
+    }, 120_000);
     py.stdout.on("data", (d) => {
       stdout += d.toString();
     });
@@ -117,10 +136,13 @@ async function invokePythonAgentSpawn(goal: string): Promise<{
   });
 }
 
-async function invokePythonAgent(goal: string) {
-  const warm = await invokeWarmAgent(goal);
+async function invokePythonAgent(
+  goal: string,
+  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[] }
+) {
+  const warm = await invokeWarmAgent(goal, opts);
   if (warm.ok) return warm;
-  return invokePythonAgentSpawn(goal);
+  return invokePythonAgentSpawn(goal, opts);
 }
 
 export async function executeRun(
@@ -142,26 +164,34 @@ export async function executeRun(
 
   run.status = "running";
   await onUpdate(run);
-  await push("info", "Run accepted — local deterministic control plane (LLM off by default)");
+  await push(
+    "info",
+    run.llmEnabled
+      ? "Run accepted — QA orchestrator (LLM planner + OpenClaw execution)"
+      : "Run accepted — deterministic planner fallback (set GROQ_API_KEY for LLM)"
+  );
 
   const extracted = extractPills(pills);
   run.knowledgePillIds = extracted.map((p) => p.id);
+  const contextPackets = extracted.map((p) => ({
+    id: p.id,
+    title: p.title,
+    format: p.format,
+    extracted: p.extracted,
+  }));
+
   if (extracted.length) {
     await push(
       "info",
-      `Extracted ${extracted.length} context packet(s) before automation`,
-      JSON.stringify(
-        extracted.map((p) => ({ id: p.id, title: p.title, extracted: p.extracted })),
-        null,
-        2
-      )
+      `Attached ${extracted.length} context packet(s) for planner RAG`,
+      JSON.stringify(contextPackets, null, 2)
     );
   } else {
-    await push("info", "No context packets attached — proceeding with KB + rules");
+    await push("info", "No context packets — planner will use KB index");
   }
 
-  await push("decision", "Route skill deterministically (no LLM kernel)");
-  await push("tool", `Goal → ${run.goal.slice(0, 100)}`);
+  await push("decision", `Planner: ${run.model} · Executor: OpenClaw`);
+  await push("tool", `Goal → ${run.goal.slice(0, 120)}`);
 
   const agentGoal =
     run.type === "sanity"
@@ -170,12 +200,17 @@ export async function executeRun(
         : `sanity check ${run.goal}`
       : run.goal;
 
-  await push("tool", "Invoking local Base Agent", agentGoal);
-  const invoked = await invokePythonAgent(agentGoal);
-  await push("info", `Agent bridge via ${invoked.via || "unknown"}`);
+  await push("tool", "Planning → executing → validating", agentGoal);
+  const invoked = await invokePythonAgent(agentGoal, {
+    runType: run.type === "scheduled" ? "sanity" : run.type,
+    model: run.model,
+    contextPackets,
+  });
+  await push("info", `Orchestrator bridge via ${invoked.via || "unknown"}`);
 
   if (invoked.ok && invoked.result) {
     const r = invoked.result;
+    const local = (r.local as Record<string, unknown> | undefined) || {};
     run.conclusion = String(r.conclusion || "UNKNOWN");
     run.reasonCode = String(r.reason_code || "");
     run.usage.toolCalls = Number(r.tool_calls || 0);
@@ -183,16 +218,24 @@ export async function executeRun(
     run.usage.llmCalls = Number(r.llm_calls || 0);
     run.usage.tokensIn = Number(r.tokens_in || 0);
     run.usage.tokensOut = Number(r.tokens_out || 0);
-    const local = (r.local as Record<string, unknown> | undefined) || undefined;
     await push(
       "observe",
-      `Observation complete → ${run.conclusion}`,
-      JSON.stringify({ reason: run.reasonCode, local }, null, 2)
+      `Validation phase ${String(local.validation_phase || "A")} → ${run.conclusion}`,
+      JSON.stringify(
+        {
+          reason: run.reasonCode,
+          planner: local.planner,
+          openclaw_mode: local.openclaw_mode,
+          steps: (local.plan as { steps?: unknown[] } | undefined)?.steps?.length,
+        },
+        null,
+        2
+      )
     );
     await push("decision", "Complete — no loop-until-success");
   } else {
     run.conclusion = "UNKNOWN";
-    run.reasonCode = "console.agent_bridge_fallback";
+    run.reasonCode = "console.orchestrator_bridge_fallback";
     run.usage = {
       tokensIn: 0,
       tokensOut: 0,
@@ -202,36 +245,31 @@ export async function executeRun(
     };
     await push(
       "error",
-      "Local agent bridge failed — start scripts/local_agent_server.py for fast path",
+      "QA orchestrator bridge failed — start scripts/local_agent_server.py",
       invoked.error
     );
   }
 
-  const md = [
-    `# QA Agent Report`,
-    ``,
-    `- **Run ID:** ${run.id}`,
-    `- **Type:** ${run.type}`,
-    `- **Goal:** ${run.goal}`,
-    `- **Conclusion:** ${run.conclusion}`,
-    `- **Reason:** ${run.reasonCode || "n/a"}`,
-    `- **Model mode:** deterministic (LLM off unless gateway enabled)`,
-    `- **Tool calls:** ${run.usage.toolCalls} · **Steps:** ${run.usage.steps} · **LLM calls:** ${run.usage.llmCalls}`,
-    `- **Tokens:** in ${run.usage.tokensIn} / out ${run.usage.tokensOut}`,
-    ``,
-    `## Context packets`,
-    extracted.length
-      ? extracted.map((p) => `- **${p.title}** (\`${p.format}\`) — ${p.content.slice(0, 120)}…`).join("\n")
-      : "_None attached_",
-    ``,
-    `## Trace`,
-    ...run.traces.map((t) => `- \`${t.at}\` **${t.kind}** — ${t.message}`),
-    ``,
-    `## Policy`,
-    `- No loop-until-success`,
-    `- Business PASS/FAIL requires approved Ground Truth`,
-    `- Technical failures use deterministic rules`,
-  ].join("\n");
+  const r = invoked.result || {};
+  const local = (r.local as Record<string, unknown> | undefined) || {};
+  const orchestratorMd = typeof local.report_markdown === "string" ? local.report_markdown : "";
+
+  const md =
+    orchestratorMd ||
+    [
+      `# QA Agent Report`,
+      ``,
+      `- **Run ID:** ${run.id}`,
+      `- **Type:** ${run.type}`,
+      `- **Goal:** ${run.goal}`,
+      `- **Conclusion:** ${run.conclusion}`,
+      `- **Reason:** ${run.reasonCode || "n/a"}`,
+      `- **Model:** ${run.model}`,
+      `- **Tool calls:** ${run.usage.toolCalls} · **Steps:** ${run.usage.steps} · **LLM calls:** ${run.usage.llmCalls}`,
+      ``,
+      `## Trace`,
+      ...run.traces.map((t) => `- \`${t.at}\` **${t.kind}** — ${t.message}`),
+    ].join("\n");
 
   run.report = {
     summary: `${run.conclusion}: ${run.goal}`,

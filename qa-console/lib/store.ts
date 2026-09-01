@@ -24,7 +24,7 @@ const defaultState = (): AppState => ({
     enabled: true,
     timeLocal: "08:00",
     timezone: "Asia/Kolkata",
-    goal: "health check endless aisle morning readiness",
+    goal: "sanity check endless aisle login and home modules",
     channels: ["email", "whatsapp"],
   },
   channels: {
@@ -33,7 +33,7 @@ const defaultState = (): AppState => ({
     whatsapp: TEST_REPORT_WHATSAPP,
     slackWebhook: "",
   },
-  selectedModel: MODEL_OPTIONS.find((m) => m.id === "disabled")?.id || "disabled",
+  selectedModel: MODEL_OPTIONS.find((m) => m.id === "groq/llama-3.1-8b-instant")?.id || "groq/llama-3.1-8b-instant",
   usageTotal: { tokensIn: 0, tokensOut: 0, runs: 0 },
 });
 

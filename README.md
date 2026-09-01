@@ -37,20 +37,21 @@ python3 -m base_agent.api "discover and crawl the application" --kb-dir discover
 ## Local-first (preferred now)
 
 ```bash
-# Terminal 1 — warm agent (fast, LLM off)
+# Terminal 1 — QA orchestrator (Groq planner + OpenClaw mock until configured)
+export GROQ_API_KEY='gsk_...'   # optional; without it uses deterministic planner fallback
 PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
 
 # Terminal 2 — console
 cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
 ```
 
-**LLM:** default **off** (`disabled`). No model is called until you enable the API gateway. See `docs/architecture/LOCAL_RUN.md`.
+**LLM:** Groq free tier by default (`groq/llama-3.1-8b-instant`). Swap to Claude via console model picker + `ANTHROPIC_API_KEY`. See `docs/architecture/QA_ORCHESTRATOR.md`.
 
 ## Repo map
 
 | Path | Purpose |
 |---|---|
-| `src/base_agent/` | Runtime core (state, router, executor, decision, GT/KB, LangGraph, LLM gateway) |
+| `src/qa_orchestrator/` | **Phase 1 product** — LLM planner + OpenClaw + KB + validation |
 | `plugins/mock_demo/` | Deterministic mock tools |
 | `plugins/qa_apex/` | APEX discover / sanity / flow catalog + Playwright crawler |
 | `discovery/uat_ea/` | Live UAT KB candidates + approval checklist + recordings merge |

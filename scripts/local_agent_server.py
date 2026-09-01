@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Local warm Base Agent HTTP server — keeps runtime in memory for fast console calls.
+"""Local warm QA Orchestrator HTTP server — LLM planner + OpenClaw execution.
 
   PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
 
-POST /run  {"goal":"health check endless aisle","kb_dir":"discovery/uat_ea/kb"}
+POST /run  {"goal":"sanity check endless aisle","run_type":"sanity","model":"groq/llama-3.1-8b-instant"}
 GET  /health
 """
 
@@ -23,38 +23,51 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 
-from base_agent.api import build_default_runtime  # noqa: E402
+from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest  # noqa: E402
 
 
-class LocalAgentService:
-    def __init__(self, kb_dir: str) -> None:
+class LocalOrchestratorService:
+    def __init__(self, kb_dir: str, *, default_model: str | None = None) -> None:
         self.kb_dir = kb_dir
+        self.default_model = default_model
         t0 = time.perf_counter()
-        self.runtime = build_default_runtime(kb_dir=kb_dir)
+        self.orchestrator = QaOrchestrator(kb_dir=kb_dir, model=default_model)
         self.boot_ms = int((time.perf_counter() - t0) * 1000)
         self.runs = 0
 
-    def run(self, goal: str) -> dict[str, Any]:
+    def run(
+        self,
+        goal: str,
+        *,
+        run_type: str = "adhoc",
+        model: str | None = None,
+        context_packets: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
         t0 = time.perf_counter()
-        result = self.runtime.run(goal)
+        result = self.orchestrator.run(
+            RunRequest(
+                goal=goal,
+                run_type=run_type,
+                model=model or self.default_model,
+                context_packets=context_packets or [],
+            )
+        )
         self.runs += 1
-        payload = result.model_dump()
-        payload["local"] = {
-            "boot_ms": self.boot_ms,
-            "elapsed_ms": int((time.perf_counter() - t0) * 1000),
-            "runs_served": self.runs,
-            "llm_enabled": self.runtime.llm_enabled,
-            "model_mode": "deterministic_off" if not self.runtime.llm_enabled else "gateway",
-        }
+        payload = self.orchestrator.to_agent_payload(result)
+        payload["local"]["elapsed_ms"] = int((time.perf_counter() - t0) * 1000)
+        payload["local"]["boot_ms"] = self.boot_ms
+        payload["local"]["runs_served"] = self.runs
+        payload["local"]["llm_enabled"] = result.metadata.get("llm_enabled", False)
+        payload["local"]["model_mode"] = "groq" if result.metadata.get("llm_enabled") else "deterministic_fallback"
         return payload
 
 
-SERVICE: LocalAgentService | None = None
+SERVICE: LocalOrchestratorService | None = None
 
 
 class Handler(BaseHTTPRequestHandler):
-    def log_message(self, fmt: str, *args: Any) -> None:  # quieter local logs
-        sys.stderr.write("[local-agent] " + (fmt % args) + "\n")
+    def log_message(self, fmt: str, *args: Any) -> None:
+        sys.stderr.write("[qa-orchestrator] " + (fmt % args) + "\n")
 
     def _json(self, code: int, body: dict[str, Any]) -> None:
         raw = json.dumps(body).encode("utf-8")
@@ -80,12 +93,13 @@ class Handler(BaseHTTPRequestHandler):
                 200,
                 {
                     "ok": True,
-                    "service": "base-agent-local",
+                    "service": "qa-orchestrator",
                     "boot_ms": SERVICE.boot_ms,
                     "runs_served": SERVICE.runs,
-                    "llm_enabled": SERVICE.runtime.llm_enabled,
+                    "llm_enabled": SERVICE.orchestrator.llm.enabled,
                     "kb_dir": SERVICE.kb_dir,
-                    "note": "LLM default OFF — deterministic QA skills only",
+                    "openclaw_mode": SERVICE.orchestrator.executor.mode,
+                    "note": "LLM planner ON when GROQ_API_KEY set; OpenClaw mock until OPENCLAW_MODE=http",
                 },
             )
             return
@@ -108,8 +122,11 @@ class Handler(BaseHTTPRequestHandler):
         if not goal:
             self._json(400, {"ok": False, "error": "goal_required"})
             return
+        run_type = str(body.get("run_type") or body.get("type") or "adhoc")
+        model = body.get("model")
+        context_packets = body.get("context_packets") if isinstance(body.get("context_packets"), list) else []
         try:
-            result = SERVICE.run(goal)
+            result = SERVICE.run(goal, run_type=run_type, model=model, context_packets=context_packets)
             self._json(200, {"ok": True, "result": result})
         except Exception as exc:  # noqa: BLE001
             self._json(500, {"ok": False, "error": f"{type(exc).__name__}:{exc}"})
@@ -120,17 +137,19 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=43124)
     parser.add_argument("--kb-dir", default=str(ROOT / "discovery/uat_ea/kb"))
+    parser.add_argument("--model", default=os.environ.get("LLM_MODEL_REASONING"))
     args = parser.parse_args()
-    os.environ.setdefault("LLM_ENABLED", "false")
+    os.environ.setdefault("LLM_ENABLED", "true")
     global SERVICE
-    SERVICE = LocalAgentService(args.kb_dir)
+    SERVICE = LocalOrchestratorService(args.kb_dir, default_model=args.model)
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)
     print(
         json.dumps(
             {
                 "listening": f"http://{args.host}:{args.port}",
                 "boot_ms": SERVICE.boot_ms,
-                "llm_enabled": False,
+                "llm_enabled": SERVICE.orchestrator.llm.enabled,
+                "openclaw_mode": SERVICE.orchestrator.executor.mode,
                 "kb_dir": args.kb_dir,
             }
         ),

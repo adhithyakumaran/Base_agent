@@ -24,6 +24,7 @@ llm = ["litellm>=1.40"]
 
 [project.scripts]
 base-agent = "base_agent.api:main"
+qa-orchestrator = "qa_orchestrator.api:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
