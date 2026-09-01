@@ -1,0 +1,87 @@
+# Azure Pipelines — Base Agent / QA APEX plugin
+# Builds, tests (LLM off), packages container for OCI registry push.
+
+trigger:
+  branches:
+    include:
+      - main
+      - cursor/*
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  pythonVersion: "3.12"
+  imageName: "base-agent"
+  # Set in Azure variable group / Key Vault-backed vars — never commit secrets
+  # OCI_REGISTRY, OCI_TENANCY, etc.
+
+stages:
+  - stage: Test
+    displayName: Lint and unit tests
+    jobs:
+      - job: pytest
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+          - script: |
+              python -m pip install -U pip
+              python -m pip install -e '.[dev,browser]'
+            displayName: Install package
+          - script: |
+              export LLM_ENABLED=false
+              python -m pytest tests/unit -q --tb=short
+            displayName: Unit tests (deterministic, LLM off)
+          - script: |
+              python -m base_agent.api "echo pipeline smoke" --kb-dir discovery/uat_ea/kb
+              python -m base_agent.api "discover the application map" --kb-dir discovery/uat_ea/kb
+              python -m base_agent.api "list application flows" --kb-dir discovery/uat_ea/kb
+            displayName: CLI smoke (KB-only, no live UAT)
+
+  - stage: Package
+    displayName: Build OCI-ready image
+    dependsOn: Test
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: docker
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build image
+            inputs:
+              command: build
+              repository: $(imageName)
+              Dockerfile: deploy/Dockerfile
+              tags: |
+                $(Build.BuildId)
+                latest
+          # Push step: wire to OCI Container Registry or ACR mirror approved by client
+          # - task: Docker@2
+          #   inputs:
+          #     command: push
+          #     containerRegistry: $(OCI_SERVICE_CONNECTION)
+          #     repository: $(imageName)
+          #     tags: $(Build.BuildId)
+
+  - stage: DeployOCI
+    displayName: Deploy to client OCI (manual gate)
+    dependsOn: Package
+    condition: and(succeeded(), eq(variables['DeployOCI'], 'true'))
+    jobs:
+      - deployment: oci
+        environment: client-oci-uat
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploy $(imageName):$(Build.BuildId) to OCI Container Instances / OKE"
+                    echo "Inject secrets from Key Vault / OCI Vault: TARGET_URL, credentials, LLM gateway"
+                    echo "Runtime default: LLM_ENABLED=false for crawl/sanity"
+                  displayName: Placeholder OCI deploy

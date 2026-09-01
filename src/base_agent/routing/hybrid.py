@@ -11,6 +11,11 @@ from base_agent.tools.registry import ToolRegistry
 ALIAS_RULES: list[tuple[re.Pattern[str], str, str]] = [
     (re.compile(r"^\s*echo\b[:\s]+(?P<text>.+)$", re.I), "demo.echo", "mock.demo.echo"),
     (re.compile(r"^\s*add\b[:\s]+(?P<a>-?\d+)\s*,\s*(?P<b>-?\d+)\s*$", re.I), "demo.add", "mock.demo.add"),
+    (
+        re.compile(r"\b(flow catalog|list flows|application flows|apex flows)\b", re.I),
+        "qa.discover",
+        "qa.apex.flow_catalog",
+    ),
     (re.compile(r"\bdiscover\b|\bcrawl\b|\bexplore\b|\bmap (the )?app\b", re.I), "qa.discover", "qa.apex.discover"),
     (re.compile(r"\bsanity\b", re.I), "qa.sanity", "qa.apex.sanity_probe"),
 ]

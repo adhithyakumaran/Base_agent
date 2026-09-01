@@ -1,0 +1,28 @@
+{
+  "kind": "knowledge",
+  "status": "approved",
+  "meta": {
+    "id": "kb.pattern.apex.auth_home",
+    "version": "1.0.0",
+    "env": "platform",
+    "source": "oracle_docs+ukoog_testing+internal",
+    "tags": ["apex", "flow_pattern", "auth"],
+    "created_by": "agent"
+  },
+  "body": {
+    "type": "flow_pattern",
+    "title": "apex_auth_to_home",
+    "summary": "Login with CSP-safe typing, land on home landmark, capture session from friendly URL.",
+    "details": {
+      "steps": [
+        {"action": "goto_login", "notes": "browser-like UA"},
+        {"action": "type_credentials", "notes": "prefer type(delay) over fill when CSP blocks"},
+        {"action": "submit"},
+        {"action": "assert_home_landmark", "fail_fast": true},
+        {"action": "capture_session_query"}
+      ],
+      "anti_stuck": ["navigation_timeout_ms=45000", "no_retry_for_wrong_password"],
+      "references": ["docs/architecture/APEX_APPLICATION_FLOWS.md"]
+    }
+  }
+}

@@ -8,11 +8,13 @@
 
 ## Pipeline stages (target)
 
-1. `lint` + `pytest` (deterministic suite, `LLM_ENABLED=false`)  
-2. Package image (`base-agent:<semver>`)  
-3. Push to OCI registry / client-approved registry  
-4. Deploy via OCI Container Instances / OKE / VM + systemd (client choice)  
-5. Config via secrets: `TARGET_URL`, credentials, model gateway endpoint, budgets
+Implemented skeleton: [`azure-pipelines.yml`](../../azure-pipelines.yml) + [`deploy/Dockerfile`](../../deploy/Dockerfile).
+
+1. `pytest` unit suite (`LLM_ENABLED=false`) + CLI smoke on KB  
+2. Package image (`base-agent:<BuildId>`)  
+3. Push to OCI registry / client-approved registry (wire service connection)  
+4. Deploy via OCI Container Instances / OKE / VM + systemd (manual gate `DeployOCI=true`)  
+5. Config via secrets: `APEX_TARGET_URL` / `TARGET_URL`, credentials, `LLM_*` gateway models, budgets
 
 ## Enterprise LLM
 

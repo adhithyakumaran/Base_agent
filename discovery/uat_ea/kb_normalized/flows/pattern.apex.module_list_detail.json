@@ -1,0 +1,33 @@
+{
+  "kind": "knowledge",
+  "status": "approved",
+  "meta": {
+    "id": "kb.pattern.apex.module_list_detail",
+    "version": "1.0.0",
+    "env": "platform",
+    "source": "endless_aisle_discovery+internal",
+    "tags": ["apex", "flow_pattern", "retail", "endless_aisle"],
+    "created_by": "agent"
+  },
+  "body": {
+    "type": "flow_pattern",
+    "title": "retail_module_list_detail",
+    "summary": "Home module tile → search/list → filters → detail → optional size/customer modal.",
+    "details": {
+      "steps": [
+        {"action": "open_home_module"},
+        {"action": "use_search_or_filters"},
+        {"action": "open_detail"},
+        {"action": "optional_modal_variant", "pattern_ref": "kb.pattern.apex.modal_dialog"}
+      ],
+      "endless_aisle_examples": [
+        "flow.standard_product_browse",
+        "flow.item_sku_search",
+        "flow.find_price",
+        "flow.stock_visibility",
+        "flow.rivaah_trousseau"
+      ],
+      "known_gap": "deep Customer Order / cart path"
+    }
+  }
+}

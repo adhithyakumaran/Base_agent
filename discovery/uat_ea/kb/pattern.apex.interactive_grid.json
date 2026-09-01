@@ -1,0 +1,26 @@
+{
+  "kind": "knowledge",
+  "status": "approved",
+  "meta": {
+    "id": "kb.pattern.apex.interactive_grid",
+    "version": "1.0.0",
+    "env": "platform",
+    "source": "hartenfeller_ukoog2023+internal",
+    "tags": ["apex", "flow_pattern", "interactive_grid"],
+    "created_by": "agent"
+  },
+  "body": {
+    "type": "flow_pattern",
+    "title": "apex_interactive_grid_edit",
+    "summary": "IG DOM rebuilds on refresh; edit by column static ID under region root.",
+    "details": {
+      "steps": [
+        {"action": "filter_to_target_row"},
+        {"action": "locate_region_static_id"},
+        {"action": "edit_cell_by_column_id"},
+        {"action": "requery_after_ajax_refresh"}
+      ],
+      "anti_stuck": ["do_not_use_nth_cell_as_primary_strategy"]
+    }
+  }
+}

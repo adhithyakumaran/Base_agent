@@ -24,15 +24,21 @@
 
 ## Skill split
 
-- `qa.discover` — map app → KB candidates (this is Week-2 skill on Base Agent tools)  
-- `qa.sanity` — deterministic probes using rules + optional GT  
-- Future: browser plugin, API plugin, evidence plugin  
+- `qa.apex.discover` — KB snapshot and/or live `ApexCrawler` (`plugins/qa_apex/crawler/`)  
+- `qa.apex.sanity_probe` — deterministic technical rules + KB presence (no business GT)  
+- `qa.apex.flow_catalog` — candidate product flows + platform `flow_pattern` docs  
+- Future: dedicated browser plugin, API plugin, evidence plugin  
 
 Base Agent stays framework; APEX specifics stay in `plugins/qa_apex`.
+
+See also: [APEX_APPLICATION_FLOWS.md](APEX_APPLICATION_FLOWS.md).
 
 ## Efficiency
 
 - Reuse KB between runs (diff by `content_hash`)  
-- Do not re-crawl unchanged aliases  
+- Do not re-crawl unchanged aliases (`normalize_page_key` strips session/cs)  
+- Modal dismiss within `modal_timeout_ms` then continue  
+- Bounded ajax wait (`jquery.active` / timeout) — never hang on `networkidle` alone  
 - Parallel only for `parallel_safe` reads  
-- LLM not involved in crawl loop
+- LLM not involved in crawl loop  
+- Live failure degrades to KB snapshot so the agent still returns useful structure

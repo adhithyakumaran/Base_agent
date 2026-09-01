@@ -62,6 +62,44 @@ class ObservationPipeline:
                 reason_code="rule.apex.error_page",
             )
 
+        # Sanity / crawl technical aggregate (no business GT)
+        tech = normalized.get("technical_aggregate")
+        if tech == "fail":
+            return Observation(
+                id=obs_id,
+                source_tool=tool_name,
+                source_plugin=plugin_id,
+                payload={"data": normalized},
+                validation_outcome="fail",
+                reason_code="rule.apex.technical_fail",
+            )
+        if tech == "pass" and tool_name.endswith("sanity_probe"):
+            # Technical pass is not business PASS — still insufficient for GT-backed claims
+            return Observation(
+                id=obs_id,
+                source_tool=tool_name,
+                source_plugin=plugin_id,
+                payload={"data": normalized},
+                validation_outcome="insufficient",
+                reason_code="obs.technical_ok_no_business_gt",
+            )
+
+        # Crawl/discover with pages and no error → useful evidence, no GT
+        if tool_name.endswith("discover") and normalized.get("pages") is not None:
+            page_errors = []
+            for p in normalized.get("pages") or []:
+                if isinstance(p, dict):
+                    page_errors.extend(p.get("errors") or [])
+            if any("apex.error_page" in str(e) for e in page_errors):
+                return Observation(
+                    id=obs_id,
+                    source_tool=tool_name,
+                    source_plugin=plugin_id,
+                    payload={"data": normalized},
+                    validation_outcome="fail",
+                    reason_code="rule.apex.error_page",
+                )
+
         # No GT / no rule → do NOT invent PASS/FAIL
         if allow_llm:
             # Placeholder: intelligence plane may interpret later; still not a conclusion

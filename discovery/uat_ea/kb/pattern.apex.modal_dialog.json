@@ -1,0 +1,27 @@
+{
+  "kind": "knowledge",
+  "status": "approved",
+  "meta": {
+    "id": "kb.pattern.apex.modal_dialog",
+    "version": "1.0.0",
+    "env": "platform",
+    "source": "oracle_apex_dialogs+internal",
+    "tags": ["apex", "flow_pattern", "modal", "iframe"],
+    "created_by": "agent"
+  },
+  "body": {
+    "type": "flow_pattern",
+    "title": "apex_modal_iframe",
+    "summary": "APEX modals often use iframes; dedicated modal budget then dismiss/skip — never park the crawler.",
+    "details": {
+      "steps": [
+        {"action": "detect_dialog"},
+        {"action": "enter_frame_context"},
+        {"action": "perform_bounded_work"},
+        {"action": "close_cancel_escape"},
+        {"action": "confirm_parent_ready"}
+      ],
+      "anti_stuck": ["modal_timeout_ms=3000", "dismiss_or_skip"]
+    }
+  }
+}

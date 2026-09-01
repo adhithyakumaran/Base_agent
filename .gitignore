@@ -1,9 +1,16 @@
 .env
 **/.env
 discovery/**/raw/
+discovery/**/screenshots/
+discovery/**/deep_*.json
+**/.auth/
+*.png
+!docs/**/*.png
 
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .venv/
+dist/
+build/

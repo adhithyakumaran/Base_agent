@@ -1,0 +1,29 @@
+{
+  "kind": "knowledge",
+  "status": "approved",
+  "meta": {
+    "id": "kb.pattern.apex.popup_lov",
+    "version": "1.0.0",
+    "env": "platform",
+    "source": "hartenfeller_ukoog2023+internal",
+    "tags": ["apex", "flow_pattern", "lov", "ajax"],
+    "created_by": "agent"
+  },
+  "body": {
+    "type": "flow_pattern",
+    "title": "apex_popup_lov",
+    "summary": "Popup LOV lives on parent page; wait for wwv_flow.ajax; pick exact match.",
+    "details": {
+      "steps": [
+        {"action": "click_popup_trigger"},
+        {"action": "scope_parent_popup"},
+        {"action": "clear_and_type_search"},
+        {"action": "click_search_if_present"},
+        {"action": "wait_ajax", "match": "/wwv_flow.ajax", "timeout_ms": 8000},
+        {"action": "handle_no_data_found"},
+        {"action": "click_exact_match"}
+      ],
+      "anti_stuck": ["ajax_timeout_bounded", "never_unbounded_networkidle_only"]
+    }
+  }
+}
