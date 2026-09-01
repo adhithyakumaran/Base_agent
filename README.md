@@ -82,13 +82,13 @@ SME GT later only increases deterministic PASS/FAIL coverage — it does not red
 
 ## Status
 
-Base Agent + enterprise QA skills (health, login, page/component probe, flow replay, report) + dark **Apex QA Console**.
+**Phase closed for now** — [docs/PHASE_COMPLETE.md](docs/PHASE_COMPLETE.md). Continue later (live UAT depth + SME GT).
 
-Demo channels: `adhithyakumaran2005@gmail.com` · WhatsApp `+919965985951` · Teams via webhook secret later.
+Folder layout follows Base Agent proposal §23 (`src/base_agent/` + top-level `plugins/`).
 
 ```bash
-cd qa-console && npm install && npm run dev
-# → http://127.0.0.1:43123
+PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
 ```
 
-Morning patrol: `python scripts/morning_patrol.py` (Azure cron 08:00 IST).
+LLM: **off** by default. Test report routes: `adhithyakumaran2005@gmail.com` · `+919965985951`.

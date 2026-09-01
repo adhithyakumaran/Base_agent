@@ -1,23 +1,23 @@
 # Product status — Base Agent + QA Console
 
-## Honest readiness (not “everything perfect” yet)
+## Phase: CLOSED (pause) — resume later
+
+See [PHASE_COMPLETE.md](PHASE_COMPLETE.md).
+
+## Honest readiness
 
 | Area | Status |
 |---|---|
 | Base Agent control plane (budgets, no loop-until-success, UNKNOWN) | **Ready** |
-| QA skills: discover, crawl, sanity, flow catalog | **Partial** — more APEX interaction skills next |
-| LLM | **API-only gateway** — models chosen in console / env; not a single locked vendor |
-| Sanity + ad-hoc + report generation | **Console + runtime wired** |
-| Daily morning sanity schedule | **Configurable in UI**; wire Azure/OCI cron to the same API in deploy |
-| Report channels (email / Teams / WhatsApp / Slack) | **Configured + queued in traces**; live webhook send on OCI secrets |
-| Enterprise frontend | **Shipped** (`qa-console`) — Vercel/GitHub-like light console |
-| Knowledge dump → data pills | **Shipped** |
-| Live side-panel traces + history + token usage | **Shipped** |
-| Full Customer Order deep skills / approved GT pack | **Pending** SME + more recordings |
+| Folder layout vs Base Agent proposal §23 | **Followed** (plugins outside core) |
+| QA skills (health, mission pack, probes, crawl, …) | **Local-demo ready**; deeper live APEX still pending |
+| LLM | **Off by default** (API gateway optional later) |
+| Console (dark) + warm local agent | **Ready** |
+| SME Ground Truth | **Pending** (~1 week) |
+| Azure / OCI production cutover | **Deferred** (local-first) |
 
 ## LLM model posture
 
-- Transport: **HTTP APIs only** via gateway (Azure OpenAI, OpenAI, Anthropic, OCI Generative AI)
-- Roles: fast / reasoning / fallback
-- Console picker stores selection; crawl/sanity remain deterministic-first (`disabled` = 0 LLM)
-- Client can change models without redesigning the agent
+- Transport: HTTP APIs only via gateway when enabled  
+- **Current runs: 0 LLM calls** (`LLM_ENABLED=false`, model `disabled`)  
+- Placeholders if enabled later: fast `gpt-4o-mini`, reasoning `gpt-4o`
