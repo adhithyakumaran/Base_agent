@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.component.stock_visibility.sku",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -21,22 +21,17 @@
     ]
   },
   "body": {
-    "type": "flow",
-    "title": "login_to_home",
-    "summary": "Candidate flow from browser recording merge.",
+    "type": "component",
+    "title": "P47_SKU",
+    "summary": "Field/control on ea1/47",
     "details": {
-      "name": "login_to_home",
-      "steps": [
-        {
-          "page": "login",
-          "action": "enter_username_password"
-        },
-        {
-          "page": "home",
-          "action": "land"
-        }
-      ],
-      "source": "report_58aa.md"
+      "id": "kb.component.stock_visibility.sku",
+      "page": "ea1/47",
+      "name": "P47_SKU",
+      "label": "P47_SKU",
+      "actions": [
+        "Search"
+      ]
     }
   }
 }

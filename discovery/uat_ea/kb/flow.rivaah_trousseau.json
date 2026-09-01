@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.flow.rivaah_trousseau",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,21 +22,29 @@
   },
   "body": {
     "type": "flow",
-    "title": "login_to_home",
+    "title": "rivaah_wedding_trousseau",
     "summary": "Candidate flow from browser recording merge.",
     "details": {
-      "name": "login_to_home",
+      "name": "rivaah_wedding_trousseau",
       "steps": [
         {
-          "page": "login",
-          "action": "enter_username_password"
+          "page": "home",
+          "action": "rivaah"
         },
         {
-          "page": "home",
-          "action": "land"
+          "page": "rivaah",
+          "action": "open_card"
+        },
+        {
+          "page": "wedding-trousseau",
+          "action": "optional_in_store_trousseau"
+        },
+        {
+          "page": "wedding-trousseau-details1",
+          "action": "view_detail"
         }
       ],
-      "source": "report_58aa.md"
+      "source": "report_58aa.md + report_8d0d.md"
     }
   }
 }

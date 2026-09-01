@@ -1,0 +1,63 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.flow.standard_product_browse",
+    "version": "0.2.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:10:28Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex",
+      "from_recording"
+    ]
+  },
+  "body": {
+    "type": "flow",
+    "title": "standard_product_browse",
+    "summary": "Candidate flow from browser recording merge.",
+    "details": {
+      "name": "standard_product_browse",
+      "steps": [
+        {
+          "page": "home",
+          "action": "open_all_products"
+        },
+        {
+          "page": "select-category",
+          "action": "pick_category_or_skip"
+        },
+        {
+          "page": "standard-product-search",
+          "action": "browse_gallery"
+        },
+        {
+          "page": "product-detail",
+          "action": "open_product"
+        },
+        {
+          "page": "product-detail",
+          "action": "optional_size_variants"
+        },
+        {
+          "page": "standard-product-search",
+          "action": "back_to_products"
+        }
+      ],
+      "source": "report_58aa.md",
+      "selectors_hint": [
+        "li.custom-card-item a.custom-card-wrap",
+        "section.fs.gallery img.pimg",
+        "Back to Products"
+      ]
+    }
+  }
+}

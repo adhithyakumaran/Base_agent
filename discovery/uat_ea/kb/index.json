@@ -1,90 +1,454 @@
 {
-  "generated_at": "2026-09-01T15:45:18Z",
-  "count": 14,
+  "generated_at": "2026-09-01T18:10:28Z",
+  "count": 64,
   "documents": [
     {
       "id": "kb.app.endless_aisle.overview",
       "type": "business_note",
       "title": "Endless Aisle application overview",
-      "status": "candidate"
+      "status": "candidate",
+      "file": "app.endless_aisle.overview.json"
     },
     {
-      "id": "kb.nav.home_modules",
-      "type": "page_map",
-      "title": "Home navigation modules",
-      "status": "candidate"
+      "id": "kb.component.find_price.item",
+      "type": "component",
+      "title": "P31_ITEM",
+      "status": "candidate",
+      "file": "component.find_price.item.json"
     },
     {
-      "id": "kb.page.home",
-      "type": "page_map",
-      "title": "Endless Aisle",
-      "status": "candidate"
-    },
-    {
-      "id": "kb.page.select-category",
-      "type": "page_map",
-      "title": "Select Category",
-      "status": "candidate"
-    },
-    {
-      "id": "kb.page.product-detail-item-search",
-      "type": "page_map",
-      "title": "Product Search",
-      "status": "candidate"
-    },
-    {
-      "id": "kb.page.rivaah",
-      "type": "page_map",
-      "title": "Rivaah",
-      "status": "candidate"
-    },
-    {
-      "id": "kb.page.product-catalogue",
-      "type": "page_map",
-      "title": "Product Catalogue",
-      "status": "candidate"
-    },
-    {
-      "id": "kb.page.product-discount",
-      "type": "page_map",
-      "title": "Product Discount",
-      "status": "candidate"
-    },
-    {
-      "id": "kb.page.administration",
-      "type": "page_map",
-      "title": "Administration",
-      "status": "candidate"
+      "id": "kb.component.find_price.lotno",
+      "type": "component",
+      "title": "P31_LOTNO",
+      "status": "candidate",
+      "file": "component.find_price.lotno.json"
     },
     {
       "id": "kb.component.item_search.sku",
       "type": "component",
-      "title": "Item Search SKU / QR field",
-      "status": "candidate"
+      "title": "P6_SKU",
+      "status": "candidate",
+      "file": "component.item_search.sku.json"
     },
     {
-      "id": "kb.flow.login_home",
+      "id": "kb.component.product_detail.size_variants",
+      "type": "component",
+      "title": "Size Variants",
+      "status": "candidate",
+      "file": "component.product_detail.size_variants.json"
+    },
+    {
+      "id": "kb.component.standard_search.gpt",
+      "type": "component",
+      "title": "P4_GPT_SEARCH",
+      "status": "candidate",
+      "file": "component.standard_search.gpt.json"
+    },
+    {
+      "id": "kb.component.stock_visibility.sku",
+      "type": "component",
+      "title": "P47_SKU",
+      "status": "candidate",
+      "file": "component.stock_visibility.sku.json"
+    },
+    {
+      "id": "kb.flow.best_deal_detail",
       "type": "flow",
-      "title": "login_to_home",
-      "status": "candidate"
+      "title": "best_deal_product_detail",
+      "status": "candidate",
+      "file": "flow.best_deal_detail.json"
     },
     {
       "id": "kb.flow.browse_all_products",
       "type": "flow",
       "title": "browse_all_products",
-      "status": "candidate"
+      "status": "candidate",
+      "file": "flow.browse_all_products.json"
+    },
+    {
+      "id": "kb.flow.category_earrings",
+      "type": "flow",
+      "title": "category_earrings_browse",
+      "status": "candidate",
+      "file": "flow.category_earrings.json"
+    },
+    {
+      "id": "kb.flow.find_price",
+      "type": "flow",
+      "title": "find_price_lookup",
+      "status": "candidate",
+      "file": "flow.find_price.json"
     },
     {
       "id": "kb.flow.item_search",
       "type": "flow",
       "title": "item_code_or_qr_search",
-      "status": "candidate"
+      "status": "candidate",
+      "file": "flow.item_search.json"
+    },
+    {
+      "id": "kb.flow.item_sku_search",
+      "type": "flow",
+      "title": "item_sku_or_qr_search",
+      "status": "candidate",
+      "file": "flow.item_sku_search.json"
+    },
+    {
+      "id": "kb.flow.login_home",
+      "type": "flow",
+      "title": "login_to_home",
+      "status": "candidate",
+      "file": "flow.login_home.json"
+    },
+    {
+      "id": "kb.flow.reports_menu",
+      "type": "flow",
+      "title": "reports_submenu_browse",
+      "status": "candidate",
+      "file": "flow.reports_menu.json"
     },
     {
       "id": "kb.flow.rivaah_browse",
       "type": "flow",
       "title": "rivaah_wedding_browse",
-      "status": "candidate"
+      "status": "candidate",
+      "file": "flow.rivaah_browse.json"
+    },
+    {
+      "id": "kb.flow.rivaah_trousseau",
+      "type": "flow",
+      "title": "rivaah_wedding_trousseau",
+      "status": "candidate",
+      "file": "flow.rivaah_trousseau.json"
+    },
+    {
+      "id": "kb.flow.standard_product_browse",
+      "type": "flow",
+      "title": "standard_product_browse",
+      "status": "candidate",
+      "file": "flow.standard_product_browse.json"
+    },
+    {
+      "id": "kb.flow.stock_visibility",
+      "type": "flow",
+      "title": "stock_visibility_search",
+      "status": "candidate",
+      "file": "flow.stock_visibility.json"
+    },
+    {
+      "id": "kb.nav.home_modules",
+      "type": "page_map",
+      "title": "Home navigation modules",
+      "status": "candidate",
+      "file": "nav.home_modules.json"
+    },
+    {
+      "id": "kb.page.administration",
+      "type": "page_map",
+      "title": "Administration",
+      "status": "candidate",
+      "file": "page.administration.json"
+    },
+    {
+      "id": "kb.page.ea.customer-wish-list1",
+      "type": "page_map",
+      "title": "ea/customer-wish-list1",
+      "status": "candidate",
+      "file": "page.customer-wish-list1.json"
+    },
+    {
+      "id": "kb.page.ea.dashboard-tile",
+      "type": "page_map",
+      "title": "ea/dashboard-tile",
+      "status": "candidate",
+      "file": "page.dashboard-tile.json"
+    },
+    {
+      "id": "kb.page.ea.discount-product-details-all-store",
+      "type": "page_map",
+      "title": "ea/discount-product-details-all-store",
+      "status": "candidate",
+      "file": "page.discount-product-details-all-store.json"
+    },
+    {
+      "id": "kb.page.ea.dream-list-product1",
+      "type": "page_map",
+      "title": "ea/dream-list-product1",
+      "status": "candidate",
+      "file": "page.dream-list-product1.json"
+    },
+    {
+      "id": "kb.page.ea1.101",
+      "type": "page_map",
+      "title": "ea1/101",
+      "status": "candidate",
+      "file": "page.ea1.101.json"
+    },
+    {
+      "id": "kb.page.ea1.102",
+      "type": "page_map",
+      "title": "ea1/102",
+      "status": "candidate",
+      "file": "page.ea1.102.json"
+    },
+    {
+      "id": "kb.page.ea1.200",
+      "type": "page_map",
+      "title": "ea1/200",
+      "status": "candidate",
+      "file": "page.ea1.200.json"
+    },
+    {
+      "id": "kb.page.ea1.22",
+      "type": "page_map",
+      "title": "ea1/22",
+      "status": "candidate",
+      "file": "page.ea1.22.json"
+    },
+    {
+      "id": "kb.page.ea1.47",
+      "type": "page_map",
+      "title": "ea1/47",
+      "status": "candidate",
+      "file": "page.ea1.47.json"
+    },
+    {
+      "id": "kb.page.ea1.51",
+      "type": "page_map",
+      "title": "ea1/51",
+      "status": "candidate",
+      "file": "page.ea1.51.json"
+    },
+    {
+      "id": "kb.page.ea1.57",
+      "type": "page_map",
+      "title": "ea1/57",
+      "status": "candidate",
+      "file": "page.ea1.57.json"
+    },
+    {
+      "id": "kb.page.ea1.61",
+      "type": "page_map",
+      "title": "ea1/61",
+      "status": "candidate",
+      "file": "page.ea1.61.json"
+    },
+    {
+      "id": "kb.page.ea1.63",
+      "type": "page_map",
+      "title": "ea1/63",
+      "status": "candidate",
+      "file": "page.ea1.63.json"
+    },
+    {
+      "id": "kb.page.ea1.estimation-slip",
+      "type": "page_map",
+      "title": "ea1/estimation-slip",
+      "status": "candidate",
+      "file": "page.ea1.estimation-slip.json"
+    },
+    {
+      "id": "kb.page.ea1.grid-bills-test",
+      "type": "page_map",
+      "title": "ea1/grid-bills-test",
+      "status": "candidate",
+      "file": "page.ea1.grid-bills-test.json"
+    },
+    {
+      "id": "kb.page.ea1.look-of-the-week-product-detail",
+      "type": "page_map",
+      "title": "ea1/look-of-the-week-product-detail",
+      "status": "candidate",
+      "file": "page.ea1.look-of-the-week-product-detail.json"
+    },
+    {
+      "id": "kb.page.ea1.manual-bills-book",
+      "type": "page_map",
+      "title": "ea1/manual-bills-book",
+      "status": "candidate",
+      "file": "page.ea1.manual-bills-book.json"
+    },
+    {
+      "id": "kb.page.ea1.new-collections",
+      "type": "page_map",
+      "title": "ea1/new-collections",
+      "status": "candidate",
+      "file": "page.ea1.new-collections.json"
+    },
+    {
+      "id": "kb.page.ea1.product-detail",
+      "type": "page_map",
+      "title": "ea1/product-detail",
+      "status": "candidate",
+      "file": "page.ea1.product-detail.json"
+    },
+    {
+      "id": "kb.page.ea1.product-discount",
+      "type": "page_map",
+      "title": "ea1/product-discount",
+      "status": "candidate",
+      "file": "page.ea1.product-discount.json"
+    },
+    {
+      "id": "kb.page.ea1.rakhi-collections-product-details1",
+      "type": "page_map",
+      "title": "ea1/rakhi-collections-product-details1",
+      "status": "candidate",
+      "file": "page.ea1.rakhi-collections-product-details1.json"
+    },
+    {
+      "id": "kb.page.ea1.silver-collections1",
+      "type": "page_map",
+      "title": "ea1/silver-collections1",
+      "status": "candidate",
+      "file": "page.ea1.silver-collections1.json"
+    },
+    {
+      "id": "kb.page.ea1.size-based-search",
+      "type": "page_map",
+      "title": "ea1/size-based-search",
+      "status": "candidate",
+      "file": "page.ea1.size-based-search.json"
+    },
+    {
+      "id": "kb.page.ea1.testing1",
+      "type": "page_map",
+      "title": "ea1/testing1",
+      "status": "candidate",
+      "file": "page.ea1.testing1.json"
+    },
+    {
+      "id": "kb.page.ea.estimation-slip",
+      "type": "page_map",
+      "title": "ea/estimation-slip",
+      "status": "candidate",
+      "file": "page.estimation-slip.json"
+    },
+    {
+      "id": "kb.page.ea.find-price",
+      "type": "page_map",
+      "title": "ea/find-price",
+      "status": "candidate",
+      "file": "page.find-price.json"
+    },
+    {
+      "id": "kb.page.gc.store-gold-coin-new",
+      "type": "page_map",
+      "title": "gc/store-gold-coin-new",
+      "status": "candidate",
+      "file": "page.gc.store-gold-coin-new.json"
+    },
+    {
+      "id": "kb.page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent",
+      "type": "page_map",
+      "title": "genai-agents-for-apex105109125128/chat-with-oci-generative-ai-agent",
+      "status": "candidate",
+      "file": "page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent.json"
+    },
+    {
+      "id": "kb.page.ea.gold-coin-stock-visibility",
+      "type": "page_map",
+      "title": "ea/gold-coin-stock-visibility",
+      "status": "candidate",
+      "file": "page.gold-coin-stock-visibility.json"
+    },
+    {
+      "id": "kb.page.ea.home",
+      "type": "page_map",
+      "title": "ea/home",
+      "status": "candidate",
+      "file": "page.home.json"
+    },
+    {
+      "id": "kb.page.ea.kvi-fmc-lcg",
+      "type": "page_map",
+      "title": "ea/kvi-fmc-lcg",
+      "status": "candidate",
+      "file": "page.kvi-fmc-lcg.json"
+    },
+    {
+      "id": "kb.page.ea.login",
+      "type": "page_map",
+      "title": "ea/login",
+      "status": "candidate",
+      "file": "page.login.json"
+    },
+    {
+      "id": "kb.page.ea.product-catalogue",
+      "type": "page_map",
+      "title": "ea/product-catalogue",
+      "status": "candidate",
+      "file": "page.product-catalogue.json"
+    },
+    {
+      "id": "kb.page.ea.product-detail-item-search",
+      "type": "page_map",
+      "title": "ea/product-detail-item-search",
+      "status": "candidate",
+      "file": "page.product-detail-item-search.json"
+    },
+    {
+      "id": "kb.page.ea.product-detail",
+      "type": "page_map",
+      "title": "ea/product-detail",
+      "status": "candidate",
+      "file": "page.product-detail.json"
+    },
+    {
+      "id": "kb.page.ea.product-discount",
+      "type": "page_map",
+      "title": "ea/product-discount",
+      "status": "candidate",
+      "file": "page.product-discount.json"
+    },
+    {
+      "id": "kb.page.ea.rivaah",
+      "type": "page_map",
+      "title": "ea/rivaah",
+      "status": "candidate",
+      "file": "page.rivaah.json"
+    },
+    {
+      "id": "kb.page.ea.select-category",
+      "type": "page_map",
+      "title": "ea/select-category",
+      "status": "candidate",
+      "file": "page.select-category.json"
+    },
+    {
+      "id": "kb.page.ea.smart-image-search1",
+      "type": "page_map",
+      "title": "ea/smart-image-search1",
+      "status": "candidate",
+      "file": "page.smart-image-search1.json"
+    },
+    {
+      "id": "kb.page.ea.solitaire-uin-search",
+      "type": "page_map",
+      "title": "ea/solitaire-uin-search",
+      "status": "candidate",
+      "file": "page.solitaire-uin-search.json"
+    },
+    {
+      "id": "kb.page.ea.standard-product-search",
+      "type": "page_map",
+      "title": "ea/standard-product-search",
+      "status": "candidate",
+      "file": "page.standard-product-search.json"
+    },
+    {
+      "id": "kb.page.ea.wedding-trousseau-details1",
+      "type": "page_map",
+      "title": "ea/wedding-trousseau-details1",
+      "status": "candidate",
+      "file": "page.wedding-trousseau-details1.json"
+    },
+    {
+      "id": "kb.page.ea.wedding-trousseau",
+      "type": "page_map",
+      "title": "ea/wedding-trousseau",
+      "status": "candidate",
+      "file": "page.wedding-trousseau.json"
     }
   ]
 }

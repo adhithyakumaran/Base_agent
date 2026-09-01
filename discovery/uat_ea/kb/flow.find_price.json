@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.flow.find_price",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,21 +22,33 @@
   },
   "body": {
     "type": "flow",
-    "title": "login_to_home",
+    "title": "find_price_lookup",
     "summary": "Candidate flow from browser recording merge.",
     "details": {
-      "name": "login_to_home",
+      "name": "find_price_lookup",
       "steps": [
         {
-          "page": "login",
-          "action": "enter_username_password"
+          "page": "home",
+          "action": "find_price"
         },
         {
-          "page": "home",
-          "action": "land"
+          "page": "find-price",
+          "action": "enter_P31_ITEM"
+        },
+        {
+          "page": "find-price",
+          "action": "enter_P31_LOTNO"
+        },
+        {
+          "page": "find-price",
+          "action": "search"
         }
       ],
-      "source": "report_58aa.md"
+      "source": "report_58aa.md",
+      "fields": [
+        "P31_ITEM",
+        "P31_LOTNO"
+      ]
     }
   }
 }

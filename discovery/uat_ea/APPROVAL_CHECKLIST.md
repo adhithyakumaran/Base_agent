@@ -1,60 +1,49 @@
-# Endless Aisle UAT — Discovery Results & Approval Checklist
+# Endless Aisle UAT — Discovery + Recording Approval Checklist
 
-Generated: `2026-09-01T15:45:18Z`
+Updated: `2026-09-01T18:10:28Z`
 
-## Who does what
+## Sources merged
 
-| Task | Who |
+| Source | Role |
 |---|---|
-| Login, crawl, extract pages/components/flows into **KB candidates** | **Agent (done this pass)** |
-| Propose **candidate expectations** | **Agent (done)** |
-| Approve / edit / reject candidates → real **Ground Truth** | **You / teammate (required, ~15–30 min)** |
-| Write full client test cases / continuous SME | **Not required** |
+| Automated Playwright crawl | Baseline page map / KB |
+| Browser recording #1 (~5m) | Extra modules, reports, filters |
+| Browser recording #2 (~35m) | Login + product browse/detail + find-price + stock + best deal |
 
-## What was extracted
+- KB documents now: **64** (`discovery/uat_ea/kb/`)
+- Candidate expectations: **22**
+- Distinct pages from recordings: **43**
 
-- App: **Endless Aisle** (APEX **1002**, workspace **tjdcom**, alias **ea**)
-- User **BALA** logs in → `/ords/r/tjdcom/ea/home`
-- Store context: **Chennai - Anna Nagar (ABO) - L2**
-- KB documents: **14** → `discovery/uat_ea/kb/`
-- Candidate expectations: **12** → `discovery/uat_ea/candidate_gt/candidates.json`
+## New pages from your recordings (high signal)
 
-### Home modules observed
-
-- All Products
-- Item Search
-- Rivaah
-- Customer Order
-- Best Deal
-- Smart Image Search
-- Find Price
-- Estimation Slip
-- Solitaire UIN
-- Crown Eye
-- Gold Coin Stock Visibility
-- Stock Visibility
-- My Store Stock
-- Open IBT Action - Urgent
-- Store Orders
-- Report
-- Customer Wishlist
-- Solitaire Products
-- New Collections
-- High Value Studded
-
-### Pages reached
-
-- `administration` — Administration — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration`
-- `home` — Endless Aisle — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home`
-- `product-catalogue` — Product Catalogue — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue`
-- `product-detail-item-search` — Product Search — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-detail-item-search`
-- `product-discount` — Product Discount — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount`
-- `rivaah` — Rivaah — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/rivaah`
-- `select-category` — Select Category — `https://dev-ea.titanrts.com/ords/r/tjdcom/ea/select-category`
+- `ea/customer-wish-list1` — `/ords/r/tjdcom/ea/customer-wish-list1` (hits=3)
+- `ea/dashboard-tile` — `/ords/r/tjdcom/ea/dashboard-tile` (hits=1)
+- `ea/discount-product-details-all-store` — `/ords/r/tjdcom/ea/discount-product-details-all-store` (hits=3)
+- `ea/estimation-slip` — `/ords/r/tjdcom/ea/estimation-slip` (hits=2)
+- `ea/find-price` — `/ords/r/tjdcom/ea/find-price` (hits=2)
+- `ea/gold-coin-stock-visibility` — `/ords/r/tjdcom/ea/gold-coin-stock-visibility` (hits=1)
+- `ea/kvi-fmc-lcg` — `/ords/r/tjdcom/ea/kvi-fmc-lcg` (hits=1)
+- `ea/product-detail` — `/ords/r/tjdcom/ea/product-detail` (hits=11)
+- `ea/smart-image-search1` — `/ords/r/tjdcom/ea/smart-image-search1` (hits=1)
+- `ea/solitaire-uin-search` — `/ords/r/tjdcom/ea/solitaire-uin-search` (hits=1)
+- `ea/standard-product-search` — `/ords/r/tjdcom/ea/standard-product-search` (hits=12)
+- `ea/wedding-trousseau` — `/ords/r/tjdcom/ea/wedding-trousseau` (hits=4)
+- `ea/wedding-trousseau-details1` — `/ords/r/tjdcom/ea/wedding-trousseau-details1` (hits=6)
+- `ea1/101` — `/ords/r/tjdcom/ea1/101` (hits=1)
+- `ea1/102` — `/ords/r/tjdcom/ea1/102` (hits=1)
+- `ea1/200` — `/ords/r/tjdcom/ea1/200` (hits=1)
+- `ea1/22` — `/ords/r/tjdcom/ea1/22` (hits=2)
+- `ea1/47` — `/ords/r/tjdcom/ea1/47` (hits=2)
+- `ea1/51` — `/ords/r/tjdcom/ea1/51` (hits=6)
+- `ea1/57` — `/ords/r/tjdcom/ea1/57` (hits=1)
+- `ea1/61` — `/ords/r/tjdcom/ea1/61` (hits=1)
+- `ea1/63` — `/ords/r/tjdcom/ea1/63` (hits=4)
+- `ea1/estimation-slip` — `/ords/r/tjdcom/ea1/estimation-slip` (hits=2)
+- `ea1/product-detail` — `/ords/r/tjdcom/ea1/product-detail` (hits=1)
 
 ## Candidate Ground Truth — mark each
 
-Only **APPROVE** items become authoritative GT for PASS/FAIL.
+Only **APPROVE** becomes authoritative GT.
 
 ### 1. `ce.auth.login`
 - Subject: `auth.login`
@@ -140,15 +129,82 @@ Only **APPROVE** items become authoritative GT for PASS/FAIL.
 - Question: Are Reports in sanity scope?
 - Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
 
-## Limits of this pass
+### 13. `ce.flow.standard_product_browse`
+- Subject: `flow.standard_product_browse`
+- Expected: `true`
+- Why: Recording shows Home→All Products→category→standard-product-search→product-detail→Back to Products.
+- Question: Approve this as a sanity golden path?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
 
-- URL + credentials discovery only (no APEX metadata DB).
-- Customer Order / cart checkout not deeply exercised yet.
-- Some dialogs (Customer select / ORSO) need a careful second pass.
-- Administration reachable for BALA — confirm before security GT.
+### 14. `ce.page.product_detail.reachable`
+- Subject: `page.product-detail.reachable`
+- Expected: `true`
+- Why: product-detail visited repeatedly from gallery clicks.
+- Question: Must product detail open from product cards?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
 
-## After you approve
+### 15. `ce.page.standard_product_search.reachable`
+- Subject: `page.standard-product-search.reachable`
+- Expected: `true`
+- Why: Core browse page after category selection.
+- Question: Is standard-product-search required in sanity?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
 
-1. I convert APPROVED rows into `ground_truth/*.yaml`.
-2. I run a deeper Customer Order / product-detail pass.
-3. Sanity checks against approved GT can run with **0 LLM** on those subjects.
+### 16. `ce.product_detail.size_variants`
+- Subject: `product_detail.size_variants`
+- Expected: `true`
+- Why: Size Variants dialog used with values like 12.8 / 44 / WOMEN.
+- Question: Should size-variant selection be part of product detail GT when variants exist?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+### 17. `ce.find_price.fields`
+- Subject: `find_price.fields_present`
+- Expected: `["P31_ITEM", "P31_LOTNO"]`
+- Why: Find Price page used item + lot fields in recording.
+- Question: Approve Find Price field contract as GT?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+### 18. `ce.stock_visibility.p47_sku`
+- Subject: `stock_visibility.sku_search`
+- Expected: `{"item": "P47_SKU"}`
+- Why: Stock Visibility (ea1/47) used P47_SKU search.
+- Question: Is Stock Visibility SKU search in scope?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+### 19. `ce.message.gold_rate_may_change`
+- Subject: `best_deal.gold_rate_disclaimer`
+- Expected: `"The Gold rate may change depending on the actual rate during the time of booking"`
+- Why: Observed on discount product details; likely informational.
+- Question: Is this disclaimer expected (PASS if present), not an error?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+### 20. `ce.flow.rivaah_trousseau`
+- Subject: `flow.rivaah_trousseau`
+- Expected: `true`
+- Why: Rivaah→wedding-trousseau→details observed in both recordings.
+- Question: Include Rivaah trousseau path in sanity?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+### 21. `ce.reports.order_status`
+- Subject: `reports.order_status.reachable`
+- Expected: `true`
+- Why: Reports→Order Status navigated to ea1/200.
+- Question: Are report submenus in QA scope for BALA?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+### 22. `ce.cross_app.ea1_linked`
+- Subject: `nav.ea_to_ea1`
+- Expected: `true`
+- Why: Many modules open under app alias ea1 (reports, stock, manual bills, collections).
+- Question: Treat ea1 as in-scope companion app for Endless Aisle QA?
+- Decision: [ ] APPROVE  [ ] EDIT  [ ] REJECT
+
+## What you should still record (optional)
+
+- **Customer Order** happy path (open order / add customer) — still thin
+- One **failed SKU search** (bad code → expected message)
+- One **HAR** for standard-product-search if possible
+
+## Not waste
+
+Your recordings added product-detail, size variants, find-price fields, stock visibility, discount details, and ea1 report links that crawl alone did not fully cover.

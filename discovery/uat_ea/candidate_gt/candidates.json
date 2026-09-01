@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-01T15:45:18Z",
+  "generated_at": "2026-09-01T18:10:28Z",
   "policy": "NOT Ground Truth until approved.",
-  "count": 12,
+  "count": 22,
   "candidates": [
     {
       "id": "ce.auth.login",
@@ -184,6 +184,180 @@
         "app": "ea",
         "user": "BALA"
       }
+    },
+    {
+      "id": "ce.flow.standard_product_browse",
+      "subject": "flow.standard_product_browse",
+      "predicate": "completable",
+      "expected": true,
+      "rationale": "Recording shows Home\u2192All Products\u2192category\u2192standard-product-search\u2192product-detail\u2192Back to Products.",
+      "approve_question": "Approve this as a sanity golden path?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.page.product_detail.reachable",
+      "subject": "page.product-detail.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "product-detail visited repeatedly from gallery clicks.",
+      "approve_question": "Must product detail open from product cards?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.page.standard_product_search.reachable",
+      "subject": "page.standard-product-search.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Core browse page after category selection.",
+      "approve_question": "Is standard-product-search required in sanity?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.product_detail.size_variants",
+      "subject": "product_detail.size_variants",
+      "predicate": "dialog_available_when_applicable",
+      "expected": true,
+      "rationale": "Size Variants dialog used with values like 12.8 / 44 / WOMEN.",
+      "approve_question": "Should size-variant selection be part of product detail GT when variants exist?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.find_price.fields",
+      "subject": "find_price.fields_present",
+      "predicate": "fields_present",
+      "expected": [
+        "P31_ITEM",
+        "P31_LOTNO"
+      ],
+      "rationale": "Find Price page used item + lot fields in recording.",
+      "approve_question": "Approve Find Price field contract as GT?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.stock_visibility.p47_sku",
+      "subject": "stock_visibility.sku_search",
+      "predicate": "field_present",
+      "expected": {
+        "item": "P47_SKU"
+      },
+      "rationale": "Stock Visibility (ea1/47) used P47_SKU search.",
+      "approve_question": "Is Stock Visibility SKU search in scope?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.message.gold_rate_may_change",
+      "subject": "best_deal.gold_rate_disclaimer",
+      "predicate": "message_may_appear",
+      "expected": "The Gold rate may change depending on the actual rate during the time of booking",
+      "rationale": "Observed on discount product details; likely informational.",
+      "approve_question": "Is this disclaimer expected (PASS if present), not an error?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.flow.rivaah_trousseau",
+      "subject": "flow.rivaah_trousseau",
+      "predicate": "completable",
+      "expected": true,
+      "rationale": "Rivaah\u2192wedding-trousseau\u2192details observed in both recordings.",
+      "approve_question": "Include Rivaah trousseau path in sanity?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.reports.order_status",
+      "subject": "reports.order_status.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Reports\u2192Order Status navigated to ea1/200.",
+      "approve_question": "Are report submenus in QA scope for BALA?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
+    },
+    {
+      "id": "ce.cross_app.ea1_linked",
+      "subject": "nav.ea_to_ea1",
+      "predicate": "linked_modules_reachable",
+      "expected": true,
+      "rationale": "Many modules open under app alias ea1 (reports, stock, manual bills, collections).",
+      "approve_question": "Treat ea1 as in-scope companion app for Endless Aisle QA?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA",
+        "source": "browser_recorder"
+      }
     }
-  ]
+  ],
+  "recording_merge": {
+    "merged_at": "2026-09-01T18:10:28Z",
+    "added_candidate_ids": [
+      "ce.flow.standard_product_browse",
+      "ce.page.product_detail.reachable",
+      "ce.page.standard_product_search.reachable",
+      "ce.product_detail.size_variants",
+      "ce.find_price.fields",
+      "ce.stock_visibility.p47_sku",
+      "ce.message.gold_rate_may_change",
+      "ce.flow.rivaah_trousseau",
+      "ce.reports.order_status",
+      "ce.cross_app.ea1_linked"
+    ],
+    "recording_files": [
+      "report_8d0d.md",
+      "report_58aa.md"
+    ]
+  }
 }

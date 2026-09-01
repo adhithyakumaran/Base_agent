@@ -1,0 +1,803 @@
+{
+  "merged_at": "2026-09-01T18:10:28Z",
+  "sources": [
+    {
+      "file": "report_8d0d.md",
+      "title": "Endless Aisle",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=13414573511339  ",
+      "duration": "5m 34s  ",
+      "recorded": "2026-09-01T16:07:58.725Z"
+    },
+    {
+      "file": "report_58aa.md",
+      "title": "Endless Aisle- Log In",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/login?session=13641377871120  ",
+      "duration": "35m 20s  ",
+      "recorded": "2026-09-01T18:07:35.255Z"
+    }
+  ],
+  "page_count": 43,
+  "pages": [
+    {
+      "path": "/ords/r/tjdcom/ea/customer-wish-list1",
+      "app": "ea",
+      "alias": "customer-wish-list1",
+      "hit_count": 3,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/dashboard-tile",
+      "app": "ea",
+      "alias": "dashboard-tile",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/discount-product-details-all-store",
+      "app": "ea",
+      "alias": "discount-product-details-all-store",
+      "hit_count": 3,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/dream-list-product1",
+      "app": "ea",
+      "alias": "dream-list-product1",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/estimation-slip",
+      "app": "ea",
+      "alias": "estimation-slip",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/find-price",
+      "app": "ea",
+      "alias": "find-price",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/gold-coin-stock-visibility",
+      "app": "ea",
+      "alias": "gold-coin-stock-visibility",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/home",
+      "app": "ea",
+      "alias": "home",
+      "hit_count": 21,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/kvi-fmc-lcg",
+      "app": "ea",
+      "alias": "kvi-fmc-lcg",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/login",
+      "app": "ea",
+      "alias": "login",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/product-catalogue",
+      "app": "ea",
+      "alias": "product-catalogue",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/product-detail",
+      "app": "ea",
+      "alias": "product-detail",
+      "hit_count": 11,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/product-detail-item-search",
+      "app": "ea",
+      "alias": "product-detail-item-search",
+      "hit_count": 4,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/product-discount",
+      "app": "ea",
+      "alias": "product-discount",
+      "hit_count": 4,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/rivaah",
+      "app": "ea",
+      "alias": "rivaah",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/select-category",
+      "app": "ea",
+      "alias": "select-category",
+      "hit_count": 7,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/smart-image-search1",
+      "app": "ea",
+      "alias": "smart-image-search1",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/solitaire-uin-search",
+      "app": "ea",
+      "alias": "solitaire-uin-search",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/standard-product-search",
+      "app": "ea",
+      "alias": "standard-product-search",
+      "hit_count": 12,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/wedding-trousseau",
+      "app": "ea",
+      "alias": "wedding-trousseau",
+      "hit_count": 4,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea/wedding-trousseau-details1",
+      "app": "ea",
+      "alias": "wedding-trousseau-details1",
+      "hit_count": 6,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/101",
+      "app": "ea1",
+      "alias": "101",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/102",
+      "app": "ea1",
+      "alias": "102",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/200",
+      "app": "ea1",
+      "alias": "200",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/22",
+      "app": "ea1",
+      "alias": "22",
+      "hit_count": 2,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/47",
+      "app": "ea1",
+      "alias": "47",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/51",
+      "app": "ea1",
+      "alias": "51",
+      "hit_count": 6,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/57",
+      "app": "ea1",
+      "alias": "57",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/61",
+      "app": "ea1",
+      "alias": "61",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/63",
+      "app": "ea1",
+      "alias": "63",
+      "hit_count": 4,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/estimation-slip",
+      "app": "ea1",
+      "alias": "estimation-slip",
+      "hit_count": 2,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/grid-bills-test",
+      "app": "ea1",
+      "alias": "grid-bills-test",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/look-of-the-week-product-detail",
+      "app": "ea1",
+      "alias": "look-of-the-week-product-detail",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/manual-bills-book",
+      "app": "ea1",
+      "alias": "manual-bills-book",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/new-collections",
+      "app": "ea1",
+      "alias": "new-collections",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/product-detail",
+      "app": "ea1",
+      "alias": "product-detail",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/product-discount",
+      "app": "ea1",
+      "alias": "product-discount",
+      "hit_count": 3,
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/rakhi-collections-product-details1",
+      "app": "ea1",
+      "alias": "rakhi-collections-product-details1",
+      "hit_count": 4,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/silver-collections1",
+      "app": "ea1",
+      "alias": "silver-collections1",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/size-based-search",
+      "app": "ea1",
+      "alias": "size-based-search",
+      "hit_count": 2,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/ea1/testing1",
+      "app": "ea1",
+      "alias": "testing1",
+      "hit_count": 1,
+      "sources": [
+        "report_58aa.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/gc/store-gold-coin-new",
+      "app": "gc",
+      "alias": "store-gold-coin-new",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    },
+    {
+      "path": "/ords/r/tjdcom/genai-agents-for-apex105109125128/chat-with-oci-generative-ai-agent",
+      "app": "genai-agents-for-apex105109125128",
+      "alias": "chat-with-oci-generative-ai-agent",
+      "hit_count": 1,
+      "sources": [
+        "report_8d0d.md"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "kb.flow.login_home",
+      "name": "login_to_home",
+      "steps": [
+        {
+          "page": "login",
+          "action": "enter_username_password"
+        },
+        {
+          "page": "home",
+          "action": "land"
+        }
+      ],
+      "source": "report_58aa.md"
+    },
+    {
+      "id": "kb.flow.standard_product_browse",
+      "name": "standard_product_browse",
+      "steps": [
+        {
+          "page": "home",
+          "action": "open_all_products"
+        },
+        {
+          "page": "select-category",
+          "action": "pick_category_or_skip"
+        },
+        {
+          "page": "standard-product-search",
+          "action": "browse_gallery"
+        },
+        {
+          "page": "product-detail",
+          "action": "open_product"
+        },
+        {
+          "page": "product-detail",
+          "action": "optional_size_variants"
+        },
+        {
+          "page": "standard-product-search",
+          "action": "back_to_products"
+        }
+      ],
+      "source": "report_58aa.md",
+      "selectors_hint": [
+        "li.custom-card-item a.custom-card-wrap",
+        "section.fs.gallery img.pimg",
+        "Back to Products"
+      ]
+    },
+    {
+      "id": "kb.flow.category_earrings",
+      "name": "category_earrings_browse",
+      "steps": [
+        {
+          "page": "home",
+          "action": "all_products"
+        },
+        {
+          "page": "select-category",
+          "action": "click_Earrings"
+        },
+        {
+          "page": "standard-product-search",
+          "action": "open_item"
+        },
+        {
+          "page": "product-detail",
+          "action": "view"
+        }
+      ],
+      "source": "report_58aa.md"
+    },
+    {
+      "id": "kb.flow.item_sku_search",
+      "name": "item_sku_or_qr_search",
+      "steps": [
+        {
+          "page": "home",
+          "action": "item_search"
+        },
+        {
+          "page": "product-detail-item-search",
+          "action": "focus_P6_SKU"
+        },
+        {
+          "page": "product-detail-item-search",
+          "action": "type_code"
+        },
+        {
+          "page": "product-detail-item-search",
+          "action": "click_btn_search"
+        }
+      ],
+      "source": "report_58aa.md",
+      "fields": [
+        "P6_SKU"
+      ],
+      "selectors_hint": [
+        "#P6_SKU",
+        "#btn_search"
+      ]
+    },
+    {
+      "id": "kb.flow.find_price",
+      "name": "find_price_lookup",
+      "steps": [
+        {
+          "page": "home",
+          "action": "find_price"
+        },
+        {
+          "page": "find-price",
+          "action": "enter_P31_ITEM"
+        },
+        {
+          "page": "find-price",
+          "action": "enter_P31_LOTNO"
+        },
+        {
+          "page": "find-price",
+          "action": "search"
+        }
+      ],
+      "source": "report_58aa.md",
+      "fields": [
+        "P31_ITEM",
+        "P31_LOTNO"
+      ]
+    },
+    {
+      "id": "kb.flow.best_deal_detail",
+      "name": "best_deal_product_detail",
+      "steps": [
+        {
+          "page": "home",
+          "action": "best_deal_or_product_discount"
+        },
+        {
+          "page": "product-discount",
+          "action": "open_product_image"
+        },
+        {
+          "page": "discount-product-details-all-store",
+          "action": "view_details"
+        },
+        {
+          "page": "product-discount",
+          "action": "back_to_products"
+        }
+      ],
+      "source": "report_58aa.md",
+      "observed_messages": [
+        "The Gold rate may change depending on the actual rate during the time of booking"
+      ]
+    },
+    {
+      "id": "kb.flow.rivaah_trousseau",
+      "name": "rivaah_wedding_trousseau",
+      "steps": [
+        {
+          "page": "home",
+          "action": "rivaah"
+        },
+        {
+          "page": "rivaah",
+          "action": "open_card"
+        },
+        {
+          "page": "wedding-trousseau",
+          "action": "optional_in_store_trousseau"
+        },
+        {
+          "page": "wedding-trousseau-details1",
+          "action": "view_detail"
+        }
+      ],
+      "source": "report_58aa.md + report_8d0d.md"
+    },
+    {
+      "id": "kb.flow.stock_visibility",
+      "name": "stock_visibility_search",
+      "steps": [
+        {
+          "page": "home_or_menu",
+          "action": "stock_visibility"
+        },
+        {
+          "page": "ea1/47",
+          "action": "enter_P47_SKU"
+        },
+        {
+          "page": "ea1/47",
+          "action": "search"
+        }
+      ],
+      "source": "report_58aa.md",
+      "fields": [
+        "P47_SKU"
+      ]
+    },
+    {
+      "id": "kb.flow.reports_menu",
+      "name": "reports_submenu_browse",
+      "steps": [
+        {
+          "page": "home",
+          "action": "reports"
+        },
+        {
+          "page": "ea1/51",
+          "action": "open_report_type"
+        },
+        {
+          "page": "ea1/200|101|102|57",
+          "action": "view_report"
+        }
+      ],
+      "source": "report_8d0d.md",
+      "report_types_observed": [
+        "Order Status",
+        "Request Status",
+        "Logged in Users",
+        "PDF/WhatsApp Export Report",
+        "Best Deal - Hit Rate"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "kb.component.item_search.sku",
+      "page": "product-detail-item-search",
+      "name": "P6_SKU",
+      "label": "Enter item code or scan the QR",
+      "actions": [
+        "#btn_search",
+        "Scan"
+      ]
+    },
+    {
+      "id": "kb.component.find_price.item",
+      "page": "find-price",
+      "name": "P31_ITEM",
+      "label": "P31_ITEM",
+      "actions": []
+    },
+    {
+      "id": "kb.component.find_price.lotno",
+      "page": "find-price",
+      "name": "P31_LOTNO",
+      "label": "P31_LOTNO",
+      "actions": []
+    },
+    {
+      "id": "kb.component.stock_visibility.sku",
+      "page": "ea1/47",
+      "name": "P47_SKU",
+      "label": "P47_SKU",
+      "actions": [
+        "Search"
+      ]
+    },
+    {
+      "id": "kb.component.standard_search.gpt",
+      "page": "standard-product-search",
+      "name": "P4_GPT_SEARCH",
+      "label": "Enter keyword or scan",
+      "actions": [
+        "#B129446122125873817"
+      ],
+      "source": "report_8d0d.md"
+    },
+    {
+      "id": "kb.component.product_detail.size_variants",
+      "page": "product-detail",
+      "name": "Size Variants",
+      "label": "Size Variants dialog",
+      "actions": [
+        "Close",
+        "Back to Products"
+      ],
+      "observed_values": [
+        "12.8",
+        "44",
+        "WOMEN"
+      ]
+    }
+  ],
+  "named_clicks_sample": [
+    "#CARD_SUBTITLE#",
+    "0 to 10 k3,208",
+    "10 to 25 k1,204",
+    "12.8",
+    "44",
+    "Abo",
+    "Additional Details",
+    "All Products",
+    "BRAND",
+    "Back",
+    "Back to Customer",
+    "Back to Products",
+    "Best Deal",
+    "Best Deal - Hit Rate",
+    "Brand",
+    "Cancel",
+    "Card View",
+    "Clear",
+    "Click to check Stock Availability",
+    "Close",
+    "Customer ( Click to Select )",
+    "ECOM Stock Visibility",
+    "Earring Width",
+    "Earrings",
+    "Edit",
+    "Enter item code or scan the QR",
+    "Enter keyword or scan",
+    "Estimation Slip",
+    "Example: 2.54",
+    "Export List",
+    "Filter",
+    "Home",
+    "In-Store Trousseau",
+    "Item Search",
+    "JEWELLERY TYPEClear",
+    "KVI",
+    "L2",
+    "LCG",
+    "LOGIN",
+    "List View",
+    "Logged in Users",
+    "Look of the week product detail",
+    "Low to High",
+    "Manual Invoice",
+    "More...",
+    "My Store Stock",
+    "New Collections",
+    "No Stock available in Store and Factory",
+    "OK",
+    "ORSO Recommendation",
+    "Order Status",
+    "Others",
+    "P31_ITEM",
+    "P31_LOTNO",
+    "P47_SKU",
+    "PDF/WhatsApp Export Report",
+    "PRICE",
+    "Password",
+    "Product",
+    "Product Catalogue",
+    "Range Begin",
+    "Refresh",
+    "Report",
+    "Reports",
+    "Request Status",
+    "Rivaah",
+    "Save",
+    "Search",
+    "Search by customer name/ phone number / RSO",
+    "Search...",
+    "Silver Collection",
+    "Size",
+    "Size Based Search",
+    "Size Variants",
+    "Skip & Continue",
+    "Standard Product",
+    "Stock Visibility",
+    "Store: Chennai - Anna Nagar (ABO)",
+    "TESTING",
+    "The Gold rate may change depending on the actual rate during the time of booking"
+  ],
+  "fields_typed_sample": [
+    "Enter item code or scan the QR",
+    "Example: 2.54",
+    "P31_ITEM",
+    "P31_LOTNO",
+    "P47_SKU",
+    "Password",
+    "Range Begin",
+    "Search by customer name/ phone number / RSO",
+    "Search...",
+    "Username"
+  ]
+}

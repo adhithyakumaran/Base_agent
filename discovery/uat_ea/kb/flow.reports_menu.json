@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.flow.reports_menu",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,21 +22,32 @@
   },
   "body": {
     "type": "flow",
-    "title": "login_to_home",
+    "title": "reports_submenu_browse",
     "summary": "Candidate flow from browser recording merge.",
     "details": {
-      "name": "login_to_home",
+      "name": "reports_submenu_browse",
       "steps": [
         {
-          "page": "login",
-          "action": "enter_username_password"
+          "page": "home",
+          "action": "reports"
         },
         {
-          "page": "home",
-          "action": "land"
+          "page": "ea1/51",
+          "action": "open_report_type"
+        },
+        {
+          "page": "ea1/200|101|102|57",
+          "action": "view_report"
         }
       ],
-      "source": "report_58aa.md"
+      "source": "report_8d0d.md",
+      "report_types_observed": [
+        "Order Status",
+        "Request Status",
+        "Logged in Users",
+        "PDF/WhatsApp Export Report",
+        "Best Deal - Hit Rate"
+      ]
     }
   }
 }

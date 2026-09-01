@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.page.ea.product-detail-item-search",
+    "id": "kb.page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,18 +22,17 @@
   },
   "body": {
     "type": "page_map",
-    "title": "ea/product-detail-item-search",
-    "summary": "Observed in browser recording(s); hit_count=4.",
+    "title": "genai-agents-for-apex105109125128/chat-with-oci-generative-ai-agent",
+    "summary": "Observed in browser recording(s); hit_count=1.",
     "details": {
       "workspace": "tjdcom",
-      "app_alias": "ea",
-      "page_alias": "product-detail-item-search",
-      "url_path": "/ords/r/tjdcom/ea/product-detail-item-search",
+      "app_alias": "genai-agents-for-apex105109125128",
+      "page_alias": "chat-with-oci-generative-ai-agent",
+      "url_path": "/ords/r/tjdcom/genai-agents-for-apex105109125128/chat-with-oci-generative-ai-agent",
       "sources": [
-        "report_58aa.md",
         "report_8d0d.md"
       ],
-      "hit_count": 4
+      "hit_count": 1
     }
   }
 }

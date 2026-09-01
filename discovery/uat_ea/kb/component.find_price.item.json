@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.component.find_price.item",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -21,22 +21,15 @@
     ]
   },
   "body": {
-    "type": "flow",
-    "title": "login_to_home",
-    "summary": "Candidate flow from browser recording merge.",
+    "type": "component",
+    "title": "P31_ITEM",
+    "summary": "Field/control on find-price",
     "details": {
-      "name": "login_to_home",
-      "steps": [
-        {
-          "page": "login",
-          "action": "enter_username_password"
-        },
-        {
-          "page": "home",
-          "action": "land"
-        }
-      ],
-      "source": "report_58aa.md"
+      "id": "kb.component.find_price.item",
+      "page": "find-price",
+      "name": "P31_ITEM",
+      "label": "P31_ITEM",
+      "actions": []
     }
   }
 }

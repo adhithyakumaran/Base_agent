@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.flow.item_sku_search",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,21 +22,36 @@
   },
   "body": {
     "type": "flow",
-    "title": "login_to_home",
+    "title": "item_sku_or_qr_search",
     "summary": "Candidate flow from browser recording merge.",
     "details": {
-      "name": "login_to_home",
+      "name": "item_sku_or_qr_search",
       "steps": [
         {
-          "page": "login",
-          "action": "enter_username_password"
+          "page": "home",
+          "action": "item_search"
         },
         {
-          "page": "home",
-          "action": "land"
+          "page": "product-detail-item-search",
+          "action": "focus_P6_SKU"
+        },
+        {
+          "page": "product-detail-item-search",
+          "action": "type_code"
+        },
+        {
+          "page": "product-detail-item-search",
+          "action": "click_btn_search"
         }
       ],
-      "source": "report_58aa.md"
+      "source": "report_58aa.md",
+      "fields": [
+        "P6_SKU"
+      ],
+      "selectors_hint": [
+        "#P6_SKU",
+        "#btn_search"
+      ]
     }
   }
 }

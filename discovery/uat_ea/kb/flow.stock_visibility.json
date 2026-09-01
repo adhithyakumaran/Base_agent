@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.flow.stock_visibility",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,21 +22,28 @@
   },
   "body": {
     "type": "flow",
-    "title": "login_to_home",
+    "title": "stock_visibility_search",
     "summary": "Candidate flow from browser recording merge.",
     "details": {
-      "name": "login_to_home",
+      "name": "stock_visibility_search",
       "steps": [
         {
-          "page": "login",
-          "action": "enter_username_password"
+          "page": "home_or_menu",
+          "action": "stock_visibility"
         },
         {
-          "page": "home",
-          "action": "land"
+          "page": "ea1/47",
+          "action": "enter_P47_SKU"
+        },
+        {
+          "page": "ea1/47",
+          "action": "search"
         }
       ],
-      "source": "report_58aa.md"
+      "source": "report_58aa.md",
+      "fields": [
+        "P47_SKU"
+      ]
     }
   }
 }

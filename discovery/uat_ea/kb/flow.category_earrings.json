@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.flow.category_earrings",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -22,18 +22,26 @@
   },
   "body": {
     "type": "flow",
-    "title": "login_to_home",
+    "title": "category_earrings_browse",
     "summary": "Candidate flow from browser recording merge.",
     "details": {
-      "name": "login_to_home",
+      "name": "category_earrings_browse",
       "steps": [
         {
-          "page": "login",
-          "action": "enter_username_password"
+          "page": "home",
+          "action": "all_products"
         },
         {
-          "page": "home",
-          "action": "land"
+          "page": "select-category",
+          "action": "click_Earrings"
+        },
+        {
+          "page": "standard-product-search",
+          "action": "open_item"
+        },
+        {
+          "page": "product-detail",
+          "action": "view"
         }
       ],
       "source": "report_58aa.md"

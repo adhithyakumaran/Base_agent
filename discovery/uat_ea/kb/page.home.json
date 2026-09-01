@@ -2,78 +2,38 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.page.home",
-    "version": "0.1.0",
+    "id": "kb.page.ea.home",
+    "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
     "app_alias": "ea",
     "workspace": "tjdcom",
-    "source": "discovery",
-    "created_at": "2026-09-01T15:45:18Z",
-    "updated_at": "2026-09-01T15:45:18Z",
+    "source": "browser_recorder+discovery",
+    "created_at": "2026-09-01T18:10:28Z",
+    "updated_at": "2026-09-01T18:10:28Z",
     "created_by": "agent",
     "tags": [
       "endless_aisle",
       "titan",
       "tanishq",
-      "apex"
+      "apex",
+      "from_recording"
     ]
   },
   "body": {
     "type": "page_map",
-    "title": "Endless Aisle",
-    "summary": "Discovered page alias `home` during authenticated UAT crawl.",
+    "title": "ea/home",
+    "summary": "Observed in browser recording(s); hit_count=21.",
     "details": {
+      "workspace": "tjdcom",
+      "app_alias": "ea",
       "page_alias": "home",
-      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
-      "headings": [
-        "Navigation",
-        "All Products",
-        "Item Search",
-        "Rivaah",
-        "Customer Order",
-        "Best Deal",
-        "Smart Image Search",
-        "Find Price",
-        "Estimation Slip",
-        "Solitaire UIN",
-        "Crown Eye",
-        "Gold Coin Stock Visibility",
-        "Stock Visibility",
-        "My Store Stock",
-        "Open IBT Action - Urgent",
-        "Store Orders",
-        "Report",
-        "Customer Wishlist",
-        "Solitaire Products",
-        "New Collections",
-        "High Value Studded",
-        "Silver Collections",
-        "Size Based Search",
-        "National/Regional Best Seller",
-        "Dashboard",
-        "Browse Store Stock",
-        "Manual Invoice",
-        "KVI&FMC",
-        "Manual Bill commercial report",
-        "Manual Invoice Report"
+      "url_path": "/ords/r/tjdcom/ea/home",
+      "sources": [
+        "report_58aa.md",
+        "report_8d0d.md"
       ],
-      "regions": [
-        {
-          "id": "home_card_li",
-          "title": "Navigation"
-        }
-      ],
-      "buttons": [
-        "Main Navigation",
-        "Store: Chennai - Anna Nagar (ABO) - L2",
-        "ORSO Recommendation",
-        "Customer ( Click to Select )",
-        "bala",
-        "\u2726 STORE STOCK"
-      ],
-      "fields": [],
-      "grids": []
+      "hit_count": 21
     }
   }
 }

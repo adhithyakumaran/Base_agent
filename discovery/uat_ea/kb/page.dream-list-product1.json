@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.page.ea.dream-list-product1",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -21,22 +21,18 @@
     ]
   },
   "body": {
-    "type": "flow",
-    "title": "login_to_home",
-    "summary": "Candidate flow from browser recording merge.",
+    "type": "page_map",
+    "title": "ea/dream-list-product1",
+    "summary": "Observed in browser recording(s); hit_count=1.",
     "details": {
-      "name": "login_to_home",
-      "steps": [
-        {
-          "page": "login",
-          "action": "enter_username_password"
-        },
-        {
-          "page": "home",
-          "action": "land"
-        }
+      "workspace": "tjdcom",
+      "app_alias": "ea",
+      "page_alias": "dream-list-product1",
+      "url_path": "/ords/r/tjdcom/ea/dream-list-product1",
+      "sources": [
+        "report_58aa.md"
       ],
-      "source": "report_58aa.md"
+      "hit_count": 1
     }
   }
 }

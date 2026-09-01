@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.component.product_detail.size_variants",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -21,22 +21,23 @@
     ]
   },
   "body": {
-    "type": "flow",
-    "title": "login_to_home",
-    "summary": "Candidate flow from browser recording merge.",
+    "type": "component",
+    "title": "Size Variants",
+    "summary": "Field/control on product-detail",
     "details": {
-      "name": "login_to_home",
-      "steps": [
-        {
-          "page": "login",
-          "action": "enter_username_password"
-        },
-        {
-          "page": "home",
-          "action": "land"
-        }
+      "id": "kb.component.product_detail.size_variants",
+      "page": "product-detail",
+      "name": "Size Variants",
+      "label": "Size Variants dialog",
+      "actions": [
+        "Close",
+        "Back to Products"
       ],
-      "source": "report_58aa.md"
+      "observed_values": [
+        "12.8",
+        "44",
+        "WOMEN"
+      ]
     }
   }
 }

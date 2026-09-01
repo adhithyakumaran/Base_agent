@@ -2,7 +2,7 @@
   "kind": "knowledge",
   "status": "candidate",
   "meta": {
-    "id": "kb.flow.login_home",
+    "id": "kb.component.standard_search.gpt",
     "version": "0.2.0",
     "env": "uat",
     "app_id": "1002",
@@ -21,22 +21,18 @@
     ]
   },
   "body": {
-    "type": "flow",
-    "title": "login_to_home",
-    "summary": "Candidate flow from browser recording merge.",
+    "type": "component",
+    "title": "P4_GPT_SEARCH",
+    "summary": "Field/control on standard-product-search",
     "details": {
-      "name": "login_to_home",
-      "steps": [
-        {
-          "page": "login",
-          "action": "enter_username_password"
-        },
-        {
-          "page": "home",
-          "action": "land"
-        }
+      "id": "kb.component.standard_search.gpt",
+      "page": "standard-product-search",
+      "name": "P4_GPT_SEARCH",
+      "label": "Enter keyword or scan",
+      "actions": [
+        "#B129446122125873817"
       ],
-      "source": "report_58aa.md"
+      "source": "report_8d0d.md"
     }
   }
 }
