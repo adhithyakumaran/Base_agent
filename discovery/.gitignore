@@ -1,0 +1,4 @@
+**/raw/
+**/*password*
+**/.env
+**/*.pem

@@ -1,0 +1,97 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.page.administration",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T15:45:18Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ]
+  },
+  "body": {
+    "type": "page_map",
+    "title": "Administration",
+    "summary": "Discovered page alias `administration` during authenticated UAT crawl.",
+    "details": {
+      "page_alias": "administration",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration",
+      "headings": [
+        "Administration",
+        "Breadcrumb",
+        "Configuration",
+        "App Configuration",
+        "Maintain Item Size",
+        "Maintain ECOM Item Exception",
+        "Maintain Users",
+        "Maintain LOVs",
+        "Maintain New Collections",
+        "User Interface",
+        "Theme Style Selection",
+        "Activity Reports",
+        "Dashboard",
+        "Top Users",
+        "Application Error Log",
+        "Page Performance",
+        "Page Views",
+        "Access Control",
+        "ACL Information",
+        "User Counts Report",
+        "Users",
+        "Access Control",
+        "Feedback",
+        "Report"
+      ],
+      "regions": [
+        {
+          "id": "R45846284972937811",
+          "title": "Configuration"
+        },
+        {
+          "id": "R45846661244937811",
+          "title": "User Interface"
+        },
+        {
+          "id": "R45847106338937811",
+          "title": "Activity Reports"
+        },
+        {
+          "id": "R45847887133937811",
+          "title": "Access Control Add"
+        },
+        {
+          "id": "R45849056804937810",
+          "title": "User Counts Report"
+        },
+        {
+          "id": "R45854098641937803",
+          "title": "Feedback"
+        },
+        {
+          "id": "R45854489333937803",
+          "title": "Report"
+        }
+      ],
+      "buttons": [
+        "Main Navigation",
+        "Store: Chennai - Anna Nagar (ABO) - L2",
+        "ORSO Recommendation",
+        "Customer ( Click to Select )",
+        "bala",
+        "Add"
+      ],
+      "fields": [],
+      "grids": []
+    }
+  }
+}

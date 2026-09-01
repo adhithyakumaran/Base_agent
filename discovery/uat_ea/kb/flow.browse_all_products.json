@@ -1,0 +1,41 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.flow.browse_all_products",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T15:45:18Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ]
+  },
+  "body": {
+    "type": "flow",
+    "title": "browse_all_products",
+    "summary": "Candidate flow inferred from UAT discovery.",
+    "details": {
+      "name": "browse_all_products",
+      "steps": [
+        {
+          "page": "home",
+          "action": "open_all_products"
+        },
+        {
+          "page": "select-category",
+          "action": "select_or_skip"
+        }
+      ],
+      "evidence_of_inference": "Reached select-category"
+    }
+  }
+}

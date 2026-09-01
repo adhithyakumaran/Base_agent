@@ -1,0 +1,4008 @@
+{
+  "login_status": "success",
+  "app_name": "Endless Aisle",
+  "client_context": "Titan/Tanishq Endless Aisle UAT",
+  "login_url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/login",
+  "discovered_at": "2026-09-01T15:39:26Z",
+  "user": "BALA",
+  "apex": {
+    "app_id_hint": "1002",
+    "workspace": "tjdcom",
+    "app_alias": "ea",
+    "apex_version_hint": "26.1.0",
+    "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903",
+    "page_alias": "home"
+  },
+  "pages": [
+    {
+      "name": "home",
+      "menu_path": "home",
+      "title": "Endless Aisle",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "home"
+      },
+      "headings": [
+        "Navigation",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Customer Order",
+        "Best Deal",
+        "Smart Image Search",
+        "Find Price",
+        "Estimation Slip",
+        "Solitaire UIN",
+        "Crown Eye",
+        "Gold Coin Stock Visibility",
+        "Stock Visibility",
+        "My Store Stock",
+        "Open IBT Action - Urgent",
+        "Store Orders",
+        "Report",
+        "Customer Wishlist",
+        "Solitaire Products",
+        "New Collections",
+        "High Value Studded",
+        "Silver Collections",
+        "Size Based Search",
+        "National/Regional Best Seller",
+        "Dashboard",
+        "Browse Store Stock",
+        "Manual Invoice",
+        "KVI&FMC",
+        "Manual Bill commercial report",
+        "Manual Invoice Report"
+      ],
+      "regions": [
+        {
+          "id": "home_card_li",
+          "title": "Navigation"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "\u2726 STORE STOCK",
+          "id": "B74402876591024608"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Navigation All Products Item Search Rivaah Customer Order Best Deal Smart Image Search Find Price Estimation Slip Solitaire UIN Crown Eye Gold Coin Stock Visibility Stock Visibility My Store Stock Open IBT Action - Urgent Store Orders Report Customer Wishlist Solitaire Products New Collections High Value Studded Silver Collections Size Based Search National/Regional Best Seller Dashboard Browse Store Stock Manual Invoice KVI&FMC Manual Bill commercial report Manual Invoice Report Shubh Gold Express Home Delivery Logistic Partner Home Delivery Report Chatbot Click Log Product Catalogue \u2726 STORE STOCK R.EA.26.6.9",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home"
+    },
+    {
+      "name": "Store: Chennai - Anna Nagar (ABO) - L2",
+      "menu_path": "Store: Chennai - Anna Nagar (ABO) - L2",
+      "title": "Endless Aisle",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "home"
+      },
+      "headings": [
+        "Navigation",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Customer Order",
+        "Best Deal",
+        "Smart Image Search",
+        "Find Price",
+        "Estimation Slip",
+        "Solitaire UIN",
+        "Crown Eye",
+        "Gold Coin Stock Visibility",
+        "Stock Visibility",
+        "My Store Stock",
+        "Open IBT Action - Urgent",
+        "Store Orders",
+        "Report",
+        "Customer Wishlist",
+        "Solitaire Products",
+        "New Collections",
+        "High Value Studded",
+        "Silver Collections",
+        "Size Based Search",
+        "National/Regional Best Seller",
+        "Dashboard",
+        "Browse Store Stock",
+        "Manual Invoice",
+        "KVI&FMC",
+        "Manual Bill commercial report",
+        "Manual Invoice Report"
+      ],
+      "regions": [
+        {
+          "id": "home_card_li",
+          "title": "Navigation"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "\u2726 STORE STOCK",
+          "id": "B74402876591024608"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Navigation All Products Item Search Rivaah Customer Order Best Deal Smart Image Search Find Price Estimation Slip Solitaire UIN Crown Eye Gold Coin Stock Visibility Stock Visibility My Store Stock Open IBT Action - Urgent Store Orders Report Customer Wishlist Solitaire Products New Collections High Value Studded Silver Collections Size Based Search National/Regional Best Seller Dashboard Browse Store Stock Manual Invoice KVI&FMC Manual Bill commercial report Manual Invoice Report Shubh Gold Express Home Delivery Logistic Partner Home Delivery Report Chatbot Click Log Product Catalogue \u2726 STORE STOCK R.EA.26.6.9",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home"
+    },
+    {
+      "name": "ORSO Recommendation",
+      "menu_path": "ORSO Recommendation",
+      "title": "Landing Page Oracle REST Data Services",
+      "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      },
+      "headings": [
+        "SQL Developer Web",
+        "Oracle APEX",
+        "OAuth2 Administration"
+      ],
+      "regions": [],
+      "buttons": [
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "apex-cdb-button"
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "oauth-go-button"
+        }
+      ],
+      "fields": [
+        {
+          "id": "language-selector",
+          "name": null,
+          "type": "select",
+          "placeholder": null,
+          "label": "Language Selector"
+        },
+        {
+          "id": "sdw-card-actions__input-text",
+          "name": "sdw-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "apex-card-actions__input-text",
+          "name": "apex-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-text",
+          "name": "oauth-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-schema",
+          "name": "oauth-schema-input",
+          "type": "text",
+          "placeholder": "schema1",
+          "label": "Schema"
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [],
+      "nav_on_page": [],
+      "body_snip": "English - English German - Deutsch Spanish - Espa\u00f1ol (Internacional) French - Fran\u00e7ais (France) Italian - Italiano (Italia) Japanese - \u65e5\u672c\u8a9e Korean - \ud55c\uad6d\uc5b4 Portuguese - Portugu\u00eas (Brasil) Chinese (Simplified) - \u4e2d\u6587\uff08\u7b80\u4f53\uff09 Chinese (Traditional) - \u4e2d\u6587\uff08\u7e41\u9ad4\uff09 Oracle REST Data Services (ORDS) is the HTTPS Web Gateway for your Oracle Database. Features include SQL Developer Web, Oracle APEX access, REST APIs for your data and databases, Oracle Database API for MongoDB, and much more. SQL Developer Web Develop REST APIs, PL/SQL, MLE JavaScript, JSON, run SQL and scripts, load data, and more! Go Oracle APEX The world's most popular enterprise low-code application platform for scalable, secure enterprise apps. Go OAuth2 Administration Manage ORDS OAuth2 clients. Schema Go Blogs Tutorials Videos Forums",
+      "url_path": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+    },
+    {
+      "name": "Customer ( Click to Select )",
+      "menu_path": "Customer ( Click to Select )",
+      "title": "Landing Page Oracle REST Data Services",
+      "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      },
+      "headings": [
+        "SQL Developer Web",
+        "Oracle APEX",
+        "OAuth2 Administration"
+      ],
+      "regions": [],
+      "buttons": [
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "apex-cdb-button"
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "oauth-go-button"
+        }
+      ],
+      "fields": [
+        {
+          "id": "language-selector",
+          "name": null,
+          "type": "select",
+          "placeholder": null,
+          "label": "Language Selector"
+        },
+        {
+          "id": "sdw-card-actions__input-text",
+          "name": "sdw-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "apex-card-actions__input-text",
+          "name": "apex-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-text",
+          "name": "oauth-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-schema",
+          "name": "oauth-schema-input",
+          "type": "text",
+          "placeholder": "schema1",
+          "label": "Schema"
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [],
+      "nav_on_page": [],
+      "body_snip": "English - English German - Deutsch Spanish - Espa\u00f1ol (Internacional) French - Fran\u00e7ais (France) Italian - Italiano (Italia) Japanese - \u65e5\u672c\u8a9e Korean - \ud55c\uad6d\uc5b4 Portuguese - Portugu\u00eas (Brasil) Chinese (Simplified) - \u4e2d\u6587\uff08\u7b80\u4f53\uff09 Chinese (Traditional) - \u4e2d\u6587\uff08\u7e41\u9ad4\uff09 Oracle REST Data Services (ORDS) is the HTTPS Web Gateway for your Oracle Database. Features include SQL Developer Web, Oracle APEX access, REST APIs for your data and databases, Oracle Database API for MongoDB, and much more. SQL Developer Web Develop REST APIs, PL/SQL, MLE JavaScript, JSON, run SQL and scripts, load data, and more! Go Oracle APEX The world's most popular enterprise low-code application platform for scalable, secure enterprise apps. Go OAuth2 Administration Manage ORDS OAuth2 clients. Schema Go Blogs Tutorials Videos Forums",
+      "url_path": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+    },
+    {
+      "name": "Home",
+      "menu_path": "Home",
+      "title": "Endless Aisle",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "home"
+      },
+      "headings": [
+        "Navigation",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Customer Order",
+        "Best Deal",
+        "Smart Image Search",
+        "Find Price",
+        "Estimation Slip",
+        "Solitaire UIN",
+        "Crown Eye",
+        "Gold Coin Stock Visibility",
+        "Stock Visibility",
+        "My Store Stock",
+        "Open IBT Action - Urgent",
+        "Store Orders",
+        "Report",
+        "Customer Wishlist",
+        "Solitaire Products",
+        "New Collections",
+        "High Value Studded",
+        "Silver Collections",
+        "Size Based Search",
+        "National/Regional Best Seller",
+        "Dashboard",
+        "Browse Store Stock",
+        "Manual Invoice",
+        "KVI&FMC",
+        "Manual Bill commercial report",
+        "Manual Invoice Report"
+      ],
+      "regions": [
+        {
+          "id": "home_card_li",
+          "title": "Navigation"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "\u2726 STORE STOCK",
+          "id": "B74402876591024608"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Navigation All Products Item Search Rivaah Customer Order Best Deal Smart Image Search Find Price Estimation Slip Solitaire UIN Crown Eye Gold Coin Stock Visibility Stock Visibility My Store Stock Open IBT Action - Urgent Store Orders Report Customer Wishlist Solitaire Products New Collections High Value Studded Silver Collections Size Based Search National/Regional Best Seller Dashboard Browse Store Stock Manual Invoice KVI&FMC Manual Bill commercial report Manual Invoice Report Shubh Gold Express Home Delivery Logistic Partner Home Delivery Report Chatbot Click Log Product Catalogue \u2726 STORE STOCK R.EA.26.6.9",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home"
+    },
+    {
+      "name": "All Products",
+      "menu_path": "All Products",
+      "title": "Select Category",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/select-category",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/select-category",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "select-category"
+      },
+      "headings": [
+        "All Products",
+        "Breadcrumb",
+        "Select the Category"
+      ],
+      "regions": [
+        {
+          "id": "R24669030873205910",
+          "title": "Select the Category Skip & Continue"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "Skip & Continue",
+          "id": "B24670534966205925"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [
+        "Earrings",
+        "Bangles",
+        "Mangalsutra",
+        "Finger Rings",
+        "Chains",
+        "Necklace",
+        "Others"
+      ],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Home All Products Select the Category Skip & Continue Earrings Bangles Mangalsutra Finger Rings Chains Necklace Others R.EA.26.6.9",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/select-category"
+    },
+    {
+      "name": "Item Search",
+      "menu_path": "Item Search",
+      "title": "Product Search",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-detail-item-search",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-detail-item-search",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "product-detail-item-search"
+      },
+      "headings": [
+        "Product Search",
+        "itemcode",
+        "Text Region"
+      ],
+      "regions": [
+        {
+          "id": "R25212527152989910",
+          "title": "itemcode"
+        },
+        {
+          "id": "R24029050082184008",
+          "title": "Text Region"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "* Booking of NAP Stock is available through the NAP System. Please contact the commercial team for further assistance.",
+          "id": "B74404790614024627"
+        },
+        {
+          "text": "Scan",
+          "id": "B24029796092184015"
+        },
+        {
+          "text": "Search",
+          "id": "btn_search"
+        }
+      ],
+      "fields": [
+        {
+          "id": "P6_SKU",
+          "name": "P6_SKU",
+          "type": "text",
+          "placeholder": "Enter item code or scan the QR ",
+          "label": "Enter item code or scan The QR"
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Product Search * Booking of NAP Stock is available through the NAP System. Please contact the commercial team for further assistance. Enter item code or scan The QR Enter 14 digit item code or scan the QR code to view the product detail R.EA.26.6.9",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-detail-item-search"
+    },
+    {
+      "name": "Rivaah",
+      "menu_path": "Rivaah",
+      "title": "Rivaah",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/rivaah",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/rivaah",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "rivaah"
+      },
+      "headings": [
+        "Rivaah",
+        "Wedding Trousseau Styling",
+        "Trousseau Set Image",
+        "Engagement Rings",
+        "Wedding Experts",
+        "Rivaah Wedding Wishlist"
+      ],
+      "regions": [
+        {
+          "id": "R673758142927726976",
+          "title": "Rivaah"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "Back",
+          "id": "B50666671840999844"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [
+        "Wedding Trousseau Styling",
+        "Trousseau Set Image",
+        "Engagement Rings",
+        "Wedding Experts",
+        "Rivaah Wedding Wishlist"
+      ],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Inter Boutique Transfer",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Inter Boutique Transfer",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/inter-boutique-transfer?session=6369775610903"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Inter Boutique Transfer Administration Manual Invoice Wedding Trousseau Styling Trousseau Set Image Engagement Rings Wedding Experts Rivaah Wedding Wishlist R.EA.26.6.9 Back",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/rivaah"
+    },
+    {
+      "name": "Product Catalogue",
+      "menu_path": "Product Catalogue",
+      "title": "Product Catalogue",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "product-catalogue"
+      },
+      "headings": [
+        "Rivaah Catalogues",
+        "Gujarat catalogue",
+        "Telugu catalogue",
+        "Bihar catalogue",
+        "Rivaah Bride",
+        "Metro_Rivaah",
+        "Marwadi",
+        "Uttra Pradesh",
+        "Bengal",
+        "Tamil",
+        "Festive diamond",
+        "Rivaah X Tarun Tahiliani",
+        "Aishani",
+        "Marathi",
+        "Orissa",
+        "Kannada",
+        "Collection Catalogues",
+        "Alekhya",
+        "Dhanteras",
+        "Chozha",
+        "Celeste",
+        "Impressions of Nature Neckwear",
+        "Impressions of Nature Pendant",
+        "Impressions of Nature Earrings",
+        "Mystique",
+        "Varamahalakshmi",
+        "Everyday",
+        "FOD HVS",
+        "Festival of Diamonds",
+        "Enchanted"
+      ],
+      "regions": [
+        {
+          "id": "rivaahCards",
+          "title": "Rivaah Catalogues"
+        },
+        {
+          "id": "R278622848364823367",
+          "title": "Collection Catalogues"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "Next",
+          "id": null
+        },
+        {
+          "text": "Back",
+          "id": "B50866183833378847"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [
+        "Gujarat catalogue",
+        "Telugu catalogue",
+        "Bihar catalogue",
+        "Rivaah Bride",
+        "Metro_Rivaah",
+        "Marwadi",
+        "Uttra Pradesh",
+        "Bengal",
+        "Tamil",
+        "Festive diamond",
+        "Rivaah X Tarun Tahiliani",
+        "Aishani",
+        "Marathi",
+        "Orissa",
+        "Kannada",
+        "Alekhya",
+        "Dhanteras",
+        "Chozha",
+        "Celeste",
+        "Impressions of Nature Neckwear",
+        "Impressions of Nature Pendant",
+        "Impressions of Nature Earrings",
+        "Mystique",
+        "Varamahalakshmi",
+        "Everyday"
+      ],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Rivaah Catalogues Gujarat catalogue Telugu catalogue Bihar catalogue Rivaah Bride Metro_Rivaah Marwadi Uttra Pradesh Bengal Tamil Festive diamond Rivaah X Tarun Tahiliani Aishani Marathi Orissa Kannada 1 - 15 Collection Catalogues Alekhya Dhanteras Chozha Celeste Impressions of Nature Neckwear Impressions of Nature Pendant Impressions of Nature Earrings Mystique Varamahalakshmi Everyday FOD HVS Festival of Diamonds Enchanted Aalo Navraani1 Navraani2 Diamond Bangle Elan RIR Catalogue Hues 1 - 20 Next R.EA.26.6.9 Back",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue"
+    },
+    {
+      "name": "Reports",
+      "menu_path": "Reports",
+      "title": "Reports",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/51",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/51",
+        "workspace": "tjdcom",
+        "app_alias": "ea1",
+        "page_alias": "51"
+      },
+      "headings": [
+        "Reports",
+        "Breadcrumb",
+        "Master Reports",
+        "Order Status",
+        "Request Status",
+        "Logged in Users",
+        "PDF/WhatsApp Export Report",
+        "Stock Check by Boutique",
+        "Auto STN Exception Report",
+        "TryOn Usage",
+        "Best Deal - Hit Rate",
+        "Best Deal - Complete Report",
+        "Customer Wishlist Dashboard",
+        "My Store Upload Usage",
+        "Estimation Slip Report",
+        "Image Search Usage",
+        "Daily Order Details Report",
+        "QR Users Report",
+        "Dreams In Gold",
+        "QMS Report"
+      ],
+      "regions": [
+        {
+          "id": "R693915907406839440",
+          "title": "Master Reports"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO)",
+          "id": null
+        },
+        {
+          "text": "L2",
+          "id": null
+        },
+        {
+          "text": "user: bala",
+          "id": "L20585798870312880"
+        }
+      ],
+      "fields": [
+        {
+          "id": "P0_INTERNET_SPEED",
+          "name": null,
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "Standard Product",
+        "Item Search",
+        "Smart Image Search",
+        "Rivaah",
+        "Best Deal",
+        "Find Price",
+        "Estimation Slip",
+        "Gold Coin Stock Visibility",
+        "Reports"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fsession%3D6369775610903%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2320435465961313136"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO)",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Fcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Standard Product",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fstandard-product-search%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F6%3Fclear%3D6%26session%3D6369775610903&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Smart Image Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsmart-image-search1%3Fsession%3D6369775610903&p_cat=Image%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F24%3Fsession%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Find Price",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F31%3Fclear%3D31%26session%3D6369775610903&p_cat=Find%20Price%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Estimation Slip",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/estimation-slip?p86_refresh=Y&session=6369775610903"
+        },
+        {
+          "text": "Gold Coin Stock Visibility",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/69?clear=69&session=6369775610903&cs=38Zu2YeNmn4UMQWxPX5a4C4UVFL8ngkbwASCVONFyBKsLbWmdjt_AZKpeKCbWF3HvqumpDxMqdCMPuaA41mI2bQ"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Fclear%3DRIR%2C29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fclear%3DRP%2C78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2320435465961313136"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/login?session=6369775610903"
+        }
+      ],
+      "body_snip": "Skip to Main Content Customer ( Click to Select ) Store: Chennai - Anna Nagar (ABO) L2 user: bala Home Standard Product Item Search Smart Image Search Rivaah Best Deal Find Price Estimation Slip Gold Coin Stock Visibility Reports Reports Order Status Request Status Logged in Users PDF/WhatsApp Export Report Stock Check by Boutique Auto STN Exception Report TryOn Usage Best Deal - Hit Rate Best Deal - Complete Report Customer Wishlist Dashboard My Store Upload Usage Estimation Slip Report Image Search Usage Daily Order Details Report QR Users Report Dreams In Gold QMS Report R.COM.2021.6.1",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/51"
+    },
+    {
+      "name": "Best Deal",
+      "menu_path": "Best Deal",
+      "title": "Product Discount",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "product-discount"
+      },
+      "headings": [
+        "Button Holder",
+        "Search Results",
+        "Search",
+        "BRAND",
+        "PRICE",
+        "Discount",
+        "JEWELLERY TYPE",
+        "PRODUCT",
+        "GENDER",
+        "COLLECTION",
+        "METAL COLOR",
+        "TYPE",
+        "GOLD KARATAGE",
+        "SIZE",
+        "Customer Details",
+        "Selected images"
+      ],
+      "regions": [
+        {
+          "id": "R1223761554222558591",
+          "title": "Button Holder"
+        },
+        {
+          "id": "DiscountSearch",
+          "title": "Search Results"
+        },
+        {
+          "id": "rgn_pdf_selected_images",
+          "title": "Selected images"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "Scan",
+          "id": "B48102240460464158"
+        },
+        {
+          "text": "Make your own catalogue",
+          "id": "B33056358867480913"
+        },
+        {
+          "text": "Price",
+          "id": "B33055713432480907"
+        },
+        {
+          "text": "Price",
+          "id": "B33056028874480910"
+        },
+        {
+          "text": "Expand / Collapse Side Column",
+          "id": "t_Button_rightControlButton"
+        },
+        {
+          "text": "Tanishq",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "COLLECTION Options",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        },
+        {
+          "text": "Show Less",
+          "id": null
+        },
+        {
+          "text": "Clear",
+          "id": null
+        },
+        {
+          "text": "Show All",
+          "id": null
+        }
+      ],
+      "fields": [
+        {
+          "id": "R1206613518417325526_fr_search",
+          "name": null,
+          "type": "search",
+          "placeholder": "Search...",
+          "label": ""
+        },
+        {
+          "id": "R1206613518417325526_fr_0_1",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Tanishq11,566"
+        },
+        {
+          "id": "R1206613518417325526_fr_0_0",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "MIA10"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_0",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "0 to 10 k3,208"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_1",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "10 to 25 k1,204"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_2",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "25 to 50 k1,907"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_3",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "50 to 1 lac1,861"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_4",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "1 to 2 lac1,596"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_5",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "2 to 5 lac1,428"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_6",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "5 to 10 lac282"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_7",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "10 lac+78"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_ib",
+          "name": null,
+          "type": "number",
+          "placeholder": null,
+          "label": "Range Begin"
+        },
+        {
+          "id": "R1206613518417325526_fr_1_ie",
+          "name": null,
+          "type": "number",
+          "placeholder": null,
+          "label": "to"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_0",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "0%-10%"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_1",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "10%-20%"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_2",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "20%-30%"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_3",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "30%-40%"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_4",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "40%-50%"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_5",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "50%+"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_ib",
+          "name": null,
+          "type": "number",
+          "placeholder": null,
+          "label": "Range Begin"
+        },
+        {
+          "id": "R1206613518417325526_fr_2_ie",
+          "name": null,
+          "type": "number",
+          "placeholder": null,
+          "label": "to"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_1",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Gold Jewellery3,763"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_4",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Plain Jewellery3,082"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_5",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Plain Jewellery with Stones704"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_0",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Diamond Jewellery699"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_7",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Studded Jewellery422"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_2",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Jewellery with Gemstones42"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_6",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Platinum Jewellery15"
+        },
+        {
+          "id": "R1206613518417325526_fr_3_3",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Plain Gold Jewellery5"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_4",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Earrings1,679"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_5",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Finger Ring1,295"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_0",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Bangle1,277"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_2",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Chain1,069"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_19",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Pendant815"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_14",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Necklace Set413"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_11",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Mangalsutra394"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_23",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Set 2368"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_1",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Bracelet316"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_20",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Pendant and Earrings Set217"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_7",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Haram196"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_13",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Necklace115"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_15",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Neckwear111"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_18",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Others91"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_21",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Pendant with Chain86"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_10",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Maang Tikka67"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_17",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Nose Pin48"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_16",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Neckwear Set38"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_22",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Pendant with Chain and Earrings Set35"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_28",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Stud Earring30"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_9",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Kada21"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_29",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Waist Belt11"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_6",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Gold Coin6"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_3",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Drop Earring4"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_25",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Set 44"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_8",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Hoop Earring3"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_12",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Mangalsutra Set3"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_26",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Set 52"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_27",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Set 72"
+        },
+        {
+          "id": "R1206613518417325526_fr_4_24",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Set 31"
+        },
+        {
+          "id": "R1206613518417325526_fr_5_3",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "WOMEN4,697"
+        },
+        {
+          "id": "R1206613518417325526_fr_5_1",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "MEN411"
+        },
+        {
+          "id": "R1206613518417325526_fr_5_2",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "UNISEX238"
+        },
+        {
+          "id": "R1206613518417325526_fr_5_0",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "KIDS135"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_f",
+          "name": null,
+          "type": "search",
+          "placeholder": "Filter COLLECTION",
+          "label": "Filter COLLECTION"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_16",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Bestsellers3,160"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_94",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "REGULAR2,117"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_31",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "CORE-23430"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_29",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "CORE-21283"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_102",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Shagun236"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_56",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Engagement Ring176"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_30",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "CORE-22167"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_32",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "CORE-24152"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_13",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Aveer146"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_76",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Modern Gold142"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_98",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Rivaah136"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_116",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Udayam135"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_89",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Padmaja95"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_43",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Core 2078"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_9",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Akshayam76"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_28",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "CORE-2068"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_118",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Utsava53"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_50",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Diamond Treats47"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_75",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Mangalam46"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_8",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Aarambh43"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_5",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "ARPAS41"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_108",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Swarnam40"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_97",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Religious39"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_7",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Aaheli38"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_109",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Swayahm37"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_77",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Modern Polki36"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_55",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Ekatvam33"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_85",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Once Upon a Moment32"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_68",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "KIDS-COLLECTION29"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_10",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Alekhya26"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_45",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "DOR24"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_64",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Glamdays23"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_70",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Kakatiya21"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_105",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "String it20"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_27",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "CORE-1919"
+        },
+        {
+          "id": "R1206613518417325526_fr_6_90",
+          "name": null,
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Platinum Collections19"
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Scan Make your own catalogue Price Price Search Results \u20b9 5,297 Approx. SIMPLE GOLD RING \u20b9 73,435 Approx. SLEEK TRIANGLE DIAMOND BANGLE \u20b9 53,702 Approx. STYLISH STUD DIAMOND EARRING F.. \u20b9 4,78,375 Approx. DAZZLING ELEGANCE DIAMOND NECK.. \u20b9 80,321 Approx. CONTEMPORARY MATTE FINGER RING \u20b9 71,607 Approx. DYNAMIC EDGE FINGER RING \u20b9 95,022 Approx. CLASSIC LOCKS CHAIN IN 22 KARA.. \u20b9 23,069 Approx. SHIMMERING NATURE INSPIRED GOL.. \u20b9 2,25,211 Approx. DAZZLING 22 KARAT YELLOW GOLD .. \u20b9 9,494 Approx. INTRICATE FLORAL PATTERN GOLD .. \u20b9 13,555 Approx. CONTEMPORARY FLORAL STUD EARRI.. \u20b9 2,69,993 Approx. CONTEMPORARY CHIC GOLD BANGLE \u20b9 3,04,034 Approx. FLORAL RADIANCE DIAMOND NECKLA.. \u20b9 23,825 Approx. TWO TONED RHODIUM FINISH GOLD .. \u20b9 2,96,320 Approx. LUMINOUS TREASURE DIAMOND NECK.. \u20b9 2,93,233 Approx. DIVINE FLORAL DIAMOND NECKLACE.. \u20b9 3,56,075 Approx. TIMELESS DIAMOND NECKLACE SET \u20b9 2,21,507 Approx. MAGNIFICENT DIAMOND NECKLACE S.. \u20b9 3,01,561 Approx. FLORAL GARLAND DIAMOND NECKLAC.. \u20b9 37,854 Approx. ENTRANCING 18 KARAT YELLOW GOL.. \u20b9 1,19,936 Approx. ETHNIC JALI WORK CHARMING GOLD.. \u20b9 76,282 Approx. DAINTY VINES DIAMOND MANGALSUT.. \u20b9 18,047 Approx. TIMELESS 18 KARAT YELLOW GOLD .. \u20b9 4,06,956 Approx. FLORAL LUMINESCENCE OPEN POLKI.. \u20b9 1,97,266 Approx. FESTIVE SPLENDOR DIAMOND NECKL.. \u20b9 31,453 Approx. BEAUTIFUL STYLISH GOLD CHAIN \u20b9 25,638 Approx. SLEEK PLATINUM CHAIN FOR EVERY.. \u20b9 46,285 Approx. ZAYN PLATINUM CHAIN \u20b9 55,014 Approx. SPLENDID 22 KARAT YELLOW GOLD .. \u20b9 10,855 Approx. SPIRAL DESIGN GOLD FINGER RING \u20b9 41,241 Approx. ETHEREAL GOLD CHAIN WITH TEXTU.. \u20b9 15,759 Approx. RADIANT DIAMOND REFLECTIONS FI.. \u20b9 1,07,181 Approx. SIMPLE AND ELEGANT 22 KARAT GO.. \u20b9 10,941 Approx. DAINTY LEAF PENDANT \u20b9 38,594 Approx. SIMPLE AND CLASSY GOLD CHAIN F.. \u20b9 31,258 Approx. LUMINOUS DIAMOND FINGER RING \u20b9 64,467 Approx. SPIRAL GLAM DIAMOND FINGER RIN.. \u20b9 49,303 Approx. CONTEMPORARY J BALI GOLD HOOP .. \u20b9 41,105 Approx. ATTRACTIVE 18 KARAT YELLOW GOL.. \u20b9 3,03,898 Approx. EXQUISITE GLAM DIAMOND BANGLE \u20b9 2,11,923 Approx. AARIFAH DIAMOND BANGLE \u20b9 21,974 Approx. INTERLINKING PLATINUM FINGER R.. \u20b9 2,59,598 Approx. LOVELY SHIMMERING DIAMOND BANG.. \u20b9 69,207 Approx. GLIMMERING 950 PURE PLATINUM A.. \u20b9 60,376 Approx. CLASSY WRAP PLATINUM RING FOR .. \u20b9 61,097 Approx. CHARMING GOLD CHAIN FOR KIDS \u20b9 79,589 Approx. WHISPER OF FOREVER PLATINUM SO.. \u20b9 92,311 Approx. ECLECTIC MANGALSUTRA \u20b9 39,952 Approx. ELEGANT 950 PLATINUM TEXTURED .. \u20b9 40,751 Approx. CONTEMPORARY SLEEK GOLD BEAD C.. 1-50 51-100 101-150 151-200 201-250 Next R.EA.26.6.9 Search BRAND Tanishq BRAND Clear Tanishq11,566 MIA10 PRICE 0 to 10 k3,208 10 to 25 k1,204 25 to 50 k1,907 50 to 1 lac1,861 1 to 2 lac1,596 2 to 5 lac1,428 5 to 10 lac282 10 lac+78 to Go Discount 0%-10% to Go JEWELLERY TYPE PRODUCT GENDER COLLEC",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount"
+    },
+    {
+      "name": "Administration",
+      "menu_path": "Administration",
+      "title": "Administration",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration",
+        "workspace": "tjdcom",
+        "app_alias": "ea",
+        "page_alias": "administration"
+      },
+      "headings": [
+        "Administration",
+        "Breadcrumb",
+        "Configuration",
+        "App Configuration",
+        "Maintain Item Size",
+        "Maintain ECOM Item Exception",
+        "Maintain Users",
+        "Maintain LOVs",
+        "Maintain New Collections",
+        "User Interface",
+        "Theme Style Selection",
+        "Activity Reports",
+        "Dashboard",
+        "Top Users",
+        "Application Error Log",
+        "Page Performance",
+        "Page Views",
+        "Access Control",
+        "ACL Information",
+        "User Counts Report",
+        "Users",
+        "Access Control",
+        "Feedback",
+        "Report"
+      ],
+      "regions": [
+        {
+          "id": "R45846284972937811",
+          "title": "Configuration"
+        },
+        {
+          "id": "R45846661244937811",
+          "title": "User Interface"
+        },
+        {
+          "id": "R45847106338937811",
+          "title": "Activity Reports"
+        },
+        {
+          "id": "R45847887133937811",
+          "title": "Access Control Add"
+        },
+        {
+          "id": "R45849056804937810",
+          "title": "User Counts Report"
+        },
+        {
+          "id": "R45854098641937803",
+          "title": "Feedback"
+        },
+        {
+          "id": "R45854489333937803",
+          "title": "Report"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "id": null
+        },
+        {
+          "text": "ORSO Recommendation",
+          "id": null
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "bala",
+          "id": "L21731618447730172"
+        },
+        {
+          "text": "Add",
+          "id": "B25253793358624943"
+        }
+      ],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Product Catalogue",
+        "Reports",
+        "Best Deal",
+        "Administration",
+        "Manual Invoice"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "ORSO Recommendation",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "All Products",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Product Catalogue",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Administration",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+        },
+        {
+          "text": "Manual Invoice",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "Settings",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+        },
+        {
+          "text": "---",
+          "href": "https://dev-ea.titanrts.com/ords/separator"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+        }
+      ],
+      "body_snip": "Skip to Main Content Store: Chennai - Anna Nagar (ABO) - L2 ORSO Recommendation Customer ( Click to Select ) bala Home All Products Item Search Rivaah Product Catalogue Reports Best Deal Administration Manual Invoice Home Administration Configuration App Configuration Maintain the Application Configurations Maintain Item Size Maintain ECOM Item Exception Maintain Users Maintain LOVs Maintain New Collections User Interface Theme Style Selection Set the default application look and feel Activity Reports Dashboard View application activity metrics Top Users Report of page views aggregated by user Application Error Log Report of errors logged by this application Page Performance Report of activity and performance by application page Page Views Report of each page view by user including date of access and elapsed time Access Control Add ACL Information All authenticated users can access this application Administrator 23 Admin 16 All Store 12 RSO 8 BOS 7 Discovery_Level_2 7 BOS_Commercial 6 IBD_EA 6 IT 6 Image Search 6 Users Change access control settings and disable access control Access Control Set level of access for authenticated users of this application Feedback no data found R.EA.26.6.9",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration"
+    },
+    {
+      "name": "Manual Invoice",
+      "menu_path": "Manual Invoice",
+      "title": "Manual Bills Book",
+      "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book",
+        "workspace": "tjdcom",
+        "app_alias": "ea1",
+        "page_alias": "manual-bills-book"
+      },
+      "headings": [
+        "Manual Bills Book",
+        "Breadcrumb",
+        "Manual Bill",
+        "Brand & Store Details",
+        "TITAN COMPANY LIMITED",
+        "Product & Gold rate",
+        "TAX INVOICE",
+        "Customer Details",
+        "Store details",
+        "List of items_test",
+        "Grid Settings",
+        "Payment Details",
+        "Product Received by",
+        "Terms and conditions",
+        "Authorised signature"
+      ],
+      "regions": [
+        {
+          "id": "R141684334937583944",
+          "title": "Manual Bill"
+        },
+        {
+          "id": "R141684363112583945",
+          "title": "Brand & Store Details"
+        },
+        {
+          "id": "R141684515687583946",
+          "title": "Product & Gold rate"
+        },
+        {
+          "id": "R141372208902776833",
+          "title": "Customer Details"
+        },
+        {
+          "id": "R141372318703776834",
+          "title": "Store details"
+        },
+        {
+          "id": "R141372496938776836",
+          "title": "Payment Details"
+        },
+        {
+          "id": "R141684180119583943",
+          "title": "Product Received by"
+        },
+        {
+          "id": "R48550776680788343",
+          "title": "Terms and conditions"
+        },
+        {
+          "id": "R141372734739776838",
+          "title": "Authorised signature"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "Main Navigation",
+          "id": "t_Button_navControl"
+        },
+        {
+          "text": "Customer ( Click to Select )",
+          "id": null
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO)",
+          "id": null
+        },
+        {
+          "text": "L2",
+          "id": null
+        },
+        {
+          "text": "user: bala",
+          "id": "L20585798870312880"
+        },
+        {
+          "text": "Columns to search",
+          "id": "IG_BILLS_ig_toolbar_column_filter_button"
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Actions",
+          "id": "IG_BILLS_ig_toolbar_actions_button"
+        },
+        {
+          "text": "Edit",
+          "id": "IG_BILLS_ig_toolbar_m1"
+        },
+        {
+          "text": "Save",
+          "id": null
+        },
+        {
+          "text": "Add Row",
+          "id": null
+        },
+        {
+          "text": "Reset",
+          "id": null
+        },
+        {
+          "text": "Selection Actions",
+          "id": null
+        },
+        {
+          "text": "Selection Actions",
+          "id": null
+        },
+        {
+          "text": "Row Actions",
+          "id": null
+        },
+        {
+          "text": "Sort Ascending",
+          "id": null
+        },
+        {
+          "text": "Sort Descending",
+          "id": null
+        },
+        {
+          "text": "Grid View",
+          "id": null
+        },
+        {
+          "text": "Change",
+          "id": null
+        },
+        {
+          "text": "Settings",
+          "id": "IG_BILLS_ig_singleRow_vc_tb_m2"
+        },
+        {
+          "text": "Previous",
+          "id": null
+        },
+        {
+          "text": "Next",
+          "id": null
+        },
+        {
+          "text": "Create invoice",
+          "id": "B141685633397583957"
+        }
+      ],
+      "fields": [
+        {
+          "id": "P0_INTERNET_SPEED",
+          "name": null,
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "P134_PRODUCT_CATEGORY_0",
+          "name": "P134_PRODUCT_CATEGORY",
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Tanishq Studded"
+        },
+        {
+          "id": "P134_PRODUCT_CATEGORY_1",
+          "name": "P134_PRODUCT_CATEGORY",
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Platinum"
+        },
+        {
+          "id": "P134_PRODUCT_CATEGORY_2",
+          "name": "P134_PRODUCT_CATEGORY",
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Plain Gold"
+        },
+        {
+          "id": "P134_PRODUCT_CATEGORY_3",
+          "name": "P134_PRODUCT_CATEGORY",
+          "type": "checkbox",
+          "placeholder": null,
+          "label": "Gold Coin"
+        },
+        {
+          "id": "P134_GOLD_RATE",
+          "name": "P134_GOLD_RATE",
+          "type": "text",
+          "placeholder": null,
+          "label": "Gold Rate per Gram(22k) :"
+        },
+        {
+          "id": "P134_PLATINUM_RATE",
+          "name": "P134_PLATINUM_RATE",
+          "type": "text",
+          "placeholder": null,
+          "label": "Platinum Rate"
+        },
+        {
+          "id": "P134_CUST_NUMBER",
+          "name": "P134_CUST_NUMBER",
+          "type": "text",
+          "placeholder": null,
+          "label": "Mobile number"
+        },
+        {
+          "id": "P134_CUST_NAME",
+          "name": "P134_CUST_NAME",
+          "type": "text",
+          "placeholder": null,
+          "label": "Customer Name"
+        },
+        {
+          "id": "P134_CUST_ADDRESS",
+          "name": "P134_CUST_ADDRESS",
+          "type": "text",
+          "placeholder": null,
+          "label": "Address"
+        },
+        {
+          "id": "P134_CUST_CITY",
+          "name": "P134_CUST_CITY",
+          "type": "text",
+          "placeholder": null,
+          "label": "City"
+        },
+        {
+          "id": "P134_CUST_STATE",
+          "name": "P134_CUST_STATE",
+          "type": "text",
+          "placeholder": null,
+          "label": "State"
+        },
+        {
+          "id": "P134_CUST_EMAIL",
+          "name": "P134_CUST_EMAIL",
+          "type": "text",
+          "placeholder": null,
+          "label": "Email"
+        },
+        {
+          "id": "P134_CUST_ENCIRCLE_NO",
+          "name": "P134_CUST_ENCIRCLE_NO",
+          "type": "text",
+          "placeholder": null,
+          "label": "Encircle No"
+        },
+        {
+          "id": "IG_BILLS_ig_toolbar_search_field",
+          "name": null,
+          "type": "search",
+          "placeholder": "Search: All Text Columns",
+          "label": "Row Search"
+        },
+        {
+          "id": null,
+          "name": null,
+          "type": "select",
+          "placeholder": null,
+          "label": "Saved Reports"
+        },
+        {
+          "id": "C94454397003787415_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Item Code"
+        },
+        {
+          "id": "C94454429642787416_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Lot No"
+        },
+        {
+          "id": "C94454543847787417_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Quantity <br>(Nos)"
+        },
+        {
+          "id": "C94454669935787418_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Unit Price <br>(Rs.)"
+        },
+        {
+          "id": "C94454771089787419_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Gross Weight <br>(Grams)"
+        },
+        {
+          "id": "C94454865395787420_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Net Weight <br> (Grams)"
+        },
+        {
+          "id": "C94454926536787421_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Diamond Weight <br> (in CTS)"
+        },
+        {
+          "id": "C94455358316787425_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Discount percent<br>%"
+        },
+        {
+          "id": "C94455497934787426_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Discount <br> (Rs.)"
+        },
+        {
+          "id": "C94456515502787437_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "GST<br>(Rs.)"
+        },
+        {
+          "id": "C106105545113682004_RO",
+          "name": null,
+          "type": "textarea",
+          "placeholder": null,
+          "label": "Total Value"
+        },
+        {
+          "id": "C94454397003787415",
+          "name": "94454397003787415",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94454429642787416",
+          "name": "94454429642787416",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94454543847787417",
+          "name": "94454543847787417",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94454669935787418",
+          "name": "94454669935787418",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94454771089787419",
+          "name": "94454771089787419",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94454865395787420",
+          "name": "94454865395787420",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94454926536787421",
+          "name": "94454926536787421",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94455358316787425",
+          "name": "94455358316787425",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94455497934787426",
+          "name": "94455497934787426",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C94456515502787437",
+          "name": "94456515502787437",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "C106105545113682004",
+          "name": "106105545113682004",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "P134_CASH",
+          "name": "P134_CASH",
+          "type": "text",
+          "placeholder": null,
+          "label": "Cash"
+        },
+        {
+          "id": "P134_CREDIT_CARD",
+          "name": "P134_CREDIT_CARD",
+          "type": "text",
+          "placeholder": null,
+          "label": "Credit Cards"
+        },
+        {
+          "id": "P134_CHEQUE",
+          "name": "P134_CHEQUE",
+          "type": "text",
+          "placeholder": null,
+          "label": "Cheque"
+        },
+        {
+          "id": "P134_TOTAL_AMT",
+          "name": "P134_TOTAL_AMT",
+          "type": "text",
+          "placeholder": null,
+          "label": "Invoice Amount :"
+        },
+        {
+          "id": "P134_CN_NO",
+          "name": "P134_CN_NO",
+          "type": "text",
+          "placeholder": null,
+          "label": "C/N value"
+        },
+        {
+          "id": "P134_ENCIRCLE_NO",
+          "name": "P134_ENCIRCLE_NO",
+          "type": "text",
+          "placeholder": null,
+          "label": "Encircle points"
+        },
+        {
+          "id": "P134_GV",
+          "name": "P134_GV",
+          "type": "text",
+          "placeholder": null,
+          "label": "Gift Voucher"
+        },
+        {
+          "id": "P134_OTHER_PAYMENT",
+          "name": "P134_OTHER_PAYMENT",
+          "type": "select",
+          "placeholder": null,
+          "label": "other payments"
+        },
+        {
+          "id": "P134_OTHERS_VALUE",
+          "name": "P134_OTHERS_VALUE",
+          "type": "text",
+          "placeholder": null,
+          "label": "Amount"
+        },
+        {
+          "id": "P134_RSO_NAME_input",
+          "name": "P134_RSO_NAME",
+          "type": "text",
+          "placeholder": null,
+          "label": ""
+        },
+        {
+          "id": "P134_REASON",
+          "name": "P134_REASON",
+          "type": "text",
+          "placeholder": null,
+          "label": "Reason for Manual bill"
+        },
+        {
+          "id": "P134_CASHIER",
+          "name": "P134_CASHIER",
+          "type": "text",
+          "placeholder": null,
+          "label": "Cashier name"
+        },
+        {
+          "id": "P134_APPROVER",
+          "name": "P134_APPROVER",
+          "type": "text",
+          "placeholder": null,
+          "label": "Approver name"
+        },
+        {
+          "id": "P134_CUSTOMER_NAME",
+          "name": "P134_CUSTOMER_NAME",
+          "type": "text",
+          "placeholder": null,
+          "label": "Customer Name"
+        },
+        {
+          "id": "apexCBMDummySelection",
+          "name": null,
+          "type": "input",
+          "placeholder": null,
+          "label": ""
+        }
+      ],
+      "grids": [
+        {
+          "id": "IG_BILLS_ig_grid_vc",
+          "headers": [
+            "Item Code",
+            "Lot No",
+            "Quantity (Nos)",
+            "Unit Price (Rs.)",
+            "Gross Weight (Grams)",
+            "Net Weight (Grams)",
+            "Diamond Weight (in CTS)",
+            "Discount percent %",
+            "Discount (Rs.)",
+            "GST (Rs.)",
+            "Total Value",
+            "Item Code",
+            "Lot No",
+            "Quantity (Nos)",
+            "Unit Price (Rs.)",
+            "Gross Weight (Grams)",
+            "Net Weight (Grams)",
+            "Diamond Weight (in CTS)",
+            "Discount percent%",
+            "Discount (Rs.)",
+            "GST(Rs.)",
+            "Total Value"
+          ]
+        },
+        {
+          "id": "report_table_R48550776680788343",
+          "headers": []
+        }
+      ],
+      "cards_sample": [],
+      "menu_texts": [
+        "Home",
+        "Standard Product",
+        "Item Search",
+        "Smart Image Search",
+        "Rivaah",
+        "Best Deal",
+        "Find Price",
+        "Estimation Slip",
+        "Gold Coin Stock Visibility",
+        "Reports"
+      ],
+      "nav_on_page": [
+        {
+          "text": "Customer ( Click to Select )",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fsession%3D6369775610903%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2320435465961313136"
+        },
+        {
+          "text": "Store: Chennai - Anna Nagar (ABO)",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "L2",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Fcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Standard Product",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fstandard-product-search%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Item Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F6%3Fclear%3D6%26session%3D6369775610903&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Smart Image Search",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsmart-image-search1%3Fsession%3D6369775610903&p_cat=Image%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Rivaah",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F24%3Fsession%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Best Deal",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+        },
+        {
+          "text": "Find Price",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F31%3Fclear%3D31%26session%3D6369775610903&p_cat=Find%20Price%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Estimation Slip",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/estimation-slip?p86_refresh=Y&session=6369775610903"
+        },
+        {
+          "text": "Gold Coin Stock Visibility",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/69?clear=69&session=6369775610903&cs=38Zu2YeNmn4UMQWxPX5a4C4UVFL8ngkbwASCVONFyBKsLbWmdjt_AZKpeKCbWF3HvqumpDxMqdCMPuaA41mI2bQ"
+        },
+        {
+          "text": "Reports",
+          "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Fclear%3DRIR%2C29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+        },
+        {
+          "text": "Home",
+          "href": "https://dev-ea.titanrts.com/ords/r/com/ea/home?session=6369775610903"
+        },
+        {
+          "text": "Change My Password",
+          "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fclear%3DRP%2C78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2320435465961313136"
+        },
+        {
+          "text": "Sign Out",
+          "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/login?session=6369775610903"
+        }
+      ],
+      "body_snip": "Skip to Main Content Customer ( Click to Select ) Store: Chennai - Anna Nagar (ABO) L2 user: bala Home Standard Product Item Search Smart Image Search Rivaah Best Deal Find Price Estimation Slip Gold Coin Stock Visibility Reports Home Manual Bills Book Pure Jewellery. Pure Joy TITAN COMPANY LIMITED Old No.AA3, New No.10, 2nd Avenue, Annanagar Phone : 044 2619 4810 Product : Tanishq Studded Platinum Plain Gold Gold Coin TAX INVOICE Gold Rate per Gram(22k) : Platinum Rate Customer Details Mobile number Customer Name Address City State Email Encircle No Store details Date 01-Sep-2026 GST No 33AAACT5131A1Z4 State Code 33 CIN No L74999TZ1984PLC001456 List of items_test Go Actions Grid in edit mode, un-press to switch to view mode Grid in view mode, press to edit Edit Add Row Reset Item Code Lot No Quantity (Nos) Unit Price (Rs.) Gross Weight (Grams) Net Weight (Grams) Diamond Weight (in CTS) Discount percent % Discount (Rs.) GST (Rs.) Total Value 1 rows selected Total 1 Cash Credit Cards Cheque Invoice Amount : C/N value Encircle points Gift Voucher Balance Amount : other payments Gpay UPI RSO Name Reason for Manual bill Cashier name Approver name Customer Name Customer Signature : Terms and conditions Prices are inclusive of GST and other statutory levies. In case of any dispute, the court in Bangalore will have jurisdiction. Tanishq product may be exchanged as per the terms and conditions of the Tanishq Exchange Policy I hereby confirm the purity, weight and value of \"CN (Credit Note)\" and have read, accepted all terms and conditions of the said CN and further acknowledge that the amount stated is correct and accurate. For TITAN COMPANY LIMITED AUTHORISED SIGNATURE Create invoice R.COM.2021.6.1 Grid row sequence 1, Column 2.",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book"
+    },
+    {
+      "name": "Settings",
+      "menu_path": "Settings",
+      "title": "Landing Page Oracle REST Data Services",
+      "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      },
+      "headings": [
+        "SQL Developer Web",
+        "Oracle APEX",
+        "OAuth2 Administration"
+      ],
+      "regions": [],
+      "buttons": [
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "apex-cdb-button"
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "oauth-go-button"
+        }
+      ],
+      "fields": [
+        {
+          "id": "language-selector",
+          "name": null,
+          "type": "select",
+          "placeholder": null,
+          "label": "Language Selector"
+        },
+        {
+          "id": "sdw-card-actions__input-text",
+          "name": "sdw-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "apex-card-actions__input-text",
+          "name": "apex-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-text",
+          "name": "oauth-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-schema",
+          "name": "oauth-schema-input",
+          "type": "text",
+          "placeholder": "schema1",
+          "label": "Schema"
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [],
+      "nav_on_page": [],
+      "body_snip": "English - English German - Deutsch Spanish - Espa\u00f1ol (Internacional) French - Fran\u00e7ais (France) Italian - Italiano (Italia) Japanese - \u65e5\u672c\u8a9e Korean - \ud55c\uad6d\uc5b4 Portuguese - Portugu\u00eas (Brasil) Chinese (Simplified) - \u4e2d\u6587\uff08\u7b80\u4f53\uff09 Chinese (Traditional) - \u4e2d\u6587\uff08\u7e41\u9ad4\uff09 Oracle REST Data Services (ORDS) is the HTTPS Web Gateway for your Oracle Database. Features include SQL Developer Web, Oracle APEX access, REST APIs for your data and databases, Oracle Database API for MongoDB, and much more. SQL Developer Web Develop REST APIs, PL/SQL, MLE JavaScript, JSON, run SQL and scripts, load data, and more! Go Oracle APEX The world's most popular enterprise low-code application platform for scalable, secure enterprise apps. Go OAuth2 Administration Manage ORDS OAuth2 clients. Schema Go Blogs Tutorials Videos Forums",
+      "url_path": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+    },
+    {
+      "name": "---",
+      "menu_path": "---",
+      "title": "Not Found",
+      "url": "https://dev-ea.titanrts.com/ords/separator",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/separator"
+      },
+      "headings": [
+        "Not Found",
+        "HTTP Status Code: 404"
+      ],
+      "regions": [],
+      "buttons": [],
+      "fields": [],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [],
+      "nav_on_page": [],
+      "body_snip": "Not Found HTTP Status Code: 404 Request ID: vDBBXs9u1VXKyI_lK__2vQ Request Timestamp: 2026-09-01T15:40:18.065861696Z Error Code: ORDS-22001 The procedure named separator could not be accessed, it may not be declared, or the user executing this request may not have been granted execute privilege on the procedure, or a function specified by security.requestValidationFunction configuration property has prevented access. Check the spelling of the procedure, check that the execute privilege has been granted to the caller and check the configured security.requestValidationFunction function. If using the PL/SQL Gateway Procedure Allow List, check that the procedure has been allowed via ords_admin.add_plsql_gateway_procedure. About Oracle Terms Of Use Contact Us Legal Notices Your Privacy Rights Copyright \u00a9 2009, 2026 Oracle and/or its affiliates",
+      "url_path": "https://dev-ea.titanrts.com/ords/separator"
+    },
+    {
+      "name": "Change My Password",
+      "menu_path": "Change My Password",
+      "title": "Landing Page Oracle REST Data Services",
+      "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open",
+      "apex": {
+        "url": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      },
+      "headings": [
+        "SQL Developer Web",
+        "Oracle APEX",
+        "OAuth2 Administration"
+      ],
+      "regions": [],
+      "buttons": [
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "apex-cdb-button"
+        },
+        {
+          "text": "Go",
+          "id": null
+        },
+        {
+          "text": "Go",
+          "id": "oauth-go-button"
+        }
+      ],
+      "fields": [
+        {
+          "id": "language-selector",
+          "name": null,
+          "type": "select",
+          "placeholder": null,
+          "label": "Language Selector"
+        },
+        {
+          "id": "sdw-card-actions__input-text",
+          "name": "sdw-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "apex-card-actions__input-text",
+          "name": "apex-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-text",
+          "name": "oauth-input",
+          "type": "text",
+          "placeholder": "pdb1",
+          "label": "PDB"
+        },
+        {
+          "id": "oauth-card-actions__input-schema",
+          "name": "oauth-schema-input",
+          "type": "text",
+          "placeholder": "schema1",
+          "label": "Schema"
+        }
+      ],
+      "grids": [],
+      "cards_sample": [],
+      "menu_texts": [],
+      "nav_on_page": [],
+      "body_snip": "English - English German - Deutsch Spanish - Espa\u00f1ol (Internacional) French - Fran\u00e7ais (France) Italian - Italiano (Italia) Japanese - \u65e5\u672c\u8a9e Korean - \ud55c\uad6d\uc5b4 Portuguese - Portugu\u00eas (Brasil) Chinese (Simplified) - \u4e2d\u6587\uff08\u7b80\u4f53\uff09 Chinese (Traditional) - \u4e2d\u6587\uff08\u7e41\u9ad4\uff09 Oracle REST Data Services (ORDS) is the HTTPS Web Gateway for your Oracle Database. Features include SQL Developer Web, Oracle APEX access, REST APIs for your data and databases, Oracle Database API for MongoDB, and much more. SQL Developer Web Develop REST APIs, PL/SQL, MLE JavaScript, JSON, run SQL and scripts, load data, and more! Go Oracle APEX The world's most popular enterprise low-code application platform for scalable, secure enterprise apps. Go OAuth2 Administration Manage ORDS OAuth2 clients. Schema Go Blogs Tutorials Videos Forums",
+      "url_path": "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+    }
+  ],
+  "nav_items": [
+    {
+      "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+      "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home?session=6369775610903"
+    },
+    {
+      "text": "ORSO Recommendation",
+      "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Forso-recommendation%3Fp152_mobile%3D%26session%3D6369775610903%26cs%3D121oTLqUQkKgMruAgqzVldHZh-P2RRdA4zr92Vpyd5idStuba0Il1oMjmjN7sX1C0e5Tufn8FGkW0mG9cibKcEQ%26dialogCs%3D8J5ItyhRQRwysr7qI59Iuw_dyR8QHesrY4OKmql4XHtEZOLn21tAmSArXolLi08v_4-BcznQZBwExvcq62vpzA&appId=1001&pageId=152&tmpl=modal-dialog&title=ORSO%20Recommendation&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20ui-dialog--stretch&trgEl=%2321719525994730107"
+    },
+    {
+      "text": "Customer ( Click to Select )",
+      "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-customer%3Fclear%3D72%26session%3D6369775610903%26cs%3D3ru6MMXYMWQaT4c55llLLEMV7mugdGM16izrV6qqL2HRF4l_DvtdcBduxZCvhAl09f64P-_rRjPjyJgdbunz8wg%26dialogCs%3DaJPVVdKV0Z9SfgXTH68DzeFFuRf3sI2QEp4tEf3IB8o9OEGRM3vqkv2bmp7uWW7EUVHLs9OsiNsFnTilPLSbJA&appId=1002&pageId=72&tmpl=drawer&title=Select%20Customer&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd&trgEl=%2321719525994730107"
+    },
+    {
+      "text": "Home",
+      "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fhome%3Fsession%3D6369775610903&p_cat=Home%20-%20NM&p_company=2400362128117845&p_user=BALA"
+    },
+    {
+      "text": "All Products",
+      "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fselect-category%3Fsession%3D6369775610903&p_cat=Attribute%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+    },
+    {
+      "text": "Item Search",
+      "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fproduct-detail-item-search%3Fclear%3D6%26session%3D6369775610903%26cs%3D3TWgrToHffrD-KRZMBSIS_BwOhTlb5n1CZeKDRyIuM_IoFU_Ux4qnbNgHPmbRzoBkAx7GqSW1q0YjizHdcxlo7Q&p_cat=Item%20Search%20-%20NM&p_company=2400362128117845&p_user=BALA"
+    },
+    {
+      "text": "Rivaah",
+      "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea%2Frivaah%3Fclear%3D38%26session%3D6369775610903&p_cat=Rivaah%20-%20Main%20Menu&p_company=2400362128117845&p_user=BALA"
+    },
+    {
+      "text": "Product Catalogue",
+      "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue?clear=71&session=6369775610903"
+    },
+    {
+      "text": "Reports",
+      "href": "https://dev-ea.titanrts.com/ords/z?p_url=%2Fords%2Fr%2Ftjdcom%2Fea1%2F51%3Frequest%3D29%26session%3D6369775610903&p_cat=Report%20-%20OS%20-%20NM&p_company=2400362128117845&p_user=BALA"
+    },
+    {
+      "text": "Best Deal",
+      "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount?clear=92&session=6369775610903&cs=3Np0H3pxBFm85Apg9oaMZlEILEvpWZndPrZ86k3nluQn9ScG34DGtR_Rz60CQarhU9yqXpqEvnrYEZ2J8O7P7Bw"
+    },
+    {
+      "text": "Administration",
+      "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration?session=6369775610903"
+    },
+    {
+      "text": "Manual Invoice",
+      "href": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book?session=6369775610903"
+    },
+    {
+      "text": "Settings",
+      "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea%2Fsettings%3Fsession%3D6369775610903%26dialogCs%3D1EuybRfPs1fjJ0PvJWdmxETWizo6-5f-I0m6BGfv15ZnEJLHDgg1mwzBa-oCz1zCDtfMkAwoa_aKPZqtc6hPtw&appId=1002&pageId=20000&tmpl=drawer&title=Settings&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=%20js-dialog-class-t-Drawer--pullOutEnd%20js-dialog-class-t-Drawer--md&trgEl=%2321719525994730107"
+    },
+    {
+      "text": "---",
+      "href": "https://dev-ea.titanrts.com/ords/separator"
+    },
+    {
+      "text": "Sign Out",
+      "href": "https://dev-ea.titanrts.com/ords/apex_authentication.logout?p_app_id=1002&p_session_id=6369775610903"
+    },
+    {
+      "text": "Change My Password",
+      "href": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open?url=%2Fords%2Fr%2Ftjdcom%2Fea1%2Fchange-password%3Fdebug%3D78%26session%3D6369775610903%26dialogCs%3D-gu46whyhCqyOE6TWQY6DJyY4qukaj0s7-oH49wQRXR6e3CraNQc3xW0U_1o2DnfsVJ1jjimIUYE065YqqVujQ&appId=1001&pageId=78&tmpl=modal-dialog&title=Change%20Password&h=auto&w=720&mxw=960&isModal=true&dlgCls=&pageCls=&trgEl=%2321719525994730107"
+    }
+  ],
+  "all_links": [
+    {
+      "text": "Store: Chennai - Anna Nagar (ABO) - L2",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home"
+    },
+    {
+      "text": "ORSO Recommendation",
+      "path": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open"
+    },
+    {
+      "text": "Customer ( Click to Select )",
+      "path": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open"
+    },
+    {
+      "text": "Home",
+      "path": "https://dev-ea.titanrts.com/ords/z"
+    },
+    {
+      "text": "All Products",
+      "path": "https://dev-ea.titanrts.com/ords/z"
+    },
+    {
+      "text": "Item Search",
+      "path": "https://dev-ea.titanrts.com/ords/z"
+    },
+    {
+      "text": "Rivaah",
+      "path": "https://dev-ea.titanrts.com/ords/z"
+    },
+    {
+      "text": "Product Catalogue",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue"
+    },
+    {
+      "text": "Reports",
+      "path": "https://dev-ea.titanrts.com/ords/z"
+    },
+    {
+      "text": "Best Deal",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount"
+    },
+    {
+      "text": "Administration",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration"
+    },
+    {
+      "text": "Manual Invoice",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book"
+    },
+    {
+      "text": "Settings",
+      "path": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open"
+    },
+    {
+      "text": "---",
+      "path": "https://dev-ea.titanrts.com/ords/separator"
+    },
+    {
+      "text": "Sign Out",
+      "path": "https://dev-ea.titanrts.com/ords/apex_authentication.logout"
+    },
+    {
+      "text": "Change My Password",
+      "path": "https://dev-ea.titanrts.com/ords/#action$a-dialog-open"
+    },
+    {
+      "text": "Estimation Slip",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/estimation-slip"
+    },
+    {
+      "text": "Open IBT Action - Urgent",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/ibt-confirmation-urgent-action"
+    },
+    {
+      "text": "Customer Wishlist",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/customer-wish-list1"
+    },
+    {
+      "text": "Solitaire Products",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/solitaire-products"
+    },
+    {
+      "text": "New Collections",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/new-collections"
+    },
+    {
+      "text": "High Value Studded",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/look-of-the-week"
+    },
+    {
+      "text": "Silver Collections",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/silver-collections"
+    },
+    {
+      "text": "Size Based Search",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/size-based-search"
+    },
+    {
+      "text": "National/Regional Best Seller",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/national-best-seller"
+    },
+    {
+      "text": "Dashboard",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/dashboard-tile"
+    },
+    {
+      "text": "Manual Invoice",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/manual-bills-book"
+    },
+    {
+      "text": "KVI&FMC",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/kvi-fmc-lcg"
+    },
+    {
+      "text": "Manual Bill commercial report",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/manual-bill-region-wise-report"
+    },
+    {
+      "text": "Manual Invoice Report",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/manual-bill-report"
+    },
+    {
+      "text": "Home Delivery",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home-delivery"
+    },
+    {
+      "text": "Logistic Partner",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/logistic-partner"
+    },
+    {
+      "text": "Home Delivery Report",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home-delivery-tracker"
+    }
+  ],
+  "inferred_flows": [
+    {
+      "name": "browse_home",
+      "status": "candidate",
+      "steps": [
+        "login",
+        "home"
+      ]
+    },
+    {
+      "name": "browse_catalog",
+      "status": "candidate",
+      "steps": [
+        "login",
+        "open catalog"
+      ]
+    },
+    {
+      "name": "customer_flow",
+      "status": "candidate",
+      "steps": [
+        "login",
+        "customers"
+      ]
+    }
+  ],
+  "observed_messages": [],
+  "candidate_expectations": [
+    {
+      "id": "ce.auth.login",
+      "status": "proposed",
+      "subject": "auth.login",
+      "predicate": "succeeds_with_valid_creds",
+      "expected": true,
+      "rationale": "BALA authenticated to Endless Aisle UAT home.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home"
+      ]
+    },
+    {
+      "id": "ce.page.home",
+      "status": "proposed",
+      "subject": "page.home.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home"
+      ]
+    },
+    {
+      "id": "ce.page.orso_recommendation",
+      "status": "proposed",
+      "subject": "page.ORSO Recommendation.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      ]
+    },
+    {
+      "id": "ce.page.customer_click_to_select_",
+      "status": "proposed",
+      "subject": "page.Customer ( Click to Select ).reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      ]
+    },
+    {
+      "id": "ce.page.select_category",
+      "status": "proposed",
+      "subject": "page.select-category.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/select-category"
+      ]
+    },
+    {
+      "id": "ce.page.product_detail_item_search",
+      "status": "proposed",
+      "subject": "page.product-detail-item-search.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-detail-item-search"
+      ]
+    },
+    {
+      "id": "ce.page.rivaah",
+      "status": "proposed",
+      "subject": "page.rivaah.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/rivaah"
+      ]
+    },
+    {
+      "id": "ce.page.product_catalogue",
+      "status": "proposed",
+      "subject": "page.product-catalogue.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue"
+      ]
+    },
+    {
+      "id": "ce.page.51",
+      "status": "proposed",
+      "subject": "page.51.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/51"
+      ]
+    },
+    {
+      "id": "ce.page.product_discount",
+      "status": "proposed",
+      "subject": "page.product-discount.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-discount"
+      ]
+    },
+    {
+      "id": "ce.page.administration",
+      "status": "proposed",
+      "subject": "page.administration.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/administration"
+      ]
+    },
+    {
+      "id": "ce.page.manual_bills_book",
+      "status": "proposed",
+      "subject": "page.manual-bills-book.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/r/tjdcom/ea1/manual-bills-book"
+      ]
+    },
+    {
+      "id": "ce.page.settings",
+      "status": "proposed",
+      "subject": "page.Settings.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      ]
+    },
+    {
+      "id": "ce.page._",
+      "status": "proposed",
+      "subject": "page.---.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/separator"
+      ]
+    },
+    {
+      "id": "ce.page.change_my_password",
+      "status": "proposed",
+      "subject": "page.Change My Password.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "applies_when": {
+        "user": "BALA"
+      },
+      "rationale": "Reached during authenticated discovery.",
+      "evidence": [
+        "https://dev-ea.titanrts.com/ords/_/landing#action$a-dialog-open"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "type": "auth_redirect",
+      "label": "Sign Out",
+      "path": "https://dev-ea.titanrts.com/ords/apex_authentication.logout"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Estimation Slip",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/estimation-slip"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Open IBT Action - Urgent",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/ibt-confirmation-urgent-action"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Customer Wishlist",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/customer-wish-list1"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Solitaire Products",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/solitaire-products"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "New Collections",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/new-collections"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "High Value Studded",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/look-of-the-week"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Silver Collections",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/silver-collections"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Size Based Search",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/size-based-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "National/Regional Best Seller",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/national-best-seller"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Dashboard",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/dashboard-tile"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Manual Invoice",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/manual-bills-book"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "KVI&FMC",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/kvi-fmc-lcg"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Manual Bill commercial report",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/manual-bill-region-wise-report"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Manual Invoice Report",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/manual-bill-report"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Home Delivery",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home-delivery"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Logistic Partner",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/logistic-partner"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Home Delivery Report",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home-delivery-tracker"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Earrings",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Bangles",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Mangalsutra",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Finger Rings",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Chains",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Necklace",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    },
+    {
+      "type": "auth_redirect",
+      "label": "Others",
+      "path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/standard-product-search"
+    }
+  ],
+  "notes": [
+    "Credentials used for discovery only; not stored in output files.",
+    "initial_queue=33"
+  ],
+  "landing_url": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/home",
+  "landing_title": "Endless Aisle",
+  "stats": {
+    "pages": 16,
+    "nav_items": 16,
+    "links_queued": 33,
+    "candidate_expectations": 15,
+    "blockers": 25,
+    "inferred_flows": 3
+  }
+}

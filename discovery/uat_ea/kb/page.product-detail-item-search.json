@@ -1,0 +1,66 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.page.product-detail-item-search",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T15:45:18Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ]
+  },
+  "body": {
+    "type": "page_map",
+    "title": "Product Search",
+    "summary": "Discovered page alias `product-detail-item-search` during authenticated UAT crawl.",
+    "details": {
+      "page_alias": "product-detail-item-search",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-detail-item-search",
+      "headings": [
+        "Product Search",
+        "itemcode",
+        "Text Region"
+      ],
+      "regions": [
+        {
+          "id": "R25212527152989910",
+          "title": "itemcode"
+        },
+        {
+          "id": "R24029050082184008",
+          "title": "Text Region"
+        }
+      ],
+      "buttons": [
+        "Main Navigation",
+        "Store: Chennai - Anna Nagar (ABO) - L2",
+        "ORSO Recommendation",
+        "Customer ( Click to Select )",
+        "bala",
+        "* Booking of NAP Stock is available through the NAP System. Please contact the commercial team for further assistance.",
+        "Scan",
+        "Search"
+      ],
+      "fields": [
+        {
+          "id": "P6_SKU",
+          "name": "P6_SKU",
+          "type": "text",
+          "placeholder": "Enter item code or scan the QR ",
+          "label": "Enter item code or scan The QR"
+        }
+      ],
+      "grids": []
+    }
+  }
+}

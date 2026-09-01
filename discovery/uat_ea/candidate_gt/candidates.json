@@ -1,0 +1,189 @@
+{
+  "generated_at": "2026-09-01T15:45:18Z",
+  "policy": "NOT Ground Truth until approved.",
+  "count": 12,
+  "candidates": [
+    {
+      "id": "ce.auth.login",
+      "subject": "auth.login",
+      "predicate": "succeeds_with_valid_creds",
+      "expected": true,
+      "rationale": "Valid UAT user BALA reached /ea/home.",
+      "approve_question": "Approve successful login with valid store-user credentials as GT for UAT?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.home.modules_visible",
+      "subject": "home.modules",
+      "predicate": "includes_minimum_set",
+      "expected": [
+        "All Products",
+        "Item Search",
+        "Rivaah",
+        "Customer Order",
+        "Best Deal",
+        "Smart Image Search",
+        "Find Price"
+      ],
+      "rationale": "These modules were visible as home headings for BALA.",
+      "approve_question": "Are these home modules required for this role/store? Edit list before approve if needed.",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.page.select_category.reachable",
+      "subject": "page.select-category.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "All Products navigates to select-category.",
+      "approve_question": "Must store users reach All Products / category selection?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.item_search.sku_field",
+      "subject": "item_search.sku_or_qr",
+      "predicate": "field_present",
+      "expected": {
+        "item": "P6_SKU",
+        "actions": [
+          "Scan",
+          "Search"
+        ]
+      },
+      "rationale": "Item Search exposes SKU/QR field with Scan and Search.",
+      "approve_question": "Is item-code/QR search required for sanity?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.item_search.nap_stock_message",
+      "subject": "item_search.nap_stock_booking_notice",
+      "predicate": "message_may_appear",
+      "expected": "Booking of NAP Stock is available through the NAP System",
+      "rationale": "Observed advisory text on Item Search; likely informational not a defect.",
+      "approve_question": "Is the NAP message expected informational text?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.store.context_visible",
+      "subject": "session.store_context",
+      "predicate": "store_label_visible",
+      "expected": true,
+      "rationale": "Header showed Store: Chennai - Anna Nagar (ABO) - L2.",
+      "approve_question": "Must store context be visible after login?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.rivaah.reachable",
+      "subject": "page.rivaah.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Rivaah module reachable from home.",
+      "approve_question": "Is Rivaah in scope for sanity?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.product_catalogue.reachable",
+      "subject": "page.product-catalogue.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Product Catalogue page reached.",
+      "approve_question": "Is Product Catalogue required in sanity?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.best_deal.reachable",
+      "subject": "page.product-discount.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Best Deal / product-discount reached.",
+      "approve_question": "Is Best Deal required in sanity?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.admin.reachable_for_bala",
+      "subject": "page.administration.reachable",
+      "predicate": "reachable_for_role",
+      "expected": "UNKNOWN_NEEDS_POLICY",
+      "rationale": "Administration was reachable for BALA. Confirm if intended.",
+      "approve_question": "Should BALA open Administration? If NO, approve inverse GT (forbidden) for Security.",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.manual_invoice.reachable",
+      "subject": "page.manual-bills-book.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Manual Invoice / manual-bills-book reached.",
+      "approve_question": "Is Manual Invoice in QA scope for BALA?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    },
+    {
+      "id": "ce.reports.reachable",
+      "subject": "page.51.reachable",
+      "predicate": "reachable_for_role",
+      "expected": true,
+      "rationale": "Reports page alias 51 reached.",
+      "approve_question": "Are Reports in sanity scope?",
+      "status": "proposed",
+      "applies_when": {
+        "env": "uat",
+        "app": "ea",
+        "user": "BALA"
+      }
+    }
+  ]
+}

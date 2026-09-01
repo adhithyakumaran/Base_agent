@@ -1,0 +1,84 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.page.product-catalogue",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T15:45:18Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ]
+  },
+  "body": {
+    "type": "page_map",
+    "title": "Product Catalogue",
+    "summary": "Discovered page alias `product-catalogue` during authenticated UAT crawl.",
+    "details": {
+      "page_alias": "product-catalogue",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/product-catalogue",
+      "headings": [
+        "Rivaah Catalogues",
+        "Gujarat catalogue",
+        "Telugu catalogue",
+        "Bihar catalogue",
+        "Rivaah Bride",
+        "Metro_Rivaah",
+        "Marwadi",
+        "Uttra Pradesh",
+        "Bengal",
+        "Tamil",
+        "Festive diamond",
+        "Rivaah X Tarun Tahiliani",
+        "Aishani",
+        "Marathi",
+        "Orissa",
+        "Kannada",
+        "Collection Catalogues",
+        "Alekhya",
+        "Dhanteras",
+        "Chozha",
+        "Celeste",
+        "Impressions of Nature Neckwear",
+        "Impressions of Nature Pendant",
+        "Impressions of Nature Earrings",
+        "Mystique",
+        "Varamahalakshmi",
+        "Everyday",
+        "FOD HVS",
+        "Festival of Diamonds",
+        "Enchanted"
+      ],
+      "regions": [
+        {
+          "id": "rivaahCards",
+          "title": "Rivaah Catalogues"
+        },
+        {
+          "id": "R278622848364823367",
+          "title": "Collection Catalogues"
+        }
+      ],
+      "buttons": [
+        "Main Navigation",
+        "Store: Chennai - Anna Nagar (ABO) - L2",
+        "ORSO Recommendation",
+        "Customer ( Click to Select )",
+        "bala",
+        "Next",
+        "Back"
+      ],
+      "fields": [],
+      "grids": []
+    }
+  }
+}

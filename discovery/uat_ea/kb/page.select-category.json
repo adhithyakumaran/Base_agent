@@ -1,0 +1,52 @@
+{
+  "kind": "knowledge",
+  "status": "candidate",
+  "meta": {
+    "id": "kb.page.select-category",
+    "version": "0.1.0",
+    "env": "uat",
+    "app_id": "1002",
+    "app_alias": "ea",
+    "workspace": "tjdcom",
+    "source": "discovery",
+    "created_at": "2026-09-01T15:45:18Z",
+    "updated_at": "2026-09-01T15:45:18Z",
+    "created_by": "agent",
+    "tags": [
+      "endless_aisle",
+      "titan",
+      "tanishq",
+      "apex"
+    ]
+  },
+  "body": {
+    "type": "page_map",
+    "title": "Select Category",
+    "summary": "Discovered page alias `select-category` during authenticated UAT crawl.",
+    "details": {
+      "page_alias": "select-category",
+      "url_path": "https://dev-ea.titanrts.com/ords/r/tjdcom/ea/select-category",
+      "headings": [
+        "All Products",
+        "Breadcrumb",
+        "Select the Category"
+      ],
+      "regions": [
+        {
+          "id": "R24669030873205910",
+          "title": "Select the Category Skip & Continue"
+        }
+      ],
+      "buttons": [
+        "Main Navigation",
+        "Store: Chennai - Anna Nagar (ABO) - L2",
+        "ORSO Recommendation",
+        "Customer ( Click to Select )",
+        "bala",
+        "Skip & Continue"
+      ],
+      "fields": [],
+      "grids": []
+    }
+  }
+}

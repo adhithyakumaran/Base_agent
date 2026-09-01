@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-09-01T15:45:18Z",
+  "count": 14,
+  "documents": [
+    {
+      "id": "kb.app.endless_aisle.overview",
+      "type": "business_note",
+      "title": "Endless Aisle application overview",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.nav.home_modules",
+      "type": "page_map",
+      "title": "Home navigation modules",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.home",
+      "type": "page_map",
+      "title": "Endless Aisle",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.select-category",
+      "type": "page_map",
+      "title": "Select Category",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.product-detail-item-search",
+      "type": "page_map",
+      "title": "Product Search",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.rivaah",
+      "type": "page_map",
+      "title": "Rivaah",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.product-catalogue",
+      "type": "page_map",
+      "title": "Product Catalogue",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.product-discount",
+      "type": "page_map",
+      "title": "Product Discount",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.page.administration",
+      "type": "page_map",
+      "title": "Administration",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.component.item_search.sku",
+      "type": "component",
+      "title": "Item Search SKU / QR field",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.flow.login_home",
+      "type": "flow",
+      "title": "login_to_home",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.flow.browse_all_products",
+      "type": "flow",
+      "title": "browse_all_products",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.flow.item_search",
+      "type": "flow",
+      "title": "item_code_or_qr_search",
+      "status": "candidate"
+    },
+    {
+      "id": "kb.flow.rivaah_browse",
+      "type": "flow",
+      "title": "rivaah_wedding_browse",
+      "status": "candidate"
+    }
+  ]
+}
