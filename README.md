@@ -40,3 +40,11 @@ Source context (client requirements, used only to bound Week 2 vs Week 1):
 ## Status
 
 This repository currently delivers **planning documents** (Base Agent proposal + APEX GT/KB collection spec). Implementation of the Python runtime starts after proposal acceptance.
+
+## UAT discovery (Endless Aisle)
+
+First authenticated discovery pack (KB candidates + GT approval checklist):
+
+- [discovery/uat_ea/APPROVAL_CHECKLIST.md](discovery/uat_ea/APPROVAL_CHECKLIST.md)
+- [discovery/uat_ea/kb/](discovery/uat_ea/kb/)
+- [discovery/uat_ea/candidate_gt/candidates.json](discovery/uat_ea/candidate_gt/candidates.json)
