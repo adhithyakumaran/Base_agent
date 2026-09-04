@@ -104,7 +104,7 @@ base-agent/
 │       ├── kb_rag.py
 │       ├── llm_client.py
 │       ├── models.py
-│       ├── openclaw_adapter.py
+│       ├── browser_executor.py
 │       ├── orchestrator.py
 │       ├── planner.py
 │       ├── reporter.py
