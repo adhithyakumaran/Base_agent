@@ -1,0 +1,316 @@
+base-agent/
+├── qa-console/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── export/
+│   │   │   │   └── route.ts
+│   │   │   ├── knowledge/
+│   │   │   │   └── route.ts
+│   │   │   ├── runs/
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── route.ts
+│   │   │   ├── settings/
+│   │   │   │   └── route.ts
+│   │   │   └── state/
+│   │   │       └── route.ts
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── button.tsx
+│   │   │   └── input.tsx
+│   │   └── qa-console.tsx
+│   ├── data/
+│   │   └── state.json
+│   ├── lib/
+│   │   ├── agent-runner.ts
+│   │   ├── notify.ts
+│   │   ├── store.ts
+│   │   ├── types.ts
+│   │   └── utils.ts
+│   ├── public/
+│   ├── components.json
+│   ├── Dockerfile
+│   ├── eslint.config.mjs
+│   ├── next-env.d.ts
+│   ├── next.config.ts
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   ├── README.md
+│   └── tsconfig.json
+├── src/
+│   ├── base_agent/
+│   │   ├── budget/
+│   │   │   ├── __init__.py
+│   │   │   └── guard.py
+│   │   ├── capabilities/
+│   │   │   └── __init__.py
+│   │   ├── context/
+│   │   │   └── __init__.py
+│   │   ├── contracts/
+│   │   │   ├── __init__.py
+│   │   │   ├── enums.py
+│   │   │   ├── models.py
+│   │   │   └── result.py
+│   │   ├── decision/
+│   │   │   ├── __init__.py
+│   │   │   └── engine.py
+│   │   ├── errors/
+│   │   │   ├── __init__.py
+│   │   │   └── taxonomy.py
+│   │   ├── graph/
+│   │   │   ├── nodes/
+│   │   │   │   └── __init__.py
+│   │   │   ├── __init__.py
+│   │   │   └── builder.py
+│   │   ├── ground_truth/
+│   │   │   ├── __init__.py
+│   │   │   └── protocol.py
+│   │   ├── knowledge/
+│   │   │   ├── __init__.py
+│   │   │   └── protocol.py
+│   │   ├── llm/
+│   │   │   ├── __init__.py
+│   │   │   └── gateway.py
+│   │   ├── observability/
+│   │   │   └── __init__.py
+│   │   ├── observation/
+│   │   │   ├── __init__.py
+│   │   │   └── pipeline.py
+│   │   ├── plugins/
+│   │   │   └── __init__.py
+│   │   ├── routing/
+│   │   │   ├── __init__.py
+│   │   │   └── hybrid.py
+│   │   ├── security/
+│   │   │   └── __init__.py
+│   │   ├── skills/
+│   │   │   └── __init__.py
+│   │   ├── state/
+│   │   │   ├── __init__.py
+│   │   │   └── schema.py
+│   │   ├── tools/
+│   │   │   ├── __init__.py
+│   │   │   └── registry.py
+│   │   ├── __init__.py
+│   │   └── api.py
+│   ├── base_agent.egg-info/
+│   └── qa_orchestrator/
+│       ├── __init__.py
+│       ├── api.py
+│       ├── kb_rag.py
+│       ├── llm_client.py
+│       ├── models.py
+│       ├── openclaw_adapter.py
+│       ├── orchestrator.py
+│       ├── planner.py
+│       ├── reporter.py
+│       └── validator.py
+├── plugins/
+│   ├── mock_demo/
+│   │   ├── __init__.py
+│   │   └── tools.py
+│   └── qa_apex/
+│       ├── crawler/
+│       │   ├── __init__.py
+│       │   ├── apex_waits.py
+│       │   ├── engine.py
+│       │   ├── selectors.py
+│       │   └── session.py
+│       ├── __init__.py
+│       ├── rules.py
+│       ├── skills.py
+│       └── tools.py
+├── discovery/
+│   └── uat_ea/
+│       ├── candidate_gt/
+│       │   └── candidates.json
+│       ├── kb/
+│       │   ├── app.endless_aisle.overview.json
+│       │   ├── component.find_price.item.json
+│       │   ├── component.find_price.lotno.json
+│       │   ├── component.item_search.sku.json
+│       │   ├── component.product_detail.size_variants.json
+│       │   ├── component.standard_search.gpt.json
+│       │   ├── component.stock_visibility.sku.json
+│       │   ├── flow.best_deal_detail.json
+│       │   ├── flow.browse_all_products.json
+│       │   ├── flow.category_earrings.json
+│       │   ├── flow.find_price.json
+│       │   ├── flow.item_search.json
+│       │   ├── flow.item_sku_search.json
+│       │   ├── flow.login_home.json
+│       │   ├── flow.reports_menu.json
+│       │   ├── flow.rivaah_browse.json
+│       │   ├── flow.rivaah_trousseau.json
+│       │   ├── flow.standard_product_browse.json
+│       │   ├── flow.stock_visibility.json
+│       │   ├── index.json
+│       │   ├── nav.home_modules.json
+│       │   ├── page.administration.json
+│       │   ├── page.customer-wish-list1.json
+│       │   ├── page.dashboard-tile.json
+│       │   ├── page.discount-product-details-all-store.json
+│       │   ├── page.dream-list-product1.json
+│       │   ├── page.ea1.101.json
+│       │   ├── page.ea1.102.json
+│       │   ├── page.ea1.200.json
+│       │   ├── page.ea1.22.json
+│       │   ├── page.ea1.47.json
+│       │   ├── page.ea1.51.json
+│       │   ├── page.ea1.57.json
+│       │   ├── page.ea1.61.json
+│       │   ├── page.ea1.63.json
+│       │   ├── page.ea1.estimation-slip.json
+│       │   ├── page.ea1.grid-bills-test.json
+│       │   ├── page.ea1.look-of-the-week-product-detail.json
+│       │   ├── page.ea1.manual-bills-book.json
+│       │   ├── page.ea1.new-collections.json
+│       │   ├── page.ea1.product-detail.json
+│       │   ├── page.ea1.product-discount.json
+│       │   ├── page.ea1.rakhi-collections-product-details1.json
+│       │   ├── page.ea1.silver-collections1.json
+│       │   ├── page.ea1.size-based-search.json
+│       │   ├── page.ea1.testing1.json
+│       │   ├── page.estimation-slip.json
+│       │   ├── page.find-price.json
+│       │   ├── page.gc.store-gold-coin-new.json
+│       │   ├── page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent.json
+│       │   ├── page.gold-coin-stock-visibility.json
+│       │   ├── page.home.json
+│       │   ├── page.kvi-fmc-lcg.json
+│       │   ├── page.login.json
+│       │   ├── page.product-catalogue.json
+│       │   ├── page.product-detail-item-search.json
+│       │   ├── page.product-detail.json
+│       │   ├── page.product-discount.json
+│       │   ├── page.rivaah.json
+│       │   ├── page.select-category.json
+│       │   ├── page.smart-image-search1.json
+│       │   ├── page.solitaire-uin-search.json
+│       │   ├── page.standard-product-search.json
+│       │   ├── page.wedding-trousseau-details1.json
+│       │   ├── page.wedding-trousseau.json
+│       │   ├── pattern.apex.auth_home.json
+│       │   ├── pattern.apex.interactive_grid.json
+│       │   ├── pattern.apex.modal_dialog.json
+│       │   ├── pattern.apex.module_list_detail.json
+│       │   └── pattern.apex.popup_lov.json
+│       ├── kb_normalized/
+│       │   ├── business/
+│       │   │   └── app.endless_aisle.overview.json
+│       │   ├── components/
+│       │   │   ├── component.find_price.item.json
+│       │   │   ├── component.find_price.lotno.json
+│       │   │   ├── component.item_search.sku.json
+│       │   │   ├── component.product_detail.size_variants.json
+│       │   │   ├── component.standard_search.gpt.json
+│       │   │   └── component.stock_visibility.sku.json
+│       │   ├── flows/
+│       │   │   ├── flow.best_deal_detail.json
+│       │   │   ├── flow.browse_all_products.json
+│       │   │   ├── flow.category_earrings.json
+│       │   │   ├── flow.find_price.json
+│       │   │   ├── flow.item_search.json
+│       │   │   ├── flow.item_sku_search.json
+│       │   │   ├── flow.login_home.json
+│       │   │   ├── flow.reports_menu.json
+│       │   │   ├── flow.rivaah_browse.json
+│       │   │   ├── flow.rivaah_trousseau.json
+│       │   │   ├── flow.standard_product_browse.json
+│       │   │   ├── flow.stock_visibility.json
+│       │   │   ├── pattern.apex.auth_home.json
+│       │   │   ├── pattern.apex.interactive_grid.json
+│       │   │   ├── pattern.apex.modal_dialog.json
+│       │   │   ├── pattern.apex.module_list_detail.json
+│       │   │   └── pattern.apex.popup_lov.json
+│       │   ├── index/
+│       │   │   └── catalog.json
+│       │   └── pages/
+│       │       ├── nav.home_modules.json
+│       │       ├── page.administration.json
+│       │       ├── page.ea.customer-wish-list1.json
+│       │       ├── page.ea.dashboard-tile.json
+│       │       ├── page.ea.discount-product-details-all-store.json
+│       │       ├── page.ea.dream-list-product1.json
+│       │       ├── page.ea.estimation-slip.json
+│       │       ├── page.ea.find-price.json
+│       │       ├── page.ea.gold-coin-stock-visibility.json
+│       │       ├── page.ea.home.json
+│       │       ├── page.ea.kvi-fmc-lcg.json
+│       │       ├── page.ea.login.json
+│       │       ├── page.ea.product-catalogue.json
+│       │       ├── page.ea.product-detail-item-search.json
+│       │       ├── page.ea.product-detail.json
+│       │       ├── page.ea.product-discount.json
+│       │       ├── page.ea.rivaah.json
+│       │       ├── page.ea.select-category.json
+│       │       ├── page.ea.smart-image-search1.json
+│       │       ├── page.ea.solitaire-uin-search.json
+│       │       ├── page.ea.standard-product-search.json
+│       │       ├── page.ea.wedding-trousseau-details1.json
+│       │       ├── page.ea.wedding-trousseau.json
+│       │       ├── page.ea1.101.json
+│       │       ├── page.ea1.102.json
+│       │       ├── page.ea1.200.json
+│       │       ├── page.ea1.22.json
+│       │       ├── page.ea1.47.json
+│       │       ├── page.ea1.51.json
+│       │       ├── page.ea1.57.json
+│       │       ├── page.ea1.61.json
+│       │       ├── page.ea1.63.json
+│       │       ├── page.ea1.estimation-slip.json
+│       │       ├── page.ea1.grid-bills-test.json
+│       │       ├── page.ea1.look-of-the-week-product-detail.json
+│       │       ├── page.ea1.manual-bills-book.json
+│       │       ├── page.ea1.new-collections.json
+│       │       ├── page.ea1.product-detail.json
+│       │       ├── page.ea1.product-discount.json
+│       │       ├── page.ea1.rakhi-collections-product-details1.json
+│       │       ├── page.ea1.silver-collections1.json
+│       │       ├── page.ea1.size-based-search.json
+│       │       ├── page.ea1.testing1.json
+│       │       ├── page.gc.store-gold-coin-new.json
+│       │       └── page.genai-agents-for-apex105109125128.chat-with-oci-generative-ai-agent.json
+│       ├── recordings/
+│       │   ├── merged_from_browser_recordings.json
+│       │   ├── report_58aa.md
+│       │   └── report_8d0d.md
+│       ├── APPROVAL_CHECKLIST.md
+│       ├── discovery_report.json
+│       └── kb_summary.json
+├── scripts/
+│   ├── local_agent_server.py
+│   └── morning_patrol.py
+├── deploy/
+│   └── Dockerfile
+├── tests/
+│   ├── unit/
+│   │   ├── test_crawler_qa.py
+│   │   ├── test_qa_orchestrator.py
+│   │   ├── test_qa_skills.py
+│   │   └── test_runtime.py
+│   └── conftest.py
+├── docs/
+│   ├── architecture/
+│   │   ├── APEX_APPLICATION_FLOWS.md
+│   │   ├── APEX_CRAWLER_PERFORMANCE.md
+│   │   ├── AZURE_OCI_DEPLOYMENT.md
+│   │   ├── LOCAL_RUN.md
+│   │   ├── OPERATING_WITHOUT_GT.md
+│   │   ├── QA_ORCHESTRATOR.md
+│   │   ├── REPORT_CHANNELS.md
+│   │   └── SIMPLIFIED_QA_ARCHITECTURE.md
+│   ├── meeting/
+│   │   ├── screenshots/
+│   │   ├── TEAM_MEETING_ARCHITECTURE.md
+│   ├── APEX_GT_KB_COLLECTION_SPEC.md
+│   ├── BASE_AGENT_TECHNICAL_PROPOSAL.md
+│   ├── PHASE_COMPLETE.md
+│   └── PRODUCT_STATUS.md
+├── azure-pipelines.yml
+├── pyproject.toml
+├── README.md
