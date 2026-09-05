@@ -13,7 +13,7 @@ Your **3 manually formatted flow KBs** are exactly what the finalized architectu
 | Metric | Before | After (Sep 5 update) |
 |---|---|---|
 | Canonical format | Clumsy JSON (page/flow seeds) | **Flow-centric YAML** |
-| SME-ready flows | 0 | **15 READY + 1 PARTIAL** |
+| SME-ready flows | 0 | **15 READY + 2 PARTIAL** |
 | Draft migrated flows | — | **7 DRAFT** |
 | Superseded legacy flows | — | **5** |
 | Legacy JSON archive | Primary | **Archived** (`kb/README.md`) |
@@ -80,6 +80,7 @@ discovery/uat_ea/
 | **BF-ADMINISTRATION-009** | Administration | **READY** | Browser Recorder + SME |
 | **BF-MANUAL-INVOICE-009** | Manual Invoice | **READY** | Browser Recorder + SME |
 | **BF-HOME-010** | Home / Navigation Map | **READY** | Browser Recorder + SME |
+| BF-HOME-010-C01 | Home Utility Components | **PARTIAL** | Browser Recorder + SME |
 | **BF-REPORTS-007** | Reports | **READY** | Browser Recorder + SME |
 | **BF-RIVAAH-005** | Rivaah Main Menu | **READY** | SME manual KB (F005) |
 | **BF-RIVAAH-005-01** | Wedding Trousseau Styling | **READY** | Browser Recorder + SME |
@@ -100,7 +101,7 @@ discovery/uat_ea/
 | BF-RIVAAH-TRO-014 | Rivaah Trousseau | SUPERSEDED | → BF-RIVAAH-005-01 |
 | BF-STD-BROWSE-015 | Standard Product Browse | DRAFT | Legacy migration |
 
-**Total flows in catalog:** 28 (15 READY · 1 PARTIAL · 7 DRAFT · 5 SUPERSEDED)
+**Total flows in catalog:** 29 (15 READY · 2 PARTIAL · 7 DRAFT · 5 SUPERSEDED)
 
 ---
 
@@ -136,6 +137,7 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Administration sanity (read-only guardrails) | Yes — BF-ADMINISTRATION-009 |
 | Manual Invoice form validation (no Create Invoice) | Yes — BF-MANUAL-INVOICE-009 |
 | Home navigation registry + child-flow routing | Yes — BF-HOME-010 |
+| Home utility components (customer, settings, ORSO, store stock) | Partial — BF-HOME-010-C01 |
 | Reports master + 18 report pages | Yes — BF-REPORTS-007 |
 | Rivaah module sanity (6 sub-flows) | Partial — BF-RIVAAH-005 subtree (005-05 PARTIAL) |
 | LLM test generation from flow knowledge | Yes — for 15 READY flows |
@@ -153,6 +155,7 @@ Based on clumsy JSON only — flow metadata was shallow.
 | P0 | **Customer Order** flow missing | SME session — Checkout capability still empty; Manual Invoice READY under Billing |
 | P1 | **7 DRAFT flows** need enrichment to READY | Use BF-LOGIN-001 as template; pull locators from legacy JSON + recordings |
 | P1 | **BF-RIVAAH-005-05** (Wishlist) | PARTIAL — SME session needed for post-customer-selection behavior |
+| P1 | **BF-HOME-010-C01** (Home utilities) | PARTIAL — complete customer selection, ORSO, Store Stock downstream |
 | P1 | Find Price (BF-FINDPRICE-004) | High client value — enrich next after search |
 | P2 | Home module sanity map | Link 20 home modules → capabilities in `capabilities.yaml` |
 | P2 | GT approval | 22 candidates still proposed — link approved GT to flow `business_rules` |

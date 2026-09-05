@@ -1,0 +1,424 @@
+flow_id: BF-HOME-010-C01
+
+flow_name: Home Page Utility Components
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Covers utility and contextual components available directly from
+    the Endless Aisle Home page, including customer selection, store
+    context, user settings, ORSO Recommendation, and Store Stock.
+
+entry_point:
+  page: Home
+  route: /ords/r/tjdcom/ea/home
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - Home page is loaded successfully.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+    title: Endless Aisle
+
+  - name: Select Customer
+    page_id: 72
+    presentation: Drawer
+    purpose: Customer selection from Home.
+
+  - name: ORSO Recommendation
+    page_id: 152
+    application_id: 1001
+    presentation: Modal Dialog
+
+components:
+
+  - name: Customer
+    label: Customer ( Click to Select )
+    type: Navigation Bar Item
+    behavior: >
+      Opens the Select Customer drawer from the Home page.
+
+  - name: Store Context
+    type: Navigation Bar Item
+    behavior: >
+      Displays the currently selected store context.
+
+  - name: User Menu
+    id: L21731618447730172
+    type: Navigation Menu
+    observed_options:
+      - Settings
+      - other user-menu options
+
+  - name: Settings
+    type: Modal/Dialog
+    parent_component: User Menu
+    behavior: >
+      Opens Settings from the user menu.
+
+  - name: ORSO Recommendation
+    type: Navigation Bar Item
+    presentation: Modal Dialog
+    behavior: >
+      Opens the ORSO Recommendation functionality.
+
+  - name: STORE STOCK
+    id: B74402876591024608
+    type: Home Page Button
+    behavior: >
+      Opens the Store Stock functionality.
+
+business_flow:
+
+  customer_selection:
+    steps:
+      - step: 1
+        action: Click Customer ( Click to Select ).
+
+      - step: 2
+        action: >
+          Verify the Select Customer drawer opens.
+
+      - step: 3
+        action: >
+          Close the drawer using its close control.
+
+    observed_result:
+      - Select Customer drawer opened successfully.
+      - Drawer could be closed.
+
+  settings:
+    steps:
+      - step: 1
+        action: Open the Home user menu.
+
+      - step: 2
+        action: Select Settings.
+
+      - step: 3
+        action: Verify Settings dialog opens.
+
+      - step: 4
+        action: Close Settings.
+
+    observed_result:
+      - Settings opened successfully.
+      - Settings dialog could be closed.
+
+  orso_recommendation:
+    steps:
+      - step: 1
+        action: Select ORSO Recommendation.
+
+      - step: 2
+        action: Verify ORSO Recommendation dialog opens.
+
+      - step: 3
+        action: Close the dialog.
+
+    observed_result:
+      - ORSO Recommendation opened in a modal dialog.
+      - Dialog could be closed.
+
+  store_context:
+    steps:
+      - step: 1
+        action: Observe the Store context displayed on Home.
+
+      - step: 2
+        action: Select the Store context control.
+
+      - step: 3
+        action: Verify navigation/reload behavior.
+
+    observed_result:
+      - Store context was displayed.
+      - Selected store was shown as a Home navigation-bar item.
+      - Recording showed the Home page after the store interaction.
+
+  store_stock:
+    steps:
+      - step: 1
+        action: Click ✦ STORE STOCK.
+
+      - step: 2
+        action: Observe the resulting UI state.
+
+    observed_result:
+      - STORE STOCK control was present and clickable.
+      - A UI overlay was observed after the interaction.
+      - Exact downstream Store Stock behavior was not fully explored.
+
+expected_success:
+
+  customer_selection:
+    - Customer selector is available on Home.
+    - Select Customer drawer opens.
+    - Drawer can be closed.
+
+  settings:
+    - User menu opens.
+    - Settings option is available.
+    - Settings opens.
+    - Settings can be closed.
+
+  orso_recommendation:
+    - ORSO Recommendation is available.
+    - ORSO Recommendation opens in a modal dialog.
+    - Modal can be closed.
+
+  store_context:
+    - Current store context is displayed.
+    - Store context interaction does not break Home navigation.
+
+  store_stock:
+    - STORE STOCK control is available.
+    - STORE STOCK interaction responds.
+
+observed_scenarios:
+
+  - scenario: Home → Customer
+    result: Select Customer drawer opened.
+
+  - scenario: Home → User Menu → Settings
+    result: Settings dialog opened.
+
+  - scenario: Home → ORSO Recommendation
+    result: ORSO Recommendation modal opened.
+
+  - scenario: Home → Store Context
+    result: Home/store context interaction observed.
+
+  - scenario: Home → STORE STOCK
+    result: Store Stock interaction initiated.
+
+business_rules:
+
+  - rule: >
+      Customer selection is accessible directly from Home.
+
+  - rule: >
+      Customer selection is presented through a drawer.
+
+  - rule: >
+      User Settings are accessible through the Home user menu.
+
+  - rule: >
+      ORSO Recommendation is accessible directly from Home.
+
+  - rule: >
+      ORSO Recommendation is presented as a modal dialog.
+
+  - rule: >
+      Home displays the active store context.
+
+  - rule: >
+      Store context is part of the user's Home application context.
+
+  - rule: >
+      Store Stock is directly accessible from Home.
+
+  - rule: >
+      Customer/store context may affect downstream business functions.
+
+unknown_business_rules:
+
+  - Exact customer-search and customer-selection rules.
+  - Whether selecting a customer is mandatory before each downstream flow.
+  - Exact customer validation/error behavior.
+  - Exact Settings functionality and individual settings.
+  - Exact ORSO Recommendation business logic.
+  - Exact ORSO Recommendation inputs and expected results.
+  - Exact Store Stock business behavior.
+  - Exact Store Stock destination/page.
+  - Exact store-switching rules.
+  - Exact role/permission rules for these components.
+
+technical_metadata:
+
+  home:
+    route: /ords/r/tjdcom/ea/home
+    title: Endless Aisle
+
+  customer:
+    label: Customer ( Click to Select )
+    navigation_selector:
+      id: "21719525994730107"
+    target_page: 72
+    target_route: /ords/r/tjdcom/ea/select-customer
+    presentation: drawer
+
+  user_menu:
+    id: L21731618447730172
+    menu_id: menu_L21731618447730172
+
+  settings:
+    menu_item_id: menu_L21731618447730172_0
+    label: Settings
+    presentation: dialog
+
+  orso_recommendation:
+    label: ORSO Recommendation
+    application_id: 1001
+    page_id: 152
+    route: /ords/r/tjdcom/ea1/orso-recommendation
+    presentation: modal-dialog
+
+  store_context:
+    observed_label: Store: [selected store]
+    component_type: Navigation Bar Item
+
+  store_stock:
+    id: B74402876591024608
+    label: ✦ STORE STOCK
+    component_type: Button
+
+automation:
+
+  recommended_framework: Playwright
+
+  primary_locators:
+
+    customer:
+      - text: Customer ( Click to Select )
+      - validated navigation-bar element
+
+    user_menu:
+      - "#L21731618447730172"
+
+    settings:
+      - text: Settings
+      - "#menu_L21731618447730172_0"
+
+    orso_recommendation:
+      - text: ORSO Recommendation
+
+    store_stock:
+      - "#B74402876591024608"
+
+  fallback_locators:
+    - Accessible name
+    - Stable element ID
+    - Validated text
+    - Stable href
+    - Validated DOM relationship
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended component.
+
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject ambiguous locator.
+
+  reusable_actions:
+    - Open Customer Selector
+    - Close Customer Drawer
+    - Open User Menu
+    - Open Settings
+    - Close Settings
+    - Open ORSO Recommendation
+    - Close ORSO Recommendation
+    - Read Store Context
+    - Open Store Stock
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed component locator.
+      - Inspect current Home DOM.
+      - Match stable text/accessible name.
+      - Validate uniqueness.
+      - Use validated fallback.
+      - Capture evidence.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation update.
+
+test_data:
+
+  customer:
+    type: logical_reference
+    value: approved_test_customer
+
+  store:
+    type: logical_reference
+    value: approved_test_store
+
+  restrictions:
+    - Do not store real customer information.
+    - Do not store session IDs.
+    - Do not store authentication cookies.
+    - Do not store CSRF/session security values.
+
+security:
+
+  authentication_required: true
+
+  context:
+    - Customer context is potentially sensitive.
+    - Store context must be preserved correctly.
+    - Downstream authorization must be validated by the relevant child flow.
+
+  sensitive_data:
+    - Customer information
+    - Authentication/session information
+    - ORSO-related protected data if applicable
+
+  policy:
+    - Sanitize recordings before KB ingestion.
+    - Never store session parameters or security tokens.
+    - Use logical test-data references.
+
+evidence:
+
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-2343.zip
+
+  recorded:
+    date: 2026-09-05
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - Interaction events
+    - Navigation events
+    - Console events
+    - Network evidence
+
+  observed_sequence:
+    - Home loaded
+    - Customer selector opened
+    - Customer drawer closed
+    - User menu opened
+    - Settings opened
+    - Settings closed
+    - ORSO Recommendation opened
+    - ORSO Recommendation closed
+    - Store context interacted with
+    - Home loaded
+    - STORE STOCK clicked
+
+  limitations:
+    - Customer selection itself was not completed.
+    - Settings internals were not explored.
+    - ORSO Recommendation internals were not explored.
+    - Store Stock downstream behavior was not fully explored.
+
+status:
+  overall: PARTIAL
+  confidence: High
+  business_coverage: Medium
+  technical_coverage: High
+  navigation_coverage: High

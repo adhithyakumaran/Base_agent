@@ -1,6 +1,6 @@
 schema: flow_kb_index_v1
 application: Endless Aisle
-count: 28
+count: 29
 sme_ready:
   - BF-LOGIN-001
   - BF-LOGOUT-002
@@ -47,6 +47,11 @@ flows:
     file: BF-HOME-010.yaml
     name: Home Page / Application Navigation Map
     status: READY
+  - id: BF-HOME-010-C01
+    file: BF-HOME-010-C01.yaml
+    name: Home Page Utility Components
+    status: PARTIAL
+    parent: BF-HOME-010
   - id: BF-ITEMCODE-011
     file: BF-ITEMCODE-011.yaml
     name: Item Code Or QR Search

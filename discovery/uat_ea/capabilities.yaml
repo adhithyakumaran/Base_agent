@@ -11,9 +11,10 @@ capabilities:
       - BF-LOGOUT-002   # User Logout — READY
 
   Application Navigation:
-    status: READY
+    status: PARTIAL
     flows:
-      - BF-HOME-010     # Home / Navigation Map — READY
+      - BF-HOME-010       # Home / Navigation Map — READY
+      - BF-HOME-010-C01   # Home Utility Components — PARTIAL
 
   Product Search:
     status: READY
