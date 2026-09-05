@@ -35,7 +35,7 @@ class PlaywrightRunner:
     def __init__(self, config: PlaywrightRunnerConfig | None = None) -> None:
         env_dry = os.environ.get("QA_RUNNER", "playwright").lower() in {"dry_run", "dry-run", "mock"}
         self.config = config or PlaywrightRunnerConfig(
-            automation_dir=Path(os.environ.get("QA_AUTOMATION_DIR", "automation")),
+            automation_dir=resolve_automation_dir(),
             suite=os.environ.get("QA_SUITE", "sanity"),
             flow_id=os.environ.get("QA_FLOW_ID"),
             dry_run=env_dry,
@@ -106,11 +106,11 @@ class PlaywrightRunner:
                 ),
             )
 
-        env = os.environ.copy()
+        env = _enrich_path(os.environ.copy())
         for key, value in (params or {}).items():
             env[f"QA_PARAM_{str(key).upper()}"] = str(value)
 
-        resolved = _resolve_command(cmd)
+        resolved = _resolve_command(cmd, env)
         if isinstance(resolved, str) and resolved.startswith("ERROR:"):
             return StepObservation(
                 step_index=step_index,
@@ -133,6 +133,9 @@ class PlaywrightRunner:
             ok = proc.returncode == 0
             meta: dict[str, Any] = {
                 "command": cmd,
+                "resolved": resolved if isinstance(resolved, str) else " ".join(resolved),
+                "cwd": str(cwd),
+                "automation_dir": str(self.config.automation_dir),
                 "stdout_tail": proc.stdout[-8000:],
                 "stderr_tail": proc.stderr[-4000:],
                 "params": params,
@@ -197,20 +200,61 @@ class PlaywrightRunner:
         return self.config.flow_id
 
 
-def _resolve_command(cmd: str) -> list[str] | str:
+def _resolve_command(cmd: str, env: dict[str, str] | None = None) -> list[str] | str:
     """Resolve npm on Windows (npm.cmd) and return argv or shell string."""
+    search_env = _enrich_path(env or os.environ.copy())
     parts = cmd.split()
     if not parts or parts[0] != "npm":
         return parts
-    npm = shutil.which("npm") or shutil.which("npm.cmd")
+    npm = shutil.which("npm", path=search_env.get("PATH")) or shutil.which("npm.cmd", path=search_env.get("PATH"))
+    if not npm:
+        npm = _find_npm_windows()
     if not npm:
         return (
-            "ERROR: npm not found on PATH — install Node.js LTS from https://nodejs.org "
-            "and restart the terminal"
+            "ERROR: npm not found on PATH — install Node.js LTS from https://nodejs.org, "
+            "restart VS Code, then run: cd automation && npm ci"
         )
     if sys.platform == "win32":
-        # Windows subprocess needs shell or npm.cmd; quoting handles spaces in paths.
-        rest = subprocess.list2cmdline(parts[1:])
-        return subprocess.list2cmdline([npm] + ([rest] if rest else []))
+        return subprocess.list2cmdline([npm, *parts[1:]])
     parts[0] = npm
     return parts
+
+
+def _enrich_path(env: dict[str, str]) -> dict[str, str]:
+    if sys.platform != "win32":
+        return env
+    extras: list[str] = []
+    for key in ("ProgramFiles", "ProgramFiles(x86)"):
+        base = os.environ.get(key)
+        if base:
+            node_dir = Path(base) / "nodejs"
+            if node_dir.is_dir():
+                extras.append(str(node_dir))
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        npm_dir = Path(appdata) / "npm"
+        if npm_dir.is_dir():
+            extras.append(str(npm_dir))
+    if extras:
+        env["PATH"] = os.pathsep.join(extras) + os.pathsep + env.get("PATH", "")
+    return env
+
+
+def _find_npm_windows() -> str | None:
+    if sys.platform != "win32":
+        return None
+    env = _enrich_path(os.environ.copy())
+    return shutil.which("npm.cmd", path=env.get("PATH")) or shutil.which("npm", path=env.get("PATH"))
+
+
+def resolve_automation_dir() -> Path:
+    """Absolute automation path — avoids wrong cwd when server started from another folder."""
+    raw = os.environ.get("QA_AUTOMATION_DIR")
+    if raw:
+        return Path(raw)
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        candidate = parent / "automation"
+        if (candidate / "package.json").exists():
+            return candidate
+    return Path("automation")

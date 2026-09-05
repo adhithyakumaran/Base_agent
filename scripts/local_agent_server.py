@@ -199,6 +199,7 @@ def main() -> None:
     args = parser.parse_args()
     os.environ.setdefault("LLM_ENABLED", "true")
     os.environ.setdefault("QA_RUNNER", "playwright")
+    os.environ.setdefault("QA_AUTOMATION_DIR", str(ROOT / "automation"))
     global SERVICE
     SERVICE = LocalOrchestratorService(args.discovery_root, default_model=args.model)
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)
