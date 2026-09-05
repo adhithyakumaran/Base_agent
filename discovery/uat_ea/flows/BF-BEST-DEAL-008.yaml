@@ -1,0 +1,388 @@
+flow_id: BF-BEST-DEAL-008
+
+flow_name: Best Deal
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows authenticated users to browse discounted and Best Deal
+    products and refine the displayed products using applicable
+    product, discount, price, and classification filters.
+
+entry_point:
+  page: Home
+  navigation: >
+    Login → Home → Best Deal → Product Discount
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to Best Deal.
+  - Application is available.
+  - Best Deal product data is available.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+
+  - page_id: 92
+    name: Product Discount
+
+  - page_id: 93
+    name: Discount Product Details - All Store
+    route: /ords/r/tjdcom/ea/discount-product-details-all-store
+
+components:
+  - name: Best Deal
+    type: Navigation/Card
+    action: Opens the Product Discount page.
+
+  - name: Product Discount
+    type: Product Listing
+    action: >
+      Displays discounted/Best Deal products.
+
+  - name: Filter Panel
+    type: Filter
+    filters:
+      - Brand
+      - Price
+      - Discount
+      - Jewellery Type
+      - Product
+      - Gender
+      - Collection
+      - Type
+      - Boutique/Type
+      - Best of Best Deal
+
+  - name: Product
+    type: Product Card
+    action: Opens Discount Product Details - All Store.
+
+  - name: Discount Product Details
+    type: Product Detail
+    action: >
+      Displays details and pricing/discount information for
+      the selected discounted product.
+
+  - name: Back to Products
+    type: Navigation Button
+    action: >
+      Returns to the Product Discount page.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Home after authentication.
+
+    - step: 2
+      action: Select Best Deal.
+
+    - step: 3
+      action: >
+        Verify that the Product Discount page opens.
+
+    - step: 4
+      action: >
+        Verify that Best Deal/discounted products are displayed.
+
+    - step: 5
+      action: >
+        Apply applicable filters such as Brand, Price, Discount,
+        Jewellery Type, Product, Gender, Collection, and Type.
+
+    - step: 6
+      action: >
+        Verify that the resulting products satisfy the selected
+        filter criteria.
+
+    - step: 7
+      action: >
+        Select a discounted product.
+
+    - step: 8
+      action: >
+        Verify that Discount Product Details - All Store opens.
+
+    - step: 9
+      action: >
+        Verify that the product details correspond exactly to
+        the selected product.
+
+    - step: 10
+      action: >
+        Validate the displayed discount and price values.
+
+    - step: 11
+      action: >
+        Verify that out-of-stock discounted products can still
+        be viewed.
+
+    - step: 12
+      action: >
+        Use Back to Products.
+
+    - step: 13
+      action: >
+        Verify that the user returns to Product Discount.
+
+expected_success:
+  - Best Deal opens successfully from Home.
+  - Product Discount page loads successfully.
+  - Discounted/Best Deal products are displayed.
+  - Users can apply applicable product filters.
+  - Filtered results satisfy the selected filter criteria.
+  - Users can select a discounted product.
+  - Discount Product Details - All Store opens successfully.
+  - Product details exactly match the selected product.
+  - Displayed price and discount values are correct.
+  - Out-of-stock discounted products can still be viewed.
+  - The flow respects the current store/customer context.
+  - Back to Products returns to Product Discount.
+
+observed_scenarios:
+  - scenario: Home → Best Deal
+    status: Observed
+
+  - scenario: Product Discount page loaded
+    status: Observed
+
+  - scenario: Best Deal filters displayed
+    status: Observed
+
+  - scenario: Discounted product selected
+    status: Observed
+
+  - scenario: Discount Product Details - All Store opened
+    status: Observed
+
+  - scenario: Back to Products
+    status: Observed
+
+business_rules:
+  - rule: >
+      Best Deal provides access to discounted/best-deal products.
+
+  - rule: >
+      Users can filter Best Deal products using the available
+      product and classification filters.
+
+  - rule: >
+      Products displayed through Best Deal must represent
+      discounted/Best Deal products.
+
+  - rule: >
+      Out-of-stock discounted products can still be viewed.
+
+  - rule: >
+      A selected Best Deal product can be opened in
+      Discount Product Details - All Store.
+
+  - rule: >
+      Product details must exactly correspond to the selected product.
+
+  - rule: >
+      Price and discount values must be validated.
+
+  - rule: >
+      Best Deal respects the current store/customer context.
+
+  - rule: >
+      Back to Products returns to the Product Discount page.
+
+  - rule: >
+      Applicable filters must be validated.
+
+  - rule: >
+      No additional business rules were specified.
+
+unknown_business_rules:
+  - Exact algorithm used to classify a product as a Best Deal.
+  - Exact discount calculation/business formula.
+  - Exact meaning and eligibility criteria of Best of Best Deal.
+  - Exact rules governing store/customer-specific Best Deal visibility.
+  - Exact behavior when no products match selected filters.
+  - Exact minimum/maximum discount rules.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  pages:
+    product_discount: 92
+    discount_product_details: 93
+
+  routes:
+    product_discount: >
+      Product Discount route observed in recording.
+    discount_product_details: >
+      /ords/r/tjdcom/ea/discount-product-details-all-store
+
+  product_discount_items:
+    - P92_BTQ_TYPE
+    - P92_BEST_OF_BEST_DEAL
+    - P92_DISPLAY_BRAND
+    - P92_FINAL_STANDARD_PRICE
+    - P92_DISCOUNT
+    - P92_JEWELLERY_TYPE
+    - P92_PRODUCT
+    - P92_GENDER
+    - P92_COLLECTION
+    - P92_TYPE
+
+  discount_product_detail_items:
+    - P93_PRODUCT
+    - P93_DISPLAY_BRAND_PD
+    - P93_GENDER_PD
+    - P93_INDICATIVE_PRICE_PD
+    - P93_PRODUCT_GROUP_AD
+    - P93_SKU_TYPE
+    - P93_PROD_TYPE
+    - P93_PRODUCT_TYPE
+
+  observed_filter_groups:
+    - Brand
+    - Price
+    - Discount
+    - Jewellery Type
+    - Product
+    - Gender
+    - Collection
+    - Type
+    - Boutique/Type
+    - Best of Best Deal
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX IDs or validated DOM attributes for
+      Best Deal navigation.
+
+    - >
+      Use stable Product Discount filter item IDs where confirmed.
+
+    - >
+      Use validated product-card attributes for product selection.
+
+    - >
+      Use stable page-item IDs for product detail validation
+      where applicable.
+
+  fallback_locators:
+    - >
+      Use accessible labels.
+    - >
+      Use stable APEX page-item IDs.
+    - >
+      Use validated DOM relationships.
+    - >
+      Use visible product names only when uniqueness is confirmed.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Best Deal
+    - Validate Product Discount page
+    - Locate filter
+    - Apply Brand filter
+    - Apply Price filter
+    - Apply Discount filter
+    - Apply Jewellery Type filter
+    - Apply Product filter
+    - Apply Gender filter
+    - Apply Collection filter
+    - Apply Type filter
+    - Apply Best of Best Deal filter
+    - Select discounted product
+    - Open Discount Product Details
+    - Validate product identity
+    - Validate price
+    - Validate discount
+    - Navigate Back to Products
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Identify the affected filter or product component.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated application user
+    - Valid Best Deal product
+    - Valid discount
+    - Valid filter values where applicable
+
+  restrictions:
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Use logical product/test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - User must have access to Best Deal.
+    - Product visibility must respect current store/customer context.
+
+  sensitive_data:
+    - No credentials stored in KB.
+    - No session information stored in KB.
+    - No authentication tokens stored in KB.
+
+  validation:
+    - Verify product visibility against the authorized store/customer context.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1750.zip
+
+  supplementary_evidence:
+    - User-provided Home screenshot showing Best Deal entry.
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Navigation evidence
+    - Filter interactions
+    - Product selection
+    - Product detail navigation
+    - Network activity
+    - Console activity
+
+  limitations:
+    - Exact Best Deal classification algorithm is unknown.
+    - Exact discount calculation rules are unknown.
+    - Exact no-result behavior is unknown.
+    - Store/customer context implementation details are unknown.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: Very High

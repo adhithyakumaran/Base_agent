@@ -1,0 +1,520 @@
+flow_id: BF-ADMINISTRATION-009
+
+flow_name: Administration
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Provides authorized administrators with application configuration,
+    maintenance, user/access management, monitoring, dashboards, and
+    operational reporting capabilities.
+
+entry_point:
+  page: Home
+  navigation: >
+    Login → Home → Administration → Administration Master Page
+
+actors:
+  - Administrator
+
+preconditions:
+  - User is authenticated.
+  - User has administrator/authorized access.
+  - Application is available.
+  - Required administration functionality is available.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+
+  - name: Administration
+    route: /ords/r/tjdcom/ea/administration
+
+components:
+  - name: Administration
+    type: Navigation/Card
+    locator:
+      id: t_MenuNav_7i
+    action: Opens Administration.
+
+  - name: Administration Master Page
+    type: Administration Dashboard
+    action: >
+      Displays available configuration, maintenance, monitoring,
+      reporting, and access-management functions.
+
+  - name: App Configuration
+    type: Configuration
+    action: >
+      Provides application preference/configuration functionality.
+
+  - name: Maintain Item Size
+    type: Maintenance
+    action: >
+      Provides item-size maintenance functionality.
+
+  - name: Maintain ECOM Item Exception
+    type: Maintenance
+    action: >
+      Provides ECOM item-exception maintenance functionality.
+
+  - name: Maintain Users
+    type: User Management
+    action: >
+      Provides user-management functionality.
+
+  - name: Maintain LOVs
+    type: Maintenance
+    action: >
+      Provides List of Values maintenance functionality.
+
+  - name: Maintain New Collections
+    type: Maintenance
+    action: >
+      Provides collection maintenance functionality.
+
+  - name: Theme Style Selection
+    type: Configuration
+    action: >
+      Provides application theme/style configuration functionality.
+
+  - name: Dashboard
+    type: Dashboard
+    action: >
+      Opens the application activity dashboard.
+
+  - name: Top Users
+    type: Report
+    action: >
+      Displays user activity information.
+
+  - name: Application Error Log
+    type: Monitoring/Report
+    action: >
+      Displays application error information.
+
+  - name: Page Performance
+    type: Monitoring/Report
+    action: >
+      Displays page performance information.
+
+  - name: Page Views
+    type: Monitoring/Report
+    action: >
+      Displays page-view information.
+
+  - name: Users
+    type: User/Access Management
+    action: >
+      Provides user/access-related administration functionality.
+
+  - name: Access Control
+    type: Authorization Management
+    action: >
+      Provides access-control functionality.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Home after authentication.
+
+    - step: 2
+      action: Open Administration.
+
+    - step: 3
+      action: >
+        Verify that the Administration Master Page loads.
+
+    - step: 4
+      action: >
+        Verify that available administration functions are displayed.
+
+    - step: 5
+      action: >
+        Open each applicable administration function.
+
+    - step: 6
+      action: >
+        Verify that configuration, maintenance, dashboard,
+        monitoring, or report pages load successfully.
+
+    - step: 7
+      action: >
+        Validate safe, non-destructive controls where applicable.
+
+    - step: 8
+      action: >
+        Do not create, modify, delete, or otherwise perform
+        sensitive administrative changes during generic QA/sanity testing.
+
+    - step: 9
+      action: >
+        Validate Access Control page availability and loading.
+
+    - step: 10
+      action: >
+        Validate monitoring/report pages by confirming successful
+        page/report loading.
+
+    - step: 11
+      action: >
+        Use Back where available.
+
+    - step: 12
+      action: >
+        Verify that Back returns to the Administration Master Page.
+
+expected_success:
+  - Administration opens successfully from Home.
+  - Administration Master Page loads successfully.
+  - Authorized administrator can access administration functions.
+  - Configuration pages load successfully.
+  - Maintenance pages load successfully.
+  - User/access-management pages load successfully.
+  - Monitoring/reporting pages load successfully.
+  - Access Control page loads successfully.
+  - Applicable safe controls are accessible.
+  - Generic sanity testing does not modify sensitive records.
+  - Back returns to the Administration Master Page.
+
+observed_scenarios:
+  - scenario: Home → Administration
+    status: Observed
+
+  - scenario: Administration Master Page displayed
+    status: Observed
+
+  - scenario: App Configuration opened
+    status: Observed
+
+  - scenario: Maintain Item Size opened
+    status: Observed
+
+  - scenario: Maintain ECOM Item Exception opened
+    status: Observed
+
+  - scenario: Maintain Users opened
+    status: Observed
+
+  - scenario: Maintain LOVs opened
+    status: Observed
+
+  - scenario: Maintain New Collections opened
+    status: Observed
+
+  - scenario: Theme Style Selection opened
+    status: Observed
+
+  - scenario: Dashboard opened
+    status: Observed
+
+  - scenario: Top Users opened
+    status: Observed
+
+  - scenario: Application Error Log opened
+    status: Observed
+
+  - scenario: Page Performance opened
+    status: Observed
+
+  - scenario: Page Views opened
+    status: Observed
+
+  - scenario: Users opened
+    status: Observed
+
+  - scenario: Access Control opened
+    status: Observed
+
+business_rules:
+  - rule: >
+      Administration provides application configuration,
+      maintenance, user/access management, monitoring,
+      dashboards, and reporting capabilities.
+
+  - rule: >
+      Administration access is restricted to administrators/
+      authorized administrative users.
+
+  - rule: >
+      Generic QA/sanity testing must not modify application,
+      user, access-control, or other sensitive records.
+
+  - rule: >
+      Configuration and maintenance pages may be inspected and
+      their safe controls validated.
+
+  - rule: >
+      Actual record creation/modification is not required for
+      generic Administration QA.
+
+  - rule: >
+      User creation or modification must not be performed
+      during generic QA automation.
+
+  - rule: >
+      Access Control must be included in Administration validation.
+
+  - rule: >
+      Dashboard, Top Users, Application Error Log,
+      Page Performance, and Page Views can be validated
+      through successful page/report loading.
+
+  - rule: >
+      Administration respects the current store/customer context.
+
+  - rule: >
+      Back from individual Administration functions returns
+      to the Administration Master Page where applicable.
+
+  - rule: >
+      Sensitive administrative changes must not be performed
+      automatically.
+
+unknown_business_rules:
+  - Exact administrator role/permission hierarchy.
+  - Exact permissions required for each individual Administration function.
+  - Exact store/customer context behavior for each administration function.
+  - Exact validation rules for individual maintenance forms.
+  - Exact data requirements for configuration and maintenance operations.
+  - Exact audit requirements for administrative actions.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  routes:
+    administration: /ords/r/tjdcom/ea/administration
+
+  navigation:
+    administration:
+      locator:
+        id: t_MenuNav_7i
+
+  functions:
+    - name: App Configuration
+      category: Configuration
+
+    - name: Maintain Item Size
+      category: Maintenance
+
+    - name: Maintain ECOM Item Exception
+      category: Maintenance
+
+    - name: Maintain Users
+      category: User Management
+
+    - name: Maintain LOVs
+      category: Maintenance
+
+    - name: Maintain New Collections
+      category: Maintenance
+
+    - name: Theme Style Selection
+      category: Configuration
+
+    - name: Dashboard
+      category: Monitoring
+
+    - name: Top Users
+      category: Reporting
+
+    - name: Application Error Log
+      category: Monitoring
+
+    - name: Page Performance
+      category: Monitoring
+
+    - name: Page Views
+      category: Monitoring
+
+    - name: Users
+      category: User Management
+
+    - name: Access Control
+      category: Authorization
+
+  observed_maintenance_actions:
+    - App Configuration:
+        action: Create observed
+
+    - Maintain Item Size:
+        action: Create observed
+
+    - Maintain ECOM Item Exception:
+        action: Add Exception Item observed
+
+    - Maintain Users:
+        action: Create action and confirmation observed
+
+    - Maintain LOVs:
+        action: Create observed
+
+    - Maintain New Collections:
+        action: Create observed
+
+  safety_classification:
+    read_only:
+      - Dashboard
+      - Top Users
+      - Application Error Log
+      - Page Performance
+      - Page Views
+
+    potentially_sensitive:
+      - App Configuration
+      - Maintain Item Size
+      - Maintain ECOM Item Exception
+      - Maintain Users
+      - Maintain LOVs
+      - Maintain New Collections
+      - Theme Style Selection
+      - Users
+      - Access Control
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX IDs or validated DOM attributes for
+      Administration navigation.
+
+    - >
+      Use validated administration-function labels or stable
+      DOM relationships for selecting functions.
+
+  fallback_locators:
+    - >
+      Use accessible labels.
+    - >
+      Use stable APEX attributes.
+    - >
+      Use validated DOM relationships.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Administration
+    - Validate Administration Master Page
+    - Locate administration function
+    - Open configuration page
+    - Open maintenance page
+    - Open monitoring page
+    - Open dashboard
+    - Open user/access-management page
+    - Validate safe controls
+    - Navigate back
+
+  safety_guardrails:
+    generic_sanity:
+      allow:
+        - Page navigation
+        - Page-load validation
+        - Non-destructive control inspection
+        - Filter validation
+        - Report/dashboard loading
+        - Back navigation
+
+      deny:
+        - Create sensitive records
+        - Modify sensitive records
+        - Delete records
+        - Change user permissions
+        - Change Access Control
+        - Change application security configuration
+        - Change production-like configuration
+        - Execute irreversible administrative operations
+
+    sensitive_change_policy:
+      description: >
+        Administration automation must stop before any sensitive
+        change and require explicit controlled test-case authorization.
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated administrator account
+    - Safe test environment
+    - Non-sensitive test data where required
+
+  restrictions:
+    - Do not use production-sensitive data for destructive testing.
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Do not modify real user/access records during generic QA.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - Administration access requires administrator/authorized access.
+
+  sensitive_data:
+    - Administration may expose sensitive configuration and user/access data.
+    - Do not store sensitive administrative data in the KB.
+    - Do not store credentials, tokens, cookies, or session identifiers.
+
+  validation:
+    - Verify unauthorized users cannot access Administration where
+      authorization testing is explicitly included.
+    - Verify administrative pages respect current store/customer context.
+
+  change_protection:
+    - Sensitive changes must not be executed during generic sanity testing.
+    - User/access-control changes require dedicated controlled tests.
+    - Application configuration changes require dedicated controlled tests.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1757.zip
+
+  supplementary_evidence:
+    - User-provided Home screenshot showing Administration entry.
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Navigation evidence
+    - Administration page interactions
+    - Maintenance controls
+    - Dashboard/report evidence
+    - Console activity
+    - Network activity
+
+  limitations:
+    - Exact role hierarchy is not established.
+    - Exact permissions for individual functions are unknown.
+    - Store/customer-context implementation details are unknown.
+    - Detailed validation rules for individual maintenance forms are unknown.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: Very High
+  safety_coverage: High

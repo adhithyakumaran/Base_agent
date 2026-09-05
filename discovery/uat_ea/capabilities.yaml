@@ -35,7 +35,8 @@ capabilities:
   Product Browse:
     status: PARTIAL
     flows:
-      - BF-BESTDEAL-008
+      - BF-BEST-DEAL-008    # Best Deal — READY
+      - BF-BESTDEAL-008     # superseded by BF-BEST-DEAL-008
       - BF-BROWSE-009
       - BF-CAT-EAR-010
       - BF-STD-BROWSE-015
@@ -57,6 +58,11 @@ capabilities:
     flows:
       - BF-REPORTS-007      # Reports — READY
       - BF-REPORTS-012      # superseded by BF-REPORTS-007
+
+  Administration:
+    status: READY
+    flows:
+      - BF-ADMINISTRATION-009  # Administration — READY
 
   Checkout:
     status: NOT_STARTED

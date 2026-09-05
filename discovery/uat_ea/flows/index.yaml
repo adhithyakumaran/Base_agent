@@ -1,12 +1,14 @@
 schema: flow_kb_index_v1
 application: Endless Aisle
-count: 24
+count: 26
 sme_ready:
   - BF-LOGIN-001
   - BF-LOGOUT-002
   - BF-PRODUCT-003
   - BF-PRODUCT-004
   - BF-PRODUCT-CATALOGUE-006
+  - BF-BEST-DEAL-008
+  - BF-ADMINISTRATION-009
   - BF-REPORTS-007
   - BF-RIVAAH-005
   - BF-RIVAAH-005-01
@@ -14,10 +16,19 @@ sme_ready:
   - BF-RIVAAH-005-03
   - BF-RIVAAH-005-04
 flows:
+  - id: BF-ADMINISTRATION-009
+    file: BF-ADMINISTRATION-009.yaml
+    name: Administration
+    status: READY
+  - id: BF-BEST-DEAL-008
+    file: BF-BEST-DEAL-008.yaml
+    name: Best Deal
+    status: READY
   - id: BF-BESTDEAL-008
     file: BF-BESTDEAL-008.yaml
     name: Best Deal Product Detail
-    status: DRAFT
+    status: SUPERSEDED
+    superseded_by: BF-BEST-DEAL-008
   - id: BF-BROWSE-009
     file: BF-BROWSE-009.yaml
     name: Browse All Products
