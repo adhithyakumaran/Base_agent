@@ -1,0 +1,464 @@
+flow_id: BF-HOME-010-01
+
+flow_name: Item Search
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows an authenticated user to search for a product using an
+    item code or QR code from the Item Search function available
+    on the Endless Aisle Home page.
+
+entry_point:
+  page: Home
+  navigation:
+    - Login
+    - Home
+    - Item Search
+    - Product Search
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - Home page is loaded.
+  - User has access to Item Search.
+  - Valid test item code is available for positive testing.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+
+  - name: Product Search
+    page_id: 6
+    route: /ords/r/tjdcom/ea/product-detail-item-search
+    title: Product Search
+
+components:
+
+  - name: Item Search
+    type: Home Page Card
+    behavior: >
+      Navigates from Home to the Product Search page.
+
+  - name: Item Code / QR Search Input
+    type: Text Input
+    id: P6_SKU
+    placeholder: "Enter item code or scan the QR"
+    behavior:
+      - Accept item code input.
+      - Supports QR-based search.
+      - Supports Enter submission.
+
+  - name: Scan
+    type: Button
+    id: B24029796092184015
+    title: Scan
+    aria_label: Scan
+    behavior: >
+      Initiates QR scanning.
+
+  - name: Search
+    type: Button
+    id: btn_search
+    title: Search
+    aria_label: Search
+    behavior: >
+      Submits the item search.
+
+  - name: Product Result
+    type: Product Result Region
+    behavior: >
+      Displays the result corresponding to the searched item.
+
+  - name: Stock Status
+    type: Product Status
+    observed_states:
+      - Sold Out
+      - No Stock available in Store and Factory
+
+  - name: Production Order Action
+    type: Button
+    id: B23985810396945939
+    observed_label: >
+      No Stock available in Store and Factory, Proceed to MyCrown
+      Portal for Initiating Production Order
+    behavior: >
+      Available for the observed no-stock scenario.
+
+business_flow:
+
+  steps:
+
+    - step: 1
+      action: >
+        From Home, select the Item Search card.
+
+    - step: 2
+      action: >
+        Verify that Product Search page opens.
+
+    - step: 3
+      action: >
+        Locate the Item Code / QR input.
+
+    - step: 4
+      action: >
+        Enter a valid item code.
+
+    - step: 5
+      action: >
+        Select Search.
+
+    - step: 6
+      action: >
+        Verify that the search request is submitted.
+
+    - step: 7
+      action: >
+        Verify that the product result corresponding to the searched
+        item is displayed.
+
+    - step: 8
+      action: >
+        Validate the applicable product/stock status.
+
+  qr_search:
+    steps:
+      - step: 1
+        action: Select the Scan control.
+      - step: 2
+        action: Scan a valid QR code.
+      - step: 3
+        action: Verify that the corresponding item is searched.
+
+    status: >
+      QR control is technically observed; complete QR scanning behavior
+      was not exercised in this recording.
+
+expected_success:
+
+  navigation:
+    - Item Search card is available on Home.
+    - Selecting Item Search opens Product Search.
+    - Product Search page loads successfully.
+
+  search:
+    - Item Code input is available.
+    - Valid item code can be entered.
+    - Search can be initiated.
+    - Search request completes successfully.
+    - Corresponding product result is displayed.
+
+  product_result:
+    - Result corresponds to the searched item.
+    - Product information is displayed.
+    - Applicable stock information is displayed.
+
+  qr:
+    - Scan control is available.
+    - Valid QR code should resolve to the corresponding item.
+
+observed_scenarios:
+
+  - scenario: Home → Item Search
+    result: Product Search page opened.
+
+  - scenario: Enter 14-character item code
+    result: Value accepted by P6_SKU.
+
+  - scenario: Item Code → Search
+    result: Search request submitted successfully.
+
+  - scenario: Search result
+    result: Product result displayed.
+
+  - scenario: Out-of-stock product
+    result: >
+      "Sold Out" status displayed.
+
+  - scenario: No store/factory stock
+    result: >
+      Application displayed an option to proceed to MyCrown Portal
+      for initiating a production order.
+
+business_rules:
+
+  - rule: >
+      Item Search is accessible directly from the Home page.
+
+  - rule: >
+      Item Search navigates to Product Search Page 6.
+
+  - rule: >
+      Product Search supports item-code search.
+
+  - rule: >
+      Product Search provides a QR scan option.
+
+  - rule: >
+      The searched item is submitted through the Search action.
+
+  - rule: >
+      The resulting product should correspond to the searched item.
+
+  - rule: >
+      Product stock status is displayed where applicable.
+
+  - rule: >
+      A sold-out product can display a Sold Out status.
+
+  - rule: >
+      When no stock is available in Store and Factory, the application
+      can expose an option to initiate a production order through
+      MyCrown Portal.
+
+unknown_business_rules:
+
+  - Exact item-code format rules beyond the observed 14-character input.
+  - Whether all item codes must be exactly 14 characters.
+  - Numeric-only versus alphanumeric item-code rules.
+  - Exact invalid item-code behavior.
+  - Exact empty-search validation.
+  - Exact QR scanning implementation and supported QR formats.
+  - Exact behavior when multiple products match.
+  - Exact product-result validation requirements.
+  - Exact store/customer context rules for Item Search.
+  - Exact authorization requirements for production-order initiation.
+  - Exact MyCrown Portal handoff behavior.
+
+technical_metadata:
+
+  page:
+    id: 6
+    title: Product Search
+    route: /ords/r/tjdcom/ea/product-detail-item-search
+
+  navigation:
+    home_card:
+      observed_console_label: Item Search
+
+  search_input:
+    id: P6_SKU
+    name: P6_SKU
+    type: text
+    placeholder: "Enter item code or scan the QR"
+    data_enter_submit: true
+
+  search_button:
+    id: btn_search
+    title: Search
+    aria_label: Search
+
+  scan_button:
+    id: B24029796092184015
+    title: Scan
+    aria_label: Scan
+
+  observed_hidden_items:
+    - P6_ITEM
+    - P6_CFA_CODE
+    - P6_EXCLUDE_AUTOSTN
+    - P6_BEST_DEAL_CHK
+    - P6_ITEM_CHK
+    - P6_IMAGE_URL
+
+  observed_submission:
+    request: Search
+    endpoint_type: wwv_flow.accept
+    page_id: 6
+
+  observed_home_logging:
+    application_process: LOG_CLICK
+    logged_function: Item Search
+
+  security_note: >
+    Recording contained session/security values in URLs and request
+    data. These values are evidence only and must never be stored
+    in the KB or automation configuration.
+
+automation:
+
+  recommended_framework: Playwright
+
+  primary_locators:
+
+    item_search_home:
+      strategy: >
+        Locate the Home card by its accessible/visible Item Search
+        identity or validated destination rather than relying only
+        on the generic Home card image selector.
+
+    search_input:
+      - "#P6_SKU"
+
+    scan_button:
+      - "#B24029796092184015"
+
+    search_button:
+      - "#btn_search"
+
+    no_stock_action:
+      - "#B23985810396945939"
+
+  fallback_locators:
+
+    item_search_home:
+      - Accessible name
+      - Visible card text
+      - Stable href
+      - Validated DOM relationship
+
+    search_input:
+      - Label association
+      - Placeholder
+      - Validated page-item relationship
+
+    search_button:
+      - aria-label
+      - title
+      - Visible Search identity
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+
+    resolution:
+      0: Try next fallback.
+      1: Accept.
+      greater_than_1: Reject as ambiguous.
+
+    important_rule: >
+      The generic Home card selector
+      "li.custom-card-item > div.custom-card > a.custom-card-wrap >
+      div.custom-card-image > img"
+      must not be used alone because it matches multiple Home cards.
+
+  reusable_actions:
+
+    - Open Item Search from Home
+    - Enter Item Code
+    - Submit Product Search
+    - Scan QR Code
+    - Wait for Search Result
+    - Validate Product Result
+    - Validate Stock Status
+    - Detect Sold Out
+    - Detect No Store/Factory Stock
+    - Validate Production Order Action
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator.
+      - Inspect current DOM.
+      - Identify stable attributes or accessible identity.
+      - Validate uniqueness.
+      - Use validated fallback.
+      - Capture evidence.
+      - Propose locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+
+  positive:
+    item_code:
+      type: logical_reference
+      value: approved_valid_item_code
+
+    qr_code:
+      type: logical_reference
+      value: approved_valid_item_qr
+
+  negative:
+    invalid_item_code:
+      type: logical_reference
+      value: approved_invalid_item_code
+
+  restrictions:
+    - Do not store actual item values from recordings unless explicitly approved.
+    - Do not store session IDs.
+    - Do not store CSRF/security tokens.
+    - Do not store authentication cookies.
+
+security:
+
+  authentication_required: true
+
+  authorization:
+    description: >
+      User must have access to Item Search. Exact role matrix is unknown.
+
+  context:
+    - Customer context may affect downstream product behavior.
+    - Store context may affect stock visibility.
+
+  production_order:
+    sensitivity: High
+    rule: >
+      The MyCrown production-order action is a potentially consequential
+      business operation and must not be executed during generic sanity
+      testing.
+
+  sensitive_data:
+    - Session identifiers
+    - Security tokens
+    - Customer context
+    - Store context
+
+  policy:
+    - Sanitize recordings before KB ingestion.
+    - Never persist session/security values.
+    - Use logical test-data references.
+
+evidence:
+
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-2356.zip
+
+  observed_sequence:
+    - Home loaded.
+    - Item Search card clicked.
+    - Product Search page opened.
+    - P6_SKU selected.
+    - 14-character item code entered.
+    - Search clicked.
+    - Search submitted.
+    - Product result displayed.
+    - Product image interacted with.
+
+  observed_network:
+    - operation: Home card click logging
+      type: wwv_flow.ajax
+      status: 200
+
+    - operation: Product Search
+      type: wwv_flow.accept
+      request: Search
+      status: 200
+
+  observed_console:
+    - Card clicked
+    - Item Search
+    - Ajax Error
+    - parsererror
+
+  limitation:
+    description: >
+      The Home-card logging AJAX produced an HTTP 200 response but
+      also logged a parsererror with an empty response body. Navigation
+      nevertheless proceeded successfully to Product Search.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: Medium
+  technical_coverage: Very High
+  automation_coverage: High

@@ -1,0 +1,210 @@
+flow_id: BF-PRODUCT-STOCK-VISIBILITY-009
+
+flow_name: Product Stock Visibility
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+purpose:
+  Check stock availability of a product across stores and factory.
+
+entry_point:
+  page: Home
+  action: Product Stock Visibility
+  route: /ords/r/tjdcom/ea/product-stock-visibility
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Home page.
+  - Current store/customer context is available.
+
+pages:
+  - page_id: 114
+    name: Product Stock Visibility
+    route: /ords/r/tjdcom/ea/product-stock-visibility
+
+components:
+  - name: Item Code
+    type: input
+    primary_locator: "#P114_SKU"
+    purpose: Enter the product item code.
+
+  - name: Search
+    type: button
+    primary_locator: "#P47_SEARCH"
+    purpose: Submit the stock visibility search.
+
+business_flow:
+  - Open Home page.
+  - Select Product Stock Visibility.
+  - Product Stock Visibility page is displayed.
+  - Enter the required item code.
+  - Submit the search.
+  - Application searches for the product.
+  - Product and stock availability information is displayed.
+  - Validate that the displayed product corresponds to the searched item.
+  - Validate stock availability across the applicable stores/factory.
+
+expected_success:
+  - Product Stock Visibility page loads successfully.
+  - Valid item code is accepted.
+  - Matching product is displayed.
+  - Stock availability/details are displayed.
+  - Results respect the current store/customer context.
+
+observed_success_scenarios:
+  - Valid item code search displays product stock information.
+  - Stock visibility can indicate unavailable stock.
+  - Observed no-stock state:
+      "No Stock available in any Store or factory."
+
+observed_validation_scenarios:
+  - Item code validation requires a full 14-digit item code.
+  - Observed validation message:
+      "Kindly provide the full Item code ( 14 Digit )"
+  - Invalid/incomplete item code results in an error/validation state.
+
+observed_no_stock_scenario:
+  - No stock available in stores/factory.
+  - Application displays a no-stock message.
+  - Application also displayed guidance to initiate a production order through Item Search.
+  - Whether the production-order guidance itself is a required business rule is UNKNOWN.
+
+business_rules:
+  - Product Stock Visibility is used to check product stock availability.
+  - A valid item code is required for the search.
+  - The recorded application validates a 14-digit item code.
+  - Search results must correspond to the searched product.
+  - Stock availability must be displayed for the applicable product.
+  - Current store/customer context must be respected.
+  - Invalid or incomplete item-code input must result in an error/validation state.
+  - No-stock scenarios must be represented by an appropriate no-stock status/message.
+
+unknown_business_rules:
+  - Whether the production-order guidance must be validated as part of this flow.
+  - Exact behavior for an item code that does not exist.
+  - Exact stock calculation/business logic across stores and factory.
+  - Whether QR scanning is supported directly in this flow.
+  - Exact authorization requirements for any downstream production-order action.
+
+technical_metadata:
+  apex_application_id: 1002
+  page_id: 114
+  page_name: Product Stock Visibility
+  route: /ords/r/tjdcom/ea/product-stock-visibility
+  item_code_item: P114_SKU
+  search_button: P47_SEARCH
+  observed_item_code_requirement: 14 digits
+  observed_no_stock_message: "No Stock available in any Store or factory."
+  observed_production_guidance:
+    "To initiate a production order go to the item search menu"
+  architecture: Oracle APEX
+  sensitive_values:
+    - actual item codes
+    - session identifiers
+    - tokens
+    - cookies
+    - request/security values
+
+automation:
+  recommended_framework:
+    - Playwright
+    - Browser automation
+
+  primary_locators:
+    item_code: "#P114_SKU"
+    search: "#P47_SEARCH"
+
+  fallback_locators:
+    item_code:
+      - "input[name='P114_SKU']"
+      - "input#P114_SKU"
+    search:
+      - "button#P47_SEARCH"
+      - "[id='P47_SEARCH']"
+
+  locator_validation:
+    strategy:
+      - Resolve primary locator first.
+      - If primary resolves to 0 elements, try the next fallback.
+      - Accept a locator only when exactly 1 matching element is found.
+      - Reject ambiguous locators resolving to more than 1 element.
+      - Record fallback usage as locator degradation.
+    rule:
+      maximum_fallbacks_per_component: 3
+
+  reusable_actions:
+    - Open Product Stock Visibility
+    - Enter Item Code
+    - Validate Item Code Format
+    - Submit Stock Search
+    - Wait For Stock Result
+    - Validate Product Identity
+    - Validate Stock Availability
+    - Validate No-Stock State
+    - Validate Error State
+    - Validate Store/Customer Context
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Detect locator failure.
+      - Inspect current DOM/page evidence.
+      - Try validated fallback locator.
+      - Capture failure and successful fallback evidence.
+      - Propose a permanent locator update when necessary.
+      - Require human approval before permanently modifying automation.
+
+test_data:
+  valid_item_code:
+    type: logical_test_data_reference
+    requirement: Valid 14-digit item code
+    actual_value: NEVER_STORE
+
+  invalid_item_code:
+    type: logical_test_data_reference
+    requirement: Invalid or incomplete item code
+    actual_value: NEVER_STORE
+
+  no_stock_item:
+    type: logical_test_data_reference
+    requirement: Known product with no available stock
+    actual_value: NEVER_STORE
+
+security:
+  - Do not store actual item codes from recordings.
+  - Do not store session IDs, cookies, tokens, salts, or protected request values.
+  - Sanitize recordings before LLM/KB ingestion.
+  - Do not initiate production orders during generic sanity testing.
+  - Any consequential downstream production action requires explicit authorization.
+  - Validate that stock information is only accessible to authorized authenticated users.
+
+evidence:
+  source:
+    - Browser Recorder recording
+  evidence_types:
+    - DOM snapshots
+    - Screenshots
+    - User interactions
+    - Network activity
+    - Console/recorder events
+  recording_observation:
+    - Home navigation to Product Stock Visibility was captured.
+    - Product Stock Visibility page and item-code search were captured.
+    - 14-digit validation behavior was observed.
+    - Stock/no-stock states were observed.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: Very High
+  automation_readiness: High
+  known_gaps:
+    - Production-order guidance requirement is unknown.
+    - Exact nonexistent-product behavior is not fully defined.

@@ -138,10 +138,10 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Administration sanity (read-only guardrails) | Yes — BF-ADMINISTRATION-009 |
 | Manual Invoice form validation (no Create Invoice) | Yes — BF-MANUAL-INVOICE-009 |
 | Home navigation registry + child-flow routing | Yes — BF-HOME-010 |
-| Home utility components (customer, settings, ORSO, store stock) | Partial — BF-HOME-010-C01 |
+| Home utility components (customer, settings, ORSO, store stock) | Yes — BF-HOME-010-C01 |
 | Reports master + 18 report pages | Yes — BF-REPORTS-007 |
-| Rivaah module sanity (6 sub-flows) | Partial — BF-RIVAAH-005 subtree (005-05 PARTIAL) |
-| LLM test generation from flow knowledge | Yes — for 15 READY flows |
+| Rivaah module sanity (6 sub-flows) | Yes — BF-RIVAAH-005 subtree (all READY) |
+| LLM test generation from flow knowledge | Yes — for 17 READY flows |
 | Self-healing locator policy | Yes — defined in YAML |
 | Morning sanity (all suites) | Partial — need suites built from READY flows |
 | Incident: "payment failing" | No — Payment capability empty |

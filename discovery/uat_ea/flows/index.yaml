@@ -1,13 +1,16 @@
 schema: flow_kb_index_v1
 application: Endless Aisle
-count: 29
+count: 31
 sme_ready:
   - BF-LOGIN-001
   - BF-LOGOUT-002
   - BF-HOME-010
+  - BF-HOME-010-01
+  - BF-HOME-010-C01
   - BF-PRODUCT-003
   - BF-PRODUCT-004
   - BF-PRODUCT-CATALOGUE-006
+  - BF-PRODUCT-STOCK-VISIBILITY-009
   - BF-BEST-DEAL-008
   - BF-MANUAL-INVOICE-009
   - BF-ADMINISTRATION-009
@@ -49,6 +52,11 @@ flows:
     file: BF-HOME-010.yaml
     name: Home Page / Application Navigation Map
     status: READY
+  - id: BF-HOME-010-01
+    file: BF-HOME-010-01.yaml
+    name: Item Search
+    status: READY
+    parent: BF-HOME-010
   - id: BF-HOME-010-C01
     file: BF-HOME-010-C01.yaml
     name: Home Page Utility Components
@@ -89,6 +97,10 @@ flows:
   - id: BF-PRODUCT-CATALOGUE-006
     file: BF-PRODUCT-CATALOGUE-006.yaml
     name: Product Catalogue
+    status: READY
+  - id: BF-PRODUCT-STOCK-VISIBILITY-009
+    file: BF-PRODUCT-STOCK-VISIBILITY-009.yaml
+    name: Product Stock Visibility
     status: READY
   - id: BF-REPORTS-007
     file: BF-REPORTS-007.yaml
@@ -145,4 +157,5 @@ flows:
   - id: BF-STOCKVIS-006
     file: BF-STOCKVIS-006.yaml
     name: Stock Visibility Search
-    status: DRAFT
+    status: SUPERSEDED
+    superseded_by: BF-PRODUCT-STOCK-VISIBILITY-009

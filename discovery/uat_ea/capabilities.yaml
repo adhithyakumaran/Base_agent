@@ -14,12 +14,14 @@ capabilities:
     status: READY
     flows:
       - BF-HOME-010       # Home / Navigation Map — READY
+      - BF-HOME-010-01    # Item Search — READY
       - BF-HOME-010-C01   # Home Utility Components — READY
 
   Product Search:
     status: READY
     flows:
       - BF-PRODUCT-003  # Search Product — READY
+      - BF-HOME-010-01  # Item Search (page 6) — READY
       - BF-ITEMSEARCH-007  # superseded by BF-PRODUCT-003
 
   Product Management:
@@ -34,9 +36,10 @@ capabilities:
       - BF-FINDPRICE-004
 
   Inventory:
-    status: DRAFT
+    status: READY
     flows:
-      - BF-STOCKVIS-006
+      - BF-PRODUCT-STOCK-VISIBILITY-009  # Product Stock Visibility — READY
+      - BF-STOCKVIS-006  # superseded by BF-PRODUCT-STOCK-VISIBILITY-009
 
   Product Browse:
     status: PARTIAL
