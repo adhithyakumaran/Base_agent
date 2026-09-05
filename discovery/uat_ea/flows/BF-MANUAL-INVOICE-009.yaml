@@ -1,0 +1,509 @@
+flow_id: BF-MANUAL-INVOICE-009
+
+flow_name: Manual Invoice
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows authorized application users to create invoices manually,
+    including customer details, product/item information, discounts,
+    taxes, payment details, approvals, and customer signature.
+
+entry_point:
+  page: Home
+  navigation: >
+    Login → Home → Manual Invoice → Manual Bills Book
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to Manual Invoice.
+  - Application is available.
+  - Required customer and product test data are available.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+
+  - name: Manual Bills Book
+    route: /ords/r/tjdcom/ea1/manual-bills-book
+
+components:
+  - name: Manual Invoice
+    type: Navigation/Card
+    action: Opens Manual Bills Book.
+
+  - name: Product Category
+    type: Selection
+    values:
+      - Plain Gold
+      - Platinum
+      - Tanishq Studded
+      - Gold Coin
+    behavior: >
+      Applicable product categories depend on the manual-invoice
+      business scenario.
+
+  - name: Customer Details
+    type: Form
+    fields:
+      - Customer Number
+      - Customer Name
+      - Mobile Number
+      - Address
+      - City
+      - State
+      - Email
+      - Encircle Number
+
+  - name: Invoice Item Grid
+    type: Interactive Grid
+    fields:
+      - Item Code
+      - Lot Number
+      - Quantity
+      - Unit Price
+      - Gross Weight
+      - Net Weight
+      - Diamond Weight
+      - Discount Percentage
+      - Discount Amount
+      - GST
+      - Total Value
+    actions:
+      - Add Row
+      - Edit
+      - Save
+      - Reset
+      - Grid Settings
+
+  - name: Payment Details
+    type: Payment Form
+    payment_methods:
+      - Cash
+      - Credit Card
+      - Cheque
+      - GPay
+      - UPI
+    fields:
+      - Invoice Amount
+      - C/N Value
+      - Encircle Points
+      - Gift Voucher
+      - Balance Amount
+
+  - name: Approval Details
+    type: Form
+    fields:
+      - RSO Name
+      - Reason for Manual Bill
+      - Cashier Name
+      - Approver Name
+
+  - name: Customer Signature
+    type: Signature Input
+    action: Captures customer signature.
+
+  - name: Create Invoice
+    type: Submit Button
+    action: >
+      Attempts to create the manual invoice after all required
+      information and validations are satisfied.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Home after authentication.
+
+    - step: 2
+      action: Select Manual Invoice.
+
+    - step: 3
+      action: Verify that Manual Bills Book opens.
+
+    - step: 4
+      action: Select an applicable Product Category.
+
+    - step: 5
+      action: Enter/select required Customer Details.
+
+    - step: 6
+      action: Add one or more invoice products/items.
+
+    - step: 7
+      action: Enter or validate item-level pricing, quantity,
+        weight, discount, GST, and total information.
+
+    - step: 8
+      action: Enter Payment Details.
+
+    - step: 9
+      action: Validate payment amount against the invoice amount.
+
+    - step: 10
+      action: Enter required RSO, manual-bill reason, cashier,
+        and approver information.
+
+    - step: 11
+      action: Capture Customer Signature.
+
+    - step: 12
+      action: Validate all required invoice information.
+
+    - step: 13
+      action: >
+        Create Invoice is intentionally NOT executed during
+        generic sanity testing.
+
+    - step: 14
+      action: >
+        Validate the form's required-field and business validations.
+
+    - step: 15
+      action: >
+        Use Back where applicable and verify navigation to the
+        immediately previous page.
+
+expected_success:
+  - Manual Invoice opens successfully from Home.
+  - Manual Bills Book loads successfully.
+  - Applicable product categories can be selected.
+  - Customer details can be entered/selected.
+  - Multiple invoice items can be added.
+  - Item pricing and calculations are handled correctly.
+  - Discount and GST calculations are validated.
+  - Payment details can be entered.
+  - Multiple payment methods can be supported.
+  - Payment amount is validated against invoice amount.
+  - RSO, reason, cashier, and approver information is validated.
+  - Customer signature can be captured.
+  - Required-field validation prevents incomplete invoice submission.
+  - Back returns to the immediately previous page.
+  - Generic sanity testing does not create an actual invoice.
+
+observed_scenarios:
+  - scenario: Home → Manual Invoice
+    status: Observed
+
+  - scenario: Manual Bills Book opened
+    status: Observed
+
+  - scenario: Product category selection
+    status: Observed
+
+  - scenario: Customer information form
+    status: Observed
+
+  - scenario: Invoice item grid
+    status: Observed
+
+  - scenario: Multiple invoice-item capability
+    status: Observed
+
+  - scenario: Payment details
+    status: Observed
+
+  - scenario: RSO/reason/cashier/approver information
+    status: Observed
+
+  - scenario: Customer signature
+    status: Observed
+
+  - scenario: Required-field validation
+    status: Observed
+
+business_rules:
+  - rule: >
+      Manual Invoice supports both manual invoice creation and
+      manual billing when required by the business process.
+
+  - rule: >
+      Customer details are mandatory before invoice creation.
+
+  - rule: >
+      A Product Category must be selected.
+
+  - rule: >
+      Applicable product categories depend on the business scenario.
+
+  - rule: >
+      An invoice can contain multiple products/items.
+
+  - rule: >
+      Invoice calculations must be validated, including applicable
+      price, quantity, discount, GST, and total values.
+
+  - rule: >
+      Payment details must be validated against the invoice amount.
+
+  - rule: >
+      Multiple payment methods are supported.
+
+  - rule: >
+      RSO Name, Reason for Manual Bill, Cashier Name, and Approver Name
+      are mandatory.
+
+  - rule: >
+      Customer Signature is mandatory before invoice creation.
+
+  - rule: >
+      Required-field validation must prevent incomplete invoice creation.
+
+  - rule: >
+      Generic sanity testing must not create an actual invoice.
+
+  - rule: >
+      Actual invoice creation requires a dedicated controlled test
+      using approved test data.
+
+  - rule: >
+      Back returns to the immediately previous page.
+
+  - rule: >
+      No additional business rules were specified.
+
+unknown_business_rules:
+  - Exact product-category eligibility rules.
+  - Exact calculation formulas for price, discount, GST, and total.
+  - Exact payment reconciliation rules for combinations of payment methods.
+  - Exact Encircle points and Gift Voucher calculation rules.
+  - Exact RSO/approver authorization hierarchy.
+  - Exact invoice numbering/generation mechanism.
+  - Exact successful-invoice response/PDF generation behavior.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  pages:
+    manual_bills_book:
+      route: /ords/r/tjdcom/ea1/manual-bills-book
+
+  customer_items:
+    - P134_CUST_NUMBER
+    - P134_CUST_NAME
+    - P134_CUST_ADDRESS
+    - P134_CUST_CITY
+    - P134_CUST_STATE
+    - P134_CUST_EMAIL
+    - P134_CUST_ENCIRCLE_NO
+    - Mobile Number
+
+  invoice_item_grid:
+    columns:
+      - Item Code
+      - Lot No
+      - Quantity
+      - Unit Price
+      - Gross Weight
+      - Net Weight
+      - Diamond Weight
+      - Discount %
+      - Discount Amount
+      - GST
+      - Total Value
+    actions:
+      - Add Row
+      - Edit
+      - Save
+      - Reset
+      - Grid Settings
+
+  payment_methods:
+    - Cash
+    - Credit Cards
+    - Cheque
+    - GPay
+    - UPI
+
+  product_categories:
+    - name: Plain Gold
+      code: PG
+
+    - name: Platinum
+      code: PT
+
+    - name: Tanishq Studded
+      code: STUD
+
+    - name: Gold Coin
+      code: GC
+
+  approval_fields:
+    - RSO Name
+    - Reason for Manual Bill
+    - Cashier Name
+    - Approver Name
+
+  observed_validation:
+    description: >
+      Create Invoice validation identifies missing required
+      customer, product, contact, and approval information.
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX IDs or validated DOM attributes for
+      Manual Invoice navigation.
+
+    - >
+      Use validated page-item IDs for customer fields.
+
+    - >
+      Use validated interactive-grid locators for invoice items.
+
+    - >
+      Use validated payment-field locators.
+
+    - >
+      Use validated approval/signature controls.
+
+  fallback_locators:
+    - Accessible labels
+    - Stable APEX page-item IDs
+    - Validated DOM relationships
+    - Unique visible field labels
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Manual Invoice
+    - Open Manual Bills Book
+    - Select Product Category
+    - Enter Customer Details
+    - Add Invoice Item
+    - Edit Invoice Item
+    - Validate Invoice Calculations
+    - Select Payment Method
+    - Enter Payment Details
+    - Validate Payment Balance
+    - Enter RSO Details
+    - Enter Manual Bill Reason
+    - Enter Cashier
+    - Enter Approver
+    - Capture Customer Signature
+    - Validate Required Fields
+    - Navigate Back
+
+  safety_guardrails:
+    generic_sanity:
+      allow:
+        - Page navigation
+        - Form loading
+        - Field validation
+        - Non-destructive input validation
+        - Calculation validation
+        - Payment-field validation
+        - Required-field validation
+        - Back navigation
+
+      deny:
+        - Actual invoice creation
+        - Financial transaction submission
+        - Real payment processing
+        - Creation using real customer data
+        - Creation using production-sensitive data
+
+    transaction_policy:
+      description: >
+        Create Invoice must not be executed during generic sanity
+        automation. Dedicated transaction tests require explicitly
+        approved test data and controlled execution.
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Identify the affected invoice component.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Dedicated test customer
+    - Dedicated test product
+    - Applicable product category
+    - Controlled payment test data
+    - Controlled RSO/cashier/approver test references
+
+  restrictions:
+    - Do not use real customer data.
+    - Do not use real payment information.
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Do not create real invoices during generic sanity testing.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - User must have access to Manual Invoice.
+    - Invoice creation must follow applicable authorization rules.
+
+  sensitive_data:
+    - Customer information must be protected.
+    - Payment information must not be stored in the KB.
+    - Authentication/session information must not be stored.
+    - Signature data must not be stored in the KB.
+
+  validation:
+    - Verify mandatory customer information.
+    - Verify mandatory approval information.
+    - Verify payment validation.
+    - Prevent unauthorized/sensitive transaction execution.
+
+  transaction_protection:
+    - Generic QA must not create invoices.
+    - Generic QA must not process real payments.
+    - Dedicated transaction tests require controlled test data.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-log-in-20260905-2319.zip
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Form fields
+    - Invoice grid
+    - Payment controls
+    - Validation messages
+    - Navigation evidence
+    - Network activity
+    - Console activity
+
+  limitations:
+    - Exact calculation formulas are not established.
+    - Successful invoice creation response was not used as a
+      generic sanity action.
+    - Exact invoice-number/PDF generation behavior is unknown.
+    - Exact product-category eligibility is scenario-dependent.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: Very High
+  safety_coverage: Very High

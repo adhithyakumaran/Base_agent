@@ -1,0 +1,753 @@
+flow_id: BF-HOME-010
+
+flow_name: Home Page / Application Navigation Map
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Provides the authenticated user's main entry point into Endless Aisle
+    and exposes business-function cards/navigation items for product
+    discovery, product search, stock visibility, customer activities,
+    Rivaah, reports, administration, billing, and other application
+    capabilities.
+
+entry_point:
+  page: Login
+  navigation:
+    - Login
+    - Home
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Endless Aisle Home page.
+  - Application is available.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+    title: Endless Aisle
+
+components:
+
+  - name: Store Context
+    type: Context Display
+    observed_behavior: >
+      Home displays the currently selected store/context.
+
+  - name: Customer Context
+    type: Customer Selector
+    observed_behavior: >
+      Home provides customer selection/context for applicable business
+      operations.
+
+  - name: Home Navigation
+    type: Navigation
+    items:
+      - Home
+      - All Products
+      - Item Search
+      - Rivaah
+      - Product Catalogue
+      - Reports
+      - Best Deal
+      - Administration
+      - Manual Invoice
+
+  - name: Product and Search Functions
+    type: Business Function Cards
+    items:
+      - All Products
+      - Item Search
+      - Smart Image Search
+      - Find Price
+      - Estimation Slip
+      - Solitaire UIN
+      - Gold Coin Stock Visibility
+      - Stock Visibility
+      - My Store Stock
+      - Solitaire Products
+      - New Collections
+      - High Value Studded
+      - Silver Collections
+      - Size Based Search
+      - National/Regional Best Seller
+      - Dashboard
+
+  - name: Customer Functions
+    type: Business Function Cards
+    items:
+      - Customer Order
+      - Customer Wishlist
+
+  - name: Rivaah
+    type: Business Function
+    child_flows:
+      - BF-RIVAAH-005
+      - BF-RIVAAH-005-01
+      - BF-RIVAAH-005-02
+      - BF-RIVAAH-005-03
+      - BF-RIVAAH-005-04
+      - BF-RIVAAH-005-05
+
+  - name: Product Catalogue
+    type: Business Function
+    child_flow:
+      - BF-PRODUCT-CATALOGUE-006
+
+  - name: Reports
+    type: Business Function
+    child_flow:
+      - BF-REPORTS-007
+
+  - name: Best Deal
+    type: Business Function
+    child_flow:
+      - BF-BEST-DEAL-008
+
+  - name: Manual Invoice
+    type: Business Function
+    child_flow:
+      - BF-MANUAL-INVOICE-009
+
+  - name: Administration
+    type: Business Function
+    child_flow:
+      - BF-ADMINISTRATION-009
+    observed_sub_functions:
+      - KVI&FMC
+      - Manual Bill commercial report
+      - Manual Invoice Report
+      - Shubh Gold
+      - Express Home Delivery
+      - Logistic Partner Home Delivery
+      - Home Delivery Report
+      - Chatbot
+      - Click Log
+
+  - name: Product Catalogue Card
+    type: Home Card
+    navigation:
+      route: /ords/r/tjdcom/ea/product-catalogue
+
+  - name: Settings
+    type: Utility
+    observed: true
+
+  - name: Sign Out
+    type: Authentication
+    observed: true
+
+  - name: Change My Password
+    type: Authentication/Account Management
+    observed: true
+
+business_flow:
+
+  overview:
+    description: >
+      After successful authentication, the user lands on Home.
+      Home acts as the application hub from which the user can enter
+      different business functions.
+
+  navigation:
+    - step: 1
+      action: Login successfully.
+
+    - step: 2
+      action: Load Endless Aisle Home page.
+
+    - step: 3
+      action: Verify Home page and primary navigation are available.
+
+    - step: 4
+      action: Select a business-function card or navigation item.
+
+    - step: 5
+      action: >
+        Application navigates to the corresponding business-function
+        page.
+
+    - step: 6
+      action: >
+        Execute the selected child business flow.
+
+  product_discovery_pattern:
+    description: >
+      Multiple Home functions provide different ways to discover,
+      search, filter, or inspect products.
+
+    common_pattern:
+      - Home
+      - Specialized Product Entry
+      - Product Listing/Search
+      - Product Card
+      - Product Detail where applicable
+
+    reusable_product_functions:
+      - All Products
+      - Item Search
+      - Smart Image Search
+      - Find Price
+      - Estimation Slip
+      - Solitaire UIN
+      - Gold Coin Search
+      - Gold Coin Stock Visibility
+      - Stock Visibility
+      - My Store Stock
+      - Solitaire Products
+      - New Collections
+      - High Value Studded
+      - Silver Collections
+      - Size Based Search
+      - National/Regional Best Seller
+
+  item_search_pattern:
+    description: >
+      Item/SKU-oriented functions allow a user to enter an item identifier
+      and retrieve product or stock information.
+
+    observed_examples:
+      - Item Search
+      - Stock Visibility
+      - Size Based Search
+      - Solitaire UIN
+      - Gold Coin Stock Visibility
+
+  product_listing_pattern:
+    description: >
+      Product-listing functions display product cards which can lead
+      to product-detail pages.
+
+    observed_examples:
+      - All Products
+      - Product Search
+      - Product Discount
+      - Solitaire Products
+      - New Collections
+      - Look of the Week
+      - Silver Collections
+      - Gold Coin Search
+
+  specialized_search_pattern:
+    observed_examples:
+      - Smart Image Search
+      - Find Price
+      - Estimation Slip
+      - Size Based Search
+      - Stock Visibility
+      - Gold Coin Stock Visibility
+
+expected_success:
+  - Home loads successfully after authentication.
+  - Home displays the Endless Aisle application interface.
+  - Store context is visible.
+  - Customer selection/context is available.
+  - Primary navigation is available.
+  - Business-function cards are available.
+  - Selecting a valid Home function navigates to its intended page.
+  - Product-oriented functions open their appropriate search/listing/detail flow.
+  - Back/Home navigation can return the user to Home where supported.
+  - Sign Out remains available through the application navigation.
+
+observed_scenarios:
+
+  - scenario: Home → All Products
+    destination: /ords/r/tjdcom/ea/select-category
+    next_flow: Standard Product Search
+
+  - scenario: Home → Item Search
+    destination: /ords/r/tjdcom/ea/product-detail-item-search
+
+  - scenario: Home → Rivaah
+    destination: /ords/r/tjdcom/ea/rivaah
+    next_flow: BF-RIVAAH-005
+
+  - scenario: Home → Product Catalogue
+    destination: /ords/r/tjdcom/ea/product-catalogue
+    next_flow: BF-PRODUCT-CATALOGUE-006
+
+  - scenario: Home → Reports
+    destination: Reports Master Page
+    next_flow: BF-REPORTS-007
+
+  - scenario: Home → Best Deal
+    destination: /ords/r/tjdcom/ea/product-discount
+    next_flow: BF-BEST-DEAL-008
+
+  - scenario: Home → Smart Image Search
+    destination: /ords/r/tjdcom/ea/smart-image-search1
+    behavior:
+      - Filter by Display Brand
+      - Filter by Collection
+      - Image upload/drop zone observed
+
+  - scenario: Home → Find Price
+    destination: /ords/r/tjdcom/ea/find-price
+    behavior:
+      - Item input
+      - Lot number input
+      - Search/action
+
+  - scenario: Home → Estimation Slip
+    destination: /ords/r/tjdcom/ea/estimation-slip
+    behavior:
+      - Item input
+      - Lot number input
+      - Search/action
+
+  - scenario: Home → Solitaire UIN
+    destination: /ords/r/tjdcom/ea/solitaire-uin-search
+    behavior:
+      - Item Code
+      - Lot Number
+      - Search
+
+  - scenario: Home → Gold Coin Stock Visibility
+    destination: /ords/r/tjdcom/ea/gold-coin-stock-visibility
+    behavior:
+      - Item search
+      - Search action
+
+  - scenario: Home → Gold Coin Search
+    destination: /ords/r/tjdcom/ea/gold-coin-search1
+    behavior:
+      - Product cards
+      - Product selection
+      - Stock visibility flow
+
+  - scenario: Home → Stock Visibility
+    destination: /ords/r/tjdcom/ea/product-stock-visibility
+    behavior:
+      - SKU input
+      - 14-character input observed
+      - Search
+
+  - scenario: Home → My Store Stock
+    destination: /ords/r/tjdcom/ea/my-store-stock
+    behavior:
+      - Jewellery Type filter
+      - KVI
+      - FMC
+      - Store-stock functionality
+
+  - scenario: Home → Customer Wishlist
+    destination: /ords/r/tjdcom/ea/customer-wish-list1
+    behavior:
+      - Customer/wishlist interaction observed
+
+  - scenario: Home → Solitaire Products
+    destination: /ords/r/tjdcom/ea/solitaire-products
+    behavior:
+      - Product listing
+      - Product Detail
+
+  - scenario: Home → New Collections
+    destination: /ords/r/tjdcom/ea/new-collections
+    behavior:
+      - Product listing
+      - Product Detail
+
+  - scenario: Home → Look of the Week
+    destination: /ords/r/tjdcom/ea/look-of-the-week
+    behavior:
+      - Product listing
+      - Product detail
+      - Back to Products
+
+  - scenario: Home → Silver Collections
+    destination: /ords/r/tjdcom/ea/silver-collections
+    behavior:
+      - Product listing
+      - Product-detail flow observed
+
+  - scenario: Home → Size Based Search
+    destination: /ords/r/tjdcom/ea/size-based-search
+    behavior:
+      - SKU input
+      - 14-character input observed
+      - Search
+
+  - scenario: Home → National/Regional Best Seller
+    destination: /ords/r/tjdcom/ea/national-best-seller
+    behavior:
+      - Store-oriented bestseller functionality observed
+
+  - scenario: Home → Dashboard
+    destination: /ords/r/tjdcom/ea/dashboard-tile
+
+  - scenario: Home → Manual Invoice
+    next_flow: BF-MANUAL-INVOICE-009
+
+  - scenario: Home → Best Deal → Product
+    destination: /ords/r/tjdcom/ea/product-discount
+    detail_page: /ords/r/tjdcom/ea/discount-product-details-all-store
+
+business_rules:
+
+  - rule: >
+      Home is the primary authenticated application hub.
+
+  - rule: >
+      Home exposes multiple business functions through cards/navigation.
+
+  - rule: >
+      Product-related Home functions are specialized entry points
+      into reusable product discovery/search/stock/detail patterns.
+
+  - rule: >
+      A product card/listing may lead to a Product Detail page.
+
+  - rule: >
+      Different product functions can use different search inputs,
+      filters, or contexts.
+
+  - rule: >
+      Item/SKU search is reused across multiple business functions.
+
+  - rule: >
+      The same Product Detail capability can be reached from multiple
+      product-discovery flows.
+
+  - rule: >
+      Rivaah, Reports, Product Catalogue, Best Deal, and Manual Invoice
+      are parent business functions with their own dedicated KBs.
+
+  - rule: >
+      Home navigation must respect the authenticated user's application
+      access/role.
+
+  - rule: >
+      Customer and store context may influence downstream business
+      functions.
+
+unknown_business_rules:
+
+  - Exact role/permission matrix for every Home card.
+  - Exact visibility rules for cards by user role.
+  - Exact business meaning of every specialized product function.
+  - Exact behavior when a downstream page has no products/results.
+  - Exact customer-selection requirements for each individual Home function.
+  - Exact store-context behavior for each individual Home function.
+  - Exact authorization requirements for sensitive functions.
+  - Exact Home-card ordering/priority rules.
+  - Exact behavior of Administration sub-functions.
+
+technical_metadata:
+
+  platform: Oracle APEX
+  application_id: 1002
+  page:
+    name: Home
+    title: Endless Aisle
+    route: /ords/r/tjdcom/ea/home
+
+  observed_home_structure:
+    card_selector: >
+      li.custom-card-item > div.custom-card >
+      a.custom-card-wrap > div.custom-card-image > img
+
+    card_container:
+      class: custom-card-item
+
+    card_wrapper:
+      class: custom-card-wrap
+
+  navigation:
+    primary_items:
+      - Home
+      - All Products
+      - Item Search
+      - Rivaah
+      - Product Catalogue
+      - Reports
+      - Best Deal
+      - Administration
+      - Manual Invoice
+
+  observed_destinations:
+    all_products:
+      route: /ords/r/tjdcom/ea/select-category
+
+    item_search:
+      route: /ords/r/tjdcom/ea/product-detail-item-search
+
+    rivaah:
+      route: /ords/r/tjdcom/ea/rivaah
+
+    product_catalogue:
+      route: /ords/r/tjdcom/ea/product-catalogue
+
+    best_deal:
+      route: /ords/r/tjdcom/ea/product-discount
+
+    smart_image_search:
+      route: /ords/r/tjdcom/ea/smart-image-search1
+
+    find_price:
+      route: /ords/r/tjdcom/ea/find-price
+
+    estimation_slip:
+      route: /ords/r/tjdcom/ea/estimation-slip
+
+    solitaire_uin:
+      route: /ords/r/tjdcom/ea/solitaire-uin-search
+
+    gold_coin_stock_visibility:
+      route: /ords/r/tjdcom/ea/gold-coin-stock-visibility
+
+    gold_coin_search:
+      route: /ords/r/tjdcom/ea/gold-coin-search1
+
+    stock_visibility:
+      route: /ords/r/tjdcom/ea/product-stock-visibility
+
+    my_store_stock:
+      route: /ords/r/tjdcom/ea/my-store-stock
+
+    customer_wishlist:
+      route: /ords/r/tjdcom/ea/customer-wish-list1
+
+    solitaire_products:
+      route: /ords/r/tjdcom/ea/solitaire-products
+
+    new_collections:
+      route: /ords/r/tjdcom/ea/new-collections
+
+    look_of_the_week:
+      route: /ords/r/tjdcom/ea/look-of-the-week
+
+    silver_collections:
+      route: /ords/r/tjdcom/ea/silver-collections
+
+    size_based_search:
+      route: /ords/r/tjdcom/ea/size-based-search
+
+    national_best_seller:
+      route: /ords/r/tjdcom/ea/national-best-seller
+
+    dashboard:
+      route: /ords/r/tjdcom/ea/dashboard-tile
+
+  reusable_page_items:
+
+    stock_visibility:
+      - P114_SKU
+
+    size_based_search:
+      - P96_SKU
+
+    solitaire_uin:
+      - P75_ITEM_CODE
+      - P75_LOT_NO
+
+    gold_coin_stock_visibility:
+      - P108_ITEM
+
+    find_price:
+      - P31_ITEM
+      - P31_LOTNO
+
+    estimation_slip:
+      - P86_ITEM
+      - P86_LOTNO
+
+  special_components:
+
+    smart_image_search:
+      image_dropzone:
+        observed_text: >
+          Drop your image here or browse. Upload a file or drag and drop.
+          PNG/JPEG support observed.
+      filters:
+        - Display Brand
+        - Collection
+
+automation:
+
+  recommended_framework: Playwright
+
+  automation_strategy:
+    principle: >
+      Do not build one independent automation implementation for every
+      Home card. Model Home as a navigation registry and reuse shared
+      business-flow/page objects.
+
+    architecture:
+      - HomePage
+      - NavigationRegistry
+      - ProductSearchPatterns
+      - ProductListingPage
+      - ProductDetailPage
+      - StockVisibilityPage
+      - RivaahFlows
+      - ReportsFlows
+      - BestDealFlows
+      - ManualInvoiceFlows
+
+  primary_locators:
+    home_cards:
+      selector: >
+        li.custom-card-item > div.custom-card >
+        a.custom-card-wrap
+
+    home_card_image:
+      selector: >
+        li.custom-card-item > div.custom-card >
+        a.custom-card-wrap > div.custom-card-image > img
+
+    navigation:
+      strategy: >
+        Prefer stable navigation IDs, accessible names, hrefs,
+        or validated card text over the generic card-image selector.
+
+  fallback_locators:
+    - Accessible card name
+    - Visible card title
+    - Stable href/path
+    - Validated DOM relationship
+
+  locator_validation:
+    rule: >
+      Generic Home card selectors are not sufficient by themselves
+      to identify a specific business function.
+
+    resolution:
+      0: Try another validated locator.
+      1: Accept.
+      greater_than_1: Reject as ambiguous.
+
+    important_rule: >
+      The generic selector
+      "li.custom-card-item > div.custom-card > a.custom-card-wrap >
+      div.custom-card-image > img"
+      matches multiple Home cards and must never be used alone to
+      select a specific business function.
+
+  reusable_actions:
+    - Verify Home loaded
+    - Read Store Context
+    - Read Customer Context
+    - Locate Home Business Card
+    - Open Business Function
+    - Navigate Home
+    - Navigate using validated application path
+    - Validate destination page
+    - Return to Home
+    - Sign Out
+
+  product_reusable_actions:
+    - Search by SKU
+    - Search by Item Code
+    - Search by Lot Number
+    - Apply Product Filter
+    - Open Product Card
+    - Validate Product Detail
+    - Navigate Back to Products
+    - Validate Stock Information
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed Home-card locator.
+      - Inspect current DOM.
+      - Match visible card title/text.
+      - Match stable href where available.
+      - Validate uniqueness.
+      - Use validated fallback.
+      - Capture evidence.
+      - Propose locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+
+  logical_references:
+    - Valid test SKU
+    - Valid test item code
+    - Valid lot number
+    - Valid test customer
+    - Valid test store context
+    - Test image for Smart Image Search
+
+  restrictions:
+    - Do not store actual customer data.
+    - Do not store actual session IDs.
+    - Do not store authentication cookies.
+    - Do not store CSRF/session security values.
+    - Do not store real payment information.
+    - Use logical references for test data.
+
+security:
+
+  authentication_required: true
+
+  authorization:
+    description: >
+      Access to individual Home functions may depend on the authenticated
+      user's permissions. Exact role matrix remains unknown.
+
+  context_security:
+    - Store context must not be bypassed.
+    - Customer context must not be unintentionally mixed between flows.
+    - Downstream authorization must be validated by the corresponding
+      child flow.
+
+  sensitive_functions:
+    - Manual Invoice
+    - Customer-related functions
+    - Administration
+    - Home Delivery
+    - Other transaction/report functions as applicable
+
+  security_agent_reuse:
+    description: >
+      This Home/application map can be consumed by the Security Agent
+      to enumerate reachable application functions and identify
+      authorization boundaries.
+
+evidence:
+
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-2335.zip
+
+  recorded:
+    date: 2026-09-05
+
+  evidence_available:
+    - Home DOM snapshot
+    - Screenshots
+    - Navigation events
+    - User interactions
+    - Network activity
+    - Console activity
+    - Page routes
+    - Product-search interactions
+    - Home-card interactions
+
+  important_observation:
+    description: >
+      The Home DOM contains a large set of custom business-function
+      cards. The recording confirms that Home is an application
+      navigation hub rather than a single business transaction.
+
+  limitations:
+    - Some Home cards were only opened for navigation discovery.
+    - Not every downstream business function was fully explored.
+    - Exact role visibility rules remain unknown.
+    - Exact business rules belong in the respective child-flow KBs.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: Medium
+  technical_coverage: Very High
+  navigation_coverage: Very High
+  security_coverage: Medium

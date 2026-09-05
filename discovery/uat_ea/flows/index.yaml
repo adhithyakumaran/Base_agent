@@ -1,13 +1,15 @@
 schema: flow_kb_index_v1
 application: Endless Aisle
-count: 26
+count: 28
 sme_ready:
   - BF-LOGIN-001
   - BF-LOGOUT-002
+  - BF-HOME-010
   - BF-PRODUCT-003
   - BF-PRODUCT-004
   - BF-PRODUCT-CATALOGUE-006
   - BF-BEST-DEAL-008
+  - BF-MANUAL-INVOICE-009
   - BF-ADMINISTRATION-009
   - BF-REPORTS-007
   - BF-RIVAAH-005
@@ -41,6 +43,10 @@ flows:
     file: BF-FINDPRICE-004.yaml
     name: Find Price Lookup
     status: DRAFT
+  - id: BF-HOME-010
+    file: BF-HOME-010.yaml
+    name: Home Page / Application Navigation Map
+    status: READY
   - id: BF-ITEMCODE-011
     file: BF-ITEMCODE-011.yaml
     name: Item Code Or QR Search
@@ -60,6 +66,10 @@ flows:
   - id: BF-LOGOUT-002
     file: BF-LOGOUT-002.yaml
     name: User Logout
+    status: READY
+  - id: BF-MANUAL-INVOICE-009
+    file: BF-MANUAL-INVOICE-009.yaml
+    name: Manual Invoice
     status: READY
   - id: BF-PRODUCT-003
     file: BF-PRODUCT-003.yaml

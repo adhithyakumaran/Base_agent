@@ -10,6 +10,11 @@ capabilities:
       - BF-LOGIN-001    # User Login — READY
       - BF-LOGOUT-002   # User Logout — READY
 
+  Application Navigation:
+    status: READY
+    flows:
+      - BF-HOME-010     # Home / Navigation Map — READY
+
   Product Search:
     status: READY
     flows:
@@ -64,10 +69,15 @@ capabilities:
     flows:
       - BF-ADMINISTRATION-009  # Administration — READY
 
+  Billing:
+    status: PARTIAL
+    flows:
+      - BF-MANUAL-INVOICE-009  # Manual Invoice — READY (sanity: no Create Invoice)
+
   Checkout:
     status: NOT_STARTED
     flows: []
-    note: Customer Order / payment chain — gap for SME
+    note: Customer Order flow still gap for SME
 
   Payment:
     status: NOT_STARTED
