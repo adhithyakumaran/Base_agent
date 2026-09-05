@@ -79,8 +79,10 @@ export type AppState = {
 };
 
 export const MODEL_OPTIONS: ModelOption[] = [
-  { id: "groq/llama-3.1-8b-instant", label: "Groq Llama 3.1 8B (fast)", role: "fast", provider: "Groq" },
-  { id: "groq/llama-3.3-70b-versatile", label: "Groq Llama 3.3 70B (reasoning)", role: "reasoning", provider: "Groq" },
+  { id: "groq/qwen/qwen3.6-27b", label: "Groq Qwen 3.6 27B (fast classify)", role: "fast", provider: "Groq" },
+  { id: "groq/openai/gpt-oss-120b", label: "Groq GPT-OSS 120B (reasoning)", role: "reasoning", provider: "Groq" },
+  { id: "groq/qwen/qwen3.8-27b", label: "Groq Qwen 3.8 27B (balanced)", role: "reasoning", provider: "Groq" },
+  { id: "groq/llama-3.1-8b-instant", label: "Groq Llama 3.1 8B (legacy fast)", role: "fast", provider: "Groq" },
   { id: "claude-sonnet-4-20250514", label: "Claude Sonnet (reasoning)", role: "reasoning", provider: "Anthropic API" },
   { id: "gpt-4o-mini", label: "GPT-4o mini (fast)", role: "fast", provider: "OpenAI API" },
   { id: "gpt-4o", label: "GPT-4o (reasoning)", role: "reasoning", provider: "OpenAI API" },

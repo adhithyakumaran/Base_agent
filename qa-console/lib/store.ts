@@ -33,7 +33,7 @@ const defaultState = (): AppState => ({
     whatsapp: TEST_REPORT_WHATSAPP,
     slackWebhook: "",
   },
-  selectedModel: MODEL_OPTIONS.find((m) => m.id === "groq/llama-3.3-70b-versatile")?.id || "groq/llama-3.3-70b-versatile",
+  selectedModel: MODEL_OPTIONS.find((m) => m.id === "groq/openai/gpt-oss-120b")?.id || "groq/openai/gpt-oss-120b",
   usageTotal: { tokensIn: 0, tokensOut: 0, runs: 0 },
 });
 

@@ -30,6 +30,8 @@ User prompt (NL)
 | Variable | Default | Purpose |
 |---|---|---|
 | `GROQ_API_KEY` | — | Groq intent classification |
+| `LLM_MODEL_FAST` | `groq/qwen/qwen3.6-27b` | Fast intent/summary (replaces retired Llama 3.3 70B for speed) |
+| `LLM_MODEL_REASONING` | `groq/openai/gpt-oss-120b` | Primary reasoning model per Groq deprecations guide |
 | `LLM_PROVIDER` | `groq` | Set `anthropic` for Claude |
 | `ANTHROPIC_API_KEY` | — | Claude when swapping provider |
 | `LLM_ENABLED` | `true` | Disable for deterministic-only |
@@ -68,3 +70,12 @@ export LLM_MODEL_REASONING=claude-sonnet-4-20250514
 ```
 
 No code changes required — `PlannerLlmClient` uses LiteLLM.
+
+## Groq model note (Sep 2026)
+
+`llama-3.3-70b-versatile` was retired on Groq Free/Developer tiers. Defaults are now:
+
+- **Reasoning:** `groq/openai/gpt-oss-120b`
+- **Fast classify/summary:** `groq/qwen/qwen3.6-27b`
+
+Override via `LLM_MODEL_REASONING` and `LLM_MODEL_FAST` in `.env`.

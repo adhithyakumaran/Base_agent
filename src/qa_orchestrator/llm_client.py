@@ -9,8 +9,8 @@ from typing import Any
 from base_agent.llm.gateway import LlmRequest, LlmResponse
 
 
-DEFAULT_GROQ_FAST = "groq/llama-3.1-8b-instant"
-DEFAULT_GROQ_REASONING = "groq/llama-3.3-70b-versatile"
+DEFAULT_GROQ_FAST = "groq/qwen/qwen3.6-27b"
+DEFAULT_GROQ_REASONING = "groq/openai/gpt-oss-120b"
 DEFAULT_CLAUDE = "claude-sonnet-4-20250514"
 
 
