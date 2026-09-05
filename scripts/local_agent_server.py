@@ -24,6 +24,23 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 
+
+def _load_dotenv() -> None:
+    env_path = ROOT / ".env"
+    if not env_path.exists():
+        return
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        os.environ.setdefault(key, value)
+
+
+_load_dotenv()
+
 from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest  # noqa: E402
 
 
@@ -181,7 +198,7 @@ def main() -> None:
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL_REASONING"))
     args = parser.parse_args()
     os.environ.setdefault("LLM_ENABLED", "true")
-    os.environ.setdefault("QA_RUNNER", "dry_run")
+    os.environ.setdefault("QA_RUNNER", "playwright")
     global SERVICE
     SERVICE = LocalOrchestratorService(args.discovery_root, default_model=args.model)
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)

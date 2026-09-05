@@ -1,27 +1,44 @@
-# Apex QA Console
+# Apex QA Agent Console
 
-Enterprise frontend for the Base Agent / QA Agent product.
+Enterprise light-theme UI for the QA orchestrator.
+
+## Run locally
+
+```bash
+# From repo root (starts orchestrator + this console)
+./scripts/start_local_stack.sh
+```
+
+Or:
+
+```bash
+# Terminal 1 — agent API (requires .env with GROQ_API_KEY)
+cd .. && set -a && source .env && set +a
+PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+
+# Terminal 2 — console
+npm install
+npm run dev
+```
+
+Open **http://127.0.0.1:43123**
 
 ## Features
 
-- Prompt + prebuilt flow CTAs (sanity, ad-hoc, discover)
-- Knowledge dump → data pills (text / md / json / csv / url)
-- Live pipeline side panel with traces
-- Daily morning sanity schedule (client-set time)
-- Report channels: email, Teams, WhatsApp, Slack
-- Export reports: JSON / Markdown / CSV / TXT
-- Google-like history of client/agent actions
-- Model picker (API gateway: Azure OpenAI, OpenAI, Anthropic, OCI, or LLM off)
-- Token / usage tracking
+- Natural language prompt → Groq intent classification → Playwright suite execution
+- **Generate sanity report** — all 19 READY flows
+- **Agent output panel** — intent, suites, discovery/LLM insights, live trace
+- **Export** combined report as MD, PDF, or DOCX
 
-## Run
+## Theme
 
-```bash
-cd qa-console
-npm install
-npm run dev -- --port 43123
-```
+Light background, orange primary buttons (`#EA580C`), black text, Inter sans-serif.
 
-Open [http://127.0.0.1:43123](http://127.0.0.1:43123).
+## Environment
 
-Runs call the Python Base Agent in the parent repo (`python -m base_agent.api`) when available.
+| Variable | Default |
+|---|---|
+| `LOCAL_AGENT_URL` | `http://127.0.0.1:43124` |
+| `GROQ_API_KEY` | Set in repo root `.env` (never commit) |
+
+Playwright automation credentials: `automation/config/.env` (copy from `environments.example.env`).

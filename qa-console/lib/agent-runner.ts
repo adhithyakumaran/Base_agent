@@ -87,8 +87,8 @@ async function invokePythonAgentSpawn(
       "-m",
       "qa_orchestrator.api",
       goal,
-      "--kb-dir",
-      "discovery/uat_ea/kb",
+      "--discovery-root",
+      "discovery/uat_ea",
       "--type",
       opts.runType,
     ];
@@ -167,8 +167,8 @@ export async function executeRun(
   await push(
     "info",
     run.llmEnabled
-      ? "Run accepted — QA orchestrator (LLM planner + OpenClaw execution)"
-      : "Run accepted — deterministic planner fallback (set GROQ_API_KEY for LLM)"
+      ? "Run accepted — enterprise orchestrator (Groq classify → Playwright suites)"
+      : "Run accepted — deterministic classification (set GROQ_API_KEY for LLM)"
   );
 
   const extracted = extractPills(pills);
@@ -211,6 +211,8 @@ export async function executeRun(
   if (invoked.ok && invoked.result) {
     const r = invoked.result;
     const local = (r.local as Record<string, unknown> | undefined) || {};
+    const intent = (local.intent as Record<string, unknown>) || {};
+    const discovery = (local.discovery as Record<string, unknown>) || {};
     run.conclusion = String(r.conclusion || "UNKNOWN");
     run.reasonCode = String(r.reason_code || "");
     run.usage.toolCalls = Number(r.tool_calls || 0);
@@ -218,6 +220,22 @@ export async function executeRun(
     run.usage.llmCalls = Number(r.llm_calls || 0);
     run.usage.tokensIn = Number(r.tokens_in || 0);
     run.usage.tokensOut = Number(r.tokens_out || 0);
+
+    await push(
+      "decision",
+      `Intent: ${String(intent.execution_mode || "unknown")} — ${String(intent.reasoning || "classified")}`,
+      JSON.stringify(intent, null, 2)
+    );
+
+    const suggestions = discovery.suggestions as string[] | undefined;
+    if (suggestions?.length) {
+      await push(
+        "observe",
+        `Discovery insights (${suggestions.length})`,
+        suggestions.join("\n")
+      );
+    }
+
     await push(
       "observe",
       `Validation phase ${String(local.validation_phase || "A")} → ${run.conclusion}`,

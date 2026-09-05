@@ -37,16 +37,21 @@ python3 -m base_agent.api "discover and crawl the application" --kb-dir discover
 ## Local-first (preferred now)
 
 ```bash
-# Terminal 1 — Enterprise QA orchestrator (Groq/Claude classify → Playwright suites)
-export GROQ_API_KEY='gsk_...'   # optional; deterministic fallback without key
-QA_RUNNER=dry_run PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
-# Live Playwright: QA_RUNNER=playwright (requires automation/npm setup)
+# One command — orchestrator (Groq + Playwright) + enterprise console UI
+./scripts/start_local_stack.sh
 
-# Terminal 2 — console
+# Or manually:
+# 1) Copy .env.example → .env and set GROQ_API_KEY
+# 2) Orchestrator
+set -a && source .env && set +a
+PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+# 3) Console (light theme, export MD/PDF/DOCX)
 cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
 ```
 
-**LLM:** Groq free tier by default (`groq/llama-3.1-8b-instant`). Swap to Claude via console model picker + `ANTHROPIC_API_KEY`. See `docs/architecture/QA_ORCHESTRATOR.md`.
+Open **http://127.0.0.1:43123** — prompt box, sanity report, agent output panel, export.
+
+**LLM:** Groq (`GROQ_API_KEY` in `.env`). Swap to Claude via `LLM_PROVIDER=anthropic`. See `docs/architecture/QA_ORCHESTRATOR.md`.
 
 ## Repo map
 
