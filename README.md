@@ -37,9 +37,10 @@ python3 -m base_agent.api "discover and crawl the application" --kb-dir discover
 ## Local-first (preferred now)
 
 ```bash
-# Terminal 1 — QA orchestrator (Groq planner + OpenClaw mock until configured)
-export GROQ_API_KEY='gsk_...'   # optional; without it uses deterministic planner fallback
-PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+# Terminal 1 — Enterprise QA orchestrator (Groq/Claude classify → Playwright suites)
+export GROQ_API_KEY='gsk_...'   # optional; deterministic fallback without key
+QA_RUNNER=dry_run PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+# Live Playwright: QA_RUNNER=playwright (requires automation/npm setup)
 
 # Terminal 2 — console
 cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
@@ -51,7 +52,7 @@ cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
 
 | Path | Purpose |
 |---|---|
-| `src/qa_orchestrator/` | **Phase 1 product** — LLM planner + OpenClaw + KB + validation |
+| `src/qa_orchestrator/` | **Phase 1 product** — intent classify + suite select + Playwright + KB graph |
 | `plugins/mock_demo/` | Deterministic mock tools |
 | `plugins/qa_apex/` | APEX discover / sanity / flow catalog + Playwright crawler |
 ## Canonical Application KB (Sep 2026)

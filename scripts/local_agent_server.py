@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Local warm QA Orchestrator HTTP server — LLM planner + OpenClaw execution.
+"""Local warm QA Orchestrator HTTP server — intent classify + Playwright execution.
 
   PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
 
-POST /run  {"goal":"sanity check endless aisle","run_type":"sanity","model":"groq/llama-3.1-8b-instant"}
+POST /run   {"goal":"morning sanity check","run_type":"sanity"}
+POST /chat  same body — chat-friendly alias with structured enterprise output
 GET  /health
 """
 
@@ -27,11 +28,16 @@ from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest  # noqa: E40
 
 
 class LocalOrchestratorService:
-    def __init__(self, kb_dir: str, *, default_model: str | None = None) -> None:
-        self.kb_dir = kb_dir
+    def __init__(
+        self,
+        discovery_root: str,
+        *,
+        default_model: str | None = None,
+    ) -> None:
+        self.discovery_root = discovery_root
         self.default_model = default_model
         t0 = time.perf_counter()
-        self.orchestrator = QaOrchestrator(kb_dir=kb_dir, model=default_model)
+        self.orchestrator = QaOrchestrator(discovery_root=discovery_root, model=default_model)
         self.boot_ms = int((time.perf_counter() - t0) * 1000)
         self.runs = 0
 
@@ -42,6 +48,8 @@ class LocalOrchestratorService:
         run_type: str = "adhoc",
         model: str | None = None,
         context_packets: list[dict[str, Any]] | None = None,
+        skip_discovery: bool = False,
+        skip_execution: bool = False,
     ) -> dict[str, Any]:
         t0 = time.perf_counter()
         result = self.orchestrator.run(
@@ -50,6 +58,8 @@ class LocalOrchestratorService:
                 run_type=run_type,
                 model=model or self.default_model,
                 context_packets=context_packets or [],
+                skip_discovery=skip_discovery,
+                skip_execution=skip_execution,
             )
         )
         self.runs += 1
@@ -58,7 +68,9 @@ class LocalOrchestratorService:
         payload["local"]["boot_ms"] = self.boot_ms
         payload["local"]["runs_served"] = self.runs
         payload["local"]["llm_enabled"] = result.metadata.get("llm_enabled", False)
-        payload["local"]["model_mode"] = "groq" if result.metadata.get("llm_enabled") else "deterministic_fallback"
+        payload["local"]["llm_provider"] = result.metadata.get("llm_provider", "groq")
+        payload["local"]["primary_flows"] = len(self.orchestrator.graph.ready_flow_ids())
+        payload["local"]["draft_flows"] = len(self.orchestrator.graph.draft_flow_ids())
         return payload
 
 
@@ -89,17 +101,23 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path in {"/health", "/"}:
             assert SERVICE is not None
+            orch = SERVICE.orchestrator
             self._json(
                 200,
                 {
                     "ok": True,
                     "service": "qa-orchestrator",
+                    "version": "2.0",
+                    "architecture": "classify → suite_select → playwright → report",
                     "boot_ms": SERVICE.boot_ms,
                     "runs_served": SERVICE.runs,
-                    "llm_enabled": SERVICE.orchestrator.llm.enabled,
-                    "kb_dir": SERVICE.kb_dir,
-                    "openclaw_mode": SERVICE.orchestrator.executor.mode,
-                    "note": "LLM planner ON when GROQ_API_KEY set; OpenClaw mock until OPENCLAW_MODE=http",
+                    "llm_enabled": orch.llm.enabled,
+                    "llm_provider": orch.llm.provider,
+                    "executor": getattr(orch.executor, "mode", "playwright"),
+                    "discovery_root": SERVICE.discovery_root,
+                    "primary_ready_flows": len(orch.graph.ready_flow_ids()),
+                    "supporting_draft_flows": len(orch.graph.draft_flow_ids()),
+                    "note": "Groq intent classification when GROQ_API_KEY set; swap to Claude via LLM_PROVIDER=anthropic",
                 },
             )
             return
@@ -107,7 +125,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
-        if path != "/run":
+        if path not in {"/run", "/chat"}:
             self._json(404, {"ok": False, "error": "not_found"})
             return
         assert SERVICE is not None
@@ -118,16 +136,39 @@ class Handler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             self._json(400, {"ok": False, "error": "invalid_json"})
             return
-        goal = str(body.get("goal") or "").strip()
+        goal = str(body.get("goal") or body.get("message") or "").strip()
         if not goal:
             self._json(400, {"ok": False, "error": "goal_required"})
             return
         run_type = str(body.get("run_type") or body.get("type") or "adhoc")
         model = body.get("model")
         context_packets = body.get("context_packets") if isinstance(body.get("context_packets"), list) else []
+        skip_discovery = bool(body.get("skip_discovery"))
+        skip_execution = bool(body.get("skip_execution"))
         try:
-            result = SERVICE.run(goal, run_type=run_type, model=model, context_packets=context_packets)
-            self._json(200, {"ok": True, "result": result})
+            result = SERVICE.run(
+                goal,
+                run_type=run_type,
+                model=model,
+                context_packets=context_packets,
+                skip_discovery=skip_discovery,
+                skip_execution=skip_execution,
+            )
+            chat_response = {
+                "message": result.get("summary", ""),
+                "conclusion": result.get("conclusion"),
+                "execution_mode": result.get("local", {}).get("execution_mode"),
+                "report_markdown": result.get("local", {}).get("report_markdown"),
+                "suite_plan": result.get("local", {}).get("suite_plan"),
+            }
+            self._json(
+                200,
+                {
+                    "ok": True,
+                    "result": result,
+                    "chat": chat_response if path == "/chat" else None,
+                },
+            )
         except Exception as exc:  # noqa: BLE001
             self._json(500, {"ok": False, "error": f"{type(exc).__name__}:{exc}"})
 
@@ -136,12 +177,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=43124)
-    parser.add_argument("--kb-dir", default=str(ROOT / "discovery/uat_ea/kb"))
+    parser.add_argument("--discovery-root", default=str(ROOT / "discovery/uat_ea"))
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL_REASONING"))
     args = parser.parse_args()
     os.environ.setdefault("LLM_ENABLED", "true")
+    os.environ.setdefault("QA_RUNNER", "dry_run")
     global SERVICE
-    SERVICE = LocalOrchestratorService(args.kb_dir, default_model=args.model)
+    SERVICE = LocalOrchestratorService(args.discovery_root, default_model=args.model)
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)
     print(
         json.dumps(
@@ -149,8 +191,9 @@ def main() -> None:
                 "listening": f"http://{args.host}:{args.port}",
                 "boot_ms": SERVICE.boot_ms,
                 "llm_enabled": SERVICE.orchestrator.llm.enabled,
-                "openclaw_mode": SERVICE.orchestrator.executor.mode,
-                "kb_dir": args.kb_dir,
+                "executor": getattr(SERVICE.orchestrator.executor, "mode", "playwright"),
+                "discovery_root": args.discovery_root,
+                "ready_flows": len(SERVICE.orchestrator.graph.ready_flow_ids()),
             }
         ),
         flush=True,

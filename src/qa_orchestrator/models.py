@@ -7,6 +7,15 @@ from pydantic import BaseModel, Field
 
 StepAction = Literal["navigate", "click", "type", "wait", "screenshot", "assert_text", "custom"]
 
+ExecutionMode = Literal[
+    "morning_sanity",
+    "adhoc_existing",
+    "adhoc_parameterized",
+    "incident_multi_flow",
+    "new_feature",
+    "discover",
+]
+
 
 class PlanStep(BaseModel):
     action: StepAction
@@ -23,6 +32,40 @@ class ExecutionPlan(BaseModel):
     steps: list[PlanStep] = Field(default_factory=list)
     kb_refs: list[str] = Field(default_factory=list)
     planner: str = "deterministic"
+
+
+class IntentClassification(BaseModel):
+    goal: str
+    run_type: str = "adhoc"
+    execution_mode: ExecutionMode = "adhoc_existing"
+    capability: str | None = None
+    flow_ids: list[str] = Field(default_factory=list)
+    supporting_flow_ids: list[str] = Field(default_factory=list)
+    suite_ids: list[str] = Field(default_factory=list)
+    params: dict[str, Any] = Field(default_factory=dict)
+    confidence: float = 0.0
+    reasoning: str = ""
+    classifier: str = "deterministic"
+
+
+class SuiteSelectionPlan(BaseModel):
+    execution_mode: ExecutionMode = "adhoc_existing"
+    suite_ids: list[str] = Field(default_factory=list)
+    flow_ids: list[str] = Field(default_factory=list)
+    commands: list[str] = Field(default_factory=list)
+    params: dict[str, Any] = Field(default_factory=dict)
+    runner: str = "playwright"
+    primary_only: bool = True
+    notes: list[str] = Field(default_factory=list)
+
+
+class DiscoveryResult(BaseModel):
+    ok: bool = False
+    mode: str = "dry_run"
+    pages_crawled: int = 0
+    seed_url: str | None = None
+    suggestions: list[str] = Field(default_factory=list)
+    report: dict[str, Any] = Field(default_factory=dict)
 
 
 class StepObservation(BaseModel):
@@ -64,6 +107,9 @@ class OrchestratorResult(BaseModel):
     summary: str
     goal: str
     run_type: str = "adhoc"
+    intent: IntentClassification
+    suite_plan: SuiteSelectionPlan
+    discovery: DiscoveryResult | None = None
     plan: ExecutionPlan
     execution: ExecutionResult
     validation: ValidationResult

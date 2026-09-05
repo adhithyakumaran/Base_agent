@@ -1,4 +1,4 @@
-"""Thin QA orchestrator — LLM planner + OpenClaw execution + KB + validation."""
+"""Enterprise QA orchestrator — classify → suite select → Playwright → report."""
 
 from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest
 

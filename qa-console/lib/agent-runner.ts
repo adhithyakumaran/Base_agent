@@ -190,7 +190,7 @@ export async function executeRun(
     await push("info", "No context packets — planner will use KB index");
   }
 
-  await push("decision", `Planner: ${run.model} · Executor: OpenClaw`);
+  await push("decision", `Classifier: ${run.model} · Executor: Playwright suites`);
   await push("tool", `Goal → ${run.goal.slice(0, 120)}`);
 
   const agentGoal =
@@ -224,9 +224,10 @@ export async function executeRun(
       JSON.stringify(
         {
           reason: run.reasonCode,
-          planner: local.planner,
-          openclaw_mode: local.openclaw_mode,
-          steps: (local.plan as { steps?: unknown[] } | undefined)?.steps?.length,
+          classifier: local.classifier,
+          execution_mode: local.execution_mode,
+          executor: local.executor,
+          suites: (local.suite_plan as { suite_ids?: unknown[] } | undefined)?.suite_ids,
         },
         null,
         2

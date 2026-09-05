@@ -1,60 +1,70 @@
-# QA Orchestrator — Phase 1 product path
+# Enterprise QA Orchestrator
 
-Thin orchestrator: **LLM planner (Groq → Claude later) + OpenClaw browser execution + KB RAG + validation + reports**.
+**Version 2.0** — aligned with `docs/finalized-proposal/ARCHITECTURE_LOCKED.md`
 
-Console UI (`qa-console/`) is unchanged — it calls this layer via `scripts/local_agent_server.py`.
+## Pipeline
 
-## Architecture
-
+```text
+User prompt (NL)
+    → IntentClassifier (Groq/Claude or deterministic fallback)
+    → FlowKnowledgeGraph (19 READY primary + 6 DRAFT supporting)
+    → SuiteSelector (deterministic approved Playwright suites)
+    → PlaywrightRunner (zero LLM at execution)
+    → DiscoveryService (new_feature / discover modes)
+    → Validator + enterprise Markdown report
 ```
-Console → local_agent_server.py → qa_orchestrator
-  ├─ planner.py      (Groq/Claude via LiteLLM)
-  ├─ kb_rag.py       (discovery/uat_ea/kb)
-  ├─ openclaw_adapter.py
-  ├─ validator.py    (Phase A pre-GT / Phase B post-GT)
-  └─ reporter.py
-```
+
+## Execution modes
+
+| Mode | Example prompt | LLM at run time |
+|---|---|---|
+| `morning_sanity` | "morning sanity check" | No |
+| `adhoc_existing` | "check login" | Classify only |
+| `adhoc_parameterized` | "SKU 12345 in search" | Classify + extract params |
+| `incident_multi_flow` | "payment failing" | Classify + graph traverse |
+| `new_feature` | "new banner on product page" | Classify + crawl |
+| `discover` | "crawl product area" | Classify + crawl |
 
 ## Environment
 
-| Variable | Purpose | Default |
+| Variable | Default | Purpose |
 |---|---|---|
-| `GROQ_API_KEY` | Groq free-tier planner | required for LLM |
-| `LLM_ENABLED` | Enable planner LLM | `true` |
-| `LLM_PROVIDER` | `groq` or `anthropic` | `groq` |
-| `LLM_MODEL_FAST` | Fast model | `groq/llama-3.1-8b-instant` |
-| `LLM_MODEL_REASONING` | Planner model | `groq/llama-3.3-70b-versatile` |
-| `ANTHROPIC_API_KEY` | Claude (later swap) | — |
-| `OPENCLAW_MODE` | `mock` / `http` / `cli` | `mock` |
-| `OPENCLAW_URL` | OpenClaw HTTP endpoint | `http://127.0.0.1:18789` |
-| `APEX_USERNAME` / `APEX_PASSWORD` | UAT credentials (never commit) | — |
+| `GROQ_API_KEY` | — | Groq intent classification |
+| `LLM_PROVIDER` | `groq` | Set `anthropic` for Claude |
+| `ANTHROPIC_API_KEY` | — | Claude when swapping provider |
+| `LLM_ENABLED` | `true` | Disable for deterministic-only |
+| `QA_RUNNER` | `playwright` | `dry_run` for CI; `openclaw` legacy |
+| `QA_CRAWL_LIVE` | — | Set `true` for live browser crawl |
+| `QA_DISCOVERY_ROOT` | `discovery/uat_ea` | KB + graph root |
 
 ## Run locally
 
 ```bash
-# Terminal 1
-export GROQ_API_KEY='gsk_...'   # optional — without it, deterministic planner fallback
-PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+# Install Python deps
+pip install -e ".[llm]"
 
-# Terminal 2
-cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
+# Dry-run orchestrator (no npm)
+QA_RUNNER=dry_run LLM_ENABLED=false python -m qa_orchestrator.api "morning sanity check" --type sanity
+
+# HTTP server (console / chat clients)
+PYTHONPATH=src:. QA_RUNNER=dry_run python3 scripts/local_agent_server.py --port 43124
+
+# Live Playwright execution
+QA_RUNNER=playwright cd automation && npm ci && npm run test:sanity
 ```
 
-CLI:
+## API
+
+- `POST /run` — full orchestrator payload
+- `POST /chat` — same body + `chat` summary block
+- `GET /health` — service metadata
+
+## Swap Groq → Claude
 
 ```bash
-PYTHONPATH=src:. python3 -m qa_orchestrator.api "sanity check endless aisle" --type sanity
+export LLM_PROVIDER=anthropic
+export ANTHROPIC_API_KEY=sk-...
+export LLM_MODEL_REASONING=claude-sonnet-4-20250514
 ```
 
-## OpenClaw
-
-Set `OPENCLAW_MODE=http` when your OpenClaw instance is running and exposes `POST /execute` with plan JSON.
-
-Until then, `mock` mode simulates steps and writes placeholder evidence under `artifacts/qa-evidence/`.
-
-## Validation phases
-
-- **Phase A (now):** technical rules + honest `NEEDS_REVIEW` — no fake business PASS
-- **Phase B (post-SME):** deterministic GT compare from `discovery/uat_ea/gt/` approved facts
-
-See `docs/architecture/SIMPLIFIED_QA_ARCHITECTURE.md`.
+No code changes required — `PlannerLlmClient` uses LiteLLM.
