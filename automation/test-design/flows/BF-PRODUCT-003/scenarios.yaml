@@ -1,0 +1,25 @@
+schema: automation_scenarios_v1
+flow_id: BF-PRODUCT-003
+flow_name: Search Product
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-PRODUCT-003-001
+  title: Search Product — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - User opens Product Search.
+  - User enters a 14-digit item code or scans the product QR code.
+  - QR scanning populates/provides the product item code.
+  - User initiates Search.
+  - Application searches for the product.
+  - Application evaluates the product against the current store/customer context.
+  - If the product is found, product and applicable stock information are displayed.
+  - If the product is not available in the current store/customer context, the applicable
+    availability status is displayed.
+  - User can proceed to Product Detail when applicable.
+  tags:
+  - sanity
+  - regression
+  - bf-product-003

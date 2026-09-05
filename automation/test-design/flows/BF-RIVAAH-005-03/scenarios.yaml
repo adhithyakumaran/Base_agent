@@ -1,0 +1,80 @@
+schema: automation_scenarios_v1
+flow_id: BF-RIVAAH-005-03
+flow_name: Engagement Rings
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-RIVAAH-005-03-001
+  title: Engagement Rings — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Rivaah from Home.'
+  - '[steps] Select Engagement Rings.'
+  - '[steps] Verify navigation to All Products / Standard Product Search with the
+    relevant engagement-ring search/filter context.'
+  - '[steps] Verify that engagement-ring products are displayed.'
+  - '[steps] Use search and/or available filters to refine the products, when required.'
+  - '[steps] Select an engagement-ring product.'
+  - '[steps] Open Product Detail.'
+  - '[steps] Verify that the displayed product details correspond exactly to the selected
+    engagement ring.'
+  - '[steps] Use Back to return to the immediately previous screen.'
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005-03
+- id: SC-BF-RIVAAH-005-03-002
+  title: 'Select Engagement Rings from Rivaah and navigate to Standard Product Search
+    / All Products.
+
+    '
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: 'Select Engagement Rings from Rivaah and navigate to Standard Product
+      Search / All Products.
+
+      '
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-03
+- id: SC-BF-RIVAAH-005-03-003
+  title: 'All Products page displays engagement-ring products and filter options.
+
+    '
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: 'All Products page displays engagement-ring products and filter options.
+
+      '
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-03
+- id: SC-BF-RIVAAH-005-03-004
+  title: Select an engagement-ring product.
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Select an engagement-ring product.
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-03
+- id: SC-BF-RIVAAH-005-03-005
+  title: Open Product Detail.
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Open Product Detail.
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-03

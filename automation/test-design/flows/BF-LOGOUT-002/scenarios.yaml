@@ -1,0 +1,23 @@
+schema: automation_scenarios_v1
+flow_id: BF-LOGOUT-002
+flow_name: User Logout
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-LOGOUT-002-001
+  title: User Logout — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - User is authenticated and is on an application page.
+  - User opens the user/profile menu.
+  - User selects Sign Out.
+  - Application terminates the authenticated session.
+  - User is redirected to the Login page.
+  - Previously authenticated pages must not remain accessible through browser Back
+    navigation.
+  - User must authenticate again to access protected application pages.
+  tags:
+  - sanity
+  - regression
+  - bf-logout-002

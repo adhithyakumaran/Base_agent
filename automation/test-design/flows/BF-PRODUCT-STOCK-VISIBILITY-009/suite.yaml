@@ -1,0 +1,18 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-PRODUCT-STOCK-VISIBILITY-009
+flow_id: BF-PRODUCT-STOCK-VISIBILITY-009
+flow_name: Product Stock Visibility
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-product-stock-visibility-009
+test_cases:
+- TC-BF-PRODUCT-STOCK-VISIBILITY-009-P01
+- TC-BF-PRODUCT-STOCK-VISIBILITY-009-N01
+- TC-BF-PRODUCT-STOCK-VISIBILITY-009-E01
+- TC-BF-PRODUCT-STOCK-VISIBILITY-009-E02
+sanity_subset:
+- TC-BF-PRODUCT-STOCK-VISIBILITY-009-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

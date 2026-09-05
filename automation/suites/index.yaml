@@ -1,0 +1,45 @@
+schema: automation_suites_v1
+approval_status: PENDING_SME
+
+sanity:
+  id: SUITE-SANITY-MORNING
+  description: >
+    Morning sanity — all P0 cases across READY flows. No LLM at execution time.
+  schedule: "0 7 * * *"
+  tags: ["@sanity"]
+  runner:
+    framework: playwright
+    command: npm run test:sanity
+    cwd: automation
+  flows:
+    - BF-LOGIN-001
+    - BF-LOGOUT-002
+    - BF-HOME-010
+    - BF-HOME-010-01
+    - BF-HOME-010-C01
+    - BF-PRODUCT-003
+    - BF-PRODUCT-004
+    - BF-PRODUCT-CATALOGUE-006
+    - BF-PRODUCT-STOCK-VISIBILITY-009
+    - BF-BEST-DEAL-008
+    - BF-MANUAL-INVOICE-009
+    - BF-ADMINISTRATION-009
+    - BF-REPORTS-007
+    - BF-RIVAAH-005
+    - BF-RIVAAH-005-01
+    - BF-RIVAAH-005-02
+    - BF-RIVAAH-005-03
+    - BF-RIVAAH-005-04
+    - BF-RIVAAH-005-05
+
+regression:
+  id: SUITE-REGRESSION-FULL
+  description: Full regression across all READY flow tags
+  tags: ["@regression"]
+  runner:
+    framework: playwright
+    command: npm run test:regression
+    cwd: automation
+
+by_flow:
+  note: Per-flow suite.yaml under automation/artifacts/flows/{flow_id}/

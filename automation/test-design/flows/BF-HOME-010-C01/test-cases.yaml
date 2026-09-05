@@ -1,0 +1,88 @@
+schema: automation_test_cases_v1
+flow_id: BF-HOME-010-C01
+flow_name: Home Page Utility Components
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-HOME-010-C01-P01
+  title: Home Page Utility Components — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-home-010-c01
+  linked_scenario: SC-BF-HOME-010-C01-001
+  preconditions:
+  - User is authenticated.
+  - Home page is loaded successfully.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    customer_selection:
+    - Customer selector is available on Home.
+    - Select Customer drawer opens.
+    - Drawer can be closed.
+    settings:
+    - User menu opens.
+    - Settings option is available.
+    - Settings opens.
+    - Settings can be closed.
+    orso_recommendation:
+    - ORSO Recommendation is available.
+    - ORSO Recommendation opens in a modal dialog.
+    - Modal can be closed.
+    store_context:
+    - Current store context is displayed.
+    - Store context interaction does not break Home navigation.
+    store_stock:
+    - STORE STOCK control is available.
+    - STORE STOCK interaction responds.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010-C01*.spec.ts
+    test_match: TC-BF-HOME-010-C01-P01
+  business_rules_validated:
+  - Customer selection is accessible directly from Home.
+  - Customer selection is presented through a drawer.
+  - User Settings are accessible through the Home user menu.
+  - ORSO Recommendation is accessible directly from Home.
+  - ORSO Recommendation is presented as a modal dialog.
+- id: TC-BF-HOME-010-C01-N01
+  title: Home Page Utility Components — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-home-010-c01
+  linked_scenario: SC-BF-HOME-010-C01-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010-C01*.spec.ts
+    test_match: TC-BF-HOME-010-C01-N01
+- id: TC-BF-HOME-010-C01-E01
+  title: Home Page Utility Components — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-HOME-010-C01-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010-C01*.spec.ts
+    test_match: TC-BF-HOME-010-C01-E01
+- id: TC-BF-HOME-010-C01-E02
+  title: Home Page Utility Components — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-home-010-c01
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-HOME-010-C01-E02
+    mode: skip-until-sme

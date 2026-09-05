@@ -1,0 +1,24 @@
+schema: automation_scenarios_v1
+flow_id: BF-LOGIN-001
+flow_name: User Login
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-LOGIN-001-001
+  title: User Login — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - Open Login page.
+  - Locate Username field using locator resolution strategy.
+  - Enter username.
+  - Locate Password field using locator resolution strategy.
+  - Enter password.
+  - Optionally interact with Remember My Credential.
+  - Click LOGIN.
+  - Application validates the supplied credentials.
+  - On successful authentication, user is taken to Home.
+  tags:
+  - sanity
+  - regression
+  - bf-login-001

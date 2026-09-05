@@ -1,0 +1,79 @@
+schema: automation_test_cases_v1
+flow_id: BF-RIVAAH-005-04
+flow_name: Wedding Experts
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-RIVAAH-005-04-P01
+  title: Wedding Experts — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005-04
+  linked_scenario: SC-BF-RIVAAH-005-04-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - Regional wedding expert information is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Wedding Experts opens successfully from Rivaah.
+  - User can select a region/location.
+  - Regional Wedding Experts displays experts for the selected region.
+  - Displayed experts correspond to the selected region.
+  - Expert information is displayed through cards.
+  - Contact/appointment-related information is displayed as text on the card.
+  - The flow respects the current store/customer context.
+  - Back returns to the immediately previous screen.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-04*.spec.ts
+    test_match: TC-BF-RIVAAH-005-04-P01
+  business_rules_validated:
+  - Wedding Experts helps customers find wedding experts based on region/location.
+  - The user selects a region before viewing the corresponding regional wedding experts.
+  - Experts displayed must correspond to the selected region.
+  - Wedding expert information is displayed using cards.
+  - Appointment/contact-related information is presented as text on the expert card.
+- id: TC-BF-RIVAAH-005-04-N01
+  title: Wedding Experts — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-rivaah-005-04
+  linked_scenario: SC-BF-RIVAAH-005-04-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-04*.spec.ts
+    test_match: TC-BF-RIVAAH-005-04-N01
+- id: TC-BF-RIVAAH-005-04-E01
+  title: Wedding Experts — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-RIVAAH-005-04-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-04*.spec.ts
+    test_match: TC-BF-RIVAAH-005-04-E01
+- id: TC-BF-RIVAAH-005-04-E02
+  title: Wedding Experts — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-rivaah-005-04
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-RIVAAH-005-04-E02
+    mode: skip-until-sme

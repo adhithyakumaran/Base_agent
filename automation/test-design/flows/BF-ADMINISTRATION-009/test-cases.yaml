@@ -1,0 +1,98 @@
+schema: automation_test_cases_v1
+flow_id: BF-ADMINISTRATION-009
+flow_name: Administration
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-ADMINISTRATION-009-P01
+  title: Administration — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-administration-009
+  - read-only-sanity
+  - read-only-sanity
+  - no-transaction
+  - no-data-mutation
+  linked_scenario: SC-BF-ADMINISTRATION-009-001
+  preconditions:
+  - User is authenticated.
+  - User has administrator/authorized access.
+  - Application is available.
+  - Required administration functionality is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Administration opens successfully from Home.
+  - Administration Master Page loads successfully.
+  - Authorized administrator can access administration functions.
+  - Configuration pages load successfully.
+  - Maintenance pages load successfully.
+  - User/access-management pages load successfully.
+  - Monitoring/reporting pages load successfully.
+  - Access Control page loads successfully.
+  - Applicable safe controls are accessible.
+  - Generic sanity testing does not modify sensitive records.
+  - Back returns to the Administration Master Page.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-ADMINISTRATION-009*.spec.ts
+    test_match: TC-BF-ADMINISTRATION-009-P01
+  business_rules_validated:
+  - Administration provides application configuration, maintenance, user/access management,
+    monitoring, dashboards, and reporting capabilities.
+  - Administration access is restricted to administrators/ authorized administrative
+    users.
+  - Generic QA/sanity testing must not modify application, user, access-control, or
+    other sensitive records.
+  - Configuration and maintenance pages may be inspected and their safe controls validated.
+  - Actual record creation/modification is not required for generic Administration
+    QA.
+- id: TC-BF-ADMINISTRATION-009-N01
+  title: Administration — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-administration-009
+  - read-only-sanity
+  - read-only-sanity
+  - no-transaction
+  - no-data-mutation
+  linked_scenario: SC-BF-ADMINISTRATION-009-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-ADMINISTRATION-009*.spec.ts
+    test_match: TC-BF-ADMINISTRATION-009-N01
+- id: TC-BF-ADMINISTRATION-009-E01
+  title: Administration — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-ADMINISTRATION-009-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-ADMINISTRATION-009*.spec.ts
+    test_match: TC-BF-ADMINISTRATION-009-E01
+- id: TC-BF-ADMINISTRATION-009-E02
+  title: Administration — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-administration-009
+  - read-only-sanity
+  - read-only-sanity
+  - no-transaction
+  - no-data-mutation
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-ADMINISTRATION-009-E02
+    mode: skip-until-sme

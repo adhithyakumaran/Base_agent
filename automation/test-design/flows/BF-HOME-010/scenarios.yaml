@@ -1,0 +1,328 @@
+schema: automation_scenarios_v1
+flow_id: BF-HOME-010
+flow_name: Home Page / Application Navigation Map
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-HOME-010-002
+  title: Home → All Products
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → All Products
+    destination: /ords/r/tjdcom/ea/select-category
+    next_flow: Standard Product Search
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-003
+  title: Home → Item Search
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Item Search
+    destination: /ords/r/tjdcom/ea/product-detail-item-search
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-004
+  title: Home → Rivaah
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Rivaah
+    destination: /ords/r/tjdcom/ea/rivaah
+    next_flow: BF-RIVAAH-005
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-005
+  title: Home → Product Catalogue
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Product Catalogue
+    destination: /ords/r/tjdcom/ea/product-catalogue
+    next_flow: BF-PRODUCT-CATALOGUE-006
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-006
+  title: Home → Reports
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Reports
+    destination: Reports Master Page
+    next_flow: BF-REPORTS-007
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-007
+  title: Home → Best Deal
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Best Deal
+    destination: /ords/r/tjdcom/ea/product-discount
+    next_flow: BF-BEST-DEAL-008
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-008
+  title: Home → Smart Image Search
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Smart Image Search
+    destination: /ords/r/tjdcom/ea/smart-image-search1
+    behavior:
+    - Filter by Display Brand
+    - Filter by Collection
+    - Image upload/drop zone observed
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-009
+  title: Home → Find Price
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Find Price
+    destination: /ords/r/tjdcom/ea/find-price
+    behavior:
+    - Item input
+    - Lot number input
+    - Search/action
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-010
+  title: Home → Estimation Slip
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Estimation Slip
+    destination: /ords/r/tjdcom/ea/estimation-slip
+    behavior:
+    - Item input
+    - Lot number input
+    - Search/action
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-011
+  title: Home → Solitaire UIN
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Solitaire UIN
+    destination: /ords/r/tjdcom/ea/solitaire-uin-search
+    behavior:
+    - Item Code
+    - Lot Number
+    - Search
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-012
+  title: Home → Gold Coin Stock Visibility
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Gold Coin Stock Visibility
+    destination: /ords/r/tjdcom/ea/gold-coin-stock-visibility
+    behavior:
+    - Item search
+    - Search action
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-013
+  title: Home → Gold Coin Search
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Gold Coin Search
+    destination: /ords/r/tjdcom/ea/gold-coin-search1
+    behavior:
+    - Product cards
+    - Product selection
+    - Stock visibility flow
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-014
+  title: Home → Stock Visibility
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Stock Visibility
+    destination: /ords/r/tjdcom/ea/product-stock-visibility
+    behavior:
+    - SKU input
+    - 14-character input observed
+    - Search
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-015
+  title: Home → My Store Stock
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → My Store Stock
+    destination: /ords/r/tjdcom/ea/my-store-stock
+    behavior:
+    - Jewellery Type filter
+    - KVI
+    - FMC
+    - Store-stock functionality
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-016
+  title: Home → Customer Wishlist
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Customer Wishlist
+    destination: /ords/r/tjdcom/ea/customer-wish-list1
+    behavior:
+    - Customer/wishlist interaction observed
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-017
+  title: Home → Solitaire Products
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Solitaire Products
+    destination: /ords/r/tjdcom/ea/solitaire-products
+    behavior:
+    - Product listing
+    - Product Detail
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-018
+  title: Home → New Collections
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → New Collections
+    destination: /ords/r/tjdcom/ea/new-collections
+    behavior:
+    - Product listing
+    - Product Detail
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-019
+  title: Home → Look of the Week
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Look of the Week
+    destination: /ords/r/tjdcom/ea/look-of-the-week
+    behavior:
+    - Product listing
+    - Product detail
+    - Back to Products
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-020
+  title: Home → Silver Collections
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Silver Collections
+    destination: /ords/r/tjdcom/ea/silver-collections
+    behavior:
+    - Product listing
+    - Product-detail flow observed
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-021
+  title: Home → Size Based Search
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Size Based Search
+    destination: /ords/r/tjdcom/ea/size-based-search
+    behavior:
+    - SKU input
+    - 14-character input observed
+    - Search
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-022
+  title: Home → National/Regional Best Seller
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → National/Regional Best Seller
+    destination: /ords/r/tjdcom/ea/national-best-seller
+    behavior:
+    - Store-oriented bestseller functionality observed
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-023
+  title: Home → Dashboard
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Dashboard
+    destination: /ords/r/tjdcom/ea/dashboard-tile
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-024
+  title: Home → Manual Invoice
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Manual Invoice
+    next_flow: BF-MANUAL-INVOICE-009
+  tags:
+  - regression
+  - bf-home-010
+- id: SC-BF-HOME-010-025
+  title: Home → Best Deal → Product
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Best Deal → Product
+    destination: /ords/r/tjdcom/ea/product-discount
+    detail_page: /ords/r/tjdcom/ea/discount-product-details-all-store
+  tags:
+  - regression
+  - bf-home-010

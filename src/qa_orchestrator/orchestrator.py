@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -8,6 +9,7 @@ from qa_orchestrator.kb_rag import KbRag
 from qa_orchestrator.llm_client import PlannerLlmClient
 from qa_orchestrator.models import OrchestratorResult
 from qa_orchestrator.openclaw_adapter import OpenClawAdapter
+from qa_orchestrator.playwright_runner import PlaywrightRunner
 from qa_orchestrator.planner import Planner
 from qa_orchestrator.reporter import build_markdown_report
 from qa_orchestrator.validator import Validator
@@ -35,7 +37,11 @@ class QaOrchestrator:
         self.kb = KbRag(self.kb_dir)
         self.llm = PlannerLlmClient.from_env(model_id=model)
         self.planner = Planner(self.kb, self.llm)
-        self.executor = OpenClawAdapter()
+        runner_mode = os.environ.get("QA_RUNNER", "mock").lower()
+        if runner_mode == "playwright":
+            self.executor = PlaywrightRunner()
+        else:
+            self.executor = OpenClawAdapter()
         gt_path = Path(gt_dir) if gt_dir else self.kb_dir.parent / "gt"
         self.validator = Validator(self.kb, gt_dir=gt_path if gt_path.exists() else None)
 

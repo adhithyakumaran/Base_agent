@@ -1,0 +1,23 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-MANUAL-INVOICE-009
+flow_id: BF-MANUAL-INVOICE-009
+flow_name: Manual Invoice
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-manual-invoice-009
+- read-only-sanity
+- no-transaction
+- read-only-sanity
+- no-transaction
+- no-data-mutation
+test_cases:
+- TC-BF-MANUAL-INVOICE-009-P01
+- TC-BF-MANUAL-INVOICE-009-N01
+- TC-BF-MANUAL-INVOICE-009-E01
+- TC-BF-MANUAL-INVOICE-009-E02
+sanity_subset:
+- TC-BF-MANUAL-INVOICE-009-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

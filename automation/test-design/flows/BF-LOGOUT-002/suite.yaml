@@ -1,0 +1,18 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-LOGOUT-002
+flow_id: BF-LOGOUT-002
+flow_name: User Logout
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-logout-002
+test_cases:
+- TC-BF-LOGOUT-002-P01
+- TC-BF-LOGOUT-002-N01
+- TC-BF-LOGOUT-002-E01
+- TC-BF-LOGOUT-002-E02
+sanity_subset:
+- TC-BF-LOGOUT-002-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

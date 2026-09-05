@@ -1,0 +1,26 @@
+schema: automation_scenarios_v1
+flow_id: BF-PRODUCT-004
+flow_name: View Product
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-PRODUCT-004-001
+  title: View Product — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - User searches for or selects a product.
+  - Application identifies the selected product.
+  - Application opens Product Detail.
+  - Product information is displayed.
+  - Product images are displayed.
+  - Product attributes are displayed.
+  - Product price is displayed where applicable.
+  - Product availability is displayed.
+  - If the product is out of stock, the out-of-stock status is displayed.
+  - If applicable, the user can proceed to the production-order process.
+  - User can return to the Products/Product Search context.
+  tags:
+  - sanity
+  - regression
+  - bf-product-004

@@ -1,0 +1,98 @@
+schema: automation_scenarios_v1
+flow_id: BF-HOME-010-01
+flow_name: Item Search
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-HOME-010-01-001
+  title: Item Search — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] From Home, select the Item Search card.'
+  - '[steps] Verify that Product Search page opens.'
+  - '[steps] Locate the Item Code / QR input.'
+  - '[steps] Enter a valid item code.'
+  - '[steps] Select Search.'
+  - '[steps] Verify that the search request is submitted.'
+  - '[steps] Verify that the product result corresponding to the searched item is
+    displayed.'
+  - '[steps] Validate the applicable product/stock status.'
+  - '[qr_search] Select the Scan control.'
+  - '[qr_search] Scan a valid QR code.'
+  - '[qr_search] Verify that the corresponding item is searched.'
+  tags:
+  - sanity
+  - regression
+  - bf-home-010-01
+- id: SC-BF-HOME-010-01-002
+  title: Home → Item Search
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Item Search
+    result: Product Search page opened.
+  tags:
+  - regression
+  - bf-home-010-01
+- id: SC-BF-HOME-010-01-003
+  title: Enter 14-character item code
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Enter 14-character item code
+    result: Value accepted by P6_SKU.
+  tags:
+  - regression
+  - bf-home-010-01
+- id: SC-BF-HOME-010-01-004
+  title: Item Code → Search
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Item Code → Search
+    result: Search request submitted successfully.
+  tags:
+  - regression
+  - bf-home-010-01
+- id: SC-BF-HOME-010-01-005
+  title: Search result
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Search result
+    result: Product result displayed.
+  tags:
+  - regression
+  - bf-home-010-01
+- id: SC-BF-HOME-010-01-006
+  title: Out-of-stock product
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Out-of-stock product
+    result: '"Sold Out" status displayed.
+
+      '
+  tags:
+  - regression
+  - bf-home-010-01
+- id: SC-BF-HOME-010-01-007
+  title: No store/factory stock
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: No store/factory stock
+    result: 'Application displayed an option to proceed to MyCrown Portal for initiating
+      a production order.
+
+      '
+  tags:
+  - regression
+  - bf-home-010-01

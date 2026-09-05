@@ -1,0 +1,95 @@
+schema: automation_scenarios_v1
+flow_id: BF-PRODUCT-CATALOGUE-006
+flow_name: Product Catalogue
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-PRODUCT-CATALOGUE-006-001
+  title: Product Catalogue — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Home after authentication.'
+  - '[steps] Select Product Catalogue.'
+  - '[steps] Verify that the Product Catalogue page displays the available catalogue
+    cards.'
+  - '[steps] Select a catalogue card.'
+  - '[steps] If the card is a direct catalogue, verify that the corresponding PDF
+    opens in a new browser tab/window.'
+  - '[steps] If the card represents an internal collection catalogue, verify navigation
+    to the corresponding Collection Catalogue page.'
+  - '[steps] Select the required catalogue/language where applicable.'
+  - '[steps] Verify that the corresponding PDF catalogue opens.'
+  - '[steps] Verify that the PDF corresponds to the selected catalogue or language.'
+  - '[steps] Use Back from an internal Collection Catalogue page.'
+  - '[steps] Verify that Back returns to the Product Catalogue page.'
+  tags:
+  - sanity
+  - regression
+  - bf-product-catalogue-006
+- id: SC-BF-PRODUCT-CATALOGUE-006-002
+  title: Open Product Catalogue from Home
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Open Product Catalogue from Home
+    status: Observed
+  tags:
+  - regression
+  - bf-product-catalogue-006
+- id: SC-BF-PRODUCT-CATALOGUE-006-003
+  title: Display catalogue cards
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Display catalogue cards
+    status: Observed
+  tags:
+  - regression
+  - bf-product-catalogue-006
+- id: SC-BF-PRODUCT-CATALOGUE-006-004
+  title: Open direct catalogue PDF
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Open direct catalogue PDF
+    status: Observed
+  tags:
+  - regression
+  - bf-product-catalogue-006
+- id: SC-BF-PRODUCT-CATALOGUE-006-005
+  title: Open internal collection catalogue
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Open internal collection catalogue
+    status: Observed
+  tags:
+  - regression
+  - bf-product-catalogue-006
+- id: SC-BF-PRODUCT-CATALOGUE-006-006
+  title: Open collection-specific PDF
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Open collection-specific PDF
+    status: Observed
+  tags:
+  - regression
+  - bf-product-catalogue-006
+- id: SC-BF-PRODUCT-CATALOGUE-006-007
+  title: Open Varamahalakshmi language catalogue
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Open Varamahalakshmi language catalogue
+    status: Observed
+  tags:
+  - regression
+  - bf-product-catalogue-006

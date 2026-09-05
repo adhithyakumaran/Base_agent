@@ -1,0 +1,24 @@
+schema: automation_scenarios_v1
+flow_id: BF-PRODUCT-STOCK-VISIBILITY-009
+flow_name: Product Stock Visibility
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-PRODUCT-STOCK-VISIBILITY-009-001
+  title: Product Stock Visibility — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - Open Home page.
+  - Select Product Stock Visibility.
+  - Product Stock Visibility page is displayed.
+  - Enter the required item code.
+  - Submit the search.
+  - Application searches for the product.
+  - Product and stock availability information is displayed.
+  - Validate that the displayed product corresponds to the searched item.
+  - Validate stock availability across the applicable stores/factory.
+  tags:
+  - sanity
+  - regression
+  - bf-product-stock-visibility-009

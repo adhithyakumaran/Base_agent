@@ -1,0 +1,84 @@
+schema: automation_test_cases_v1
+flow_id: BF-BEST-DEAL-008
+flow_name: Best Deal
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-BEST-DEAL-008-P01
+  title: Best Deal — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-best-deal-008
+  linked_scenario: SC-BF-BEST-DEAL-008-001
+  preconditions:
+  - User is authenticated.
+  - User has access to Best Deal.
+  - Application is available.
+  - Best Deal product data is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Best Deal opens successfully from Home.
+  - Product Discount page loads successfully.
+  - Discounted/Best Deal products are displayed.
+  - Users can apply applicable product filters.
+  - Filtered results satisfy the selected filter criteria.
+  - Users can select a discounted product.
+  - Discount Product Details - All Store opens successfully.
+  - Product details exactly match the selected product.
+  - Displayed price and discount values are correct.
+  - Out-of-stock discounted products can still be viewed.
+  - The flow respects the current store/customer context.
+  - Back to Products returns to Product Discount.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-BEST-DEAL-008*.spec.ts
+    test_match: TC-BF-BEST-DEAL-008-P01
+  business_rules_validated:
+  - Best Deal provides access to discounted/best-deal products.
+  - Users can filter Best Deal products using the available product and classification
+    filters.
+  - Products displayed through Best Deal must represent discounted/Best Deal products.
+  - Out-of-stock discounted products can still be viewed.
+  - A selected Best Deal product can be opened in Discount Product Details - All Store.
+- id: TC-BF-BEST-DEAL-008-N01
+  title: Best Deal — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-best-deal-008
+  linked_scenario: SC-BF-BEST-DEAL-008-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-BEST-DEAL-008*.spec.ts
+    test_match: TC-BF-BEST-DEAL-008-N01
+- id: TC-BF-BEST-DEAL-008-E01
+  title: Best Deal — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-BEST-DEAL-008-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-BEST-DEAL-008*.spec.ts
+    test_match: TC-BF-BEST-DEAL-008-E01
+- id: TC-BF-BEST-DEAL-008-E02
+  title: Best Deal — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-best-deal-008
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-BEST-DEAL-008-E02
+    mode: skip-until-sme

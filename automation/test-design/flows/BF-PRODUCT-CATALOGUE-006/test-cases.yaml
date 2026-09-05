@@ -1,0 +1,84 @@
+schema: automation_test_cases_v1
+flow_id: BF-PRODUCT-CATALOGUE-006
+flow_name: Product Catalogue
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-PRODUCT-CATALOGUE-006-P01
+  title: Product Catalogue — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-product-catalogue-006
+  linked_scenario: SC-BF-PRODUCT-CATALOGUE-006-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Product Catalogue.
+  - Application is available.
+  - Catalogue data/documents are available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Product Catalogue opens successfully from Home.
+  - Available catalogue cards are displayed.
+  - Users can browse the available catalogues.
+  - Users can open/download catalogue PDFs.
+  - Direct PDF catalogues open in a new browser tab/window.
+  - Collection catalogue cards open their corresponding internal Collection Catalogue
+    page.
+  - Available language versions can be selected where applicable.
+  - The resulting PDF corresponds to the selected catalogue/language.
+  - Back from an internal Collection Catalogue returns to Product Catalogue.
+  - Product Catalogue is accessible to authenticated users.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-CATALOGUE-006*.spec.ts
+    test_match: TC-BF-PRODUCT-CATALOGUE-006-P01
+  business_rules_validated:
+  - Product Catalogue allows users to browse available product catalogues.
+  - Product Catalogue allows users to open/download catalogue documents.
+  - Direct catalogue PDF links open the PDF in a new browser tab/window.
+  - Collection catalogue cards navigate to their corresponding internal Collection
+    Catalogue page.
+  - Users can select the required catalogue language where multiple language versions
+    are provided.
+- id: TC-BF-PRODUCT-CATALOGUE-006-N01
+  title: Product Catalogue — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-product-catalogue-006
+  linked_scenario: SC-BF-PRODUCT-CATALOGUE-006-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-CATALOGUE-006*.spec.ts
+    test_match: TC-BF-PRODUCT-CATALOGUE-006-N01
+- id: TC-BF-PRODUCT-CATALOGUE-006-E01
+  title: Product Catalogue — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-PRODUCT-CATALOGUE-006-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-CATALOGUE-006*.spec.ts
+    test_match: TC-BF-PRODUCT-CATALOGUE-006-E01
+- id: TC-BF-PRODUCT-CATALOGUE-006-E02
+  title: Product Catalogue — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-product-catalogue-006
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-PRODUCT-CATALOGUE-006-E02
+    mode: skip-until-sme

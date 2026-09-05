@@ -1,0 +1,95 @@
+schema: automation_scenarios_v1
+flow_id: BF-BEST-DEAL-008
+flow_name: Best Deal
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-BEST-DEAL-008-001
+  title: Best Deal — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Home after authentication.'
+  - '[steps] Select Best Deal.'
+  - '[steps] Verify that the Product Discount page opens.'
+  - '[steps] Verify that Best Deal/discounted products are displayed.'
+  - '[steps] Apply applicable filters such as Brand, Price, Discount, Jewellery Type,
+    Product, Gender, Collection, and Type.'
+  - '[steps] Verify that the resulting products satisfy the selected filter criteria.'
+  - '[steps] Select a discounted product.'
+  - '[steps] Verify that Discount Product Details - All Store opens.'
+  - '[steps] Verify that the product details correspond exactly to the selected product.'
+  - '[steps] Validate the displayed discount and price values.'
+  - '[steps] Verify that out-of-stock discounted products can still be viewed.'
+  - '[steps] Use Back to Products.'
+  - '[steps] Verify that the user returns to Product Discount.'
+  tags:
+  - sanity
+  - regression
+  - bf-best-deal-008
+- id: SC-BF-BEST-DEAL-008-002
+  title: Home → Best Deal
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Best Deal
+    status: Observed
+  tags:
+  - regression
+  - bf-best-deal-008
+- id: SC-BF-BEST-DEAL-008-003
+  title: Product Discount page loaded
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Product Discount page loaded
+    status: Observed
+  tags:
+  - regression
+  - bf-best-deal-008
+- id: SC-BF-BEST-DEAL-008-004
+  title: Best Deal filters displayed
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Best Deal filters displayed
+    status: Observed
+  tags:
+  - regression
+  - bf-best-deal-008
+- id: SC-BF-BEST-DEAL-008-005
+  title: Discounted product selected
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Discounted product selected
+    status: Observed
+  tags:
+  - regression
+  - bf-best-deal-008
+- id: SC-BF-BEST-DEAL-008-006
+  title: Discount Product Details - All Store opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Discount Product Details - All Store opened
+    status: Observed
+  tags:
+  - regression
+  - bf-best-deal-008
+- id: SC-BF-BEST-DEAL-008-007
+  title: Back to Products
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Back to Products
+    status: Observed
+  tags:
+  - regression
+  - bf-best-deal-008

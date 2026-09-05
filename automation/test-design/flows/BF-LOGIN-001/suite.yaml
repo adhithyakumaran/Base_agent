@@ -1,0 +1,18 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-LOGIN-001
+flow_id: BF-LOGIN-001
+flow_name: User Login
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-login-001
+test_cases:
+- TC-BF-LOGIN-001-P01
+- TC-BF-LOGIN-001-N01
+- TC-BF-LOGIN-001-E01
+- TC-BF-LOGIN-001-E02
+sanity_subset:
+- TC-BF-LOGIN-001-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

@@ -1,0 +1,142 @@
+schema: automation_scenarios_v1
+flow_id: BF-MANUAL-INVOICE-009
+flow_name: Manual Invoice
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-MANUAL-INVOICE-009-001
+  title: Manual Invoice — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Home after authentication.'
+  - '[steps] Select Manual Invoice.'
+  - '[steps] Verify that Manual Bills Book opens.'
+  - '[steps] Select an applicable Product Category.'
+  - '[steps] Enter/select required Customer Details.'
+  - '[steps] Add one or more invoice products/items.'
+  - '[steps] Enter or validate item-level pricing, quantity, weight, discount, GST,
+    and total information.'
+  - '[steps] Enter Payment Details.'
+  - '[steps] Validate payment amount against the invoice amount.'
+  - '[steps] Enter required RSO, manual-bill reason, cashier, and approver information.'
+  - '[steps] Capture Customer Signature.'
+  - '[steps] Validate all required invoice information.'
+  - '[steps] Create Invoice is intentionally NOT executed during generic sanity testing.'
+  - '[steps] Validate the form''s required-field and business validations.'
+  - '[steps] Use Back where applicable and verify navigation to the immediately previous
+    page.'
+  tags:
+  - sanity
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-002
+  title: Home → Manual Invoice
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Manual Invoice
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-003
+  title: Manual Bills Book opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Manual Bills Book opened
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-004
+  title: Product category selection
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Product category selection
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-005
+  title: Customer information form
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Customer information form
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-006
+  title: Invoice item grid
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Invoice item grid
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-007
+  title: Multiple invoice-item capability
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Multiple invoice-item capability
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-008
+  title: Payment details
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Payment details
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-009
+  title: RSO/reason/cashier/approver information
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: RSO/reason/cashier/approver information
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-010
+  title: Customer signature
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Customer signature
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009
+- id: SC-BF-MANUAL-INVOICE-009-011
+  title: Required-field validation
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Required-field validation
+    status: Observed
+  tags:
+  - regression
+  - bf-manual-invoice-009

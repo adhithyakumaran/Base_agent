@@ -1,0 +1,77 @@
+schema: automation_test_cases_v1
+flow_id: BF-LOGIN-001
+flow_name: User Login
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-LOGIN-001-P01
+  title: User Login — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-login-001
+  linked_scenario: SC-BF-LOGIN-001-001
+  preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User has valid test credentials.
+  - User is not currently authenticated.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    condition:
+    - Valid test credentials are supplied.
+    result:
+    - User is authenticated.
+    - Login page is exited.
+    - User is navigated to Home.
+    - Endless Aisle application becomes available to the authenticated user.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-LOGIN-001*.spec.ts
+    test_match: TC-BF-LOGIN-001-P01
+  business_rules_validated:
+  - Valid credentials must authenticate an authorized user.
+  - Successful authentication navigates the user to Home.
+  - Invalid credentials must not authenticate the user.
+  - Invalid login provides feedback to the user.
+  - Remember My Credential is available on the Login page.
+- id: TC-BF-LOGIN-001-N01
+  title: User Login — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-login-001
+  linked_scenario: SC-BF-LOGIN-001-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-LOGIN-001*.spec.ts
+    test_match: TC-BF-LOGIN-001-N01
+- id: TC-BF-LOGIN-001-E01
+  title: User Login — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-LOGIN-001-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-LOGIN-001*.spec.ts
+    test_match: TC-BF-LOGIN-001-E01
+- id: TC-BF-LOGIN-001-E02
+  title: User Login — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-login-001
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-LOGIN-001-E02
+    mode: skip-until-sme

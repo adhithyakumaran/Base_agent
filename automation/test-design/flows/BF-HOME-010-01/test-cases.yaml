@@ -1,0 +1,88 @@
+schema: automation_test_cases_v1
+flow_id: BF-HOME-010-01
+flow_name: Item Search
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-HOME-010-01-P01
+  title: Item Search — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-home-010-01
+  linked_scenario: SC-BF-HOME-010-01-001
+  preconditions:
+  - User is authenticated.
+  - Home page is loaded.
+  - User has access to Item Search.
+  - Valid test item code is available for positive testing.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    navigation:
+    - Item Search card is available on Home.
+    - Selecting Item Search opens Product Search.
+    - Product Search page loads successfully.
+    search:
+    - Item Code input is available.
+    - Valid item code can be entered.
+    - Search can be initiated.
+    - Search request completes successfully.
+    - Corresponding product result is displayed.
+    product_result:
+    - Result corresponds to the searched item.
+    - Product information is displayed.
+    - Applicable stock information is displayed.
+    qr:
+    - Scan control is available.
+    - Valid QR code should resolve to the corresponding item.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010-01*.spec.ts
+    test_match: TC-BF-HOME-010-01-P01
+  business_rules_validated:
+  - Item Search is accessible directly from the Home page.
+  - Item Search navigates to Product Search Page 6.
+  - Product Search supports item-code search.
+  - Product Search provides a QR scan option.
+  - The searched item is submitted through the Search action.
+- id: TC-BF-HOME-010-01-N01
+  title: Item Search — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-home-010-01
+  linked_scenario: SC-BF-HOME-010-01-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010-01*.spec.ts
+    test_match: TC-BF-HOME-010-01-N01
+- id: TC-BF-HOME-010-01-E01
+  title: Item Search — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-HOME-010-01-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010-01*.spec.ts
+    test_match: TC-BF-HOME-010-01-E01
+- id: TC-BF-HOME-010-01-E02
+  title: Item Search — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-home-010-01
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-HOME-010-01-E02
+    mode: skip-until-sme

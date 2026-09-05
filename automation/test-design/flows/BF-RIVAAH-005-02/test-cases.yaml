@@ -1,0 +1,81 @@
+schema: automation_test_cases_v1
+flow_id: BF-RIVAAH-005-02
+flow_name: Trousseau Set Image
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-RIVAAH-005-02-P01
+  title: Trousseau Set Image — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005-02
+  linked_scenario: SC-BF-RIVAAH-005-02-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - Relevant trousseau collection data is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Trousseau Set Image opens successfully from Rivaah.
+  - Explore opens the regional/community-specific trousseau view.
+  - Available trousseau collections/sets are displayed.
+  - User can explore products belonging to a selected set.
+  - Individual products can be selected.
+  - Selected products open their corresponding Product Detail page.
+  - Product details exactly match the selected product.
+  - Out-of-stock products can still be viewed.
+  - The flow respects the current store/customer context.
+  - Back returns to the immediately previous screen.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-02*.spec.ts
+    test_match: TC-BF-RIVAAH-005-02-P01
+  business_rules_validated:
+  - Trousseau Set Image is primarily used to visually browse wedding/trousseau collections.
+  - Explore opens the regional/community-specific trousseau view.
+  - Users can explore individual products associated with a selected trousseau collection/set.
+  - Out-of-stock products can still be viewed.
+  - Product details must exactly correspond to the selected product.
+- id: TC-BF-RIVAAH-005-02-N01
+  title: Trousseau Set Image — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-rivaah-005-02
+  linked_scenario: SC-BF-RIVAAH-005-02-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-02*.spec.ts
+    test_match: TC-BF-RIVAAH-005-02-N01
+- id: TC-BF-RIVAAH-005-02-E01
+  title: Trousseau Set Image — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-RIVAAH-005-02-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-02*.spec.ts
+    test_match: TC-BF-RIVAAH-005-02-E01
+- id: TC-BF-RIVAAH-005-02-E02
+  title: Trousseau Set Image — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-rivaah-005-02
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-RIVAAH-005-02-E02
+    mode: skip-until-sme

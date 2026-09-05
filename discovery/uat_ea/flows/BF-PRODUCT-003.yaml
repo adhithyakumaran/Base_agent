@@ -151,8 +151,9 @@ observed_invalid_search:
     - Product search does not proceed to a valid product result.
     - User remains on the Product Search flow.
     - An appropriate validation/error state is expected.
-    status: Business behavior confirmed as invalid search;
-            exact UI message requires runtime validation.
+  status: >
+    Business behavior confirmed as invalid search;
+    exact UI message requires runtime validation.
 
 observed_out_of_stock:
   condition:

@@ -1,0 +1,78 @@
+schema: automation_test_cases_v1
+flow_id: BF-RIVAAH-005
+flow_name: Rivaah Main Menu
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-RIVAAH-005-P01
+  title: Rivaah Main Menu — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005
+  linked_scenario: SC-BF-RIVAAH-005-001
+  preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User has access to the Rivaah functionality.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    condition:
+    - Authenticated user selects Rivaah.
+    result:
+    - Rivaah page is displayed.
+    - Rivaah-specific functionality is available.
+    - User can select an available Rivaah feature.
+    - Selecting a feature navigates to its corresponding application page.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005*.spec.ts
+    test_match: TC-BF-RIVAAH-005-P01
+  business_rules_validated:
+  - An authenticated user with access to Rivaah can open the Rivaah functionality
+    from the application.
+  - The Rivaah page provides navigation to the available Rivaah-specific features.
+  - Wedding Trousseau Styling is available as a Rivaah feature.
+  - Trousseau Set Image is available as a Rivaah feature.
+  - Engagement Rings is available as a Rivaah feature.
+- id: TC-BF-RIVAAH-005-N01
+  title: Rivaah Main Menu — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-rivaah-005
+  linked_scenario: SC-BF-RIVAAH-005-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005*.spec.ts
+    test_match: TC-BF-RIVAAH-005-N01
+- id: TC-BF-RIVAAH-005-E01
+  title: Rivaah Main Menu — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-RIVAAH-005-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005*.spec.ts
+    test_match: TC-BF-RIVAAH-005-E01
+- id: TC-BF-RIVAAH-005-E02
+  title: Rivaah Main Menu — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-rivaah-005
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-RIVAAH-005-E02
+    mode: skip-until-sme

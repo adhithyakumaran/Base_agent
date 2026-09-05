@@ -275,7 +275,7 @@ technical_metadata:
     presentation: modal-dialog
 
   store_context:
-    observed_label: Store: [selected store]
+    observed_label: "Store: [selected store]"
     component_type: Navigation Bar Item
 
   store_stock:

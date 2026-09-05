@@ -1,0 +1,85 @@
+schema: automation_test_cases_v1
+flow_id: BF-PRODUCT-004
+flow_name: View Product
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-PRODUCT-004-P01
+  title: View Product — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-product-004
+  linked_scenario: SC-BF-PRODUCT-004-001
+  preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User has access to product information.
+  - A valid product has been selected or searched.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    condition:
+    - A valid product has been selected or searched.
+    result:
+    - Product Detail page is displayed.
+    - The displayed details belong to the exact selected/searched product.
+    - Product identification information is displayed.
+    - Product imagery is displayed.
+    - Product attributes are displayed.
+    - Applicable price information is displayed.
+    - Product availability status is displayed.
+    - User can return to the appropriate Products/Product Search context.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-004*.spec.ts
+    test_match: TC-BF-PRODUCT-004-P01
+  business_rules_validated:
+  - A valid selected or searched product must open its corresponding Product Detail
+    information.
+  - Product Detail must display information belonging to the exact product selected
+    or searched by the user.
+  - A product can be viewed even when it is out of stock.
+  - An out-of-stock product must display an appropriate out-of-stock status.
+  - Product Detail displays applicable product information including product identification,
+    images, attributes, price and availability.
+- id: TC-BF-PRODUCT-004-N01
+  title: View Product — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-product-004
+  linked_scenario: SC-BF-PRODUCT-004-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-004*.spec.ts
+    test_match: TC-BF-PRODUCT-004-N01
+- id: TC-BF-PRODUCT-004-E01
+  title: View Product — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-PRODUCT-004-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-004*.spec.ts
+    test_match: TC-BF-PRODUCT-004-E01
+- id: TC-BF-PRODUCT-004-E02
+  title: View Product — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-product-004
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-PRODUCT-004-E02
+    mode: skip-until-sme

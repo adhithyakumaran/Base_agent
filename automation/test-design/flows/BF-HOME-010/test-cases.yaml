@@ -1,0 +1,81 @@
+schema: automation_test_cases_v1
+flow_id: BF-HOME-010
+flow_name: Home Page / Application Navigation Map
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-HOME-010-P01
+  title: Home Page / Application Navigation Map — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-home-010
+  linked_scenario: SC-BF-HOME-010-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Endless Aisle Home page.
+  - Application is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Home loads successfully after authentication.
+  - Home displays the Endless Aisle application interface.
+  - Store context is visible.
+  - Customer selection/context is available.
+  - Primary navigation is available.
+  - Business-function cards are available.
+  - Selecting a valid Home function navigates to its intended page.
+  - Product-oriented functions open their appropriate search/listing/detail flow.
+  - Back/Home navigation can return the user to Home where supported.
+  - Sign Out remains available through the application navigation.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010*.spec.ts
+    test_match: TC-BF-HOME-010-P01
+  business_rules_validated:
+  - Home is the primary authenticated application hub.
+  - Home exposes multiple business functions through cards/navigation.
+  - Product-related Home functions are specialized entry points into reusable product
+    discovery/search/stock/detail patterns.
+  - A product card/listing may lead to a Product Detail page.
+  - Different product functions can use different search inputs, filters, or contexts.
+- id: TC-BF-HOME-010-N01
+  title: Home Page / Application Navigation Map — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-home-010
+  linked_scenario: SC-BF-HOME-010-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010*.spec.ts
+    test_match: TC-BF-HOME-010-N01
+- id: TC-BF-HOME-010-E01
+  title: Home Page / Application Navigation Map — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-HOME-010-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-HOME-010*.spec.ts
+    test_match: TC-BF-HOME-010-E01
+- id: TC-BF-HOME-010-E02
+  title: Home Page / Application Navigation Map — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-home-010
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-HOME-010-E02
+    mode: skip-until-sme

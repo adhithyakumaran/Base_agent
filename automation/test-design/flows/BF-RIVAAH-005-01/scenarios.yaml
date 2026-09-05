@@ -1,0 +1,55 @@
+schema: automation_scenarios_v1
+flow_id: BF-RIVAAH-005-01
+flow_name: Wedding Trousseau Styling
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-RIVAAH-005-01-001
+  title: Wedding Trousseau Styling — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Rivaah from Home.'
+  - '[steps] Select Wedding Trousseau Styling.'
+  - '[steps] Browse the available trousseau products/collections.'
+  - '[steps] Select a product/collection.'
+  - '[steps] Open the corresponding Wedding Trousseau Details page.'
+  - '[steps] Verify the displayed details belong to the selected item.'
+  - '[steps] Use Back to Products to return to the product listing.'
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005-01
+- id: SC-BF-RIVAAH-005-01-002
+  title: Navigate from Rivaah to Wedding Trousseau Styling
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Navigate from Rivaah to Wedding Trousseau Styling
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-01
+- id: SC-BF-RIVAAH-005-01-003
+  title: Open Wedding Trousseau Details
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Open Wedding Trousseau Details
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-01
+- id: SC-BF-RIVAAH-005-01-004
+  title: Return using Back to Products
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Return using Back to Products
+    status: Observed
+  tags:
+  - regression
+  - bf-rivaah-005-01

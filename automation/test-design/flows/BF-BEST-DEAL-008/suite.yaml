@@ -1,0 +1,18 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-BEST-DEAL-008
+flow_id: BF-BEST-DEAL-008
+flow_name: Best Deal
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-best-deal-008
+test_cases:
+- TC-BF-BEST-DEAL-008-P01
+- TC-BF-BEST-DEAL-008-N01
+- TC-BF-BEST-DEAL-008-E01
+- TC-BF-BEST-DEAL-008-E02
+sanity_subset:
+- TC-BF-BEST-DEAL-008-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

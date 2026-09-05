@@ -1,0 +1,251 @@
+schema: automation_scenarios_v1
+flow_id: BF-REPORTS-007
+flow_name: Reports
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-REPORTS-007-001
+  title: Reports — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Home after authentication.'
+  - '[steps] Select Reports.'
+  - '[steps] Verify that the Reports Master Page opens.'
+  - '[steps] Verify that available report entries are displayed.'
+  - '[steps] Select the required report.'
+  - '[steps] Verify that the corresponding report page opens.'
+  - '[steps] Identify the filters applicable to the selected report.'
+  - '[steps] Apply valid date, store, category, or report-specific filter values where
+    applicable.'
+  - '[steps] Execute the report using Go or Search as applicable.'
+  - '[steps] Verify that the report page/report component loads successfully.'
+  - '[steps] If an Actions menu or other report controls are available, validate that
+    the applicable controls are accessible.'
+  - '[steps] If Clear is available, validate that the report filters can be cleared.'
+  - '[steps] Use Back where available.'
+  - '[steps] Verify that Back returns to the Reports Master Page.'
+  tags:
+  - sanity
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-002
+  title: Home → Reports
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Reports
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-003
+  title: Reports Master Page displayed
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Reports Master Page displayed
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-004
+  title: Order Status opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Order Status opened
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-005
+  title: Request Status opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Request Status opened
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-006
+  title: Logged in Users opened and date filter used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Logged in Users opened and date filter used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-007
+  title: PDF/WhatsApp Export Report opened and date filter used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: PDF/WhatsApp Export Report opened and date filter used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-008
+  title: Stock Check by Boutique opened and date filters used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Stock Check by Boutique opened and date filters used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-009
+  title: Auto STN Exception Report opened and Go/Clear used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Auto STN Exception Report opened and Go/Clear used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-010
+  title: TryOn Usage opened and date filter used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: TryOn Usage opened and date filter used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-011
+  title: Best Deal - Hit Rate opened and date filter used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Best Deal - Hit Rate opened and date filter used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-012
+  title: Best Deal - Complete Report opened and date filters used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Best Deal - Complete Report opened and date filters used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-013
+  title: Customer Wishlist Dashboard opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Customer Wishlist Dashboard opened
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-014
+  title: My Store Upload Usage opened and date filters used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: My Store Upload Usage opened and date filters used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-015
+  title: Estimation Slip Report opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Estimation Slip Report opened
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-016
+  title: Image Search Usage opened and date filters used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Image Search Usage opened and date filters used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-017
+  title: Manual Bill Report opened and Search/Clear used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Manual Bill Report opened and Search/Clear used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-018
+  title: Daily Order Details Report opened and Actions/Format used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Daily Order Details Report opened and Actions/Format used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-019
+  title: QR Users Report opened and date filter used
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: QR Users Report opened and date filter used
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-020
+  title: Dreams In Gold opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Dreams In Gold opened
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007
+- id: SC-BF-REPORTS-007-021
+  title: QMS Report opened and Search/Actions displayed
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: QMS Report opened and Search/Actions displayed
+    status: Observed
+  tags:
+  - regression
+  - bf-reports-007

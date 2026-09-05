@@ -1,0 +1,206 @@
+schema: automation_scenarios_v1
+flow_id: BF-ADMINISTRATION-009
+flow_name: Administration
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-ADMINISTRATION-009-001
+  title: Administration — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[steps] Navigate to Home after authentication.'
+  - '[steps] Open Administration.'
+  - '[steps] Verify that the Administration Master Page loads.'
+  - '[steps] Verify that available administration functions are displayed.'
+  - '[steps] Open each applicable administration function.'
+  - '[steps] Verify that configuration, maintenance, dashboard, monitoring, or report
+    pages load successfully.'
+  - '[steps] Validate safe, non-destructive controls where applicable.'
+  - '[steps] Do not create, modify, delete, or otherwise perform sensitive administrative
+    changes during generic QA/sanity testing.'
+  - '[steps] Validate Access Control page availability and loading.'
+  - '[steps] Validate monitoring/report pages by confirming successful page/report
+    loading.'
+  - '[steps] Use Back where available.'
+  - '[steps] Verify that Back returns to the Administration Master Page.'
+  tags:
+  - sanity
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-002
+  title: Home → Administration
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Administration
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-003
+  title: Administration Master Page displayed
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Administration Master Page displayed
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-004
+  title: App Configuration opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: App Configuration opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-005
+  title: Maintain Item Size opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Maintain Item Size opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-006
+  title: Maintain ECOM Item Exception opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Maintain ECOM Item Exception opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-007
+  title: Maintain Users opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Maintain Users opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-008
+  title: Maintain LOVs opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Maintain LOVs opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-009
+  title: Maintain New Collections opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Maintain New Collections opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-010
+  title: Theme Style Selection opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Theme Style Selection opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-011
+  title: Dashboard opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Dashboard opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-012
+  title: Top Users opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Top Users opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-013
+  title: Application Error Log opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Application Error Log opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-014
+  title: Page Performance opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Page Performance opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-015
+  title: Page Views opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Page Views opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-016
+  title: Users opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Users opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009
+- id: SC-BF-ADMINISTRATION-009-017
+  title: Access Control opened
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Access Control opened
+    status: Observed
+  tags:
+  - regression
+  - bf-administration-009

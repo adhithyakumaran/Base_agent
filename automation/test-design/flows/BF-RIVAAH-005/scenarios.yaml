@@ -1,0 +1,21 @@
+schema: automation_scenarios_v1
+flow_id: BF-RIVAAH-005
+flow_name: Rivaah Main Menu
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-RIVAAH-005-001
+  title: Rivaah Main Menu — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - Authenticated user is on the Endless Aisle Home page.
+  - User selects Rivaah from the application navigation or Home page.
+  - Application opens the Rivaah page.
+  - Rivaah displays the available Rivaah functionality.
+  - User can select an applicable Rivaah feature.
+  - User can navigate back from Rivaah to the previous application context.
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005

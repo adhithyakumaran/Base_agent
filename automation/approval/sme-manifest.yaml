@@ -1,0 +1,34 @@
+schema: sme_approval_manifest_v1
+application: Endless Aisle
+environment: DEV/UAT
+status: PENDING_SME_REVIEW
+
+approval_policy:
+  - Scenarios, test cases, scripts, and suites require explicit SME sign-off.
+  - Production CI must run only APPROVED suites.
+  - Self-healing permanent locator updates require separate approval.
+
+artifacts:
+  scenarios: automation/test-design/flows/*/scenarios.yaml
+  test_cases: automation/test-design/flows/*/test-cases.yaml
+  suites: automation/test-design/flows/*/suite.yaml
+  scripts: automation/tests/**/*.spec.ts
+  master_suites: automation/suites/index.yaml
+
+review_checklist:
+  - Locators match UAT DOM and KB primary/fallback chain
+  - Safety guardrails enforced for Admin, Manual Invoice, Reports
+  - No credentials or session values in repo
+  - Test data uses logical references / env vars only
+  - P0 sanity coverage for all 19 READY flows
+  - Negative and edge cases align with business_rules
+
+sign_off:
+  reviewer: null
+  reviewed_at: null
+  decision: null
+  notes: null
+
+flows_pending:
+  count: 19
+  status: PENDING_SME_REVIEW

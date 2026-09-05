@@ -1,0 +1,102 @@
+schema: automation_test_cases_v1
+flow_id: BF-MANUAL-INVOICE-009
+flow_name: Manual Invoice
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-MANUAL-INVOICE-009-P01
+  title: Manual Invoice — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-manual-invoice-009
+  - read-only-sanity
+  - no-transaction
+  - read-only-sanity
+  - no-transaction
+  - no-data-mutation
+  linked_scenario: SC-BF-MANUAL-INVOICE-009-001
+  preconditions:
+  - User is authenticated.
+  - User has access to Manual Invoice.
+  - Application is available.
+  - Required customer and product test data are available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Manual Invoice opens successfully from Home.
+  - Manual Bills Book loads successfully.
+  - Applicable product categories can be selected.
+  - Customer details can be entered/selected.
+  - Multiple invoice items can be added.
+  - Item pricing and calculations are handled correctly.
+  - Discount and GST calculations are validated.
+  - Payment details can be entered.
+  - Multiple payment methods can be supported.
+  - Payment amount is validated against invoice amount.
+  - RSO, reason, cashier, and approver information is validated.
+  - Customer signature can be captured.
+  - Required-field validation prevents incomplete invoice submission.
+  - Back returns to the immediately previous page.
+  - Generic sanity testing does not create an actual invoice.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-MANUAL-INVOICE-009*.spec.ts
+    test_match: TC-BF-MANUAL-INVOICE-009-P01
+  business_rules_validated:
+  - Manual Invoice supports both manual invoice creation and manual billing when required
+    by the business process.
+  - Customer details are mandatory before invoice creation.
+  - A Product Category must be selected.
+  - Applicable product categories depend on the business scenario.
+  - An invoice can contain multiple products/items.
+- id: TC-BF-MANUAL-INVOICE-009-N01
+  title: Manual Invoice — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-manual-invoice-009
+  - read-only-sanity
+  - no-transaction
+  - read-only-sanity
+  - no-transaction
+  - no-data-mutation
+  linked_scenario: SC-BF-MANUAL-INVOICE-009-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-MANUAL-INVOICE-009*.spec.ts
+    test_match: TC-BF-MANUAL-INVOICE-009-N01
+- id: TC-BF-MANUAL-INVOICE-009-E01
+  title: Manual Invoice — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-MANUAL-INVOICE-009-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-MANUAL-INVOICE-009*.spec.ts
+    test_match: TC-BF-MANUAL-INVOICE-009-E01
+- id: TC-BF-MANUAL-INVOICE-009-E02
+  title: Manual Invoice — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-manual-invoice-009
+  - read-only-sanity
+  - no-transaction
+  - read-only-sanity
+  - no-transaction
+  - no-data-mutation
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-MANUAL-INVOICE-009-E02
+    mode: skip-until-sme

@@ -1,0 +1,18 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-HOME-010-C01
+flow_id: BF-HOME-010-C01
+flow_name: Home Page Utility Components
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-home-010-c01
+test_cases:
+- TC-BF-HOME-010-C01-P01
+- TC-BF-HOME-010-C01-N01
+- TC-BF-HOME-010-C01-E01
+- TC-BF-HOME-010-C01-E02
+sanity_subset:
+- TC-BF-HOME-010-C01-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

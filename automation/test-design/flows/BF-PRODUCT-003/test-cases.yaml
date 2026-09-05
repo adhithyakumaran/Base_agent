@@ -1,0 +1,81 @@
+schema: automation_test_cases_v1
+flow_id: BF-PRODUCT-003
+flow_name: Search Product
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-PRODUCT-003-P01
+  title: Search Product — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-product-003
+  linked_scenario: SC-BF-PRODUCT-003-001
+  preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User has access to Product Search.
+  - Current store/customer context is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    condition:
+    - A valid 14-digit item code is supplied or a valid product QR code is scanned.
+    - The product is valid for the current store/customer context.
+    result:
+    - The application identifies the requested product.
+    - Product information is displayed.
+    - Applicable stock information is displayed.
+    - The user can access the applicable product details.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-003*.spec.ts
+    test_match: TC-BF-PRODUCT-003-P01
+  business_rules_validated:
+  - Product search accepts a 14-digit item code or a product QR code.
+  - QR scanning is functionally equivalent to providing the corresponding item code
+    for product search.
+  - An empty product search must not be submitted as a valid search.
+  - A product search must be evaluated against the current store/customer context.
+  - When a valid product is found, product and applicable stock information must be
+    displayed.
+- id: TC-BF-PRODUCT-003-N01
+  title: Search Product — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-product-003
+  linked_scenario: SC-BF-PRODUCT-003-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-003*.spec.ts
+    test_match: TC-BF-PRODUCT-003-N01
+- id: TC-BF-PRODUCT-003-E01
+  title: Search Product — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-PRODUCT-003-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-003*.spec.ts
+    test_match: TC-BF-PRODUCT-003-E01
+- id: TC-BF-PRODUCT-003-E02
+  title: Search Product — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-product-003
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-PRODUCT-003-E02
+    mode: skip-until-sme

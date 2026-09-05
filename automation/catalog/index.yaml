@@ -1,0 +1,118 @@
+schema: automation_catalog_v1
+ready_flow_count: 19
+approval_status: PENDING_SME
+flows:
+- flow_id: BF-ADMINISTRATION-009
+  flow_name: Administration
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-ADMINISTRATION-009/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-ADMINISTRATION-009/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-ADMINISTRATION-009/suite.yaml
+- flow_id: BF-BEST-DEAL-008
+  flow_name: Best Deal
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-BEST-DEAL-008/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-BEST-DEAL-008/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-BEST-DEAL-008/suite.yaml
+- flow_id: BF-HOME-010
+  flow_name: Home Page / Application Navigation Map
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-HOME-010/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-HOME-010/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-HOME-010/suite.yaml
+- flow_id: BF-HOME-010-01
+  flow_name: Item Search
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-HOME-010-01/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-HOME-010-01/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-HOME-010-01/suite.yaml
+- flow_id: BF-HOME-010-C01
+  flow_name: Home Page Utility Components
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-HOME-010-C01/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-HOME-010-C01/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-HOME-010-C01/suite.yaml
+- flow_id: BF-LOGIN-001
+  flow_name: User Login
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-LOGIN-001/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-LOGIN-001/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-LOGIN-001/suite.yaml
+- flow_id: BF-LOGOUT-002
+  flow_name: User Logout
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-LOGOUT-002/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-LOGOUT-002/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-LOGOUT-002/suite.yaml
+- flow_id: BF-MANUAL-INVOICE-009
+  flow_name: Manual Invoice
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-MANUAL-INVOICE-009/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-MANUAL-INVOICE-009/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-MANUAL-INVOICE-009/suite.yaml
+- flow_id: BF-PRODUCT-003
+  flow_name: Search Product
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-PRODUCT-003/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-PRODUCT-003/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-PRODUCT-003/suite.yaml
+- flow_id: BF-PRODUCT-004
+  flow_name: View Product
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-PRODUCT-004/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-PRODUCT-004/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-PRODUCT-004/suite.yaml
+- flow_id: BF-PRODUCT-CATALOGUE-006
+  flow_name: Product Catalogue
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-PRODUCT-CATALOGUE-006/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-PRODUCT-CATALOGUE-006/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-PRODUCT-CATALOGUE-006/suite.yaml
+- flow_id: BF-PRODUCT-STOCK-VISIBILITY-009
+  flow_name: Product Stock Visibility
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-PRODUCT-STOCK-VISIBILITY-009/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-PRODUCT-STOCK-VISIBILITY-009/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-PRODUCT-STOCK-VISIBILITY-009/suite.yaml
+- flow_id: BF-REPORTS-007
+  flow_name: Reports
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-REPORTS-007/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-REPORTS-007/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-REPORTS-007/suite.yaml
+- flow_id: BF-RIVAAH-005
+  flow_name: Rivaah Main Menu
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-RIVAAH-005/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-RIVAAH-005/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-RIVAAH-005/suite.yaml
+- flow_id: BF-RIVAAH-005-01
+  flow_name: Wedding Trousseau Styling
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-RIVAAH-005-01/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-RIVAAH-005-01/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-RIVAAH-005-01/suite.yaml
+- flow_id: BF-RIVAAH-005-02
+  flow_name: Trousseau Set Image
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-RIVAAH-005-02/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-RIVAAH-005-02/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-RIVAAH-005-02/suite.yaml
+- flow_id: BF-RIVAAH-005-03
+  flow_name: Engagement Rings
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-RIVAAH-005-03/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-RIVAAH-005-03/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-RIVAAH-005-03/suite.yaml
+- flow_id: BF-RIVAAH-005-04
+  flow_name: Wedding Experts
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-RIVAAH-005-04/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-RIVAAH-005-04/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-RIVAAH-005-04/suite.yaml
+- flow_id: BF-RIVAAH-005-05
+  flow_name: Rivaah Wedding Wishlist
+  artifacts:
+    scenarios: /workspace/automation/test-design/flows/BF-RIVAAH-005-05/scenarios.yaml
+    test_cases: /workspace/automation/test-design/flows/BF-RIVAAH-005-05/test-cases.yaml
+    suite: /workspace/automation/test-design/flows/BF-RIVAAH-005-05/suite.yaml

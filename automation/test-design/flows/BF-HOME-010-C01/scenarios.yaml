@@ -1,0 +1,85 @@
+schema: automation_scenarios_v1
+flow_id: BF-HOME-010-C01
+flow_name: Home Page Utility Components
+status: PENDING_SME_APPROVAL
+scenarios:
+- id: SC-BF-HOME-010-C01-001
+  title: Home Page Utility Components — primary business path
+  type: functional
+  priority: P0
+  source: business_flow
+  steps:
+  - '[customer_selection] Click Customer ( Click to Select ).'
+  - '[customer_selection] Verify the Select Customer drawer opens.'
+  - '[customer_selection] Close the drawer using its close control.'
+  - '[settings] Open the Home user menu.'
+  - '[settings] Select Settings.'
+  - '[settings] Verify Settings dialog opens.'
+  - '[settings] Close Settings.'
+  - '[orso_recommendation] Select ORSO Recommendation.'
+  - '[orso_recommendation] Verify ORSO Recommendation dialog opens.'
+  - '[orso_recommendation] Close the dialog.'
+  - '[store_context] Observe the Store context displayed on Home.'
+  - '[store_context] Select the Store context control.'
+  - '[store_context] Verify navigation/reload behavior.'
+  - '[store_stock] Click ✦ STORE STOCK.'
+  - '[store_stock] Observe the resulting UI state.'
+  tags:
+  - sanity
+  - regression
+  - bf-home-010-c01
+- id: SC-BF-HOME-010-C01-002
+  title: Home → Customer
+  type: observed
+  priority: P1
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Customer
+    result: Select Customer drawer opened.
+  tags:
+  - regression
+  - bf-home-010-c01
+- id: SC-BF-HOME-010-C01-003
+  title: Home → User Menu → Settings
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → User Menu → Settings
+    result: Settings dialog opened.
+  tags:
+  - regression
+  - bf-home-010-c01
+- id: SC-BF-HOME-010-C01-004
+  title: Home → ORSO Recommendation
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → ORSO Recommendation
+    result: ORSO Recommendation modal opened.
+  tags:
+  - regression
+  - bf-home-010-c01
+- id: SC-BF-HOME-010-C01-005
+  title: Home → Store Context
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → Store Context
+    result: Home/store context interaction observed.
+  tags:
+  - regression
+  - bf-home-010-c01
+- id: SC-BF-HOME-010-C01-006
+  title: Home → STORE STOCK
+  type: observed
+  priority: P2
+  source: observed_scenarios
+  metadata:
+    scenario: Home → STORE STOCK
+    result: Store Stock interaction initiated.
+  tags:
+  - regression
+  - bf-home-010-c01

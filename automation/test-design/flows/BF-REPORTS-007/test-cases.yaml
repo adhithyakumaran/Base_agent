@@ -1,0 +1,86 @@
+schema: automation_test_cases_v1
+flow_id: BF-REPORTS-007
+flow_name: Reports
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-REPORTS-007-P01
+  title: Reports — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-reports-007
+  linked_scenario: SC-BF-REPORTS-007-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Reports module.
+  - Application is available.
+  - Required report data is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Reports opens successfully from Home.
+  - Reports Master Page loads successfully.
+  - Available report entries are displayed.
+  - Selecting a report opens the correct report page.
+  - Applicable filters are displayed.
+  - Date filters accept the expected date format.
+  - Store filters are available where applicable.
+  - Category/report-specific filters are available where applicable.
+  - Go/Search executes the applicable report operation.
+  - The report page/report component loads successfully.
+  - Applicable Actions controls are accessible.
+  - Applicable Clear controls work.
+  - Back returns to the Reports Master Page.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-REPORTS-007*.spec.ts
+    test_match: TC-BF-REPORTS-007-P01
+  business_rules_validated:
+  - Reports provides access to operational/business reporting functionality.
+  - Reports supports both viewing reports and generating/running reports using applicable
+    controls.
+  - All authenticated users can access the Reports module.
+  - QA validation of the general Reports flow focuses on successful page/report loading
+    rather than validating the correctness of the underlying business data.
+  - Applicable date filters must be validated.
+- id: TC-BF-REPORTS-007-N01
+  title: Reports — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-reports-007
+  linked_scenario: SC-BF-REPORTS-007-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-REPORTS-007*.spec.ts
+    test_match: TC-BF-REPORTS-007-N01
+- id: TC-BF-REPORTS-007-E01
+  title: Reports — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-REPORTS-007-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-REPORTS-007*.spec.ts
+    test_match: TC-BF-REPORTS-007-E01
+- id: TC-BF-REPORTS-007-E02
+  title: Reports — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-reports-007
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-REPORTS-007-E02
+    mode: skip-until-sme

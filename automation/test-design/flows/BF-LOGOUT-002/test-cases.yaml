@@ -1,0 +1,81 @@
+schema: automation_test_cases_v1
+flow_id: BF-LOGOUT-002
+flow_name: User Logout
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-LOGOUT-002-P01
+  title: User Logout — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-logout-002
+  linked_scenario: SC-BF-LOGOUT-002-001
+  preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User is currently on an authenticated application page.
+  - User has an active application session.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+    condition:
+    - Authenticated user selects Sign Out.
+    result:
+    - User's application session is terminated.
+    - User is redirected to the Login page.
+    - User is no longer authenticated.
+    - Previously authenticated pages cannot be accessed through browser Back navigation.
+    - Re-authentication is required to access protected application pages.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-LOGOUT-002*.spec.ts
+    test_match: TC-BF-LOGOUT-002-P01
+  business_rules_validated:
+  - Authenticated users must be able to sign out of the application.
+  - Selecting Sign Out terminates the user's authenticated application session.
+  - Successful logout redirects the user to the Login page.
+  - After logout, previously authenticated pages must not remain accessible through
+    browser Back navigation.
+  - After logout, the user must authenticate again before accessing protected application
+    pages.
+- id: TC-BF-LOGOUT-002-N01
+  title: User Logout — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-logout-002
+  linked_scenario: SC-BF-LOGOUT-002-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-LOGOUT-002*.spec.ts
+    test_match: TC-BF-LOGOUT-002-N01
+- id: TC-BF-LOGOUT-002-E01
+  title: User Logout — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-LOGOUT-002-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-LOGOUT-002*.spec.ts
+    test_match: TC-BF-LOGOUT-002-E01
+- id: TC-BF-LOGOUT-002-E02
+  title: User Logout — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-logout-002
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-LOGOUT-002-E02
+    mode: skip-until-sme

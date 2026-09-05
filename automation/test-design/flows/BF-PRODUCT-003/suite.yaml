@@ -1,0 +1,18 @@
+schema: automation_suite_v1
+suite_id: SUITE-BF-PRODUCT-003
+flow_id: BF-PRODUCT-003
+flow_name: Search Product
+status: PENDING_SME_APPROVAL
+tags:
+- regression
+- bf-product-003
+test_cases:
+- TC-BF-PRODUCT-003-P01
+- TC-BF-PRODUCT-003-N01
+- TC-BF-PRODUCT-003-E01
+- TC-BF-PRODUCT-003-E02
+sanity_subset:
+- TC-BF-PRODUCT-003-P01
+runner:
+  framework: playwright
+  command_template: npx playwright test --grep '@{flow_id}'

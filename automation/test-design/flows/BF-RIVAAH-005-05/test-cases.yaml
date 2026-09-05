@@ -1,0 +1,79 @@
+schema: automation_test_cases_v1
+flow_id: BF-RIVAAH-005-05
+flow_name: Rivaah Wedding Wishlist
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-RIVAAH-005-05-P01
+  title: Rivaah Wedding Wishlist — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-rivaah-005-05
+  linked_scenario: SC-BF-RIVAAH-005-05-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - A customer must be selected before proceeding to Dream List details.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Rivaah Wedding Wishlist opens successfully.
+  - Dream List Details is accessible through the Rivaah module.
+  - Customer selection is required before proceeding.
+  - Attempting to proceed without a customer displays the customer-required validation
+    message.
+  - After a customer is selected, the application can proceed to the Dream List functionality.
+  - Dream List information, when displayed, belongs to the selected customer.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-05*.spec.ts
+    test_match: TC-BF-RIVAAH-005-05-P01
+  business_rules_validated:
+  - Rivaah Wedding Wishlist is accessed through the Rivaah module.
+  - A customer must be selected before proceeding to Dream List Details.
+  - If no customer is selected, the application must prevent proceeding and display
+    the customer-required validation message.
+  - Dream List functionality is customer-dependent.
+  - Dream List information must correspond to the selected customer.
+- id: TC-BF-RIVAAH-005-05-N01
+  title: Rivaah Wedding Wishlist — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-rivaah-005-05
+  linked_scenario: SC-BF-RIVAAH-005-05-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-05*.spec.ts
+    test_match: TC-BF-RIVAAH-005-05-N01
+- id: TC-BF-RIVAAH-005-05-E01
+  title: Rivaah Wedding Wishlist — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-RIVAAH-005-05-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-RIVAAH-005-05*.spec.ts
+    test_match: TC-BF-RIVAAH-005-05-E01
+- id: TC-BF-RIVAAH-005-05-E02
+  title: Rivaah Wedding Wishlist — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-rivaah-005-05
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-RIVAAH-005-05-E02
+    mode: skip-until-sme

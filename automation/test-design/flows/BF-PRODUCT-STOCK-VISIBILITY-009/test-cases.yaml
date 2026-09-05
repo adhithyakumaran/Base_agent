@@ -1,0 +1,75 @@
+schema: automation_test_cases_v1
+flow_id: BF-PRODUCT-STOCK-VISIBILITY-009
+flow_name: Product Stock Visibility
+status: PENDING_SME_APPROVAL
+test_cases:
+- id: TC-BF-PRODUCT-STOCK-VISIBILITY-009-P01
+  title: Product Stock Visibility — primary path succeeds
+  type: positive
+  priority: P0
+  tags:
+  - sanity
+  - regression
+  - bf-product-stock-visibility-009
+  linked_scenario: SC-BF-PRODUCT-STOCK-VISIBILITY-009-001
+  preconditions:
+  - User is authenticated.
+  - User has access to the Home page.
+  - Current store/customer context is available.
+  steps_summary: Execute primary business_flow steps end-to-end.
+  expected_result:
+  - Product Stock Visibility page loads successfully.
+  - Valid item code is accepted.
+  - Matching product is displayed.
+  - Stock availability/details are displayed.
+  - Results respect the current store/customer context.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-STOCK-VISIBILITY-009*.spec.ts
+    test_match: TC-BF-PRODUCT-STOCK-VISIBILITY-009-P01
+  business_rules_validated:
+  - Product Stock Visibility is used to check product stock availability.
+  - A valid item code is required for the search.
+  - The recorded application validates a 14-digit item code.
+  - Search results must correspond to the searched product.
+  - Stock availability must be displayed for the applicable product.
+- id: TC-BF-PRODUCT-STOCK-VISIBILITY-009-N01
+  title: Product Stock Visibility — required-field / access validation
+  type: negative
+  priority: P1
+  tags: &id001
+  - regression
+  - bf-product-stock-visibility-009
+  linked_scenario: SC-BF-PRODUCT-STOCK-VISIBILITY-009-001
+  steps_summary: Attempt flow with missing required input or unauthorized context.
+  expected_result: Application blocks progress with validation or access control.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-STOCK-VISIBILITY-009*.spec.ts
+    test_match: TC-BF-PRODUCT-STOCK-VISIBILITY-009-N01
+- id: TC-BF-PRODUCT-STOCK-VISIBILITY-009-E01
+  title: Product Stock Visibility — back navigation / context integrity
+  type: edge
+  priority: P2
+  tags: *id001
+  linked_scenario: SC-BF-PRODUCT-STOCK-VISIBILITY-009-001
+  steps_summary: Validate Back/navigation preserves authorized context.
+  expected_result: User returns to expected page; session/context remains valid.
+  automation:
+    framework: playwright
+    spec_glob: tests/**/BF-PRODUCT-STOCK-VISIBILITY-009*.spec.ts
+    test_match: TC-BF-PRODUCT-STOCK-VISIBILITY-009-E01
+- id: TC-BF-PRODUCT-STOCK-VISIBILITY-009-E02
+  title: Product Stock Visibility — documented unknown-rule boundaries
+  type: edge
+  priority: P3
+  tags:
+  - manual-review
+  - regression
+  - bf-product-stock-visibility-009
+  steps_summary: Manual/assisted checks for KB-documented unknown rules only.
+  expected_result: No automation assertion beyond observed KB scope.
+  automation:
+    framework: playwright
+    test_match: TC-BF-PRODUCT-STOCK-VISIBILITY-009-E02
+    mode: skip-until-sme
