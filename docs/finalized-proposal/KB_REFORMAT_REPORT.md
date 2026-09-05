@@ -115,15 +115,13 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Layer | Before | Now | Notes |
 |---|---:|---:|---|
 | Flow-centric KB (READY quality) | 5% | **70%** | 15 READY + 1 PARTIAL at full proposal depth |
-| Knowledge graph edges | 15% | **50%** | Home map links child flows; capability map expanded |
-| **Overall toward proposal** | **~45%** | **~80%** | +35 pts incl. Home nav map and Manual Invoice |
 | Locator + self-heal metadata | 10% | **55%** | Primary+3 fallbacks on READY flows; Rivaah menu locators observed |
-| Business rules (numbered) | 15% | **60%** | 50+ rules across READY flows |
-| Capability map | 0% | **35%** | Rivaah + Product Management capabilities added |
+| Business rules (numbered) | 15% | **65%** | 70+ rules across READY flows |
+| Capability map | 0% | **45%** | Home, Billing, Rivaah, Reports, Admin capabilities |
 | Legacy page/flow seeds | 70% | **70%** | Still valid as enrichment source |
-| Knowledge graph edges | 15% | **40%** | Capability→flow expanded (Rivaah subtree) |
+| Knowledge graph edges | 15% | **50%** | Home map links child flows; capability map expanded |
 | Automation repository | 5% | 5% | Not in scope this task |
-| **Overall toward proposal** | **~45%** | **~75%** | +30 pts from Product, Rivaah, Reports, Best Deal, Admin SME flows |
+| **Overall toward proposal** | **~45%** | **~80%** | +35 pts incl. Home nav map and Manual Invoice |
 
 ### 4.3 What the 3 READY flows unlock immediately
 
