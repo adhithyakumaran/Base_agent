@@ -1,0 +1,264 @@
+flow_id: BF-RIVAAH-005-02
+
+flow_name: Trousseau Set Image
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows users to visually browse wedding/trousseau collections and
+    explore the products associated with a selected collection or set.
+
+entry_point:
+  page: Rivaah
+  route: /ords/r/tjdcom/ea/rivaah
+  navigation: >
+    Home → Rivaah → Trousseau Set Image
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - Relevant trousseau collection data is available.
+
+pages:
+  - page_id: 38
+    name: Rivaah
+    route: /ords/r/tjdcom/ea/rivaah
+
+  - name: Trousseau Set Image
+    route: /ords/r/tjdcom/ea/wedding-trousseau1
+
+  - page_id: 49
+    name: Regional Trousseau
+    route: /ords/r/tjdcom/ea/wedding-trousseau-regional
+
+  - page_id: 4
+    name: Standard Product Search
+    route: /ords/r/tjdcom/ea/standard-product-search
+
+  - page_id: 5
+    name: Product Detail
+    route: /ords/r/tjdcom/ea/product-detail
+
+components:
+  - name: Trousseau Set Image
+    type: Navigation/Card
+    action: Opens the trousseau set/collection experience.
+
+  - name: Explore
+    type: Button/Link
+    action: Opens the regional/community-specific trousseau view.
+
+  - name: Trousseau Collection/Set
+    type: Collection
+    action: Allows the user to explore products belonging to the selected set.
+
+  - name: Product
+    type: Product
+    action: Opens the selected product.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Rivaah from Home.
+
+    - step: 2
+      action: Select Trousseau Set Image.
+
+    - step: 3
+      action: Select Explore.
+
+    - step: 4
+      action: Open the regional/community-specific trousseau view.
+
+    - step: 5
+      action: Select a trousseau collection/set.
+
+    - step: 6
+      action: Explore the individual products associated with the selected set.
+
+    - step: 7
+      action: Select a product.
+
+    - step: 8
+      action: Open Product Detail.
+
+    - step: 9
+      action: Verify that the displayed product details correspond to the selected product.
+
+    - step: 10
+      action: Use Back to return to the immediately previous screen.
+
+expected_success:
+  - Trousseau Set Image opens successfully from Rivaah.
+  - Explore opens the regional/community-specific trousseau view.
+  - Available trousseau collections/sets are displayed.
+  - User can explore products belonging to a selected set.
+  - Individual products can be selected.
+  - Selected products open their corresponding Product Detail page.
+  - Product details exactly match the selected product.
+  - Out-of-stock products can still be viewed.
+  - The flow respects the current store/customer context.
+  - Back returns to the immediately previous screen.
+
+observed_scenarios:
+  - scenario: Navigate from Rivaah to Trousseau Set Image
+    status: Observed
+
+  - scenario: Explore regional trousseau
+    status: Observed
+
+  - scenario: Navigate to Standard Product Search
+    status: Observed
+
+  - scenario: Open Product Detail
+    status: Observed
+
+business_rules:
+  - rule: >
+      Trousseau Set Image is primarily used to visually browse
+      wedding/trousseau collections.
+
+  - rule: >
+      Explore opens the regional/community-specific trousseau view.
+
+  - rule: >
+      Users can explore individual products associated with a
+      selected trousseau collection/set.
+
+  - rule: >
+      Out-of-stock products can still be viewed.
+
+  - rule: >
+      Product details must exactly correspond to the selected product.
+
+  - rule: >
+      The flow respects the current store/customer context.
+
+  - rule: >
+      Back returns the user to the immediately previous screen.
+
+unknown_business_rules:
+  - Exact criteria used to determine regional/community collections.
+  - Exact collection eligibility rules.
+  - Exact filtering/sorting behavior.
+  - Any limits on the number of products displayed in a collection.
+  - Exact handling of unavailable collections.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  routes:
+    trousseau_set_image: /ords/r/tjdcom/ea/wedding-trousseau1
+    regional_trousseau: /ords/r/tjdcom/ea/wedding-trousseau-regional
+    standard_product_search: /ords/r/tjdcom/ea/standard-product-search
+    product_detail: /ords/r/tjdcom/ea/product-detail
+
+  pages:
+    rivaah: 38
+    regional_trousseau: 49
+    standard_product_search: 4
+    product_detail: 5
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX IDs or validated DOM attributes captured from
+      the Browser Recorder evidence.
+
+    - >
+      Explore action was observed using a button/link CSS structure;
+      validate uniqueness before using it as an automation locator.
+
+  fallback_locators:
+    - >
+      Use validated accessible labels, stable attributes, or APEX
+      component identifiers where available.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Rivaah
+    - Open Trousseau Set Image
+    - Click Explore
+    - Select regional trousseau
+    - Select collection/set
+    - Explore collection products
+    - Select product
+    - Open Product Detail
+    - Verify product identity/details
+    - Navigate back
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Search for a validated alternative.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated user
+    - Valid trousseau collection/set
+    - Valid product associated with the selected collection
+
+  restrictions:
+    - Do not store credentials.
+    - Do not store session IDs, cookies, tokens, or secrets.
+    - Use logical test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - User must have access to the Rivaah module.
+
+  sensitive_data:
+    - No credentials or session information stored in KB.
+
+  validation:
+    - Verify that product and collection information is accessible only within
+      the user's authorized application context.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1645.zip
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Network activity
+    - Console activity
+
+  limitations:
+    - No Playwright trace available.
+    - Some detailed collection/business rules remain unknown.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: High

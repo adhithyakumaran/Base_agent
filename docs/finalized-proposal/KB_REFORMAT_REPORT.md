@@ -10,11 +10,12 @@
 
 Your **3 manually formatted flow KBs** are exactly what the finalized architecture requires. They were imported as the **canonical READY standard**. The old 64-document JSON pack is **archived** (still useful as discovery reference) but is no longer the primary KB shape.
 
-| Metric | Before | After |
+| Metric | Before | After (Sep 5 update) |
 |---|---|---|
 | Canonical format | Clumsy JSON (page/flow seeds) | **Flow-centric YAML** |
-| SME-ready flows | 0 | **3 (READY)** |
-| Draft migrated flows | — | **12** |
+| SME-ready flows | 0 | **9 READY + 1 PARTIAL** |
+| Draft migrated flows | — | **9 DRAFT** |
+| Superseded legacy flows | — | **3** |
 | Legacy JSON archive | Primary | **Archived** (`kb/README.md`) |
 
 ---
@@ -73,6 +74,13 @@ discovery/uat_ea/
 | **BF-LOGIN-001** | User Login | **READY** | SME manual KB |
 | **BF-LOGOUT-002** | User Logout | **READY** | SME manual KB |
 | **BF-PRODUCT-003** | Search Product | **READY** | SME manual KB |
+| **BF-PRODUCT-004** | View Product | **READY** | SME manual KB (F004) |
+| **BF-RIVAAH-005** | Rivaah Main Menu | **READY** | SME manual KB (F005) |
+| **BF-RIVAAH-005-01** | Wedding Trousseau Styling | **READY** | Browser Recorder + SME |
+| **BF-RIVAAH-005-02** | Trousseau Set Image | **READY** | Browser Recorder + SME |
+| **BF-RIVAAH-005-03** | Engagement Rings | **READY** | Browser Recorder + SME |
+| **BF-RIVAAH-005-04** | Wedding Experts | **READY** | Browser Recorder + SME |
+| BF-RIVAAH-005-05 | Rivaah Wedding Wishlist | **PARTIAL** | Browser Recorder + SME |
 | BF-FINDPRICE-004 | Find Price Lookup | DRAFT | Legacy migration |
 | BF-LOGIN-HOME-005 | Login To Home | DRAFT | Superseded by BF-LOGIN-001 |
 | BF-STOCKVIS-006 | Stock Visibility | DRAFT | Legacy migration |
@@ -82,11 +90,11 @@ discovery/uat_ea/
 | BF-CAT-EAR-010 | Category Earrings | DRAFT | Legacy migration |
 | BF-ITEMCODE-011 | Item Code Search | DRAFT | Legacy migration |
 | BF-REPORTS-012 | Reports Menu | DRAFT | Legacy migration |
-| BF-RIVAAH-013 | Rivaah Browse | DRAFT | Legacy migration |
-| BF-RIVAAH-TRO-014 | Rivaah Trousseau | DRAFT | Legacy migration |
+| BF-RIVAAH-013 | Rivaah Browse | SUPERSEDED | → BF-RIVAAH-005 |
+| BF-RIVAAH-TRO-014 | Rivaah Trousseau | SUPERSEDED | → BF-RIVAAH-005-01 |
 | BF-STD-BROWSE-015 | Standard Product Browse | DRAFT | Legacy migration |
 
-**Total flows in catalog:** 15 (3 READY · 11 DRAFT · 1 SUPERSEDED)
+**Total flows in catalog:** 22 (9 READY · 1 PARTIAL · 9 DRAFT · 3 SUPERSEDED)
 
 ---
 
@@ -100,14 +108,14 @@ Based on clumsy JSON only — flow metadata was shallow.
 
 | Layer | Before | Now | Notes |
 |---|---:|---:|---|
-| Flow-centric KB (READY quality) | 5% | **35%** | 3 flows at full proposal depth |
-| Locator + self-heal metadata | 10% | **40%** | Primary+3 fallbacks on READY flows |
-| Business rules (numbered) | 15% | **45%** | 22+ rules across 3 flows |
-| Capability map | 0% | **20%** | `capabilities.yaml` draft |
+| Flow-centric KB (READY quality) | 5% | **55%** | 9 READY + 1 PARTIAL at full proposal depth |
+| Locator + self-heal metadata | 10% | **55%** | Primary+3 fallbacks on READY flows; Rivaah menu locators observed |
+| Business rules (numbered) | 15% | **60%** | 50+ rules across READY flows |
+| Capability map | 0% | **35%** | Rivaah + Product Management capabilities added |
 | Legacy page/flow seeds | 70% | **70%** | Still valid as enrichment source |
-| Knowledge graph edges | 15% | **25%** | Capability→flow started |
+| Knowledge graph edges | 15% | **40%** | Capability→flow expanded (Rivaah subtree) |
 | Automation repository | 5% | 5% | Not in scope this task |
-| **Overall toward proposal** | **~45%** | **~55%** | +10 pts from format + SME flows |
+| **Overall toward proposal** | **~45%** | **~65%** | +20 pts from Rivaah + View Product SME flows |
 
 ### 4.3 What the 3 READY flows unlock immediately
 
@@ -116,7 +124,9 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Orchestrator: "verify login" | Yes — BF-LOGIN-001 |
 | Orchestrator: "check logout / session" | Yes — BF-LOGOUT-002 |
 | Adhoc param: "product ID X in search" | Yes — BF-PRODUCT-003 + `test_data` refs |
-| LLM test generation from flow knowledge | Yes — for these 3 flows |
+| View product detail / out-of-stock | Yes — BF-PRODUCT-004 |
+| Rivaah module sanity (6 sub-flows) | Partial — BF-RIVAAH-005 subtree (005-05 PARTIAL) |
+| LLM test generation from flow knowledge | Yes — for 9 READY flows |
 | Self-healing locator policy | Yes — defined in YAML |
 | Morning sanity (all suites) | Partial — need suites built from READY flows |
 | Incident: "payment failing" | No — Payment capability empty |
@@ -129,7 +139,8 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Priority | Gap | Action |
 |---|---|---|
 | P0 | **Payment / Checkout / Customer Order** flows missing | SME session — no capability for incident orchestration |
-| P1 | **11 DRAFT flows** need enrichment to READY | Use BF-LOGIN-001 as template; pull locators from legacy JSON + recordings |
+| P1 | **9 DRAFT flows** need enrichment to READY | Use BF-LOGIN-001 as template; pull locators from legacy JSON + recordings |
+| P1 | **BF-RIVAAH-005-05** (Wishlist) | PARTIAL — SME session needed for post-customer-selection behavior |
 | P1 | Find Price (BF-FINDPRICE-004) | High client value — enrich next after search |
 | P2 | Home module sanity map | Link 20 home modules → capabilities in `capabilities.yaml` |
 | P2 | GT approval | 22 candidates still proposed — link approved GT to flow `business_rules` |
@@ -172,7 +183,7 @@ No architecture change — this KB reformat **implements** the locked proposal:
 
 - **Your 3 manual KBs are the correct format** — imported and locked as canonical.  
 - **Old KB was rich but clumsy** — now organized: READY SME flows + DRAFT migrations + legacy archive.  
-- **Readiness improved ~45% → ~55%** toward the finalized proposal model.  
-- **Biggest remaining gap:** Payment/Checkout flows and enriching 11 DRAFT flows to READY standard.
+- **Readiness improved ~45% → ~65%** toward the finalized proposal model.  
+- **Biggest remaining gap:** Payment/Checkout flows, completing BF-RIVAAH-005-05, and enriching 9 DRAFT flows to READY standard.
 
 No orchestrator, automation suite, or console changes were made in this task — KB and documentation only.

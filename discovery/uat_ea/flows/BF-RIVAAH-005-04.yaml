@@ -1,0 +1,285 @@
+flow_id: BF-RIVAAH-005-04
+
+flow_name: Wedding Experts
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Helps customers find wedding experts based on their selected
+    region/location and provides expert information through cards,
+    including contact/appointment-related information displayed
+    as text on the expert card.
+
+entry_point:
+  page: Rivaah
+  route: /ords/r/tjdcom/ea/rivaah
+  navigation: >
+    Home → Rivaah → Wedding Experts → Regional Wedding Experts
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - Regional wedding expert information is available.
+
+pages:
+  - page_id: 38
+    name: Rivaah
+    route: /ords/r/tjdcom/ea/rivaah
+
+  - page_id: 70
+    name: Wedding Experts
+
+  - page_id: 73
+    name: Regional Wedding Experts
+
+components:
+  - name: Wedding Experts
+    type: Navigation/Card
+    action: Opens the Wedding Experts experience.
+
+  - name: Region Selection
+    type: Selection
+    action: Allows the user to select a region/location.
+
+  - name: Regional Wedding Experts
+    type: Page
+    action: Displays wedding experts associated with the selected region.
+
+  - name: Wedding Expert Card
+    type: Card
+    action: >
+      Displays information about an expert and provides
+      appointment/contact-related information as text on the card.
+
+  - name: Contact/Appointment Information
+    type: Card Text
+    action: >
+      Provides the relevant contact or appointment information
+      displayed on the expert card.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Rivaah from Home.
+
+    - step: 2
+      action: Select Wedding Experts.
+
+    - step: 3
+      action: Select the required region/location.
+
+    - step: 4
+      action: >
+        Verify that the Regional Wedding Experts page displays
+        experts associated with the selected region.
+
+    - step: 5
+      action: >
+        Review the displayed wedding expert cards.
+
+    - step: 6
+      action: >
+        Verify that each expert card contains the expected
+        expert information.
+
+    - step: 7
+      action: >
+        Verify that appointment/contact-related information is
+        presented as text on the expert card.
+
+    - step: 8
+      action: >
+        Use Back to return to the immediately previous screen.
+
+expected_success:
+  - Wedding Experts opens successfully from Rivaah.
+  - User can select a region/location.
+  - Regional Wedding Experts displays experts for the selected region.
+  - Displayed experts correspond to the selected region.
+  - Expert information is displayed through cards.
+  - Contact/appointment-related information is displayed as text on the card.
+  - The flow respects the current store/customer context.
+  - Back returns to the immediately previous screen.
+
+observed_scenarios:
+  - scenario: Navigate from Rivaah to Wedding Experts
+    status: Observed
+
+  - scenario: Select a region
+    status: Observed
+
+  - scenario: Display regional wedding expert cards
+    status: Observed
+
+  - scenario: Expert card information displayed
+    status: Observed
+
+business_rules:
+  - rule: >
+      Wedding Experts helps customers find wedding experts
+      based on region/location.
+
+  - rule: >
+      The user selects a region before viewing the corresponding
+      regional wedding experts.
+
+  - rule: >
+      Experts displayed must correspond to the selected region.
+
+  - rule: >
+      Wedding expert information is displayed using cards.
+
+  - rule: >
+      Appointment/contact-related information is presented
+      as text on the expert card.
+
+  - rule: >
+      The flow respects the current store/customer context.
+
+  - rule: >
+      Back returns to the immediately previous screen.
+
+unknown_business_rules:
+  - Exact list of supported regions.
+  - Exact criteria used to associate an expert with a region.
+  - Exact expert-card fields required by the business.
+  - Exact format/content of appointment or contact information.
+  - Whether experts can be selected for additional details beyond the card.
+  - Any expert availability or assignment rules.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  pages:
+    rivaah: 38
+    wedding_experts: 70
+    regional_wedding_experts: 73
+
+  observed_components:
+    regional_expert_card:
+      css_class: wed_exp_region
+
+  navigation:
+    entry:
+      from: Rivaah
+      action: Wedding Experts
+
+    region_selection:
+      destination: Regional Wedding Experts
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX IDs or validated DOM attributes for
+      Wedding Experts navigation.
+
+    - >
+      Use stable region-selection attributes or validated
+      accessible labels for region selection.
+
+    - >
+      Use validated expert-card attributes or DOM relationships
+      for regional expert cards.
+
+  fallback_locators:
+    - >
+      Use validated accessible labels, stable attributes,
+      or page-specific DOM relationships.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Rivaah
+    - Open Wedding Experts
+    - Select region
+    - Verify Regional Wedding Experts
+    - Validate expert-region relationship
+    - Validate expert cards
+    - Validate contact/appointment information
+    - Navigate back
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated user
+    - Valid supported region
+    - At least one wedding expert associated with the selected region
+
+  restrictions:
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Use logical test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - User must have access to the Rivaah module.
+    - Expert information must respect the current store/customer context.
+
+  sensitive_data:
+    - Do not store authentication secrets.
+    - Do not store session information.
+    - Treat contact information displayed on cards according to
+      the application's data-access rules.
+
+  validation:
+    - Verify that regional expert information is displayed
+      only within the user's authorized application context.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1645.zip
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Network activity
+    - Console activity
+
+  observed_technical_details:
+    - Wedding Experts page ID 70.
+    - Regional Wedding Experts page ID 73.
+    - Regional expert cards use the observed CSS class wed_exp_region.
+
+  limitations:
+    - No Playwright trace available.
+    - Exact region list and expert assignment rules are not explicitly defined.
+    - Exact appointment/contact information format is not defined.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: High

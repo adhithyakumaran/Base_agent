@@ -16,6 +16,11 @@ capabilities:
       - BF-PRODUCT-003  # Search Product — READY
       - BF-ITEMSEARCH-007  # superseded by BF-PRODUCT-003
 
+  Product Management:
+    status: READY
+    flows:
+      - BF-PRODUCT-004  # View Product — READY
+
   Pricing:
     status: DRAFT
     flows:
@@ -27,14 +32,24 @@ capabilities:
       - BF-STOCKVIS-006
 
   Product Browse:
-    status: DRAFT
+    status: PARTIAL
     flows:
       - BF-BESTDEAL-008
       - BF-BROWSE-009
       - BF-CAT-EAR-010
-      - BF-RIVAAH-013
-      - BF-RIVAAH-TRO-014
       - BF-STD-BROWSE-015
+      - BF-RIVAAH-013       # superseded by BF-RIVAAH-005
+      - BF-RIVAAH-TRO-014   # superseded by BF-RIVAAH-005-01
+
+  Rivaah:
+    status: PARTIAL
+    flows:
+      - BF-RIVAAH-005       # Rivaah Main Menu — READY
+      - BF-RIVAAH-005-01    # Wedding Trousseau Styling — READY
+      - BF-RIVAAH-005-02    # Trousseau Set Image — READY
+      - BF-RIVAAH-005-03    # Engagement Rings — READY
+      - BF-RIVAAH-005-04    # Wedding Experts — READY
+      - BF-RIVAAH-005-05    # Rivaah Wedding Wishlist — PARTIAL
 
   Reporting:
     status: DRAFT

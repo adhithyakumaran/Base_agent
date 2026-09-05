@@ -1,0 +1,208 @@
+flow_id: BF-RIVAAH-005-01
+
+flow_name: Wedding Trousseau Styling
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows users to explore Wedding Trousseau Styling products/collections
+    available through the Rivaah module and navigate to the relevant
+    product details.
+
+entry_point:
+  page: Rivaah
+  route: /ords/r/tjdcom/ea/rivaah
+  navigation: >
+    Home → Rivaah → Wedding Trousseau Styling
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - Relevant product/collection data is available.
+
+pages:
+  - page_id: 38
+    name: Rivaah
+    route: /ords/r/tjdcom/ea/rivaah
+
+  - page_id: 136
+    name: Wedding Trousseau Styling
+    route: /ords/r/tjdcom/ea/wedding-trousseau
+
+  - name: Wedding Trousseau Details
+    route: /ords/r/tjdcom/ea/wedding-trousseau-details1
+
+components:
+  - name: Wedding Trousseau Styling
+    type: Navigation/Card
+    action: Opens Wedding Trousseau Styling
+
+  - name: Trousseau Product/Collection
+    type: Product/Collection
+    action: Opens the selected trousseau item
+
+  - name: Back to Products
+    type: Button
+    locator:
+      id: B86295931231248721
+    action: Returns to the product listing
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Rivaah from Home.
+
+    - step: 2
+      action: Select Wedding Trousseau Styling.
+
+    - step: 3
+      action: Browse the available trousseau products/collections.
+
+    - step: 4
+      action: Select a product/collection.
+
+    - step: 5
+      action: Open the corresponding Wedding Trousseau Details page.
+
+    - step: 6
+      action: Verify the displayed details belong to the selected item.
+
+    - step: 7
+      action: Use Back to Products to return to the product listing.
+
+expected_success:
+  - Wedding Trousseau Styling opens successfully from Rivaah.
+  - Available trousseau products/collections are displayed.
+  - User can select a trousseau product/collection.
+  - The selected item opens its corresponding details page.
+  - Displayed details correspond to the selected item.
+  - Back to Products returns the user to the product listing.
+  - The flow respects the current application context.
+
+observed_scenarios:
+  - scenario: Navigate from Rivaah to Wedding Trousseau Styling
+    status: Observed
+
+  - scenario: Open Wedding Trousseau Details
+    status: Observed
+
+  - scenario: Return using Back to Products
+    status: Observed
+
+business_rules:
+  - rule: >
+      Wedding Trousseau Styling is accessed through the Rivaah module.
+  - rule: >
+      A user can select a trousseau product/collection and view its details.
+  - rule: >
+      Product details must correspond to the selected product/collection.
+  - rule: >
+      Out-of-stock items can still be viewed.
+  - rule: >
+      Back to Products returns to the product listing.
+  - rule: >
+      The flow respects the current store/customer context.
+  - rule: >
+      No additional business rules were specified for this flow.
+
+unknown_business_rules:
+  - Exact product eligibility rules.
+  - Exact filtering/sorting rules, if any.
+  - Exact regional/community selection logic, if applicable.
+  - Exact handling/message for unavailable collections.
+  - Any product-specific ordering or purchase restrictions.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+  page_id: 136
+  route: /ords/r/tjdcom/ea/wedding-trousseau
+  details_route: /ords/r/tjdcom/ea/wedding-trousseau-details1
+  back_to_products:
+    id: B86295931231248721
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX component IDs or validated DOM attributes
+      discovered from the Browser Recorder evidence.
+
+  fallback_locators:
+    - >
+      Use validated DOM attributes or accessible labels when the primary
+      locator is unavailable.
+
+  locator_validation:
+    rule: >
+      A locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Rivaah
+    - Open Wedding Trousseau Styling
+    - Select trousseau product/collection
+    - Verify selected item
+    - Open Wedding Trousseau Details
+    - Navigate back to products
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and page/DOM evidence.
+      - Search for validated alternative locator.
+      - Validate uniqueness at runtime.
+      - Execute using validated fallback when safe.
+      - Record degradation.
+      - Propose permanent locator update.
+      - Require human approval before modifying automation permanently.
+
+test_data:
+  required:
+    - Valid authenticated user
+    - Valid trousseau product/collection
+  restrictions:
+    - Do not store credentials, tokens, cookies, session IDs, or other secrets.
+    - Use logical test-data references instead of real sensitive values.
+
+security:
+  authentication_required: true
+  authorization:
+    - User must have access to the Rivaah module.
+  sensitive_data:
+    - No credentials or session information stored in KB.
+  validation:
+    - Verify that product/collection details do not expose unauthorized information.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1645.zip
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Network activity
+    - Console activity
+  limitations:
+    - No Playwright trace available.
+    - Some detailed business rules are not present in the recording.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: High

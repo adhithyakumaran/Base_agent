@@ -1,10 +1,16 @@
 schema: flow_kb_index_v1
 application: Endless Aisle
-count: 15
+count: 22
 sme_ready:
   - BF-LOGIN-001
   - BF-LOGOUT-002
   - BF-PRODUCT-003
+  - BF-PRODUCT-004
+  - BF-RIVAAH-005
+  - BF-RIVAAH-005-01
+  - BF-RIVAAH-005-02
+  - BF-RIVAAH-005-03
+  - BF-RIVAAH-005-04
 flows:
   - id: BF-BESTDEAL-008
     file: BF-BESTDEAL-008.yaml
@@ -46,18 +52,53 @@ flows:
     file: BF-PRODUCT-003.yaml
     name: Search Product
     status: READY
+  - id: BF-PRODUCT-004
+    file: BF-PRODUCT-004.yaml
+    name: View Product
+    status: READY
   - id: BF-REPORTS-012
     file: BF-REPORTS-012.yaml
     name: Reports Submenu Browse
     status: DRAFT
+  - id: BF-RIVAAH-005
+    file: BF-RIVAAH-005.yaml
+    name: Rivaah Main Menu
+    status: READY
+  - id: BF-RIVAAH-005-01
+    file: BF-RIVAAH-005-01.yaml
+    name: Wedding Trousseau Styling
+    status: READY
+    parent: BF-RIVAAH-005
+  - id: BF-RIVAAH-005-02
+    file: BF-RIVAAH-005-02.yaml
+    name: Trousseau Set Image
+    status: READY
+    parent: BF-RIVAAH-005
+  - id: BF-RIVAAH-005-03
+    file: BF-RIVAAH-005-03.yaml
+    name: Engagement Rings
+    status: READY
+    parent: BF-RIVAAH-005
+  - id: BF-RIVAAH-005-04
+    file: BF-RIVAAH-005-04.yaml
+    name: Wedding Experts
+    status: READY
+    parent: BF-RIVAAH-005
+  - id: BF-RIVAAH-005-05
+    file: BF-RIVAAH-005-05.yaml
+    name: Rivaah Wedding Wishlist
+    status: PARTIAL
+    parent: BF-RIVAAH-005
   - id: BF-RIVAAH-013
     file: BF-RIVAAH-013.yaml
     name: Rivaah Wedding Browse
-    status: DRAFT
+    status: SUPERSEDED
+    superseded_by: BF-RIVAAH-005
   - id: BF-RIVAAH-TRO-014
     file: BF-RIVAAH-TRO-014.yaml
     name: Rivaah Wedding Trousseau
-    status: DRAFT
+    status: SUPERSEDED
+    superseded_by: BF-RIVAAH-005-01
   - id: BF-STD-BROWSE-015
     file: BF-STD-BROWSE-015.yaml
     name: Standard Product Browse

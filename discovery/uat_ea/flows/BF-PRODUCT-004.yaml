@@ -1,0 +1,349 @@
+flow_id: BF-PRODUCT-004
+
+flow_name: View Product
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+purpose:
+  Display detailed information for the product selected or searched by
+  the authenticated user, including product identification, images,
+  pricing, product attributes and availability information.
+
+entry_point:
+  pages:
+    - Product Search
+    - Product Catalogue
+    - All Products
+
+actors:
+  - Authenticated application user
+
+preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User has access to product information.
+  - A valid product has been selected or searched.
+
+pages:
+  - Product Search
+  - Product Catalogue
+  - All Products
+  - Product Detail
+
+components:
+  product_information:
+    type: product_detail_region
+    purpose: Display selected product information
+    attributes_observed:
+      - Item code / SKU
+      - Product name
+      - Product image
+      - Product price
+      - User / gender
+      - Occasion
+      - Jewellery Type
+      - Category
+      - Karatage
+      - Diamond Quality
+      - Metal Color
+      - MTO Lead Time
+      - Availability status
+
+  product_images:
+    type: image_gallery
+    purpose: Display product images
+    behavior:
+      - Main product image is displayed.
+      - Additional product images/thumbnails are available.
+      - Product imagery can include multiple views.
+      - A 360-degree product view may be available.
+
+  stock_availability:
+    type: information_region
+    purpose: Display product stock status
+    observed_states:
+      - In Stock
+      - Not in Stock
+      - Item Sold Out
+      - No Stock available in Store and Factory
+
+  back_to_products:
+    type: navigation_action
+    action: Return to Products
+    status: Observed
+
+  production_order:
+    type: external_action
+    action: Proceed to My Crown Portal for initiating production order
+    status: Observed for applicable out-of-stock state
+
+business_flow:
+  - User searches for or selects a product.
+  - Application identifies the selected product.
+  - Application opens Product Detail.
+  - Product information is displayed.
+  - Product images are displayed.
+  - Product attributes are displayed.
+  - Product price is displayed where applicable.
+  - Product availability is displayed.
+  - If the product is out of stock, the out-of-stock status is displayed.
+  - If applicable, the user can proceed to the production-order process.
+  - User can return to the Products/Product Search context.
+
+expected_success:
+  condition:
+    - A valid product has been selected or searched.
+  result:
+    - Product Detail page is displayed.
+    - The displayed details belong to the exact selected/searched product.
+    - Product identification information is displayed.
+    - Product imagery is displayed.
+    - Product attributes are displayed.
+    - Applicable price information is displayed.
+    - Product availability status is displayed.
+    - User can return to the appropriate Products/Product Search context.
+
+observed_out_of_stock:
+  condition:
+    - Selected product is not available in the applicable stock context.
+  result:
+    - Product Detail is still displayed.
+    - Product is explicitly marked as Not in Stock / Sold Out.
+    - Stock availability information is displayed.
+    - Where applicable, the production-order action is presented.
+
+business_rules:
+  BR-VIEW-001:
+    rule: A valid selected or searched product must open its corresponding
+      Product Detail information.
+    status: Confirmed/Observed
+
+  BR-VIEW-002:
+    rule: Product Detail must display information belonging to the exact
+      product selected or searched by the user.
+    status: Confirmed
+
+  BR-VIEW-003:
+    rule: A product can be viewed even when it is out of stock.
+    status: Confirmed
+
+  BR-VIEW-004:
+    rule: An out-of-stock product must display an appropriate out-of-stock
+      status.
+    status: Confirmed/Observed
+
+  BR-VIEW-005:
+    rule: Product Detail displays applicable product information including
+      product identification, images, attributes, price and availability.
+    status: Confirmed/Observed
+
+  BR-VIEW-006:
+    rule: The user can return from Product Detail to the applicable
+      Products/Product Search context.
+    status: Confirmed
+
+  BR-VIEW-007:
+    rule: When applicable, an out-of-stock product provides an action to
+      proceed to the production-order process.
+    status: Observed
+
+unknown_business_rules:
+  - Which individual product attributes are mandatory for every product.
+  - Whether price is mandatory for every product type.
+  - Exact behavior when a product identifier is invalid or no longer exists.
+  - Exact behavior when product details cannot be retrieved.
+  - Whether all products must have multiple images.
+  - Whether the 360-degree view is available for every product.
+  - Exact rules determining when the production-order action is displayed.
+  - Exact authorization rules for viewing product information.
+  - Exact behavior when product information/API retrieval fails.
+  - Exact caching/refresh behavior for product information.
+
+technical_metadata:
+  apex:
+    application_id: 1002
+
+  observed_pages:
+    product_listing:
+      page_name: All Products
+
+    product_search:
+      page_name: Product Search
+
+    product_detail:
+      page_name: Product Detail
+
+  observed_navigation:
+    product_listing_to_detail:
+      source: All Products
+      destination: Product Detail
+
+    product_search_to_detail:
+      source: Product Search
+      destination: Product Detail
+
+  observed_product_detail_information:
+    product_identifier:
+      description: Product/item identifier
+      status: Observed
+
+    product_name:
+      description: Product name
+      status: Observed
+
+    price:
+      description: Indicative product price
+      status: Observed
+
+    availability:
+      description: Product stock/availability
+      status: Observed
+
+    user:
+      description: Product user/gender
+      status: Observed
+
+    occasion:
+      description: Product occasion
+      status: Observed
+
+    jewellery_type:
+      description: Jewellery type
+      status: Observed
+
+    category:
+      description: Product category
+      status: Observed
+
+    karatage:
+      description: Product karatage
+      status: Observed
+
+    diamond_quality:
+      description: Diamond quality
+      status: Observed
+
+    metal_color:
+      description: Metal color
+      status: Observed
+
+    mto_lead_time:
+      description: Made-to-order lead time
+      status: Observed
+
+  observed_stock_states:
+    - Not in Stock
+    - Item Sold Out
+    - No Stock available in Store and Factory
+
+  external_integration:
+    system: My Crown Portal
+    purpose: Initiate production order
+    trigger: Applicable out-of-stock product
+    status: Observed
+
+automation:
+  recommended_framework: Playwright
+
+  locator_strategy:
+    resolution_order:
+      - primary
+      - fallback_1
+      - fallback_2
+      - fallback_3
+
+    uniqueness_validation:
+      - If locator resolves to 0 elements, try the next locator.
+      - If locator resolves to exactly 1 element, accept it.
+      - If locator resolves to more than 1 element, reject it as ambiguous.
+
+  primary_locators:
+    product_detail: "To be finalized from DOM inspection"
+    product_identifier: "To be finalized from DOM inspection"
+    product_name: "To be finalized from DOM inspection"
+    product_price: "To be finalized from DOM inspection"
+    availability_status: "To be finalized from DOM inspection"
+    back_to_products: "To be finalized from DOM inspection"
+
+  fallback_locators:
+    status: Pending DOM inspection
+    note:
+      - The supplied screenshots establish visual components but do not
+        provide sufficient DOM attributes to safely create stable fallback
+        locators.
+      - Locators must be obtained from DOM inspection rather than invented.
+
+  reusable_actions:
+    - navigate_to_product_detail
+    - verify_product_identifier
+    - verify_product_name
+    - verify_product_image
+    - verify_product_price
+    - verify_product_attributes
+    - verify_product_availability
+    - verify_out_of_stock_status
+    - verify_exact_product
+    - return_to_products
+    - verify_production_order_action_when_applicable
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Try validated fallback locators if the primary locator fails.
+      - Record the failed primary locator.
+      - Capture current DOM and page evidence.
+      - Record the successful fallback locator.
+      - Analyze the UI change.
+      - Recommend a permanent locator update only after validation.
+      - Do not permanently modify automation without approval.
+
+test_data:
+  valid_product:
+    source: DEV/UAT approved product test data
+    value: LOGICAL_REFERENCE_ONLY
+
+  out_of_stock_product:
+    source: DEV/UAT approved out-of-stock product
+    value: LOGICAL_REFERENCE_ONLY
+
+  product_identifier:
+    source: Product test data
+    value: DO_NOT_STORE_REAL_VALUE
+
+security:
+  sensitive_data_policy:
+    - Do not store real credentials in the KB.
+    - Do not store session IDs.
+    - Do not store authentication tokens.
+    - Do not store cookies.
+    - Do not store raw protected request/response values.
+    - Store logical product/test-data references instead.
+
+  security_relevance:
+    - Product details must correspond to the authorized product context.
+    - Product information must not expose data outside the user's
+      authorized store/customer context.
+    - Product-detail APIs should enforce authorization server-side.
+    - Product identifiers must not be treated as authorization controls.
+    - The production-order action should be checked for appropriate
+      authorization by the Security Agent.
+
+evidence:
+  sources:
+    - Browser interaction recording
+    - Product Detail screenshots
+    - Product Search/Product Catalogue navigation evidence
+    - DOM/component information where available
+    - Network activity captured during product navigation
+    - Product availability evidence
+
+status:
+  overall: READY
+  confidence: High for observed Product Detail behavior
+  business_rule_gaps: Present
+  locator_status:
+    primary_locators: Pending DOM inspection
+    fallback_locators: Pending DOM inspection

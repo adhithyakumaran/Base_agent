@@ -1,0 +1,273 @@
+flow_id: BF-RIVAAH-005-05
+
+flow_name: Rivaah Wedding Wishlist
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Provides access to the Rivaah Wedding Wishlist / Dream List
+    functionality for a selected customer.
+
+entry_point:
+  page: Rivaah
+  route: /ords/r/tjdcom/ea/rivaah
+  navigation: >
+    Home → Rivaah → Rivaah Wedding Wishlist
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - A customer must be selected before proceeding to Dream List details.
+
+pages:
+  - page_id: 38
+    name: Rivaah
+    route: /ords/r/tjdcom/ea/rivaah
+
+  - page_id: 37
+    name: Dreams in Gold
+    route: /ords/r/tjdcom/ea/dreams-in-gold
+
+  - name: Dream List Details
+    route: /ords/r/tjdcom/ea/dreams-in-gold
+
+components:
+  - name: Rivaah Wedding Wishlist
+    type: Navigation/Card
+    action: Opens the Dream List functionality.
+
+  - name: Customer Selection
+    type: Customer Selector
+    action: >
+      Allows the authenticated application user to select a customer
+      before proceeding.
+
+  - name: Dream List Details
+    type: Page
+    action: >
+      Displays the customer's Dream List details after the required
+      customer context is established.
+
+  - name: Customer Required Message
+    type: Validation Message
+    observed_text: >
+      Please select a customer before proceeding.
+    condition: >
+      User attempts to proceed without selecting a customer.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Rivaah from Home.
+
+    - step: 2
+      action: Select Rivaah Wedding Wishlist.
+
+    - step: 3
+      action: >
+        Navigate to Dream List Details.
+
+    - step: 4
+      action: >
+        Verify that a customer is required before proceeding.
+
+    - step: 5
+      action: >
+        If no customer is selected, verify that the application
+        displays the customer-required validation message.
+
+    - step: 6
+      action: >
+        Select a customer through the application customer selector.
+
+    - step: 7
+      action: >
+        Proceed to Dream List Details.
+
+    - step: 8
+      action: >
+        Verify customer-specific Dream List information.
+
+expected_success:
+  - Rivaah Wedding Wishlist opens successfully.
+  - Dream List Details is accessible through the Rivaah module.
+  - Customer selection is required before proceeding.
+  - Attempting to proceed without a customer displays the
+    customer-required validation message.
+  - After a customer is selected, the application can proceed
+    to the Dream List functionality.
+  - Dream List information, when displayed, belongs to the
+    selected customer.
+
+observed_scenarios:
+  - scenario: Open Rivaah Wedding Wishlist
+    status: Observed
+
+  - scenario: Navigate to Dream List Details
+    status: Observed
+
+  - scenario: Proceed without selecting customer
+    status: Observed
+
+  - scenario: Customer-required validation displayed
+    status: Observed
+
+  - scenario: Customer-specific Dream List after selection
+    status: Not Observed
+
+business_rules:
+  - rule: >
+      Rivaah Wedding Wishlist is accessed through the Rivaah module.
+
+  - rule: >
+      A customer must be selected before proceeding to Dream List Details.
+
+  - rule: >
+      If no customer is selected, the application must prevent
+      proceeding and display the customer-required validation message.
+
+  - rule: >
+      Dream List functionality is customer-dependent.
+
+  - rule: >
+      Dream List information must correspond to the selected customer.
+
+unknown_business_rules:
+  - How products are added to the Dream List.
+  - How products are removed from the Dream List.
+  - Whether wishlist contents persist across sessions.
+  - Whether out-of-stock products remain in the Dream List.
+  - Whether products can be opened directly from the Dream List.
+  - Whether duplicate products are allowed.
+  - Whether the Dream List has a maximum item limit.
+  - Whether the Dream List can be shared.
+  - Whether products can be purchased directly from the Dream List.
+  - Exact behavior after customer selection.
+  - Exact customer-selection validation behavior beyond the observed message.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  pages:
+    rivaah: 38
+    dreams_in_gold: 37
+
+  route:
+    dreams_in_gold: /ords/r/tjdcom/ea/dreams-in-gold
+
+  observed_url_behavior:
+    description: >
+      Dream List Details navigation includes APEX page/request
+      parameters associated with the selected Dream List action.
+    security_note: >
+      Session identifiers and other transient URL values must not
+      be stored in the KB.
+
+  validation:
+    no_customer_message: "Please select a customer before proceeding."
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use the validated APEX/DOM locator for Rivaah Wedding Wishlist.
+
+    - >
+      Use the validated customer selector locator.
+
+  fallback_locators:
+    - >
+      Use stable accessible labels or validated DOM attributes.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Rivaah
+    - Open Rivaah Wedding Wishlist
+    - Open Dream List Details
+    - Verify customer-required validation
+    - Select customer
+    - Proceed to Dream List
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated application user
+    - Valid customer record
+    - Customer-specific Dream List data
+
+  restrictions:
+    - Do not store customer PII unnecessarily.
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Use logical test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - User must have access to the Rivaah module.
+    - Dream List information must be associated with the selected customer.
+
+  sensitive_data:
+    - Customer information must be handled according to application access controls.
+    - Do not store customer PII in the KB unless explicitly required.
+    - Do not store authentication/session secrets.
+
+  validation:
+    - Verify that the Dream List belongs to the selected customer.
+    - Verify that a customer is required before accessing customer-specific data.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1645.zip
+
+  supplementary_evidence:
+    - User-provided screenshot showing Dream List Details customer validation.
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Network activity
+    - Console activity
+
+  limitations:
+    - The available recording does not show the Dream List after a customer
+      has been selected.
+    - Add/remove/persistence/sharing/purchase behavior cannot be inferred.
+
+status:
+  overall: PARTIAL
+  confidence: High
+  business_coverage: Medium
+  technical_coverage: High

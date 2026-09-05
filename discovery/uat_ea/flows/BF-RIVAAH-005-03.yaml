@@ -1,0 +1,324 @@
+flow_id: BF-RIVAAH-005-03
+
+flow_name: Engagement Rings
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows users to access engagement-ring products from the Rivaah module.
+    Selecting Engagement Rings navigates the user to the All Products /
+    Standard Product Search page with the appropriate engagement-ring
+    search/filter context.
+
+entry_point:
+  page: Rivaah
+  route: /ords/r/tjdcom/ea/rivaah
+  navigation: >
+    Home → Rivaah → Engagement Rings → All Products / Standard Product Search
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Rivaah module.
+  - Application is available.
+  - Engagement-ring product data is available.
+
+pages:
+  - page_id: 38
+    name: Rivaah
+    route: /ords/r/tjdcom/ea/rivaah
+
+  - page_id: 4
+    name: All Products / Standard Product Search
+    route: /ords/r/tjdcom/ea/standard-product-search
+
+  - page_id: 5
+    name: Product Detail
+    route: /ords/r/tjdcom/ea/product-detail
+
+components:
+  - name: Engagement Rings
+    type: Navigation/Card
+    action: >
+      Navigates to All Products / Standard Product Search with
+      the relevant engagement-ring search/filter context.
+
+  - name: Product Search
+    type: Search
+    action: >
+      Allows the user to search products using keyword/item information
+      or scan functionality.
+
+  - name: Filter Panel
+    type: Filter
+    observed_filters:
+      - Brand
+      - Available at Factory
+      - Price
+      - Weight Band
+      - Jewellery Type
+      - Product
+      - Gender
+      - Collection
+      - Metal Color
+      - Type
+    action: >
+      Allows the user to refine the displayed product results.
+
+  - name: Product
+    type: Product Card
+    action: Opens the selected product.
+
+  - name: Product Detail
+    type: Page
+    action: Displays details of the selected product.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Rivaah from Home.
+
+    - step: 2
+      action: Select Engagement Rings.
+
+    - step: 3
+      action: >
+        Verify navigation to All Products / Standard Product Search
+        with the relevant engagement-ring search/filter context.
+
+    - step: 4
+      action: >
+        Verify that engagement-ring products are displayed.
+
+    - step: 5
+      action: >
+        Use search and/or available filters to refine the products,
+        when required.
+
+    - step: 6
+      action: Select an engagement-ring product.
+
+    - step: 7
+      action: Open Product Detail.
+
+    - step: 8
+      action: Verify that the displayed product details correspond
+        exactly to the selected engagement ring.
+
+    - step: 9
+      action: Use Back to return to the immediately previous screen.
+
+expected_success:
+  - Engagement Rings opens successfully from Rivaah.
+  - User is taken to All Products / Standard Product Search.
+  - The appropriate engagement-ring search/filter context is applied.
+  - Relevant engagement-ring products are displayed.
+  - User can search/filter the displayed products.
+  - User can select an engagement-ring product.
+  - Selected product opens in Product Detail.
+  - Product details exactly match the selected product.
+  - Out-of-stock engagement rings can still be viewed.
+  - The flow respects the current store/customer context.
+  - Back returns to the immediately previous screen.
+
+observed_scenarios:
+  - scenario: >
+      Select Engagement Rings from Rivaah and navigate to
+      Standard Product Search / All Products.
+    status: Observed
+
+  - scenario: >
+      All Products page displays engagement-ring products and
+      filter options.
+    status: Observed
+
+  - scenario: Select an engagement-ring product.
+    status: Observed
+
+  - scenario: Open Product Detail.
+    status: Observed
+
+business_rules:
+  - rule: >
+      Engagement Rings is accessed through the Rivaah module.
+
+  - rule: >
+      Selecting Engagement Rings navigates to the All Products /
+      Standard Product Search page rather than a dedicated
+      Engagement Rings page.
+
+  - rule: >
+      The navigation applies the relevant engagement-ring
+      search/filter context.
+
+  - rule: >
+      Users can search and filter the resulting products.
+
+  - rule: >
+      Users can select an engagement-ring product and view its details.
+
+  - rule: >
+      Out-of-stock engagement-ring products can still be viewed.
+
+  - rule: >
+      Product details must exactly correspond to the selected product.
+
+  - rule: >
+      Product visibility and availability respect the current
+      store/customer context.
+
+  - rule: >
+      Back returns to the immediately previous screen.
+
+unknown_business_rules:
+  - Exact technical parameter/value used to establish the engagement-ring
+    filter context in the All Products URL.
+  - Exact filter combination applied automatically after selecting
+    Engagement Rings.
+  - Exact eligibility criteria for products to appear as engagement rings.
+  - Exact sorting/default ordering rules.
+  - Exact handling when no engagement-ring products are available.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  routes:
+    rivaah: /ords/r/tjdcom/ea/rivaah
+    all_products: /ords/r/tjdcom/ea/standard-product-search
+    product_detail: /ords/r/tjdcom/ea/product-detail
+
+  pages:
+    rivaah: 38
+    standard_product_search: 4
+    product_detail: 5
+
+  navigation_behavior:
+    engagement_rings:
+      destination: Standard Product Search / All Products
+      behavior: >
+        Opens the product-search experience with the relevant
+        engagement-ring context.
+
+  observed_ui:
+    search:
+      placeholder: "Enter keyword or scan"
+
+    filters:
+      - Brand
+      - Available at Factory
+      - Price
+      - Weight Band
+      - Jewellery Type
+      - Product
+      - Gender
+      - Collection
+      - Metal Color
+      - Type
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use the stable APEX/DOM locator for the Engagement Rings
+      navigation card discovered from the Browser Recorder evidence.
+
+    - >
+      Use stable product-card attributes or validated DOM relationships
+      for selecting engagement-ring products.
+
+  fallback_locators:
+    - >
+      Use validated accessible labels, stable attributes, or
+      page-specific DOM relationships.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Rivaah
+    - Open Engagement Rings
+    - Verify All Products page
+    - Verify engagement-ring context
+    - Search products
+    - Apply product filters
+    - Select engagement-ring product
+    - Open Product Detail
+    - Verify product identity/details
+    - Navigate back
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated user
+    - Engagement-ring product
+    - Valid product-search/filter context
+
+  restrictions:
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Use logical test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - User must have access to the Rivaah module.
+    - Product information must respect the current store/customer context.
+
+  sensitive_data:
+    - No credentials or session information stored in KB.
+
+  validation:
+    - Verify that product visibility matches the authorized store/customer context.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1645.zip
+
+  supplementary_evidence:
+    - User-provided screenshot of All Products / Standard Product Search.
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Network activity
+    - Console activity
+
+  limitations:
+    - No Playwright trace available.
+    - Exact URL/filter parameter used by the Engagement Rings navigation
+      requires technical DOM/network validation.
+    - Exact engagement-ring eligibility rules are not explicitly defined.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: High

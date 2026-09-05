@@ -1,0 +1,478 @@
+flow_id: BF-RIVAAH-005
+
+flow_name: Rivaah Main Menu
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+  rivaah_page_id: 38
+
+purpose:
+  Provide authenticated Endless Aisle users with access to the
+  Rivaah-specific product and wedding-related functionality.
+
+entry_point:
+  page: Home
+  route: /ords/r/tjdcom/ea/home
+
+actors:
+  - Authenticated application user
+
+preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User has access to the Rivaah functionality.
+
+pages:
+  - Home
+  - Rivaah
+
+components:
+  rivaah_navigation:
+    type: navigation_menu
+    id: t_MenuNav_3i
+    label: Rivaah
+    action: Open Rivaah
+    locator:
+      primary:
+        strategy: css
+        value: "#t_MenuNav_3i"
+        source: DOM inspection
+        status: Observed
+
+      fallback_1:
+        strategy: css
+        value: "a[role='menuitem'][id='t_MenuNav_3i']"
+        source: Observed DOM attributes
+        status: Candidate
+
+      fallback_2:
+        strategy: text
+        value: "Rivaah"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "a.a-MenuBar-label[aria-current='true']"
+        source: Observed Rivaah page navigation state
+        status: Candidate
+
+  wedding_trousseau_styling:
+    type: navigation_card
+    label: Wedding Trousseau Styling
+    action: Open Wedding Trousseau Styling
+    locator:
+      primary:
+        strategy: css
+        value: "a.t-Card-wrap[href*='/wedding-trousseau?']"
+        source: DOM inspection
+        status: Candidate
+
+      fallback_1:
+        strategy: text
+        value: "Wedding Trousseau Styling"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_2:
+        strategy: css
+        value: "a.t-Card-wrap"
+        source: Generic card structure
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "div.t-Card-title"
+        source: Observed card structure
+        status: Candidate
+
+  trousseau_set_image:
+    type: navigation_card
+    label: Trousseau Set Image
+    action: Open Trousseau Set Image
+    locator:
+      primary:
+        strategy: css
+        value: "a.t-Card-wrap[href*='/wedding-trousseau1']"
+        source: DOM inspection
+        status: Candidate
+
+      fallback_1:
+        strategy: text
+        value: "Trousseau Set Image"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_2:
+        strategy: css
+        value: "a.t-Card-wrap"
+        source: Generic card structure
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "div.t-Card-title"
+        source: Observed card structure
+        status: Candidate
+
+  engagement_rings:
+    type: navigation_card
+    label: Engagement Rings
+    action: Open Engagement Rings
+    locator:
+      primary:
+        strategy: css
+        value: "a.t-Card-wrap[href*='/standard-product-search']"
+        source: DOM inspection
+        status: Candidate
+
+      fallback_1:
+        strategy: text
+        value: "Engagement Rings"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_2:
+        strategy: css
+        value: "a.t-Card-wrap"
+        source: Generic card structure
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "div.t-Card-title"
+        source: Observed card structure
+        status: Candidate
+
+  wedding_experts:
+    type: navigation_card
+    label: Wedding Experts
+    action: Open Wedding Experts
+    locator:
+      primary:
+        strategy: css
+        value: "a.t-Card-wrap[href*='/wedding-experts']"
+        source: DOM inspection
+        status: Candidate
+
+      fallback_1:
+        strategy: text
+        value: "Wedding Experts"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_2:
+        strategy: css
+        value: "a.t-Card-wrap"
+        source: Generic card structure
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "div.t-Card-title"
+        source: Observed card structure
+        status: Candidate
+
+  rivaah_wedding_wishlist:
+    type: navigation_card
+    label: Rivaah Wedding Wishlist
+    action: Open Rivaah Wedding Wishlist
+    locator:
+      primary:
+        strategy: css
+        value: "a.t-Card-wrap[href*='/dreams-in-gold']"
+        source: DOM inspection
+        status: Candidate
+
+      fallback_1:
+        strategy: text
+        value: "Rivaah Wedding Wishlist"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_2:
+        strategy: css
+        value: "a.t-Card-wrap"
+        source: Generic card structure
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "div.t-Card-title"
+        source: Observed card structure
+        status: Candidate
+
+  back_button:
+    type: button
+    id: B50666671840999844
+    label: Back
+    action: Return to Home
+    locator:
+      primary:
+        strategy: css
+        value: "#B50666671840999844"
+        source: DOM inspection
+        status: Observed
+
+      fallback_1:
+        strategy: css
+        value: "button#B50666671840999844"
+        source: Observed DOM attribute
+        status: Candidate
+
+      fallback_2:
+        strategy: text
+        value: "Back"
+        source: Observed DOM text
+        status: Candidate
+
+      fallback_3:
+        strategy: css
+        value: "button.t-Button"
+        source: Generic button structure
+        status: Candidate
+
+business_flow:
+  - Authenticated user is on the Endless Aisle Home page.
+  - User selects Rivaah from the application navigation or Home page.
+  - Application opens the Rivaah page.
+  - Rivaah displays the available Rivaah functionality.
+  - User can select an applicable Rivaah feature.
+  - Available Rivaah features observed include:
+      - Wedding Trousseau Styling
+      - Trousseau Set Image
+      - Engagement Rings
+      - Wedding Experts
+      - Rivaah Wedding Wishlist
+  - User can navigate back from Rivaah to the previous application context.
+
+expected_success:
+  condition:
+    - Authenticated user selects Rivaah.
+  result:
+    - Rivaah page is displayed.
+    - Rivaah-specific functionality is available.
+    - User can select an available Rivaah feature.
+    - Selecting a feature navigates to its corresponding application page.
+
+observed_navigation:
+  condition:
+    - User selects Rivaah from Home.
+  result:
+    - User is navigated to the Rivaah page.
+    - Rivaah page title is displayed.
+    - Rivaah navigation becomes the current application navigation context.
+
+business_rules:
+  BR-RIVAAH-001:
+    rule: An authenticated user with access to Rivaah can open the
+      Rivaah functionality from the application.
+    status: Confirmed/Observed
+
+  BR-RIVAAH-002:
+    rule: The Rivaah page provides navigation to the available
+      Rivaah-specific features.
+    status: Confirmed/Observed
+
+  BR-RIVAAH-003:
+    rule: Wedding Trousseau Styling is available as a Rivaah feature.
+    status: Observed
+
+  BR-RIVAAH-004:
+    rule: Trousseau Set Image is available as a Rivaah feature.
+    status: Observed
+
+  BR-RIVAAH-005:
+    rule: Engagement Rings is available as a Rivaah feature.
+    status: Observed
+
+  BR-RIVAAH-006:
+    rule: Wedding Experts is available as a Rivaah feature.
+    status: Observed
+
+  BR-RIVAAH-007:
+    rule: Rivaah Wedding Wishlist is available as a Rivaah feature.
+    status: Observed
+
+unknown_business_rules:
+  - Business purpose of each individual Rivaah feature.
+  - Eligibility rules for accessing individual Rivaah features.
+  - Whether all authenticated users can access every Rivaah feature.
+  - Exact business rules for Wedding Trousseau Styling.
+  - Exact business rules for Trousseau Set Image.
+  - Exact business rules for Engagement Rings.
+  - Exact business rules for Wedding Experts.
+  - Exact business rules for Rivaah Wedding Wishlist.
+  - Whether feature visibility is role/customer/store dependent.
+  - Whether any Rivaah feature requires a selected customer.
+  - Expected behavior when an individual Rivaah feature fails to load.
+  - Expected behavior when a Rivaah destination is unavailable.
+  - Whether the Back action must always return specifically to Home.
+
+technical_metadata:
+  apex:
+    application_id: 1002
+    rivaah_page_id: 38
+
+  page:
+    name: Rivaah
+    page_id: 38
+    title: Rivaah
+    body_class:
+      - t-PageBody
+      - t-PageTemplate--standard
+      - apex-top-nav
+
+  observed_navigation:
+    home_to_rivaah:
+      source: Home
+      destination: Rivaah
+      destination_path: /ords/r/tjdcom/ea/rivaah
+
+  rivaah_menu:
+    id: t_MenuNav_3i
+    label: Rivaah
+    menu_type: split_menu
+    split_button_id: t_MenuNav_3isb
+
+  observed_features:
+    wedding_trousseau_styling:
+      label: Wedding Trousseau Styling
+      destination: /ords/r/tjdcom/ea/wedding-trousseau
+
+    trousseau_set_image:
+      label: Trousseau Set Image
+      destination: /ords/r/tjdcom/ea/wedding-trousseau1
+
+    engagement_rings:
+      label: Engagement Rings
+      destination: /ords/r/tjdcom/ea/standard-product-search
+
+    wedding_experts:
+      label: Wedding Experts
+      destination: /ords/r/tjdcom/ea/wedding-experts
+
+    rivaah_wedding_wishlist:
+      label: Rivaah Wedding Wishlist
+      destination: /ords/r/tjdcom/ea/dreams-in-gold
+
+  observed_page_items:
+    - P0_CUST_ID
+
+  observed_navigation_components:
+    - t_MenuNav_3i
+    - t_MenuNav_3isb
+    - B50666671840999844
+
+  network:
+    observed_operations:
+      - wwv_flow.ajax
+    status: Technical network activity observed
+    security_note:
+      - Store sanitized operation metadata only.
+      - Do not store session IDs or protected request values.
+
+automation:
+  recommended_framework: Playwright
+
+  locator_strategy:
+    resolution_order:
+      - primary
+      - fallback_1
+      - fallback_2
+      - fallback_3
+
+    uniqueness_validation:
+      - If locator resolves to 0 elements, try the next locator.
+      - If locator resolves to exactly 1 element, accept it.
+      - If locator resolves to more than 1 element, reject it as ambiguous.
+
+  primary_locators:
+    rivaah_navigation: "#t_MenuNav_3i"
+    wedding_trousseau_styling: "a.t-Card-wrap[href*='/wedding-trousseau?']"
+    trousseau_set_image: "a.t-Card-wrap[href*='/wedding-trousseau1']"
+    engagement_rings: "a.t-Card-wrap[href*='/standard-product-search']"
+    wedding_experts: "a.t-Card-wrap[href*='/wedding-experts']"
+    rivaah_wedding_wishlist: "a.t-Card-wrap[href*='/dreams-in-gold']"
+    back_button: "#B50666671840999844"
+
+  fallback_locators:
+    status: Candidate
+    validation_required:
+      - All fallback locators must pass runtime uniqueness validation.
+      - Generic card selectors must not be accepted if multiple cards
+        are returned.
+
+  reusable_actions:
+    - navigate_to_rivaah
+    - verify_rivaah_page
+    - verify_rivaah_features
+    - open_wedding_trousseau_styling
+    - open_trousseau_set_image
+    - open_engagement_rings
+    - open_wedding_experts
+    - open_rivaah_wedding_wishlist
+    - return_to_home
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Try validated fallback locators if the primary locator fails.
+      - Record the failed primary locator.
+      - Capture current DOM and page evidence.
+      - Record the successful fallback locator.
+      - Analyze the UI change.
+      - Recommend a permanent locator update only after validation.
+      - Do not permanently modify automation without approval.
+
+test_data:
+  authenticated_user:
+    source: DEV/UAT test credentials
+    value: DO_NOT_STORE_IN_KB
+
+  customer_context:
+    source: DEV/UAT application context
+    value: LOGICAL_REFERENCE_ONLY
+
+security:
+  sensitive_data_policy:
+    - Do not store real credentials in the KB.
+    - Do not store session IDs.
+    - Do not store authentication tokens.
+    - Do not store cookies.
+    - Do not store raw protected request/response values.
+    - Store logical customer/test-data references instead.
+
+  security_relevance:
+    - Rivaah feature access should respect authenticated-user permissions.
+    - Individual Rivaah feature URLs should not bypass authorization.
+    - Customer-specific data, if used by Rivaah features, must be protected.
+    - Feature visibility should not be treated as the only authorization control.
+
+evidence:
+  sources:
+    - Browser Recorder interaction recording
+    - DOM snapshots
+    - Rivaah page screenshots
+    - Navigation evidence
+    - Network activity
+    - Rivaah feature card information
+
+  recorder_status:
+    playwright_trace: Not available
+    browser_recorder: Available
+    dom_snapshots: Available
+    screenshots: Available
+    interactions: Available
+    network_capture: Available
+    console_capture: Available
+
+status:
+  overall: READY
+  confidence: High for Rivaah navigation and feature discovery
+  business_rule_gaps: Present
+  locator_status:
+    primary_locators: Observed / DOM-derived
+    fallback_locators: Require runtime uniqueness validation
