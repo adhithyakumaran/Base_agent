@@ -1,11 +1,13 @@
 schema: flow_kb_index_v1
 application: Endless Aisle
-count: 22
+count: 24
 sme_ready:
   - BF-LOGIN-001
   - BF-LOGOUT-002
   - BF-PRODUCT-003
   - BF-PRODUCT-004
+  - BF-PRODUCT-CATALOGUE-006
+  - BF-REPORTS-007
   - BF-RIVAAH-005
   - BF-RIVAAH-005-01
   - BF-RIVAAH-005-02
@@ -56,10 +58,19 @@ flows:
     file: BF-PRODUCT-004.yaml
     name: View Product
     status: READY
+  - id: BF-PRODUCT-CATALOGUE-006
+    file: BF-PRODUCT-CATALOGUE-006.yaml
+    name: Product Catalogue
+    status: READY
+  - id: BF-REPORTS-007
+    file: BF-REPORTS-007.yaml
+    name: Reports
+    status: READY
   - id: BF-REPORTS-012
     file: BF-REPORTS-012.yaml
     name: Reports Submenu Browse
-    status: DRAFT
+    status: SUPERSEDED
+    superseded_by: BF-REPORTS-007
   - id: BF-RIVAAH-005
     file: BF-RIVAAH-005.yaml
     name: Rivaah Main Menu

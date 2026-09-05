@@ -1,0 +1,650 @@
+flow_id: BF-REPORTS-007
+
+flow_name: Reports
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Provides authenticated users with access to operational and business
+    reports and allows users to generate/run reports using applicable
+    filters and report controls.
+
+entry_point:
+  page: Home
+  navigation: >
+    Login → Home → Reports → Reports Master Page
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Reports module.
+  - Application is available.
+  - Required report data is available.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+
+  - page_id: 51
+    name: Reports
+    route: /ords/r/tjdcom/ea1/51
+
+components:
+  - name: Reports
+    type: Navigation/Card
+    action: Opens the Reports Master Page.
+
+  - name: Reports Master Page
+    type: Report Dashboard
+    action: >
+      Displays the available reports as selectable report entries.
+
+  - name: Report Entry
+    type: Navigation Item
+    action: >
+      Opens the corresponding individual report page.
+
+  - name: Date Filter
+    type: Date Picker
+    applicable: Report dependent
+    expected_format: DD-Mon-YYYY
+
+  - name: Store Filter
+    type: Select/List
+    applicable: Report dependent
+
+  - name: Category Filter
+    type: Select/List
+    applicable: Report dependent
+
+  - name: Report-specific Filters
+    type: Form Input
+    applicable: Report dependent
+
+  - name: Go
+    type: Button
+    action: >
+      Executes/refreshes the report using the selected filter values.
+
+  - name: Search
+    type: Button
+    action: >
+      Executes a report using report-specific search criteria.
+
+  - name: Clear
+    type: Button
+    action: >
+      Clears applicable report filter values.
+
+  - name: Actions
+    type: Interactive Report Menu
+    applicable: Report dependent
+    action: >
+      Provides report-specific interactive-report operations.
+
+  - name: Back
+    type: Navigation Button
+    action: >
+      Returns to the Reports Master Page.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Home after authentication.
+
+    - step: 2
+      action: Select Reports.
+
+    - step: 3
+      action: >
+        Verify that the Reports Master Page opens.
+
+    - step: 4
+      action: >
+        Verify that available report entries are displayed.
+
+    - step: 5
+      action: >
+        Select the required report.
+
+    - step: 6
+      action: >
+        Verify that the corresponding report page opens.
+
+    - step: 7
+      action: >
+        Identify the filters applicable to the selected report.
+
+    - step: 8
+      action: >
+        Apply valid date, store, category, or report-specific
+        filter values where applicable.
+
+    - step: 9
+      action: >
+        Execute the report using Go or Search as applicable.
+
+    - step: 10
+      action: >
+        Verify that the report page/report component loads successfully.
+
+    - step: 11
+      action: >
+        If an Actions menu or other report controls are available,
+        validate that the applicable controls are accessible.
+
+    - step: 12
+      action: >
+        If Clear is available, validate that the report filters
+        can be cleared.
+
+    - step: 13
+      action: >
+        Use Back where available.
+
+    - step: 14
+      action: >
+        Verify that Back returns to the Reports Master Page.
+
+expected_success:
+  - Reports opens successfully from Home.
+  - Reports Master Page loads successfully.
+  - Available report entries are displayed.
+  - Selecting a report opens the correct report page.
+  - Applicable filters are displayed.
+  - Date filters accept the expected date format.
+  - Store filters are available where applicable.
+  - Category/report-specific filters are available where applicable.
+  - Go/Search executes the applicable report operation.
+  - The report page/report component loads successfully.
+  - Applicable Actions controls are accessible.
+  - Applicable Clear controls work.
+  - Back returns to the Reports Master Page.
+
+observed_scenarios:
+  - scenario: Home → Reports
+    status: Observed
+
+  - scenario: Reports Master Page displayed
+    status: Observed
+
+  - scenario: Order Status opened
+    status: Observed
+
+  - scenario: Request Status opened
+    status: Observed
+
+  - scenario: Logged in Users opened and date filter used
+    status: Observed
+
+  - scenario: PDF/WhatsApp Export Report opened and date filter used
+    status: Observed
+
+  - scenario: Stock Check by Boutique opened and date filters used
+    status: Observed
+
+  - scenario: Auto STN Exception Report opened and Go/Clear used
+    status: Observed
+
+  - scenario: TryOn Usage opened and date filter used
+    status: Observed
+
+  - scenario: Best Deal - Hit Rate opened and date filter used
+    status: Observed
+
+  - scenario: Best Deal - Complete Report opened and date filters used
+    status: Observed
+
+  - scenario: Customer Wishlist Dashboard opened
+    status: Observed
+
+  - scenario: My Store Upload Usage opened and date filters used
+    status: Observed
+
+  - scenario: Estimation Slip Report opened
+    status: Observed
+
+  - scenario: Image Search Usage opened and date filters used
+    status: Observed
+
+  - scenario: Manual Bill Report opened and Search/Clear used
+    status: Observed
+
+  - scenario: Daily Order Details Report opened and Actions/Format used
+    status: Observed
+
+  - scenario: QR Users Report opened and date filter used
+    status: Observed
+
+  - scenario: Dreams In Gold opened
+    status: Observed
+
+  - scenario: QMS Report opened and Search/Actions displayed
+    status: Observed
+
+business_rules:
+  - rule: >
+      Reports provides access to operational/business reporting
+      functionality.
+
+  - rule: >
+      Reports supports both viewing reports and generating/running
+      reports using applicable controls.
+
+  - rule: >
+      All authenticated users can access the Reports module.
+
+  - rule: >
+      QA validation of the general Reports flow focuses on successful
+      page/report loading rather than validating the correctness of
+      the underlying business data.
+
+  - rule: >
+      Applicable date filters must be validated.
+
+  - rule: >
+      Applicable store filters must be validated.
+
+  - rule: >
+      Applicable category and report-specific filters must be validated.
+
+  - rule: >
+      Interactive report Actions must be validated when applicable.
+
+  - rule: >
+      Back from an individual report returns to the Reports Master Page.
+
+  - rule: >
+      Export/download validation is required only for specifically
+      designated reports, not automatically for every report.
+
+  - rule: >
+      No additional business rules were specified.
+
+unknown_business_rules:
+  - Exact report-specific authorization rules beyond the master
+    Reports access rule.
+  - Whether individual reports respect store/customer context.
+  - Exact store/customer context behavior for each report.
+  - Exact list of reports requiring export/download validation.
+  - Exact business meaning and expected data semantics of each report.
+  - Exact error behavior for invalid date/filter combinations.
+  - Exact behavior when a report returns no data.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  master_page:
+    page_id: 51
+    name: Reports
+    route: /ords/r/tjdcom/ea1/51
+
+  report_inventory:
+
+    - report_name: Order Status
+      page_id: 29
+      route: /ords/r/tjdcom/ea1/29
+      controls:
+        - report
+
+    - report_name: Request Status
+      page_id: 200
+      route: /ords/r/tjdcom/ea1/200
+      controls:
+        - report
+
+    - report_name: Logged in Users
+      page_id: 101
+      route: /ords/r/tjdcom/ea1/101
+      filters:
+        - P101_FROM_DATE
+        - P101_TO_DATE
+        - User Type
+      controls:
+        - Go
+        - Actions
+        - Back
+
+    - report_name: PDF/WhatsApp Export Report
+      page_id: 102
+      route: /ords/r/tjdcom/ea1/102
+      filters:
+        - P102_FROM_DATE
+        - P102_TO_DATE
+        - P102_STORE
+      controls:
+        - Go
+        - Search Bar
+        - Back
+
+    - report_name: Stock Check by Boutique
+      page_id: 103
+      route: /ords/r/tjdcom/ea1/103
+      filters:
+        - P103_FROM_DATE
+        - P103_TO_DATE
+      controls:
+        - Go
+        - Actions
+        - Back
+
+    - report_name: Auto STN Exception Report
+      page_id: 104
+      route: /ords/r/tjdcom/ea1/104
+      filters:
+        - P104_FROM_DATE
+      controls:
+        - Go
+        - Clear
+        - Back
+
+    - report_name: TryOn Usage
+      page_id: 55
+      route: /ords/r/tjdcom/ea1/55
+      filters:
+        - P55_FROM_DATE
+        - P55_TO_DATE
+        - P55_STORE
+      controls:
+        - Go
+        - Back
+
+    - report_name: Best Deal - Hit Rate
+      page_id: 57
+      route: /ords/r/tjdcom/ea1/57
+      filters:
+        - P57_FROM_DATE
+        - P57_TO_DATE
+      controls:
+        - Go
+        - Clear
+        - Back
+
+    - report_name: Best Deal - Complete Report
+      page_id: 56
+      route: /ords/r/tjdcom/ea1/56
+      filters:
+        - P56_FROM_DATE
+        - P56_TO_DATE
+      controls:
+        - Go
+        - Search Bar
+        - Actions
+
+    - report_name: Customer Wishlist Dashboard
+      page_id: 74
+      route: /ords/r/tjdcom/ea1/74
+      controls:
+        - dashboard
+      observed_components:
+        - Store Stock Uploaded vs Available Store
+
+    - report_name: My Store Upload Usage
+      page_id: 48
+      route: /ords/r/tjdcom/ea1/my-store-upload-usage
+      filters:
+        - P48_FROM_DATE
+        - P48_TO_DATE
+      controls:
+        - Go
+        - Back
+
+    - report_name: Estimation Slip Report
+      page_id: 87
+      route: /ords/r/tjdcom/ea1/87
+      controls:
+        - report
+
+    - report_name: Image Search Usage
+      page_id: 90
+      route: /ords/r/tjdcom/ea1/image-search-report
+      filters:
+        - P90_FROM_DATE
+        - P90_TO_DATE
+        - P90_STORE
+        - P90_CATEGORY
+      controls:
+        - Go
+        - Back
+
+    - report_name: Manual Bill Report
+      page_id: 139
+      route: /ords/r/tjdcom/ea1/manual-bill-report
+      filters:
+        - P139_FROM_DATE
+        - P139_TO_DATE
+        - P139_BILL_NO
+        - P139_POS_ORDER_NO
+        - P139_FISCAL_YEAR
+      controls:
+        - Search
+        - Clear
+
+    - report_name: Daily Order Details Report
+      route: /ords/r/tjdcom/ea1/daily-order-details-report
+      filters:
+        - Store Code
+        - Item Code
+        - Order Type
+        - Advance
+      controls:
+        - Actions
+        - Format
+
+    - report_name: QR Users Report
+      page_id: 97
+      route: /ords/r/tjdcom/ea1/qr-login-report
+      filters:
+        - P97_FROM_DATE
+        - P97_TO_DATE
+      controls:
+        - Go
+        - Actions
+        - Back
+
+    - report_name: Dreams In Gold
+      page_id: 128
+      route: /ords/r/tjdcom/ea1/128
+      controls:
+        - report
+
+    - report_name: QMS Report
+      route: /ords/r/tjdcom/ea/qms-report
+      filters:
+        - P125_FROM_DATE
+      controls:
+        - Search
+        - Actions
+      observed_state:
+        - No data found
+
+  reusable_report_patterns:
+
+    date_range:
+      description: >
+        Reports using From Date and To Date controls.
+      common_items:
+        - FROM_DATE
+        - TO_DATE
+      expected_format: DD-Mon-YYYY
+
+    date_range_store:
+      description: >
+        Reports using date range plus store selection.
+      examples:
+        - PDF/WhatsApp Export Report
+        - TryOn Usage
+        - Image Search Usage
+
+    date_store_category:
+      description: >
+        Reports using date, store, and category filtering.
+      example:
+        - Image Search Usage
+
+    business_identifier_search:
+      description: >
+        Reports using business-specific identifiers instead of
+        or in addition to date filters.
+      example:
+        - Manual Bill Report
+
+    interactive_report:
+      description: >
+        Reports exposing Actions, Format, sorting/filtering or
+        other interactive-report functionality where applicable.
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    master_reports:
+      - >
+        Use the visible report name to identify the intended report entry,
+        combined with a validated stable DOM relationship.
+
+    report_controls:
+      - >
+        Prefer stable APEX item IDs such as P101_FROM_DATE or
+        P139_BILL_NO where confirmed.
+
+    date_picker:
+      - >
+        Prefer the associated APEX page-item ID and calendar trigger
+        relationship.
+
+    actions:
+      - >
+        Use the report region's validated Actions button when applicable.
+
+  fallback_locators:
+    - >
+      Use accessible labels.
+    - >
+      Use stable APEX page-item IDs.
+    - >
+      Use validated DOM relationships.
+    - >
+      Use visible report names only when uniqueness is confirmed.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Reports
+    - Locate report by name
+    - Open report
+    - Detect report filter pattern
+    - Set From Date
+    - Set To Date
+    - Select Store
+    - Select Category
+    - Enter report-specific identifier
+    - Click Go
+    - Click Search
+    - Click Clear
+    - Open Actions
+    - Validate applicable report controls
+    - Navigate Back
+    - Return to Reports Master Page
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Identify the affected report and page.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated application user
+    - Valid date range
+    - Valid store where applicable
+    - Valid category where applicable
+    - Valid report-specific identifiers where applicable
+
+  restrictions:
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Use logical test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - Reports Master Page is available to authenticated users.
+    - Individual report authorization behavior is currently unknown.
+
+  sensitive_data:
+    - Do not store authentication secrets.
+    - Do not store session information.
+    - Avoid storing customer-sensitive report data in the KB.
+
+  validation:
+    - Verify authenticated access to Reports.
+    - Individual report authorization should be validated when
+      role-specific behavior is established.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-20260905-1735.zip
+
+  supplementary_evidence:
+    - User-provided screenshot showing Home → Reports.
+    - Detailed Browser Recorder report, interaction, DOM,
+      network and console evidence.
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Navigation evidence
+    - APEX page/item identifiers
+    - Filter interactions
+    - Report control interactions
+    - Console activity
+    - Network activity
+
+  observed_behavior:
+    - Reports Master Page opens from Home.
+    - Multiple individual report pages were visited.
+    - Date pickers were exercised.
+    - Go/Search/Clear controls were exercised where available.
+    - Interactive report Actions/Format controls were exercised
+      where available.
+    - Back navigation was exercised on applicable reports.
+    - QMS Report displayed a "No data found" state during recording.
+
+  limitations:
+    - Underlying report data correctness was not validated.
+    - Exact business meaning of individual report fields is not
+      fully established.
+    - Store/customer-context behavior is unknown.
+    - Exact list of reports requiring export validation is not defined.
+    - Exact error handling for invalid filters is unknown.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: Very High

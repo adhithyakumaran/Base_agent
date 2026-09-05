@@ -1,0 +1,317 @@
+flow_id: BF-PRODUCT-CATALOGUE-006
+
+flow_name: Product Catalogue
+
+application:
+  name: Endless Aisle
+  platform: Oracle APEX
+  application_id: 1002
+  environment: DEV/UAT
+
+purpose:
+  description: >
+    Allows authenticated users to browse available product catalogues
+    and open/download catalogue documents, primarily as PDF files.
+
+entry_point:
+  page: Home
+  navigation: >
+    Login → Home → Product Catalogue
+
+actors:
+  - Authenticated User
+
+preconditions:
+  - User is authenticated.
+  - User has access to the Product Catalogue.
+  - Application is available.
+  - Catalogue data/documents are available.
+
+pages:
+  - name: Home
+    route: /ords/r/tjdcom/ea/home
+
+  - page_id: 71
+    name: Product Catalogue
+
+  - page_id: 94
+    name: Collection Catalogue
+
+components:
+  - name: Product Catalogue
+    type: Navigation/Card
+    action: Opens the Product Catalogue page.
+
+  - name: Catalogue Card
+    type: Catalogue/Card
+    action: >
+      Opens the associated catalogue document or collection catalogue.
+
+  - name: Direct PDF Catalogue
+    type: Document
+    action: >
+      Opens the catalogue PDF in a new browser tab/window.
+
+  - name: Collection Catalogue
+    type: Internal Page
+    action: >
+      Opens a collection-specific catalogue page.
+
+  - name: Collection Catalogue Language
+    type: Link/Button
+    action: >
+      Opens the selected language version of the catalogue PDF.
+
+business_flow:
+  steps:
+    - step: 1
+      action: Navigate to Home after authentication.
+
+    - step: 2
+      action: Select Product Catalogue.
+
+    - step: 3
+      action: >
+        Verify that the Product Catalogue page displays the
+        available catalogue cards.
+
+    - step: 4
+      action: >
+        Select a catalogue card.
+
+    - step: 5
+      action: >
+        If the card is a direct catalogue, verify that the
+        corresponding PDF opens in a new browser tab/window.
+
+    - step: 6
+      action: >
+        If the card represents an internal collection catalogue,
+        verify navigation to the corresponding Collection Catalogue page.
+
+    - step: 7
+      action: >
+        Select the required catalogue/language where applicable.
+
+    - step: 8
+      action: >
+        Verify that the corresponding PDF catalogue opens.
+
+    - step: 9
+      action: >
+        Verify that the PDF corresponds to the selected catalogue
+        or language.
+
+    - step: 10
+      action: >
+        Use Back from an internal Collection Catalogue page.
+
+    - step: 11
+      action: >
+        Verify that Back returns to the Product Catalogue page.
+
+expected_success:
+  - Product Catalogue opens successfully from Home.
+  - Available catalogue cards are displayed.
+  - Users can browse the available catalogues.
+  - Users can open/download catalogue PDFs.
+  - Direct PDF catalogues open in a new browser tab/window.
+  - Collection catalogue cards open their corresponding internal
+    Collection Catalogue page.
+  - Available language versions can be selected where applicable.
+  - The resulting PDF corresponds to the selected catalogue/language.
+  - Back from an internal Collection Catalogue returns to Product Catalogue.
+  - Product Catalogue is accessible to authenticated users.
+
+observed_scenarios:
+  - scenario: Open Product Catalogue from Home
+    status: Observed
+
+  - scenario: Display catalogue cards
+    status: Observed
+
+  - scenario: Open direct catalogue PDF
+    status: Observed
+
+  - scenario: Open internal collection catalogue
+    status: Observed
+
+  - scenario: Open collection-specific PDF
+    status: Observed
+
+  - scenario: Open Varamahalakshmi language catalogue
+    status: Observed
+
+business_rules:
+  - rule: >
+      Product Catalogue allows users to browse available product catalogues.
+
+  - rule: >
+      Product Catalogue allows users to open/download catalogue documents.
+
+  - rule: >
+      Direct catalogue PDF links open the PDF in a new browser tab/window.
+
+  - rule: >
+      Collection catalogue cards navigate to their corresponding
+      internal Collection Catalogue page.
+
+  - rule: >
+      Users can select the required catalogue language where
+      multiple language versions are provided.
+
+  - rule: >
+      The selected catalogue/language must open the corresponding PDF.
+
+  - rule: >
+      Product Catalogue is available to all authenticated users.
+
+  - rule: >
+      Back from an internal Collection Catalogue returns to
+      the Product Catalogue page.
+
+  - rule: >
+      No additional business rules were specified.
+
+unknown_business_rules:
+  - Exact behavior when a catalogue PDF is unavailable or broken.
+  - Exact error message displayed for an unavailable catalogue.
+  - Whether PDF documents are physically downloaded or only opened
+    in the browser's PDF viewer.
+  - Any future catalogue-specific access restrictions.
+
+technical_metadata:
+  platform: Oracle APEX
+  application_id: 1002
+
+  pages:
+    product_catalogue: 71
+    collection_catalogue: 94
+
+  navigation:
+    entry_point: Home
+    destination: Product Catalogue
+
+  catalogue_types:
+    direct_pdf:
+      behavior: >
+        Catalogue card opens the corresponding PDF in a new
+        browser tab/window.
+
+    collection_catalogue:
+      behavior: >
+        Catalogue card opens an internal Collection Catalogue page,
+        from which the relevant catalogue/document can be selected.
+
+  observed_collection_catalogues:
+    - Metro_Rivaah
+    - Tamil
+    - Alekhya
+    - Chozha
+    - Varamahalakshmi
+
+  observed_language_variants:
+    - English
+    - Kannada
+    - Telugu
+
+automation:
+  recommended_framework: Playwright
+
+  primary_locators:
+    - >
+      Use stable APEX IDs or validated DOM attributes for
+      Product Catalogue navigation.
+
+    - >
+      Use stable catalogue-card identifiers or validated DOM
+      relationships for catalogue selection.
+
+    - >
+      Use validated identifiers for collection/language links.
+
+  fallback_locators:
+    - >
+      Use validated accessible labels, stable attributes,
+      or page-specific DOM relationships.
+
+  locator_validation:
+    rule: >
+      Every locator must resolve to exactly one intended element.
+    resolution:
+      0: Try next fallback.
+      1: Accept locator.
+      greater_than_1: Reject as ambiguous.
+
+  reusable_actions:
+    - Navigate to Product Catalogue
+    - Enumerate catalogue cards
+    - Open direct PDF catalogue
+    - Detect new browser tab/window
+    - Open Collection Catalogue
+    - Select collection
+    - Select catalogue language
+    - Validate PDF destination
+    - Navigate back to Product Catalogue
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Capture failed locator and DOM/page evidence.
+      - Search for a validated alternative locator.
+      - Validate uniqueness.
+      - Use fallback only when safely validated.
+      - Record locator degradation.
+      - Propose permanent locator update.
+      - Require human approval before permanent automation modification.
+
+test_data:
+  required:
+    - Valid authenticated application user
+    - Available catalogue
+    - Available collection/language where applicable
+
+  restrictions:
+    - Do not store credentials.
+    - Do not store session IDs.
+    - Do not store cookies or authentication tokens.
+    - Use logical catalogue/test-data references.
+
+security:
+  authentication_required: true
+
+  authorization:
+    - Product Catalogue is available to authenticated users.
+
+  sensitive_data:
+    - No authentication secrets stored in KB.
+    - No session information stored in KB.
+
+  validation:
+    - Verify that catalogue access is available only within
+      an authenticated application session.
+
+evidence:
+  source:
+    type: Browser Recorder
+    recording: browser-recording-endless-aisle-log-in-20260905-1714.zip
+
+  supplementary_evidence:
+    - User-provided screenshot showing Home and Product Catalogue entry point.
+
+  evidence_available:
+    - Screenshots
+    - DOM snapshots
+    - User interactions
+    - Navigation evidence
+    - Catalogue/PDF navigation evidence
+
+  limitations:
+    - Exact PDF failure/error behavior was not observed.
+    - Catalogue availability rules beyond authentication were not specified.
+
+status:
+  overall: READY
+  confidence: High
+  business_coverage: High
+  technical_coverage: High

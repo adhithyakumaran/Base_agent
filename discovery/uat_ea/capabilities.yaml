@@ -20,6 +20,7 @@ capabilities:
     status: READY
     flows:
       - BF-PRODUCT-004  # View Product — READY
+      - BF-PRODUCT-CATALOGUE-006  # Product Catalogue — READY
 
   Pricing:
     status: DRAFT
@@ -52,9 +53,10 @@ capabilities:
       - BF-RIVAAH-005-05    # Rivaah Wedding Wishlist — PARTIAL
 
   Reporting:
-    status: DRAFT
+    status: READY
     flows:
-      - BF-REPORTS-012
+      - BF-REPORTS-007      # Reports — READY
+      - BF-REPORTS-012      # superseded by BF-REPORTS-007
 
   Checkout:
     status: NOT_STARTED
