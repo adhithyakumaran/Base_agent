@@ -13,9 +13,9 @@ Your **3 manually formatted flow KBs** are exactly what the finalized architectu
 | Metric | Before | After (Sep 5 update) |
 |---|---|---|
 | Canonical format | Clumsy JSON (page/flow seeds) | **Flow-centric YAML** |
-| SME-ready flows | 0 | **11 READY + 1 PARTIAL** |
-| Draft migrated flows | — | **8 DRAFT** |
-| Superseded legacy flows | — | **4** |
+| SME-ready flows | 0 | **13 READY + 1 PARTIAL** |
+| Draft migrated flows | — | **7 DRAFT** |
+| Superseded legacy flows | — | **5** |
 | Legacy JSON archive | Primary | **Archived** (`kb/README.md`) |
 
 ---
@@ -76,6 +76,8 @@ discovery/uat_ea/
 | **BF-PRODUCT-003** | Search Product | **READY** | SME manual KB |
 | **BF-PRODUCT-004** | View Product | **READY** | SME manual KB (F004) |
 | **BF-PRODUCT-CATALOGUE-006** | Product Catalogue | **READY** | Browser Recorder + SME |
+| **BF-BEST-DEAL-008** | Best Deal | **READY** | Browser Recorder + SME |
+| **BF-ADMINISTRATION-009** | Administration | **READY** | Browser Recorder + SME |
 | **BF-REPORTS-007** | Reports | **READY** | Browser Recorder + SME |
 | **BF-RIVAAH-005** | Rivaah Main Menu | **READY** | SME manual KB (F005) |
 | **BF-RIVAAH-005-01** | Wedding Trousseau Styling | **READY** | Browser Recorder + SME |
@@ -87,7 +89,7 @@ discovery/uat_ea/
 | BF-LOGIN-HOME-005 | Login To Home | DRAFT | Superseded by BF-LOGIN-001 |
 | BF-STOCKVIS-006 | Stock Visibility | DRAFT | Legacy migration |
 | BF-ITEMSEARCH-007 | Item SKU (legacy path) | SUPERSEDED | → BF-PRODUCT-003 |
-| BF-BESTDEAL-008 | Best Deal Detail | DRAFT | Legacy migration |
+| BF-BESTDEAL-008 | Best Deal Detail | SUPERSEDED | → BF-BEST-DEAL-008 |
 | BF-BROWSE-009 | Browse All Products | DRAFT | Legacy migration |
 | BF-CAT-EAR-010 | Category Earrings | DRAFT | Legacy migration |
 | BF-ITEMCODE-011 | Item Code Search | DRAFT | Legacy migration |
@@ -96,7 +98,7 @@ discovery/uat_ea/
 | BF-RIVAAH-TRO-014 | Rivaah Trousseau | SUPERSEDED | → BF-RIVAAH-005-01 |
 | BF-STD-BROWSE-015 | Standard Product Browse | DRAFT | Legacy migration |
 
-**Total flows in catalog:** 24 (11 READY · 1 PARTIAL · 8 DRAFT · 4 SUPERSEDED)
+**Total flows in catalog:** 26 (13 READY · 1 PARTIAL · 7 DRAFT · 5 SUPERSEDED)
 
 ---
 
@@ -110,7 +112,7 @@ Based on clumsy JSON only — flow metadata was shallow.
 
 | Layer | Before | Now | Notes |
 |---|---:|---:|---|
-| Flow-centric KB (READY quality) | 5% | **60%** | 11 READY + 1 PARTIAL at full proposal depth |
+| Flow-centric KB (READY quality) | 5% | **65%** | 13 READY + 1 PARTIAL at full proposal depth |
 | Locator + self-heal metadata | 10% | **55%** | Primary+3 fallbacks on READY flows; Rivaah menu locators observed |
 | Business rules (numbered) | 15% | **60%** | 50+ rules across READY flows |
 | Capability map | 0% | **35%** | Rivaah + Product Management capabilities added |
@@ -128,9 +130,11 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Adhoc param: "product ID X in search" | Yes — BF-PRODUCT-003 + `test_data` refs |
 | View product detail / out-of-stock | Yes — BF-PRODUCT-004 |
 | Product catalogue PDF browse | Yes — BF-PRODUCT-CATALOGUE-006 |
+| Best Deal browse + discount detail | Yes — BF-BEST-DEAL-008 |
+| Administration sanity (read-only guardrails) | Yes — BF-ADMINISTRATION-009 |
 | Reports master + 18 report pages | Yes — BF-REPORTS-007 |
 | Rivaah module sanity (6 sub-flows) | Partial — BF-RIVAAH-005 subtree (005-05 PARTIAL) |
-| LLM test generation from flow knowledge | Yes — for 11 READY flows |
+| LLM test generation from flow knowledge | Yes — for 13 READY flows |
 | Self-healing locator policy | Yes — defined in YAML |
 | Morning sanity (all suites) | Partial — need suites built from READY flows |
 | Incident: "payment failing" | No — Payment capability empty |
@@ -143,7 +147,7 @@ Based on clumsy JSON only — flow metadata was shallow.
 | Priority | Gap | Action |
 |---|---|---|
 | P0 | **Payment / Checkout / Customer Order** flows missing | SME session — no capability for incident orchestration |
-| P1 | **8 DRAFT flows** need enrichment to READY | Use BF-LOGIN-001 as template; pull locators from legacy JSON + recordings |
+| P1 | **7 DRAFT flows** need enrichment to READY | Use BF-LOGIN-001 as template; pull locators from legacy JSON + recordings |
 | P1 | **BF-RIVAAH-005-05** (Wishlist) | PARTIAL — SME session needed for post-customer-selection behavior |
 | P1 | Find Price (BF-FINDPRICE-004) | High client value — enrich next after search |
 | P2 | Home module sanity map | Link 20 home modules → capabilities in `capabilities.yaml` |
@@ -187,7 +191,7 @@ No architecture change — this KB reformat **implements** the locked proposal:
 
 - **Your 3 manual KBs are the correct format** — imported and locked as canonical.  
 - **Old KB was rich but clumsy** — now organized: READY SME flows + DRAFT migrations + legacy archive.  
-- **Readiness improved ~45% → ~70%** toward the finalized proposal model.  
-- **Biggest remaining gap:** Payment/Checkout flows, completing BF-RIVAAH-005-05, and enriching 8 DRAFT flows to READY standard.
+- **Readiness improved ~45% → ~75%** toward the finalized proposal model.  
+- **Biggest remaining gap:** Payment/Checkout flows, completing BF-RIVAAH-005-05, and enriching 7 DRAFT flows to READY standard.
 
 No orchestrator, automation suite, or console changes were made in this task — KB and documentation only.
