@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
+import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -93,21 +95,40 @@ class PlaywrightRunner:
                 ok=False,
                 message=f"missing automation dir: {cwd}",
             )
+        if not (cwd / "node_modules").exists():
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=False,
+                message=(
+                    "automation dependencies missing — run: cd automation && npm ci && "
+                    "npx playwright install chromium"
+                ),
+            )
 
         env = os.environ.copy()
         for key, value in (params or {}).items():
             env[f"QA_PARAM_{str(key).upper()}"] = str(value)
 
-        parts = cmd.split()
+        resolved = _resolve_command(cmd)
+        if isinstance(resolved, str) and resolved.startswith("ERROR:"):
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=False,
+                message=resolved,
+            )
+        use_shell = isinstance(resolved, str)
         try:
             proc = subprocess.run(
-                parts,
+                resolved,
                 cwd=str(cwd),
                 capture_output=True,
                 text=True,
                 timeout=self.config.timeout_s,
                 check=False,
                 env=env,
+                shell=use_shell,
             )
             ok = proc.returncode == 0
             meta: dict[str, Any] = {
@@ -174,3 +195,22 @@ class PlaywrightRunner:
             if ref.startswith("BF-"):
                 return ref
         return self.config.flow_id
+
+
+def _resolve_command(cmd: str) -> list[str] | str:
+    """Resolve npm on Windows (npm.cmd) and return argv or shell string."""
+    parts = cmd.split()
+    if not parts or parts[0] != "npm":
+        return parts
+    npm = shutil.which("npm") or shutil.which("npm.cmd")
+    if not npm:
+        return (
+            "ERROR: npm not found on PATH — install Node.js LTS from https://nodejs.org "
+            "and restart the terminal"
+        )
+    if sys.platform == "win32":
+        # Windows subprocess needs shell or npm.cmd; quoting handles spaces in paths.
+        rest = subprocess.list2cmdline(parts[1:])
+        return subprocess.list2cmdline([npm] + ([rest] if rest else []))
+    parts[0] = npm
+    return parts
