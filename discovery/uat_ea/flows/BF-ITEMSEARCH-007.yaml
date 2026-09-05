@@ -1,0 +1,6 @@
+flow_id: BF-ITEMSEARCH-007
+flow_name: Item SKU Search (legacy path)
+status:
+  overall: SUPERSEDED
+  superseded_by: BF-PRODUCT-003
+  note: Canonical product search KB is BF-PRODUCT-003

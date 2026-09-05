@@ -1,0 +1,39 @@
+flow_id: BF-STOCKVIS-006
+flow_name: Stock Visibility Search
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Inventory
+  status: Draft
+
+purpose:
+  Search stock visibility by SKU.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/gold-coin-stock-visibility
+
+pages:
+  - Home
+  - Stock Visibility
+
+business_flow:
+  - Open stock visibility module.
+  - Enter P47_SKU.
+  - Search.
+
+components:
+  P47_SKU:
+    status: MigratedFromLegacy
+    note: Enrich with locators, rules, and automation block per KB_FORMAT.md
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

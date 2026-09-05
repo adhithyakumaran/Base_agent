@@ -1,0 +1,37 @@
+flow_id: BF-RIVAAH-TRO-014
+flow_name: Rivaah Wedding Trousseau
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Product Browse
+  status: Draft
+
+purpose:
+  Browse wedding trousseau flow.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/home
+
+pages:
+  - home
+  - rivaah
+  - wedding-trousseau
+  - wedding-trousseau-details1
+
+business_flow:
+  - home: rivaah
+  - rivaah: open_card
+  - wedding-trousseau: optional_in_store_trousseau
+  - wedding-trousseau-details1: view_detail
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

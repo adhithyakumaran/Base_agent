@@ -1,0 +1,34 @@
+flow_id: BF-ITEMCODE-011
+flow_name: Item Code Or QR Search
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Product Search
+  status: Draft
+
+purpose:
+  Search by item code or QR.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/home
+
+pages:
+  - home
+  - product-detail-item-search
+
+business_flow:
+  - home: open_item_search
+  - product-detail-item-search: enter_P6_SKU
+  - product-detail-item-search: search_or_scan
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

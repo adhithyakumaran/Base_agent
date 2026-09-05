@@ -1,0 +1,563 @@
+flow_id: BF-LOGIN-001
+
+flow_name: User Login
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+  login_page_id: 9999
+
+purpose:
+  Authenticate an authorized Endless Aisle user and provide access
+  to the application.
+
+entry_point:
+  page: Login
+  route: /ords/r/tjdcom/ea/login
+
+actors:
+  - Authorized application user
+
+preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User has valid test credentials.
+  - User is not currently authenticated.
+
+pages:
+  - Login
+  - Home
+
+
+components:
+
+  username:
+    type: input
+    html_tag: INPUT
+    apex_item: P9999_USERNAME
+
+    observed_attributes:
+      id: P9999_USERNAME
+      name: P9999_USERNAME
+      type: text
+      placeholder: Username
+      data_enter_submit: true
+      input_validation:
+        handler: "this.value = this.value.replace(/[^0-9a-zA-Z_]/g, '');"
+        allowed_characters:
+          - 0-9
+          - a-z
+          - A-Z
+          - underscore
+
+    locators:
+
+      primary:
+        strategy: id
+        value: "#P9999_USERNAME"
+        source: UAT_DOM_INSPECTION
+        status: Observed
+
+      fallback_1:
+        strategy: name
+        value: 'input[name="P9999_USERNAME"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_2:
+        strategy: placeholder
+        value: 'input[placeholder="Username"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_3:
+        strategy: type_and_name
+        value: 'input[type="text"][name="P9999_USERNAME"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+
+  password:
+    type: password
+    html_tag: INPUT
+    apex_item: P9999_PASSWORD
+
+    observed_attributes:
+      id: P9999_PASSWORD
+      name: P9999_PASSWORD
+      type: password
+      autocomplete: current-password
+      data_enter_submit: true
+
+    locators:
+
+      primary:
+        strategy: id
+        value: "#P9999_PASSWORD"
+        source: UAT_DOM_INSPECTION
+        status: Observed
+
+      fallback_1:
+        strategy: name
+        value: 'input[name="P9999_PASSWORD"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_2:
+        strategy: autocomplete
+        value: 'input[autocomplete="current-password"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_3:
+        strategy: type_and_name
+        value: 'input[type="password"][name="P9999_PASSWORD"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+
+  remember_my_credential:
+    type: checkbox
+    html_tag: INPUT
+    apex_item: P9999_REMEMBER
+    status: Available
+
+    observed_attributes:
+      id: P9999_REMEMBER
+      type: checkbox
+      value: Y
+      aria_label: Remember My Credential
+      data_unchecked_value: N
+
+    locators:
+
+      primary:
+        strategy: id
+        value: "#P9999_REMEMBER"
+        source: UAT_DOM_INSPECTION
+        status: Observed
+
+      fallback_1:
+        strategy: aria_label
+        value: 'input[aria-label="Remember My Credential"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_2:
+        strategy: type_and_id
+        value: 'input[type="checkbox"][id="P9999_REMEMBER"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_3:
+        strategy: value_and_type
+        value: 'input[type="checkbox"][value="Y"]'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+        validation_required: true
+
+
+  login_button:
+    type: button
+    html_tag: BUTTON
+    id: login-btn
+    action: LOGIN
+
+    observed_attributes:
+      id: login-btn
+      type: button
+      class:
+        - t-Button
+        - t-Button--hot
+
+    locators:
+
+      primary:
+        strategy: id
+        value: "#login-btn"
+        source: UAT_DOM_INSPECTION
+        status: Observed
+
+      fallback_1:
+        strategy: type_and_id
+        value: 'button[type="button"]#login-btn'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_2:
+        strategy: class_and_id
+        value: 'button.t-Button--hot#login-btn'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+
+      fallback_3:
+        strategy: class
+        value: 'button.t-Button--hot'
+        source: UAT_DOM_INSPECTION
+        status: Candidate
+        validation_required: true
+
+
+business_flow:
+
+  - Open Login page.
+  - Locate Username field using locator resolution strategy.
+  - Enter username.
+  - Locate Password field using locator resolution strategy.
+  - Enter password.
+  - Optionally interact with Remember My Credential.
+  - Click LOGIN.
+  - Application validates the supplied credentials.
+  - On successful authentication, user is taken to Home.
+
+
+expected_success:
+
+  condition:
+    - Valid test credentials are supplied.
+
+  result:
+    - User is authenticated.
+    - Login page is exited.
+    - User is navigated to Home.
+    - Endless Aisle application becomes available to the authenticated user.
+
+
+observed_invalid_login:
+
+  condition:
+    - Invalid credentials are supplied.
+
+  result:
+    - Authentication does not succeed.
+    - User remains/reaches the Login page.
+    - An invalid-login notification/retry message is displayed.
+
+
+business_rules:
+
+  BR-LOGIN-001:
+    rule: Valid credentials must authenticate an authorized user.
+    status: Confirmed/Observed
+
+  BR-LOGIN-002:
+    rule: Successful authentication navigates the user to Home.
+    status: Confirmed/Observed
+
+  BR-LOGIN-003:
+    rule: Invalid credentials must not authenticate the user.
+    status: Confirmed/Observed
+
+  BR-LOGIN-004:
+    rule: Invalid login provides feedback to the user.
+    status: Observed
+
+  BR-LOGIN-005:
+    rule: Remember My Credential is available on the Login page.
+    status: Observed
+
+  BR-LOGIN-006:
+    rule: Username input accepts alphanumeric characters and underscores.
+    status: Confirmed/Observed
+
+  BR-LOGIN-007:
+    rule: Characters outside the allowed username character set are
+      removed by the observed client-side input handler.
+    status: Confirmed/Observed
+
+  BR-LOGIN-008:
+    rule: Username and Password fields support framework-level
+      Enter-key submission.
+    status: Observed
+
+
+account_lock:
+
+  status: Unknown
+
+  rule: >
+    No confirmed account-locking business rule is currently available.
+
+  qa_instruction:
+    - Do not assume an account-lock threshold.
+    - Do not generate account-lock test cases until the
+      client/application provides the expected behavior.
+
+
+remember_my_credential:
+
+  status: Partially Known
+
+  known:
+    - The option exists on the Login page.
+    - The option can be interacted with.
+    - Checked state uses value Y.
+    - Unchecked state uses data-unchecked-value N.
+
+  unknown:
+    - Exact persistence behavior.
+    - Duration of remembered credentials.
+    - Whether credentials are stored locally, server-side,
+      or through another mechanism.
+
+  qa_instruction:
+    - Do not invent expected persistence behavior.
+    - Test state transitions only where the expected business
+      behavior is known.
+
+
+username_validation:
+
+  status: Confirmed/Observed
+
+  allowed_characters:
+    - digits
+    - lowercase_letters
+    - uppercase_letters
+    - underscore
+
+  observed_behavior:
+    invalid_characters:
+      action: Removed from username input by client-side handler
+
+  qa_instruction:
+    - Generate username validation tests from this observed behavior.
+    - Verify that unsupported characters are removed from the input.
+    - Do not infer additional username business rules.
+
+
+enter_key_submission:
+
+  status: Observed
+
+  components:
+    - Username
+    - Password
+
+  attribute:
+    data-enter-submit: true
+
+  qa_instruction:
+    - The automation agent may validate Enter-key submission.
+    - Expected authentication result should follow the same
+      credential validation rules as normal Login submission.
+
+
+unknown_business_rules:
+
+  - Empty username behavior
+  - Empty password behavior
+  - Both fields empty behavior
+  - Password complexity rules
+  - Account-lock threshold
+  - Account unlock behavior
+  - Session timeout behavior
+  - Role-based access after login
+  - Remember My Credential persistence semantics
+  - Forgot Password business rules
+  - Exact username length restrictions
+  - Exact password length restrictions
+  - Password character requirements
+
+
+technical_metadata:
+
+  apex:
+
+    application_id: 1002
+
+    login_page_id: 9999
+
+    page_items:
+      - P9999_USERNAME
+      - P9999_PASSWORD
+      - P9999_REMEMBER
+      - P9999_ACCOUNT_LOCKED
+      - P0_CUST_ID
+
+  observed_dom_components:
+
+    username:
+      id: P9999_USERNAME
+      name: P9999_USERNAME
+      type: text
+      placeholder: Username
+
+    password:
+      id: P9999_PASSWORD
+      name: P9999_PASSWORD
+      type: password
+      autocomplete: current-password
+
+    remember_my_credential:
+      id: P9999_REMEMBER
+      type: checkbox
+      value: Y
+      aria_label: Remember My Credential
+      data_unchecked_value: N
+
+    login_button:
+      id: login-btn
+      type: button
+      class:
+        - t-Button
+        - t-Button--hot
+
+  observed_apex_operations:
+    - wwv_flow.accept
+    - wwv_flow.ajax
+
+  login_operation:
+    request: LOGIN
+
+  successful_destination:
+    page: Home
+    route: /ords/r/tjdcom/ea/home
+
+
+automation:
+
+  recommended_framework: Playwright
+
+  locator_strategy:
+
+    resolution_order:
+      - primary
+      - fallback_1
+      - fallback_2
+      - fallback_3
+
+    validation:
+
+      required_match_count: 1
+
+      zero_matches:
+        action: Try next locator
+
+      multiple_matches:
+        action: Reject locator as ambiguous and try next locator
+
+      single_match:
+        action: Accept locator
+
+    degradation_tracking:
+
+      enabled: true
+      record_failed_primary: true
+      record_successful_fallback: true
+
+    self_healing:
+
+      enabled: true
+
+      trigger:
+        - Primary locator fails and fallback locator succeeds.
+
+      actions:
+        - Continue test execution using validated fallback.
+        - Record failed primary locator.
+        - Record successful fallback locator.
+        - Capture current DOM evidence.
+        - Capture screenshot/evidence where applicable.
+        - Compare current element attributes with KB.
+        - Generate locator update recommendation.
+
+      permanent_update:
+        requires_validation_or_approval: true
+
+  reusable_actions:
+
+    - navigate_to_login
+    - locate_username
+    - enter_username
+    - locate_password
+    - enter_password
+    - locate_remember_my_credential
+    - set_remember_my_credential
+    - locate_login_button
+    - click_login
+    - submit_using_enter
+    - verify_home_page
+    - verify_invalid_login
+    - capture_login_evidence
+
+
+test_data:
+
+  valid_credentials:
+    source: UAT/DEV test credentials
+    value: DO_NOT_STORE_IN_KB
+
+  invalid_credentials:
+    source: Generated/test data
+    value: DO_NOT_STORE_REAL_CREDENTIALS
+
+
+security:
+
+  sensitive_data_policy:
+
+    - Do not store usernames/passwords in the KB unless explicitly
+      required and securely referenced.
+    - Do not store session IDs.
+    - Do not store authentication tokens.
+    - Do not store cookies.
+    - Do not store raw protected request/response values.
+    - Do not store secrets captured in browser recordings.
+    - Store logical test-data references instead.
+
+
+evidence:
+
+  sources:
+
+    - Browser interaction recording
+    - Playwright trace/business-rule recording
+    - UAT DOM inspection
+    - DOM/component information
+    - Navigation information
+    - Network activity captured during login
+
+  captured_findings:
+
+    - Username DOM attributes identified.
+    - Password DOM attributes identified.
+    - Remember My Credential DOM attributes identified.
+    - Login button DOM attributes identified.
+    - Username client-side input filtering identified.
+    - Enter-key submission attribute identified.
+    - Remember My Credential checked/unchecked values identified.
+
+  sanitization_required:
+
+    - Credentials
+    - Session identifiers
+    - Authentication tokens
+    - Cookies
+    - Protected request/response data
+
+
+status:
+
+  overall: READY
+
+  confidence:
+
+    business_flow: High
+    observed_behavior: High
+    technical_metadata: High
+    primary_locators: High
+    fallback_locator_candidates: High
+    fallback_locator_uniqueness: Requires runtime validation
+
+  business_rule_gaps: Present
+
+  automation_readiness: High
+
+  locator_resilience:
+
+    strategy: Primary plus three fallback locators
+
+    enabled: true
+
+    runtime_validation_required: true

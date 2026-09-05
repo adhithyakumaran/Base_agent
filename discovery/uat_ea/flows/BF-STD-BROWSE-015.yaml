@@ -1,0 +1,39 @@
+flow_id: BF-STD-BROWSE-015
+flow_name: Standard Product Browse
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Product Browse
+  status: Draft
+
+purpose:
+  Standard product browse map.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/home
+
+pages:
+  - home
+  - product-detail
+  - select-category
+  - standard-product-search
+
+business_flow:
+  - home: open_all_products
+  - select-category: pick_category_or_skip
+  - standard-product-search: browse_gallery
+  - product-detail: open_product
+  - product-detail: optional_size_variants
+  - standard-product-search: back_to_products
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

@@ -1,0 +1,68 @@
+schema: flow_kb_index_v1
+application: Endless Aisle
+count: 15
+sme_ready:
+  - BF-LOGIN-001
+  - BF-LOGOUT-002
+  - BF-PRODUCT-003
+flows:
+  - id: BF-BESTDEAL-008
+    file: BF-BESTDEAL-008.yaml
+    name: Best Deal Product Detail
+    status: DRAFT
+  - id: BF-BROWSE-009
+    file: BF-BROWSE-009.yaml
+    name: Browse All Products
+    status: DRAFT
+  - id: BF-CAT-EAR-010
+    file: BF-CAT-EAR-010.yaml
+    name: Category Earrings Browse
+    status: DRAFT
+  - id: BF-FINDPRICE-004
+    file: BF-FINDPRICE-004.yaml
+    name: Find Price Lookup
+    status: DRAFT
+  - id: BF-ITEMCODE-011
+    file: BF-ITEMCODE-011.yaml
+    name: Item Code Or QR Search
+    status: DRAFT
+  - id: BF-ITEMSEARCH-007
+    file: BF-ITEMSEARCH-007.yaml
+    name: Item SKU Search (legacy path)
+    status: SUPERSEDED
+  - id: BF-LOGIN-001
+    file: BF-LOGIN-001.yaml
+    name: User Login
+    status: READY
+  - id: BF-LOGIN-HOME-005
+    file: BF-LOGIN-HOME-005.yaml
+    name: Login To Home (superseded)
+    status: DRAFT
+  - id: BF-LOGOUT-002
+    file: BF-LOGOUT-002.yaml
+    name: User Logout
+    status: READY
+  - id: BF-PRODUCT-003
+    file: BF-PRODUCT-003.yaml
+    name: Search Product
+    status: READY
+  - id: BF-REPORTS-012
+    file: BF-REPORTS-012.yaml
+    name: Reports Submenu Browse
+    status: DRAFT
+  - id: BF-RIVAAH-013
+    file: BF-RIVAAH-013.yaml
+    name: Rivaah Wedding Browse
+    status: DRAFT
+  - id: BF-RIVAAH-TRO-014
+    file: BF-RIVAAH-TRO-014.yaml
+    name: Rivaah Wedding Trousseau
+    status: DRAFT
+  - id: BF-STD-BROWSE-015
+    file: BF-STD-BROWSE-015.yaml
+    name: Standard Product Browse
+    status: DRAFT
+  - id: BF-STOCKVIS-006
+    file: BF-STOCKVIS-006.yaml
+    name: Stock Visibility Search
+    status: DRAFT

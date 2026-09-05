@@ -1,0 +1,55 @@
+# Business Capabilities → Flows (draft map)
+
+**Application:** Endless Aisle · **Environment:** DEV/UAT
+
+```yaml
+capabilities:
+  Authentication:
+    status: READY
+    flows:
+      - BF-LOGIN-001    # User Login — READY
+      - BF-LOGOUT-002   # User Logout — READY
+
+  Product Search:
+    status: READY
+    flows:
+      - BF-PRODUCT-003  # Search Product — READY
+      - BF-ITEMSEARCH-007  # superseded by BF-PRODUCT-003
+
+  Pricing:
+    status: DRAFT
+    flows:
+      - BF-FINDPRICE-004
+
+  Inventory:
+    status: DRAFT
+    flows:
+      - BF-STOCKVIS-006
+
+  Product Browse:
+    status: DRAFT
+    flows:
+      - BF-BESTDEAL-008
+      - BF-BROWSE-009
+      - BF-CAT-EAR-010
+      - BF-RIVAAH-013
+      - BF-RIVAAH-TRO-014
+      - BF-STD-BROWSE-015
+
+  Reporting:
+    status: DRAFT
+    flows:
+      - BF-REPORTS-012
+
+  Checkout:
+    status: NOT_STARTED
+    flows: []
+    note: Customer Order / payment chain — gap for SME
+
+  Payment:
+    status: NOT_STARTED
+    flows: []
+    note: Required for incident-style multi-suite orchestration
+```
+
+This file feeds the future knowledge graph (`Capability → Flow → Suite`).

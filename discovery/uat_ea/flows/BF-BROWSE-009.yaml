@@ -1,0 +1,33 @@
+flow_id: BF-BROWSE-009
+flow_name: Browse All Products
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Product Browse
+  status: Draft
+
+purpose:
+  Navigate all products category browse.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/home
+
+pages:
+  - home
+  - select-category
+
+business_flow:
+  - home: open_all_products
+  - select-category: select_or_skip
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

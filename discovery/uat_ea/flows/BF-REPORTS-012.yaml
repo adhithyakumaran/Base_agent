@@ -1,0 +1,35 @@
+flow_id: BF-REPORTS-012
+flow_name: Reports Submenu Browse
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Reporting
+  status: Draft
+
+purpose:
+  Open and browse reports submenu.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/ea1/200|101|102|57
+
+pages:
+  - ea1/200|101|102|57
+  - ea1/51
+  - home
+
+business_flow:
+  - home: reports
+  - ea1/51: open_report_type
+  - ea1/200|101|102|57: view_report
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

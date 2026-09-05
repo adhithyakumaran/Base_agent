@@ -1,0 +1,430 @@
+flow_id: BF-PRODUCT-003
+
+flow_name: Search Product
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+  search_page_id: 6
+
+purpose:
+  Search for a product using its 14-digit item code or QR code and
+  display the product and applicable stock information for the
+  current store/customer context.
+
+entry_point:
+  page: Product Search
+  route: /ords/r/tjdcom/ea/product-search
+
+actors:
+  - Authenticated application user
+
+preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User has access to Product Search.
+  - Current store/customer context is available.
+
+pages:
+  - Product Search
+  - Product Detail
+
+components:
+  product_search_input:
+    type: input
+    apex_item: P6_SKU
+    attributes:
+      type: text
+      name: P6_SKU
+      placeholder: "Enter item code or scan the QR"
+      data_enter_submit: "true"
+    locator:
+      primary:
+        strategy: css
+        value: "#P6_SKU"
+        source: DOM inspection
+        status: Observed
+      fallback_1:
+        strategy: css
+        value: "input[name='P6_SKU']"
+        source: Observed DOM attribute
+        status: Candidate
+      fallback_2:
+        strategy: css
+        value: "input[placeholder='Enter item code or scan the QR']"
+        source: Observed DOM attribute
+        status: Candidate
+      fallback_3:
+        strategy: css
+        value: "input[type='text'][name='P6_SKU']"
+        source: Observed DOM attributes
+        status: Candidate
+
+  qr_scan_button:
+    type: button
+    id: B24029796092184015
+    action: Scan
+    attributes:
+      title: Scan
+      aria_label: Scan
+    locator:
+      primary:
+        strategy: css
+        value: "#B24029796092184015"
+        source: DOM inspection
+        status: Observed
+      fallback_1:
+        strategy: css
+        value: "button[aria-label='Scan']"
+        source: Observed DOM attribute
+        status: Candidate
+      fallback_2:
+        strategy: css
+        value: "button[title='Scan']"
+        source: Observed DOM attribute
+        status: Candidate
+      fallback_3:
+        strategy: css
+        value: "button#B24029796092184015"
+        source: Observed DOM attribute
+        status: Candidate
+
+  search_button:
+    type: button
+    id: btn_search
+    action: Search
+    attributes:
+      title: Search
+      aria_label: Search
+    locator:
+      primary:
+        strategy: css
+        value: "#btn_search"
+        source: DOM inspection
+        status: Observed
+      fallback_1:
+        strategy: css
+        value: "button[aria-label='Search']"
+        source: Observed DOM attribute
+        status: Candidate
+      fallback_2:
+        strategy: css
+        value: "button[title='Search']"
+        source: Observed DOM attribute
+        status: Candidate
+      fallback_3:
+        strategy: css
+        value: "button#btn_search"
+        source: Observed DOM attribute
+        status: Candidate
+
+business_flow:
+  - User opens Product Search.
+  - User enters a 14-digit item code or scans the product QR code.
+  - QR scanning populates/provides the product item code.
+  - User initiates Search.
+  - Application searches for the product.
+  - Application evaluates the product against the current
+    store/customer context.
+  - If the product is found, product and applicable stock information
+    are displayed.
+  - If the product is not available in the current store/customer
+    context, the applicable availability status is displayed.
+  - User can proceed to Product Detail when applicable.
+
+expected_success:
+  condition:
+    - A valid 14-digit item code is supplied or a valid product QR
+      code is scanned.
+    - The product is valid for the current store/customer context.
+  result:
+    - The application identifies the requested product.
+    - Product information is displayed.
+    - Applicable stock information is displayed.
+    - The user can access the applicable product details.
+
+observed_invalid_search:
+  condition:
+    - The supplied product/item code does not identify a valid product.
+  result:
+    - Product search does not proceed to a valid product result.
+    - User remains on the Product Search flow.
+    - An appropriate validation/error state is expected.
+    status: Business behavior confirmed as invalid search;
+            exact UI message requires runtime validation.
+
+observed_out_of_stock:
+  condition:
+    - The product exists but is not available in the relevant
+      store/factory stock context.
+  result:
+    - Product information is displayed.
+    - The application indicates that the product is not in stock.
+    - A no-stock state may provide an option to proceed to the
+      applicable production-order process.
+  status: Confirmed/Observed
+
+business_rules:
+  BR-PRODUCT-001:
+    rule: Product search accepts a 14-digit item code or a product QR code.
+    status: Confirmed
+
+  BR-PRODUCT-002:
+    rule: QR scanning is functionally equivalent to providing the
+      corresponding item code for product search.
+    status: Confirmed
+
+  BR-PRODUCT-003:
+    rule: An empty product search must not be submitted as a valid search.
+    status: Confirmed
+
+  BR-PRODUCT-004:
+    rule: A product search must be evaluated against the current
+      store/customer context.
+    status: Confirmed
+
+  BR-PRODUCT-005:
+    rule: When a valid product is found, product and applicable
+      stock information must be displayed.
+    status: Confirmed
+
+  BR-PRODUCT-006:
+    rule: When a product is out of stock, the product must still be
+      displayed with the applicable out-of-stock status.
+    status: Confirmed
+
+  BR-PRODUCT-007:
+    rule: An invalid/non-existent product code must not produce a
+      valid product result.
+    status: Confirmed
+
+  BR-PRODUCT-008:
+    rule: Product search can be initiated through the Search button.
+    status: Confirmed/Observed
+
+  BR-PRODUCT-009:
+    rule: The product search input supports Enter-key submission.
+    status: Confirmed/Observed
+
+unknown_business_rules:
+  - Exact error message for invalid/non-existent product code
+  - Exact validation message for empty search
+  - Whether the 14-digit code must contain only numeric characters
+  - Whether leading/trailing spaces are accepted or trimmed
+  - Case-sensitivity rules for scanned/manual values, if applicable
+  - Exact rules determining product visibility for different customer contexts
+  - Exact rules determining store-specific stock availability
+  - Behavior when QR scanning fails
+  - Behavior when an invalid QR code is scanned
+  - Maximum number/frequency of search attempts
+  - Network/API failure behavior during product search
+
+technical_metadata:
+  apex:
+    application_id: 1002
+    search_page_id: 6
+
+    page_items:
+      - P6_SKU
+      - P6_ITEM
+      - P6_CFA_CODE
+      - P6_EXCLUDE_AUTOSTN
+      - P6_BEST_DEAL_CHK
+      - P6_ITEM_CHK
+      - P6_IMAGE_URL
+
+  page:
+    name: Product Search
+    page_id: 6
+    html_class: page-6
+
+  observed_components:
+    product_search_input:
+      apex_item: P6_SKU
+      id: P6_SKU
+      name: P6_SKU
+
+    qr_scan_button:
+      id: B24029796092184015
+      title: Scan
+      aria_label: Scan
+
+    search_button:
+      id: btn_search
+      title: Search
+      aria_label: Search
+
+  observed_behavior:
+    enter_key:
+      behavior:
+        - Convert search value to uppercase.
+        - Trigger the Search button.
+        - Prevent default Enter-key behavior.
+
+    search_submission:
+      request: Search
+      validation: true
+
+  observed_stock_state:
+    - Sold Out
+    - No Stock available in Store and Factory
+
+  observed_navigation:
+    product_search:
+      page: Product Search
+      page_id: 6
+
+    product_detail:
+      page: Product Detail
+      route_reference: product-detail-item-search
+
+  external_integration:
+    no_stock_action:
+      destination:
+        system: MyCrown Portal
+        purpose: Initiate Production Order
+      status: Observed
+
+automation:
+  recommended_framework: Playwright
+
+  locator_strategy:
+    resolution_order:
+      - primary
+      - fallback_1
+      - fallback_2
+      - fallback_3
+
+    uniqueness_validation:
+      - If locator resolves to 0 elements, try the next locator.
+      - If locator resolves to exactly 1 element, accept it.
+      - If locator resolves to more than 1 element, reject it as ambiguous.
+
+  primary_locators:
+    product_search_input: "#P6_SKU"
+    qr_scan_button: "#B24029796092184015"
+    search_button: "#btn_search"
+
+  fallback_locators:
+    product_search_input:
+      - strategy: css
+        value: "input[name='P6_SKU']"
+        status: Candidate
+      - strategy: css
+        value: "input[placeholder='Enter item code or scan the QR']"
+        status: Candidate
+      - strategy: css
+        value: "input[type='text'][name='P6_SKU']"
+        status: Candidate
+
+    qr_scan_button:
+      - strategy: css
+        value: "button[aria-label='Scan']"
+        status: Candidate
+      - strategy: css
+        value: "button[title='Scan']"
+        status: Candidate
+      - strategy: css
+        value: "button#B24029796092184015"
+        status: Candidate
+
+    search_button:
+      - strategy: css
+        value: "button[aria-label='Search']"
+        status: Candidate
+      - strategy: css
+        value: "button[title='Search']"
+        status: Candidate
+      - strategy: css
+        value: "button#btn_search"
+        status: Candidate
+
+  reusable_actions:
+    - navigate_to_product_search
+    - enter_item_code
+    - scan_product_qr
+    - submit_product_search
+    - verify_product_result
+    - verify_product_stock_status
+    - verify_invalid_product_search
+    - verify_empty_search_validation
+    - open_product_detail
+    - verify_store_customer_context
+
+  test_scenarios:
+    - valid_14_digit_item_code
+    - valid_qr_code
+    - invalid_item_code
+    - empty_search
+    - product_available_in_current_store
+    - product_not_available_in_current_store
+    - product_out_of_stock
+    - enter_key_search
+    - qr_scan_failure
+    - network_failure_during_search
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Try validated fallback locators if the primary locator fails.
+      - Record the failed primary locator.
+      - Capture current DOM and page evidence.
+      - Record the successful fallback locator.
+      - Analyze the UI change.
+      - Recommend a permanent locator update only after validation.
+      - Do not permanently modify automation without approval.
+
+test_data:
+  valid_item_code:
+    source: DEV/UAT approved product test data
+    format: 14-digit item code
+    value: DO_NOT_STORE_REAL_TEST_VALUE
+
+  valid_qr:
+    source: DEV/UAT approved product QR
+    value: DO_NOT_STORE_REAL_QR_PAYLOAD
+
+  invalid_item_code:
+    source: Generated/approved negative test data
+    value: DO_NOT_STORE_REAL_TEST_VALUE
+
+  product_context:
+    source: Current DEV/UAT store/customer context
+    value: LOGICAL_REFERENCE_ONLY
+
+security:
+  sensitive_data_policy:
+    - Do not store real credentials in the KB.
+    - Do not store session IDs.
+    - Do not store authentication tokens.
+    - Do not store cookies.
+    - Do not store raw protected request/response values.
+    - Do not store real QR payloads if they contain sensitive information.
+    - Store logical test-data references instead.
+
+  security_relevance:
+    - Product search should respect the current store/customer context.
+    - Product information should not be exposed outside the user's
+      authorized context.
+    - Product/API requests should be evaluated for authorization when
+      the Security Agent consumes this KB.
+    - Hidden technical parameters should not be treated as trusted
+      authorization controls without server-side validation.
+
+evidence:
+  sources:
+    - Browser interaction recording
+    - Playwright trace
+    - Product Search DOM snapshot/resources
+    - APEX page/component metadata
+    - Network activity captured during product search
+    - Product stock/result evidence
+
+status:
+  overall: READY
+  confidence: High
+  business_rule_gaps: Present
+  locator_status:
+    primary_locators: Observed
+    fallback_locators: Require runtime uniqueness validation

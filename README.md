@@ -54,8 +54,15 @@ cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
 | `src/qa_orchestrator/` | **Phase 1 product** — LLM planner + OpenClaw + KB + validation |
 | `plugins/mock_demo/` | Deterministic mock tools |
 | `plugins/qa_apex/` | APEX discover / sanity / flow catalog + Playwright crawler |
-| `discovery/uat_ea/` | Live UAT KB candidates + approval checklist + recordings merge |
-| `docs/BASE_AGENT_TECHNICAL_PROPOSAL.md` | Full runtime proposal (base agent contract) |
+## Canonical Application KB (Sep 2026)
+
+Flow-centric YAML lives in `discovery/uat_ea/flows/`. See `discovery/uat_ea/KB_FORMAT.md` and [KB_REFORMAT_REPORT.md](finalized-proposal/KB_REFORMAT_REPORT.md).
+
+| Path | Purpose |
+|---|---|
+| `discovery/uat_ea/flows/` | **Canonical** flow KB (YAML) |
+| `discovery/uat_ea/kb/` | Legacy JSON archive |
+| `docs/finalized-proposal/` | **LOCKED** AI QA automation proposal + architecture + KB readiness |
 | `docs/APEX_GT_KB_COLLECTION_SPEC.md` | KB/GT schemas |
 | `docs/architecture/OPERATING_WITHOUT_GT.md` | How we run before SME GT |
 | `docs/architecture/APEX_APPLICATION_FLOWS.md` | APEX flow patterns for the QA agent |

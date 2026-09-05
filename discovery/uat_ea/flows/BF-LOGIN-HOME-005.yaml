@@ -1,0 +1,32 @@
+flow_id: BF-LOGIN-HOME-005
+flow_name: Login To Home (superseded)
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Authentication
+  status: Draft
+
+purpose:
+  Use BF-LOGIN-001 as canonical login flow.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/login
+
+pages:
+  - Login
+  - Home
+
+business_flow:
+  - Superseded by BF-LOGIN-001
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

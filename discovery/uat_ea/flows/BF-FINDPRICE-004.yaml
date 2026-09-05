@@ -1,0 +1,43 @@
+flow_id: BF-FINDPRICE-004
+flow_name: Find Price Lookup
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+
+business_capability:
+  name: Pricing
+  status: Draft
+
+purpose:
+  Look up item/lot pricing from Find Price module.
+
+entry_point:
+  route: /ords/r/tjdcom/ea/find-price
+
+pages:
+  - Home
+  - Find Price
+
+business_flow:
+  - Navigate from Home to Find Price.
+  - Enter P31_ITEM.
+  - Enter P31_LOTNO.
+  - Submit search.
+
+components:
+  P31_ITEM:
+    status: MigratedFromLegacy
+    note: Enrich with locators, rules, and automation block per KB_FORMAT.md
+  P31_LOTNO:
+    status: MigratedFromLegacy
+    note: Enrich with locators, rules, and automation block per KB_FORMAT.md
+
+status:
+  overall: DRAFT
+  source: legacy_kb_migration
+  confidence: Low
+  qa_instruction:
+    - This flow was auto-migrated from discovery/uat_ea/kb/*.json
+    - Enrich to READY standard using SME YAML format before automation generation

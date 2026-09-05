@@ -1,0 +1,281 @@
+flow_id: BF-LOGOUT-002
+
+flow_name: User Logout
+
+application:
+  name: Endless Aisle
+  environment: DEV/UAT
+  apex_application_id: 1002
+  login_page_id: 9999
+
+purpose:
+  Terminate the authenticated user's Endless Aisle application session
+  and return the user to the Login page.
+
+entry_point:
+  page: Home
+  route: /ords/r/tjdcom/ea/home
+
+actors:
+  - Authenticated application user
+
+preconditions:
+  - Endless Aisle DEV/UAT application is accessible.
+  - User is successfully authenticated.
+  - User is currently on an authenticated application page.
+  - User has an active application session.
+
+pages:
+  - Home
+  - Login
+
+components:
+  user_menu:
+    type: button/menu
+    id: L21731618447730172
+    action: Open user menu
+    locator:
+      primary:
+        strategy: css
+        value: "#L21731618447730172"
+        source: Browser interaction recording
+        status: Observed
+      fallback_1:
+        strategy: css
+        value: "button[id='L21731618447730172']"
+        source: Derived from observed ID
+        status: Candidate
+      fallback_2:
+        strategy: css
+        value: "[id='L21731618447730172']"
+        source: Derived from observed ID
+        status: Candidate
+      fallback_3:
+        strategy: text
+        value: "User menu"
+        source: Not explicitly observed
+        status: Not Available
+
+  sign_out:
+    type: link/menu item
+    id: menu_L21731618447730172_2i
+    action: Sign Out
+    locator:
+      primary:
+        strategy: css
+        value: "#menu_L21731618447730172_2i"
+        source: Browser interaction recording
+        status: Observed
+      fallback_1:
+        strategy: css
+        value: "a[id='menu_L21731618447730172_2i']"
+        source: Derived from observed ID
+        status: Candidate
+      fallback_2:
+        strategy: text
+        value: "Sign Out"
+        source: Browser interaction recording
+        status: Observed
+      fallback_3:
+        strategy: css
+        value: "a[href*='apex_authentication.logout']"
+        source: Observed logout destination pattern
+        status: Candidate
+
+business_flow:
+  - User is authenticated and is on an application page.
+  - User opens the user/profile menu.
+  - User selects Sign Out.
+  - Application terminates the authenticated session.
+  - User is redirected to the Login page.
+  - Previously authenticated pages must not remain accessible through
+    browser Back navigation.
+  - User must authenticate again to access protected application pages.
+
+expected_success:
+  condition:
+    - Authenticated user selects Sign Out.
+  result:
+    - User's application session is terminated.
+    - User is redirected to the Login page.
+    - User is no longer authenticated.
+    - Previously authenticated pages cannot be accessed through
+      browser Back navigation.
+    - Re-authentication is required to access protected application pages.
+
+observed_logout:
+  condition:
+    - Authenticated user opens the user menu and selects Sign Out.
+  result:
+    - Sign Out action is executed.
+    - Application navigates from Home to the Login page.
+    - Login page is displayed after logout.
+
+business_rules:
+  BR-LOGOUT-001:
+    rule: Authenticated users must be able to sign out of the application.
+    status: Confirmed/Observed
+
+  BR-LOGOUT-002:
+    rule: Selecting Sign Out terminates the user's authenticated application session.
+    status: Confirmed
+
+  BR-LOGOUT-003:
+    rule: Successful logout redirects the user to the Login page.
+    status: Confirmed/Observed
+
+  BR-LOGOUT-004:
+    rule: After logout, previously authenticated pages must not remain accessible
+      through browser Back navigation.
+    status: Confirmed
+
+  BR-LOGOUT-005:
+    rule: After logout, the user must authenticate again before accessing
+      protected application pages.
+    status: Confirmed
+
+  BR-LOGOUT-006:
+    rule: Sign Out is available to all authenticated application users.
+    status: Confirmed
+
+  BR-LOGOUT-007:
+    rule: No additional logout confirmation or post-logout business action
+      is required.
+    status: Confirmed
+
+unknown_business_rules:
+  - Session timeout behavior
+  - Automatic logout behavior
+  - Behavior when the logout request fails
+  - Behavior when the network is unavailable during logout
+  - Whether client-side cached data is explicitly cleared
+  - Whether all browser cookies are cleared
+  - Whether all application-specific local storage is cleared
+
+technical_metadata:
+  apex:
+    application_id: 1002
+    login_page_id: 9999
+
+  observed_pages:
+    authenticated:
+      route: /ords/r/tjdcom/ea/home
+      title: Endless Aisle
+    logout_destination:
+      route: /ords/r/tjdcom/ea/login
+      title: Endless Aisle- Log In
+
+  observed_components:
+    user_menu:
+      id: L21731618447730172
+
+    sign_out:
+      id: menu_L21731618447730172_2i
+      text: Sign Out
+
+  logout_operation:
+    type: APEX authentication logout
+    application_id: 1002
+    status: Observed
+
+  navigation:
+    before_logout:
+      page: Home
+    after_logout:
+      page: Login
+
+automation:
+  recommended_framework: Playwright
+
+  locator_strategy:
+    resolution_order:
+      - primary
+      - fallback_1
+      - fallback_2
+      - fallback_3
+
+    uniqueness_validation:
+      - If locator resolves to 0 elements, try the next locator.
+      - If locator resolves to exactly 1 element, accept it.
+      - If locator resolves to more than 1 element, reject it as ambiguous.
+
+  primary_locators:
+    user_menu: "#L21731618447730172"
+    sign_out: "#menu_L21731618447730172_2i"
+
+  fallback_locators:
+    user_menu:
+      - strategy: css
+        value: "button[id='L21731618447730172']"
+        status: Candidate
+      - strategy: css
+        value: "[id='L21731618447730172']"
+        status: Candidate
+
+    sign_out:
+      - strategy: css
+        value: "a[id='menu_L21731618447730172_2i']"
+        status: Candidate
+      - strategy: text
+        value: "Sign Out"
+        status: Observed
+      - strategy: css
+        value: "a[href*='apex_authentication.logout']"
+        status: Candidate
+
+  reusable_actions:
+    - verify_authenticated_state
+    - open_user_menu
+    - click_sign_out
+    - verify_login_page
+    - verify_session_terminated
+    - verify_back_navigation_protection
+    - verify_reauthentication_required
+
+  self_healing:
+    enabled: true
+    behavior:
+      - Try validated fallback locators if the primary locator fails.
+      - Record the failed primary locator.
+      - Capture current DOM and page evidence.
+      - Record the successful fallback locator.
+      - Analyze whether the UI structure changed.
+      - Recommend a permanent locator update only after validation.
+      - Do not permanently modify the automation without approval.
+
+test_data:
+  authenticated_user:
+    source: DEV/UAT test credentials
+    value: DO_NOT_STORE_IN_KB
+
+security:
+  sensitive_data_policy:
+    - Do not store usernames/passwords in the KB unless explicitly required
+      and securely referenced.
+    - Do not store session IDs.
+    - Do not store authentication tokens.
+    - Do not store cookies.
+    - Do not store raw protected logout request/response values.
+    - Store logical test-data references instead.
+
+  security_relevance:
+    - Logout must terminate the authenticated session.
+    - Protected pages must not become accessible after logout.
+    - Browser Back navigation must not restore authenticated access.
+    - Re-authentication must be required after logout.
+
+evidence:
+  sources:
+    - Browser interaction recording
+    - Playwright trace
+    - DOM/component information
+    - Network activity captured during authentication/logout
+    - Navigation from Home to Login after Sign Out
+
+status:
+  overall: READY
+  confidence: High
+  business_rule_gaps: Present
+  locator_status:
+    primary_locators: Observed
+    fallback_locators: Require runtime uniqueness validation
