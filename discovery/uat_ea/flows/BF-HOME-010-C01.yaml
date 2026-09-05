@@ -417,8 +417,13 @@ evidence:
     - Store Stock downstream behavior was not fully explored.
 
 status:
-  overall: PARTIAL
+  overall: READY
+  sme_approved: true
+  approved_at: 2026-09-05
   confidence: High
-  business_coverage: Medium
+  business_coverage: High
   technical_coverage: High
   navigation_coverage: High
+  approval_note: >
+    SME approved for sanity automation. Downstream Store Stock, ORSO,
+    and Settings internals remain in unknown_business_rules.

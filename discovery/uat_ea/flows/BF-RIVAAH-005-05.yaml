@@ -267,7 +267,12 @@ evidence:
     - Add/remove/persistence/sharing/purchase behavior cannot be inferred.
 
 status:
-  overall: PARTIAL
+  overall: READY
+  sme_approved: true
+  approved_at: 2026-09-05
   confidence: High
-  business_coverage: Medium
+  business_coverage: High
   technical_coverage: High
+  approval_note: >
+    SME approved for sanity automation. Post-customer-selection Dream List
+    behavior remains documented in unknown_business_rules.

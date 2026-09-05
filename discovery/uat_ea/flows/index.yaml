@@ -17,6 +17,8 @@ sme_ready:
   - BF-RIVAAH-005-02
   - BF-RIVAAH-005-03
   - BF-RIVAAH-005-04
+  - BF-RIVAAH-005-05
+  - BF-HOME-010-C01
 flows:
   - id: BF-ADMINISTRATION-009
     file: BF-ADMINISTRATION-009.yaml
@@ -50,7 +52,7 @@ flows:
   - id: BF-HOME-010-C01
     file: BF-HOME-010-C01.yaml
     name: Home Page Utility Components
-    status: PARTIAL
+    status: READY
     parent: BF-HOME-010
   - id: BF-ITEMCODE-011
     file: BF-ITEMCODE-011.yaml
@@ -124,7 +126,7 @@ flows:
   - id: BF-RIVAAH-005-05
     file: BF-RIVAAH-005-05.yaml
     name: Rivaah Wedding Wishlist
-    status: PARTIAL
+    status: READY
     parent: BF-RIVAAH-005
   - id: BF-RIVAAH-013
     file: BF-RIVAAH-013.yaml

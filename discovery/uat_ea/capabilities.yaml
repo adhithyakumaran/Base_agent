@@ -11,10 +11,10 @@ capabilities:
       - BF-LOGOUT-002   # User Logout — READY
 
   Application Navigation:
-    status: PARTIAL
+    status: READY
     flows:
       - BF-HOME-010       # Home / Navigation Map — READY
-      - BF-HOME-010-C01   # Home Utility Components — PARTIAL
+      - BF-HOME-010-C01   # Home Utility Components — READY
 
   Product Search:
     status: READY
@@ -50,14 +50,14 @@ capabilities:
       - BF-RIVAAH-TRO-014   # superseded by BF-RIVAAH-005-01
 
   Rivaah:
-    status: PARTIAL
+    status: READY
     flows:
       - BF-RIVAAH-005       # Rivaah Main Menu — READY
       - BF-RIVAAH-005-01    # Wedding Trousseau Styling — READY
       - BF-RIVAAH-005-02    # Trousseau Set Image — READY
       - BF-RIVAAH-005-03    # Engagement Rings — READY
       - BF-RIVAAH-005-04    # Wedding Experts — READY
-      - BF-RIVAAH-005-05    # Rivaah Wedding Wishlist — PARTIAL
+      - BF-RIVAAH-005-05    # Rivaah Wedding Wishlist — READY
 
   Reporting:
     status: READY
