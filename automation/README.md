@@ -41,6 +41,21 @@ npm run test:regression
 npm run test:flow -- "@BF-LOGIN-001"
 ```
 
+### Login setup fails (404 at `dev-ea.titanrts.com/login`)
+
+Playwright treats paths starting with `/` as **domain-root** paths. With
+`EA_BASE_URL=https://dev-ea.titanrts.com/ords/r/tjdcom/ea`, using `EA_LOGIN_URL=/login`
+navigates to `https://dev-ea.titanrts.com/login` (404), not the app login page.
+
+Use app-relative paths **without a leading slash**:
+
+```env
+EA_LOGIN_URL=login
+EA_HOME_URL=home
+```
+
+(`/login` still works after `git pull` — the code strips the leading slash automatically.)
+
 ### Login setup fails (timeout on `#P9999_USERNAME`)
 
 The UAT site uses **AppTrana WAF**, which blocks headless/automated Chromium (HTTP 406 — no login form). Normal Chrome works; bundled Playwright Chromium often does not.

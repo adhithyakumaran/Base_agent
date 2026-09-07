@@ -28,6 +28,18 @@ function normalizeBaseUrl(raw) {
   return url.replace(/\/login\/?$/i, '');
 }
 
+function toAppRelativePath(pathSegment, fallback) {
+  const raw = (pathSegment ?? fallback).trim();
+  if (/^https?:\/\//i.test(raw)) return raw;
+  return raw.replace(/^\/+/, '');
+}
+
+function resolveAppUrl(baseURL, pathSegment, fallback) {
+  const segment = toAppRelativePath(pathSegment, fallback);
+  if (/^https?:\/\//i.test(segment)) return segment;
+  return `${normalizeBaseUrl(baseURL)}/${segment}`;
+}
+
 async function findLoginScope(page) {
   for (const selector of USERNAME_SELECTORS) {
     if ((await page.locator(selector).count()) > 0) return page;
@@ -78,10 +90,11 @@ async function main() {
   const baseURL = normalizeBaseUrl(process.env.EA_BASE_URL);
   const user = process.env.EA_USER_USERNAME;
   const pass = process.env.EA_USER_PASSWORD;
-  const loginPath = process.env.EA_LOGIN_URL ?? '/login';
+  const login = toAppRelativePath(process.env.EA_LOGIN_URL, 'login');
+  const loginUrl = resolveAppUrl(baseURL, process.env.EA_LOGIN_URL, 'login');
   const headless = process.env.EA_HEADLESS === 'true';
 
-  console.log(`Debug login: ${baseURL}${loginPath}`);
+  console.log(`Debug login: ${loginUrl}`);
   console.log(`headless=${headless}, user=${user ? '[set]' : '[missing]'}`);
 
   const browser = await chromium.launch({
@@ -104,7 +117,7 @@ async function main() {
   const page = await context.newPage();
 
   try {
-    await page.goto(loginPath, { waitUntil: 'load', timeout: 90_000 });
+    await page.goto(login, { waitUntil: 'load', timeout: 90_000 });
     console.log('Loaded URL:', page.url());
     console.log('Title:', await page.title());
 

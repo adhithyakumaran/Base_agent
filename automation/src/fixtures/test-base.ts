@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test';
+import { homePath } from '../core/app-url';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
 import { ProductSearchPage } from '../pages/product-search.page';
@@ -31,7 +32,7 @@ export const test = base.extend<Fixtures>({
     if (!user || !pass) {
       test.skip(true, 'EA_USER_USERNAME / EA_USER_PASSWORD not configured');
     }
-    await page.goto(process.env.EA_HOME_URL ?? '/home');
+    await page.goto(homePath());
     await expect(page).toHaveURL(/\/home/i);
     await use(homePage);
   },

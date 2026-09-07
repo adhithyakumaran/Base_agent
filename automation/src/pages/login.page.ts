@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { loginPath } from '../core/app-url';
 import { LOCATORS, LocatorResolver } from '../core/locator-chain';
 
 export class LoginPage {
@@ -9,8 +10,7 @@ export class LoginPage {
   }
 
   async goto(): Promise<void> {
-    const loginPath = process.env.EA_LOGIN_URL ?? '/login';
-    await this.page.goto(loginPath);
+    await this.page.goto(loginPath());
   }
 
   async login(username: string, password: string): Promise<void> {

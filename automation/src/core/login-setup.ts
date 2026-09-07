@@ -1,15 +1,10 @@
 import type { Frame, Page } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { normalizeBaseUrl } from './app-url';
 import { LOCATORS } from './locator-chain';
 
-export function normalizeBaseUrl(raw: string | undefined): string {
-  const fallback = 'https://uat.example.com/ords/r/tjdcom/ea';
-  if (!raw) return fallback;
-  let url = raw.trim().replace(/\/+$/, '');
-  url = url.replace(/\/login\/?$/i, '');
-  return url;
-}
+export { normalizeBaseUrl } from './app-url';
 
 async function countMatchingInputs(scope: Page | Frame, selectors: readonly string[]): Promise<number> {
   let total = 0;
@@ -97,6 +92,9 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
   const frameCount = page.frames().length;
   const usernameMatches = await countMatchingInputs(page, LOCATORS.login.username);
   const blockedByWaf = /not acceptable|406|blocked due to suspicious/i.test(`${title}\n${html}`);
+  const wrongRootPath =
+    /404|not found/i.test(`${title}\n${html}`) &&
+    !page.url().includes('/ords/r/tjdcom/ea/');
 
   return [
     reason,
@@ -106,6 +104,9 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
     `frames=${frameCount}`,
     `username_locator_matches=${usernameMatches}`,
     blockedByWaf ? 'detected=WAF_BLOCK (AppTrana/406 — use EA_USE_SYSTEM_CHROME=true and EA_HEADLESS=false)' : '',
+    wrongRootPath
+      ? 'detected=WRONG_URL (use EA_LOGIN_URL=login without leading slash, or git pull latest fix)'
+      : '',
     `screenshot=${screenshotPath}`,
     `html=${htmlPath}`,
     'Tips: open the URL in Chrome, confirm VPN, try EA_HEADLESS=false, set EA_USE_SYSTEM_CHROME=true.',
