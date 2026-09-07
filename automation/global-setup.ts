@@ -2,6 +2,7 @@ import { chromium, type FullConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { launchUatBrowser, newUatContext } from './src/core/browser-launch';
 import {
   dumpLoginFailure,
   fillLoginForm,
@@ -23,11 +24,8 @@ async function globalSetup(config: FullConfig): Promise<void> {
   }
 
   const headless = process.env.EA_HEADLESS !== 'false';
-  const browser = await chromium.launch({ headless });
-  const context = await browser.newContext({
-    baseURL,
-    ignoreHTTPSErrors: process.env.EA_IGNORE_HTTPS_ERRORS === 'true',
-  });
+  const browser = await launchUatBrowser(headless);
+  const context = await newUatContext(browser, baseURL);
   const page = await context.newPage();
   const loginPath = process.env.EA_LOGIN_URL ?? '/login';
   console.log(`Global setup: login ${baseURL}${loginPath} as ${user} (headless=${headless})`);

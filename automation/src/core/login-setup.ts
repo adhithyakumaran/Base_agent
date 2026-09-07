@@ -96,6 +96,7 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
   const inputCount = await page.locator('input').count().catch(() => -1);
   const frameCount = page.frames().length;
   const usernameMatches = await countMatchingInputs(page, LOCATORS.login.username);
+  const blockedByWaf = /not acceptable|406|blocked due to suspicious/i.test(`${title}\n${html}`);
 
   return [
     reason,
@@ -104,8 +105,11 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
     `inputs=${inputCount}`,
     `frames=${frameCount}`,
     `username_locator_matches=${usernameMatches}`,
+    blockedByWaf ? 'detected=WAF_BLOCK (AppTrana/406 — use EA_USE_SYSTEM_CHROME=true and EA_HEADLESS=false)' : '',
     `screenshot=${screenshotPath}`,
     `html=${htmlPath}`,
-    'Tips: open the URL in Chrome, confirm VPN, try EA_HEADLESS=false, set EA_IGNORE_HTTPS_ERRORS=true if cert errors.',
-  ].join('\n');
+    'Tips: open the URL in Chrome, confirm VPN, try EA_HEADLESS=false, set EA_USE_SYSTEM_CHROME=true.',
+  ]
+    .filter(Boolean)
+    .join('\n');
 }

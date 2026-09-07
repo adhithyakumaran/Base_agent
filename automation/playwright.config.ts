@@ -39,7 +39,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium-uat',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: process.env.EA_USE_SYSTEM_CHROME === 'false' ? undefined : 'chrome',
+        launchOptions: {
+          args: ['--disable-blink-features=AutomationControlled'],
+        },
+      },
     },
   ],
 });

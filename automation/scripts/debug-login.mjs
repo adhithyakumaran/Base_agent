@@ -84,10 +84,22 @@ async function main() {
   console.log(`Debug login: ${baseURL}${loginPath}`);
   console.log(`headless=${headless}, user=${user ? '[set]' : '[missing]'}`);
 
-  const browser = await chromium.launch({ headless, slowMo: headless ? 0 : 300 });
+  const browser = await chromium.launch({
+    headless,
+    slowMo: headless ? 0 : 300,
+    channel: process.env.EA_USE_SYSTEM_CHROME === 'false' ? undefined : (process.env.EA_BROWSER_CHANNEL ?? 'chrome'),
+    args: ['--disable-blink-features=AutomationControlled'],
+  });
   const context = await browser.newContext({
     baseURL,
     ignoreHTTPSErrors: process.env.EA_IGNORE_HTTPS_ERRORS === 'true',
+    userAgent:
+      process.env.EA_USER_AGENT ??
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    viewport: { width: 1366, height: 768 },
+  });
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
   });
   const page = await context.newPage();
 

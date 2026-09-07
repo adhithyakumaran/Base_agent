@@ -33,9 +33,29 @@ export class LocatorResolver {
 
 export const LOCATORS = {
   login: {
-    username: ['#P9999_USERNAME', 'input[name="P9999_USERNAME"]', 'input[placeholder="Username"]'],
-    password: ['#P9999_PASSWORD', 'input[name="P9999_PASSWORD"]', 'input[autocomplete="current-password"]'],
-    submit: ['#login-btn', 'button#login-btn', 'button:has-text("Login")'],
+    username: [
+      '#P9999_USERNAME',
+      'input[name="P9999_USERNAME"]',
+      'input[placeholder="Username"]',
+      'input[placeholder*="Username" i]',
+      'label:has-text("Username") + input',
+      'input[type="text"]',
+    ],
+    password: [
+      '#P9999_PASSWORD',
+      'input[name="P9999_PASSWORD"]',
+      'input[autocomplete="current-password"]',
+      'input[placeholder="Password"]',
+      'input[placeholder*="Password" i]',
+      'input[type="password"]',
+    ],
+    submit: [
+      '#login-btn',
+      'button#login-btn',
+      'button:has-text("LOGIN")',
+      'button:has-text("Login")',
+      'input[type="button"][value*="LOGIN" i]',
+    ],
   },
   userMenu: {
     menu: ['#L21731618447730172', "button[id='L21731618447730172']"],
