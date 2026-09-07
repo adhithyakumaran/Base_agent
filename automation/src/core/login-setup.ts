@@ -6,6 +6,15 @@ import { LOCATORS } from './locator-chain';
 
 export { normalizeBaseUrl } from './app-url';
 
+const APEX_USERNAME = '#P9999_USERNAME';
+const APEX_PASSWORD = '#P9999_PASSWORD';
+const APEX_SUBMIT = '#login-btn';
+const HOME_URL = /\/home/i;
+
+function pageOf(scope: Page | Frame): Page {
+  return 'page' in scope ? scope.page() : scope;
+}
+
 async function countMatchingInputs(scope: Page | Frame, selectors: readonly string[]): Promise<number> {
   let total = 0;
   for (const selector of selectors) {
@@ -15,14 +24,13 @@ async function countMatchingInputs(scope: Page | Frame, selectors: readonly stri
 }
 
 export async function findLoginScope(page: Page): Promise<Page | Frame> {
+  if ((await page.locator(APEX_USERNAME).count()) > 0) return page;
   for (const selector of LOCATORS.login.username) {
     if ((await page.locator(selector).count()) > 0) return page;
   }
   for (const frame of page.frames()) {
     if (frame === page.mainFrame()) continue;
-    for (const selector of LOCATORS.login.username) {
-      if ((await frame.locator(selector).count()) > 0) return frame;
-    }
+    if ((await frame.locator(APEX_USERNAME).count()) > 0) return frame;
   }
   return page;
 }
@@ -31,71 +39,135 @@ export async function waitForLoginForm(page: Page, timeoutMs = 60_000): Promise<
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const scope = await findLoginScope(page);
-    for (const selector of LOCATORS.login.username) {
-      const locator = scope.locator(selector).first();
-      if ((await locator.count()) > 0 && (await locator.isVisible().catch(() => false))) {
-        return scope;
-      }
-    }
+    const user = scope.locator(APEX_USERNAME);
+    const submit = scope.locator(APEX_SUBMIT);
+    const userReady =
+      (await user.count()) > 0 &&
+      ((await user.isVisible().catch(() => false)) || (await user.count()) > 0);
+    const submitReady = (await submit.count()) > 0 && (await submit.isVisible().catch(() => false));
+    if (userReady && submitReady) return scope;
     await page.waitForTimeout(250);
   }
   throw new Error('Login form did not become visible before timeout');
 }
 
-export async function fillLoginForm(
+/** Fill an APEX item and fire input/change so custom skins + apex validation see the value. */
+async function fillApexInput(scope: Page | Frame, selector: string, value: string): Promise<boolean> {
+  const locator = scope.locator(selector).first();
+  if ((await locator.count()) === 0) return false;
+
+  await locator.waitFor({ state: 'attached', timeout: 15_000 });
+  await locator.click({ force: true, timeout: 5_000 }).catch(() => undefined);
+  await locator.fill('', { force: true }).catch(() => undefined);
+  await locator.pressSequentially(value, { delay: 40 });
+
+  const current = await locator.inputValue().catch(() => '');
+  if (current !== value) {
+    await locator.evaluate(
+      (el, v) => {
+        const input = el as HTMLInputElement;
+        input.value = v;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      value
+    );
+  }
+  return true;
+}
+
+async function fillWithFallbacks(
   scope: Page | Frame,
-  user: string,
-  pass: string
+  selectors: readonly string[],
+  value: string,
+  label: 'username' | 'password'
 ): Promise<void> {
-  let filledUser = false;
-  for (const selector of LOCATORS.login.username) {
-    const locator = scope.locator(selector).first();
-    if ((await locator.count()) > 0) {
-      await locator.fill(user, { timeout: 15_000 });
-      filledUser = true;
-      break;
-    }
-  }
-  if (!filledUser) throw new Error('Username field not found');
+  const apexSelector = label === 'username' ? APEX_USERNAME : APEX_PASSWORD;
+  if (await fillApexInput(scope, apexSelector, value)) return;
 
-  let filledPass = false;
-  for (const selector of LOCATORS.login.password) {
+  for (const selector of selectors) {
+    if (selector === APEX_USERNAME || selector === APEX_PASSWORD) continue;
     const locator = scope.locator(selector).first();
-    if ((await locator.count()) > 0) {
-      await locator.fill(pass, { timeout: 15_000 });
-      filledPass = true;
-      break;
-    }
+    if ((await locator.count()) === 0) continue;
+    if (!(await locator.isVisible().catch(() => false))) continue;
+    await locator.click();
+    await locator.fill(value);
+    return;
   }
-  if (!filledPass) throw new Error('Password field not found');
+  throw new Error(`${label} field not found`);
+}
 
+export async function fillLoginForm(scope: Page | Frame, user: string, pass: string): Promise<void> {
+  await fillWithFallbacks(scope, LOCATORS.login.username, user, 'username');
+  await fillWithFallbacks(scope, LOCATORS.login.password, pass, 'password');
+  await pageOf(scope).waitForTimeout(300);
   await submitLogin(scope);
 }
 
 async function submitLogin(scope: Page | Frame): Promise<void> {
-  for (const selector of LOCATORS.login.submit) {
-    const locator = scope.locator(selector).first();
-    if (!(await locator.isVisible().catch(() => false))) continue;
-    await locator.scrollIntoViewIfNeeded();
-    await locator.click({ timeout: 15_000 });
-    return;
+  const page = pageOf(scope);
+
+  if (HOME_URL.test(page.url())) return;
+
+  const btn = scope.locator(APEX_SUBMIT).first();
+  if ((await btn.count()) === 0) {
+    throw new Error('Login submit control #login-btn not found');
   }
 
-  const roleButton = scope.getByRole('button', { name: /^login$/i }).first();
-  if (await roleButton.isVisible().catch(() => false)) {
-    await roleButton.click({ timeout: 15_000 });
-    return;
+  await btn.scrollIntoViewIfNeeded();
+
+  // 1) Playwright click + navigation wait
+  await Promise.all([
+    page.waitForURL(HOME_URL, { timeout: 45_000, waitUntil: 'domcontentloaded' }).catch(() => null),
+    btn.click({ timeout: 15_000 }),
+  ]);
+  if (HOME_URL.test(page.url())) return;
+
+  // 2) DOM click (bypasses overlay/pointer intercept)
+  await Promise.all([
+    page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null),
+    btn.evaluate((el: HTMLElement) => el.click()),
+  ]);
+  if (HOME_URL.test(page.url())) return;
+
+  // 3) APEX programmatic submit
+  await page
+    .evaluate(() => {
+      const w = window as typeof window & {
+        apex?: { submit?: (label: string) => void; page?: { submit?: (label: string) => void } };
+      };
+      if (w.apex?.page?.submit) w.apex.page.submit('LOGIN');
+      else if (w.apex?.submit) w.apex.submit('LOGIN');
+      else {
+        const el = document.querySelector('#login-btn') as HTMLElement | null;
+        el?.click();
+      }
+    })
+    .catch(() => undefined);
+  await page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null);
+  if (HOME_URL.test(page.url())) return;
+
+  // 4) Enter on password (APEX data_enter_submit)
+  const pass = scope.locator(APEX_PASSWORD).first();
+  if ((await pass.count()) > 0) {
+    await Promise.all([
+      page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null),
+      pass.press('Enter'),
+    ]);
   }
 
-  for (const selector of LOCATORS.login.password) {
-    const pass = scope.locator(selector).first();
-    if (await pass.isVisible().catch(() => false)) {
-      await pass.press('Enter');
-      return;
-    }
+  if (!HOME_URL.test(page.url())) {
+    const errText = await page
+      .locator('.t-Alert, .a-Alert, .u-visible, [role="alert"]')
+      .allTextContents()
+      .catch(() => []);
+    const hint = errText.filter(Boolean).join(' ').trim();
+    throw new Error(
+      hint
+        ? `Login did not reach /home — ${hint}`
+        : 'Login did not reach /home — submit fired but credentials may be wrong or session blocked'
+    );
   }
-
-  throw new Error('Login submit control not found');
 }
 
 export async function performLogin(page: Page, user: string, pass: string): Promise<void> {
@@ -116,6 +188,7 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
   const inputCount = await page.locator('input').count().catch(() => -1);
   const frameCount = page.frames().length;
   const usernameMatches = await countMatchingInputs(page, LOCATORS.login.username);
+  const userValue = await page.locator(APEX_USERNAME).inputValue().catch(() => '[unreadable]');
   const blockedByWaf = /not acceptable|406|blocked due to suspicious/i.test(`${title}\n${html}`);
   const wrongRootPath =
     (/404|not found|isn't available/i.test(`${title}\n${html}`) &&
@@ -129,13 +202,14 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
     `inputs=${inputCount}`,
     `frames=${frameCount}`,
     `username_locator_matches=${usernameMatches}`,
+    `P9999_USERNAME_value=${userValue ? '[set]' : '[empty]'}`,
     blockedByWaf ? 'detected=WAF_BLOCK (AppTrana/406 — use EA_USE_SYSTEM_CHROME=true and EA_HEADLESS=false)' : '',
     wrongRootPath
       ? 'detected=WRONG_URL (use EA_LOGIN_URL=login without leading slash, or git pull latest fix)'
       : '',
     `screenshot=${screenshotPath}`,
     `html=${htmlPath}`,
-    'Tips: open the URL in Chrome, confirm VPN, try EA_HEADLESS=false, set EA_USE_SYSTEM_CHROME=true.',
+    'Tips: verify password in automation/config/.env, try manual login in same browser.',
   ]
     .filter(Boolean)
     .join('\n');

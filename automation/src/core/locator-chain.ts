@@ -38,8 +38,6 @@ export const LOCATORS = {
       'input[name="P9999_USERNAME"]',
       'input[placeholder="Username"]',
       'input[placeholder*="Username" i]',
-      'label:has-text("Username") + input',
-      'input[type="text"]',
     ],
     password: [
       '#P9999_PASSWORD',
@@ -47,7 +45,6 @@ export const LOCATORS = {
       'input[autocomplete="current-password"]',
       'input[placeholder="Password"]',
       'input[placeholder*="Password" i]',
-      'input[type="password"]',
     ],
     submit: [
       '#login-btn',
