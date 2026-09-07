@@ -9,6 +9,8 @@
     "test:regression": "playwright test --grep @regression",
     "test:flow": "playwright test --grep",
     "test:headed": "playwright test --headed",
+    "debug:login": "node scripts/debug-login.mjs",
+    "debug:login:headed": "EA_HEADLESS=false node scripts/debug-login.mjs",
     "report": "playwright show-report",
     "install:browsers": "playwright install chromium"
   },

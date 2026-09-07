@@ -41,6 +41,19 @@ npm run test:regression
 npm run test:flow -- "@BF-LOGIN-001"
 ```
 
+### Login setup fails (timeout on `#P9999_USERNAME`)
+
+1. Confirm you can open the login URL in Chrome (VPN may be required).
+2. Check `automation/config/.env` — base URL must **not** include `/login`.
+3. Run headed debug (saves screenshot + HTML under `reports/`):
+
+```bash
+npm run debug:login:headed
+```
+
+4. If you see a certificate warning page, set `EA_IGNORE_HTTPS_ERRORS=true`.
+5. Inspect artifacts: `reports/debug-login-failure.png` and `reports/debug-login-failure.html`.
+
 ## Enterprise standards
 
 | Standard | Implementation |

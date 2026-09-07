@@ -1,17 +1,15 @@
 import { chromium, type FullConfig } from '@playwright/test';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
+import {
+  dumpLoginFailure,
+  fillLoginForm,
+  normalizeBaseUrl,
+  waitForLoginForm,
+} from './src/core/login-setup';
 
 dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
-
-function normalizeBaseUrl(raw: string | undefined): string {
-  const fallback = 'https://uat.example.com/ords/r/tjdcom/ea';
-  if (!raw) return fallback;
-  let url = raw.trim().replace(/\/+$/, '');
-  // Common misconfig: full login URL pasted into EA_BASE_URL
-  url = url.replace(/\/login\/?$/i, '');
-  return url;
-}
 
 async function globalSetup(config: FullConfig): Promise<void> {
   const baseURL = normalizeBaseUrl(
@@ -24,17 +22,37 @@ async function globalSetup(config: FullConfig): Promise<void> {
     return;
   }
 
-  const browser = await chromium.launch({ headless: process.env.EA_HEADLESS !== 'false' });
-  const page = await browser.newPage({ baseURL });
+  const headless = process.env.EA_HEADLESS !== 'false';
+  const browser = await chromium.launch({ headless });
+  const context = await browser.newContext({
+    baseURL,
+    ignoreHTTPSErrors: process.env.EA_IGNORE_HTTPS_ERRORS === 'true',
+  });
+  const page = await context.newPage();
   const loginPath = process.env.EA_LOGIN_URL ?? '/login';
-  console.log(`Global setup: login ${baseURL}${loginPath} as ${user}`);
-  await page.goto(loginPath, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-  await page.locator('#P9999_USERNAME, input[name="P9999_USERNAME"]').first().fill(user, { timeout: 45_000 });
-  await page.locator('#P9999_PASSWORD, input[name="P9999_PASSWORD"]').first().fill(pass);
-  await page.locator('#login-btn, button#login-btn, button:has-text("Login")').first().click();
-  await page.waitForURL(/\/home/i, { timeout: 60_000 });
-  await page.context().storageState({ path: path.resolve(__dirname, '.auth', 'user.json') });
-  await browser.close();
+  console.log(`Global setup: login ${baseURL}${loginPath} as ${user} (headless=${headless})`);
+
+  try {
+    await page.goto(loginPath, { waitUntil: 'load', timeout: 90_000 });
+    await page.waitForLoadState('domcontentloaded').catch(() => undefined);
+    const scope = await waitForLoginForm(page, 60_000);
+    await fillLoginForm(scope, user, pass);
+    await page.waitForURL(/\/home/i, { timeout: 90_000 });
+    const authDir = path.resolve(__dirname, '.auth');
+    fs.mkdirSync(authDir, { recursive: true });
+    await context.storageState({ path: path.join(authDir, 'user.json') });
+    console.log('Global setup: saved .auth/user.json');
+  } catch (error) {
+    const reportsDir = path.resolve(__dirname, 'reports');
+    const detail = await dumpLoginFailure(
+      page,
+      reportsDir,
+      error instanceof Error ? error.message : String(error)
+    );
+    throw new Error(`Global login setup failed:\n${detail}`);
+  } finally {
+    await browser.close();
+  }
 }
 
 export default globalSetup;
