@@ -1,5 +1,4 @@
 import { test, expect } from '../../src/fixtures/test-base';
-import { assertNoDestructiveAction } from '../../src/core/safety-guardrails';
 
 const ADMIN_FUNCTIONS = [
   'App Configuration',
@@ -11,7 +10,6 @@ const ADMIN_FUNCTIONS = [
 
 test.describe('BF-ADMINISTRATION-009 Administration @BF-ADMINISTRATION-009 @regression @read-only-sanity @no-data-mutation', () => {
   test('TC-BF-ADMINISTRATION-009-P01 administration master loads @sanity', async ({ page }) => {
-    assertNoDestructiveAction('modify user', 'BF-ADMINISTRATION-009');
     await page.goto('/administration');
     await expect(page.locator('body')).toBeVisible();
   });

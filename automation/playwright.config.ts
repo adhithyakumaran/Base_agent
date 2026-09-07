@@ -5,7 +5,10 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
 dotenv.config({ path: path.resolve(__dirname, 'config', '.env.local'), override: true });
 
-const baseURL = process.env.EA_BASE_URL ?? 'https://uat.example.com/ords/r/tjdcom/ea';
+const baseURL = (() => {
+  const raw = process.env.EA_BASE_URL ?? 'https://uat.example.com/ords/r/tjdcom/ea';
+  return raw.trim().replace(/\/+$/, '').replace(/\/login\/?$/i, '');
+})();
 
 export default defineConfig({
   testDir: './tests',

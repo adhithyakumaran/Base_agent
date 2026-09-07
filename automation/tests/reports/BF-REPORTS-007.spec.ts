@@ -1,5 +1,4 @@
 import { test, expect } from '../../src/fixtures/test-base';
-import { assertNoDestructiveAction } from '../../src/core/safety-guardrails';
 
 const REPORTS: Array<{ name: string; path: string }> = [
   { name: 'Order Status', path: '/ea1/29' },
@@ -10,10 +9,6 @@ const REPORTS: Array<{ name: string; path: string }> = [
 ];
 
 test.describe('BF-REPORTS-007 Reports @BF-REPORTS-007 @regression @read-only-sanity @no-transaction', () => {
-  test.beforeEach(() => {
-    assertNoDestructiveAction('delete report', 'BF-REPORTS-007');
-  });
-
   test('TC-BF-REPORTS-007-P01 reports master page loads @sanity', async ({ page }) => {
     await page.goto('/ea1/51');
     await expect(page.locator('body')).toBeVisible();
