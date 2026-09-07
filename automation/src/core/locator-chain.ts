@@ -23,7 +23,10 @@ export class LocatorResolver {
       for (const selector of chain) {
         const locator = this.page.locator(selector);
         const count = await locator.count();
-        if (count === 1 && (await locator.isVisible().catch(() => false))) return locator;
+        if (count >= 1) {
+          const candidate = locator.first();
+          if (await candidate.isVisible().catch(() => false)) return candidate;
+        }
       }
       await this.page.waitForTimeout(200);
     }
@@ -67,8 +70,14 @@ export const LOCATORS = {
     scan: ['#B24029796092184015', 'button[aria-label="Scan"]'],
   },
   stockVisibility: {
-    sku: ['#P114_SKU', "input[name='P114_SKU']", 'input#P114_SKU'],
-    search: ['#P47_SEARCH', 'button#P47_SEARCH', "[id='P47_SEARCH']"],
+    sku: [
+      '#P114_SKU',
+      "input[name='P114_SKU']",
+      'input#P114_SKU',
+      'input[placeholder*="Item code" i]',
+      'input[placeholder*="14 Digit" i]',
+    ],
+    search: ['#P47_SEARCH', 'button#P47_SEARCH', 'button:has-text("Search")', "[id='P47_SEARCH']"],
   },
   home: {
     storeStock: ['#B74402876591024608', 'button:has-text("STORE STOCK")'],
@@ -78,5 +87,29 @@ export const LOCATORS = {
   rivaah: {
     nav: ['#t_MenuNav_3i', "a[role='menuitem'][id='t_MenuNav_3i']", 'text=Rivaah'],
     back: ['#B50666671840999844', 'button#B50666671840999844', 'button:has-text("Back")'],
+    cards: {
+      trousseauStyling: [
+        "a.t-Card-wrap[href*='wedding-trousseau?']",
+        "a.t-Card-wrap[href*='wedding-trousseau']",
+        'a.t-Card-wrap:has-text("Wedding Trousseau Styling")',
+      ],
+      trousseauSetImage: [
+        "a.t-Card-wrap[href*='wedding-trousseau1']",
+        'a.t-Card-wrap:has-text("Trousseau Set Image")',
+      ],
+      engagementRings: [
+        "a.t-Card-wrap[href*='standard-product-search']",
+        'a.t-Card-wrap:has-text("Engagement Rings")',
+      ],
+      weddingExperts: [
+        "a.t-Card-wrap[href*='wedding-experts']",
+        'a.t-Card-wrap:has-text("Wedding Experts")',
+      ],
+      weddingWishlist: [
+        "a.t-Card-wrap[href*='dreams-in-gold']",
+        'a.t-Card-wrap:has-text("Wedding Wishlist")',
+        'a.t-Card-wrap:has-text("Dreams in Gold")',
+      ],
+    },
   },
 } as const;

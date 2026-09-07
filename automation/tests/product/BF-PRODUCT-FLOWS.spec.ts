@@ -1,4 +1,4 @@
-import { test, expect, ensureAuthenticated } from '../../src/fixtures/test-base';
+import { test, expect } from '../../src/fixtures/test-base';
 import { appPath } from '../../src/core/app-url';
 
 test.describe('BF-BEST-DEAL-008 Best Deal @BF-BEST-DEAL-008 @regression @product-browse', () => {
@@ -30,9 +30,11 @@ test.describe('BF-PRODUCT-004 View Product @BF-PRODUCT-004 @regression @product-
 });
 
 test.describe('BF-PRODUCT-003 Search Product @BF-PRODUCT-003 @regression @product-search', () => {
-  test('TC-BF-PRODUCT-003-P01 direct product search page @sanity', async ({ page }) => {
-    await ensureAuthenticated(page);
-    await page.goto(appPath('product-detail-item-search'));
-    await expect(page.locator('#P6_SKU')).toBeVisible();
+  test('TC-BF-PRODUCT-003-P01 direct product search page @sanity', async ({
+    authenticatedPage,
+    productSearchPage,
+  }) => {
+    await authenticatedPage.openItemSearch();
+    await productSearchPage.expectLoaded();
   });
 });

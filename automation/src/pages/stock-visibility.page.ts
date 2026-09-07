@@ -9,12 +9,12 @@ export class StockVisibilityPage {
   }
 
   async expectLoaded(): Promise<void> {
-    await this.resolver.resolve([...LOCATORS.stockVisibility.sku], 'P114_SKU');
+    await this.resolver.firstVisible([...LOCATORS.stockVisibility.sku], 'stock sku input', 20_000);
   }
 
   async searchItemCode(itemCode: string): Promise<void> {
-    const input = await this.resolver.resolve([...LOCATORS.stockVisibility.sku], 'P114_SKU');
-    const search = await this.resolver.resolve([...LOCATORS.stockVisibility.search], 'P47_SEARCH');
+    const input = await this.resolver.firstVisible([...LOCATORS.stockVisibility.sku], 'stock sku input', 20_000);
+    const search = await this.resolver.firstVisible([...LOCATORS.stockVisibility.search], 'stock search', 10_000);
     await input.fill(itemCode);
     await search.click();
   }

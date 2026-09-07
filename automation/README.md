@@ -107,6 +107,10 @@ Oracle APEX friendly URLs live under `.../ords/r/tjdcom/ea/`. Playwright/browser
 `npm test` runs `scripts/validate-env.mjs` first and fails fast on bad `.env`.
 Run `npm run test:unit-url` after URL helper changes.
 
+**Session note:** `BF-LOGIN-001` logs in with a fresh browser context, which invalidates the
+global-setup session on the server. Tests that need auth use `ensureAuthenticated()` to
+re-login automatically when redirected to `/login?session=...`.
+
 | Standard | Implementation |
 |---|---|
 | Traceability | Test titles prefixed `TC-{flow_id}-*` |

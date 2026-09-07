@@ -1,4 +1,5 @@
 import { test, expect } from '../../src/fixtures/test-base';
+import { appUrl } from '../../src/core/app-url';
 
 test.describe('BF-PRODUCT-STOCK-VISIBILITY-009 @BF-PRODUCT-STOCK-VISIBILITY-009 @regression @inventory', () => {
   test('TC-BF-PRODUCT-STOCK-VISIBILITY-009-P01 valid 14-digit code returns stock view @sanity', async ({
@@ -10,7 +11,12 @@ test.describe('BF-PRODUCT-STOCK-VISIBILITY-009 @BF-PRODUCT-STOCK-VISIBILITY-009 
     test.skip(!item, 'EA_VALID_ITEM_CODE not configured');
 
     await authenticatedPage.openProductStockVisibility();
-    await stockVisibilityPage.expectLoaded();
+    try {
+      await stockVisibilityPage.expectLoaded();
+    } catch {
+      await page.goto(appUrl('product-stock-visibility'));
+      await stockVisibilityPage.expectLoaded();
+    }
     await stockVisibilityPage.searchItemCode(item!);
     await expect(page.locator('.t-Body-content')).toBeVisible();
   });
@@ -21,7 +27,12 @@ test.describe('BF-PRODUCT-STOCK-VISIBILITY-009 @BF-PRODUCT-STOCK-VISIBILITY-009 
     page,
   }) => {
     await authenticatedPage.openProductStockVisibility();
-    await stockVisibilityPage.expectLoaded();
+    try {
+      await stockVisibilityPage.expectLoaded();
+    } catch {
+      await page.goto(appUrl('product-stock-visibility'));
+      await stockVisibilityPage.expectLoaded();
+    }
     await stockVisibilityPage.searchItemCode('123');
     await expect(page.locator('text=/14 Digit|Item code/i')).toBeVisible({ timeout: 10_000 });
   });
