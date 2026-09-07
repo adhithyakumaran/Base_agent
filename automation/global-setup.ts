@@ -6,8 +6,7 @@ import { launchUatBrowser, newUatContext } from './src/core/browser-launch';
 import { loginUrl, normalizeBaseUrl } from './src/core/app-url';
 import {
   dumpLoginFailure,
-  fillLoginForm,
-  waitForLoginForm,
+  performLogin,
 } from './src/core/login-setup';
 
 dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
@@ -32,10 +31,9 @@ async function globalSetup(config: FullConfig): Promise<void> {
 
   try {
     await page.goto(loginTarget, { waitUntil: 'load', timeout: 90_000 });
-    await page.waitForLoadState('domcontentloaded').catch(() => undefined);
-    const scope = await waitForLoginForm(page, 60_000);
-    await fillLoginForm(scope, user, pass);
+    await performLogin(page, user, pass);
     await page.waitForURL(/\/home/i, { timeout: 90_000 });
+    const authDir = path.resolve(__dirname, '.auth');
     fs.mkdirSync(authDir, { recursive: true });
     await context.storageState({ path: path.join(authDir, 'user.json') });
     console.log('Global setup: saved .auth/user.json');

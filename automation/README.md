@@ -88,6 +88,25 @@ The UAT site uses **AppTrana WAF**, which blocks headless/automated Chromium (HT
 
 ## Enterprise standards
 
+### Navigation rules (read before adding tests)
+
+Oracle APEX friendly URLs live under `.../ords/r/tjdcom/ea/`. Playwright/browser URL rules cause subtle bugs:
+
+| `.env` or `page.goto()` | Opens | Result |
+|---|---|---|
+| `EA_LOGIN_URL=/login` | `https://host/login` | 404 |
+| `page.goto('login')` with base `.../ea` | `.../tjdcom/login` | drops `ea` |
+| `page.goto('./login')` or `loginUrl()` | `.../tjdcom/ea/login` | correct |
+
+**Always use helpers** from `src/fixtures/navigation.ts`:
+
+- `gotoLogin(page)` / `loginUrl()` — auth entry
+- `gotoApp(page, 'rivaah')` / `appPath()` — in-app routes with `./` prefix
+- `gotoAppUrl(page, 'administration')` — absolute URL
+
+`npm test` runs `scripts/validate-env.mjs` first and fails fast on bad `.env`.
+Run `npm run test:unit-url` after URL helper changes.
+
 | Standard | Implementation |
 |---|---|
 | Traceability | Test titles prefixed `TC-{flow_id}-*` |

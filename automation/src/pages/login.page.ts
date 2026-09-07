@@ -9,7 +9,11 @@ export class LoginPage {
     await this.page.goto(loginUrl());
   }
 
-  async login(username: string, password: string): Promise<void> {
+  /** Fill credentials and submit. Waits for /home on success. */
+  async login(username: string, password: string, waitForHome = true): Promise<void> {
     await performLogin(this.page, username, password);
+    if (waitForHome) {
+      await this.page.waitForURL(/\/home/i, { timeout: 90_000 });
+    }
   }
 }

@@ -17,13 +17,13 @@ test.describe('BF-LOGIN-001 User Login @BF-LOGIN-001 @regression @authentication
 
   test('TC-BF-LOGIN-001-N01 invalid credentials remain on login @regression', async ({ loginPage, page }) => {
     await loginPage.goto();
-    await loginPage.login('invalid_user_xyz', 'invalid_pass_xyz');
+    await loginPage.login('invalid_user_xyz', 'invalid_pass_xyz', false);
     await expect(page).toHaveURL(/login/i);
   });
 
   test('TC-BF-LOGIN-001-E01 empty credentials do not authenticate @regression', async ({ loginPage, page }) => {
     await loginPage.goto();
-    await loginPage.login('', '');
+    await loginPage.login('', '', false);
     await expect(page).toHaveURL(/login/i);
   });
 });

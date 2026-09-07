@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import { homeRelativePath } from '../core/app-url';
+import { gotoHome } from './navigation';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
 import { ProductSearchPage } from '../pages/product-search.page';
@@ -32,10 +32,11 @@ export const test = base.extend<Fixtures>({
     if (!user || !pass) {
       test.skip(true, 'EA_USER_USERNAME / EA_USER_PASSWORD not configured');
     }
-    await page.goto(homeRelativePath());
-    await expect(page).toHaveURL(/\/home/i);
+    await gotoHome(page);
+    await expect(page).toHaveURL(/\/home/i, { timeout: 60_000 });
     await use(homePage);
   },
 });
 
 export { expect };
+export { gotoApp, gotoAppUrl, gotoHome, gotoLogin } from './navigation';
