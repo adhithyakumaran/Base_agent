@@ -1,6 +1,7 @@
 import type { Frame, Page } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { dismissBlockingOverlays } from './apex-overlays';
 import { normalizeBaseUrl } from './app-url';
 import { LOCATORS } from './locator-chain';
 
@@ -110,50 +111,52 @@ async function submitLogin(scope: Page | Frame): Promise<void> {
   if (HOME_URL.test(page.url())) return;
 
   const btn = scope.locator(APEX_SUBMIT).first();
-  if ((await btn.count()) === 0) {
-    throw new Error('Login submit control #login-btn not found');
-  }
-
-  await btn.scrollIntoViewIfNeeded();
-
-  // 1) Playwright click + navigation wait
-  await Promise.all([
-    page.waitForURL(HOME_URL, { timeout: 45_000, waitUntil: 'domcontentloaded' }).catch(() => null),
-    btn.click({ timeout: 15_000 }),
-  ]);
-  if (HOME_URL.test(page.url())) return;
-
-  // 2) DOM click (bypasses overlay/pointer intercept)
-  await Promise.all([
-    page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null),
-    btn.evaluate((el: HTMLElement) => el.click()),
-  ]);
-  if (HOME_URL.test(page.url())) return;
-
-  // 3) APEX programmatic submit
-  await page
-    .evaluate(() => {
-      const w = window as typeof window & {
-        apex?: { submit?: (label: string) => void; page?: { submit?: (label: string) => void } };
-      };
-      if (w.apex?.page?.submit) w.apex.page.submit('LOGIN');
-      else if (w.apex?.submit) w.apex.submit('LOGIN');
-      else {
-        const el = document.querySelector('#login-btn') as HTMLElement | null;
-        el?.click();
-      }
-    })
-    .catch(() => undefined);
-  await page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null);
-  if (HOME_URL.test(page.url())) return;
-
-  // 4) Enter on password (APEX data_enter_submit)
   const pass = scope.locator(APEX_PASSWORD).first();
-  if ((await pass.count()) > 0) {
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await dismissBlockingOverlays(page);
+
+    // 1) Enter on password — works even when ui-widget-overlay blocks the LOGIN button
+    if ((await pass.count()) > 0) {
+      await Promise.all([
+        page.waitForURL(HOME_URL, { timeout: 45_000, waitUntil: 'domcontentloaded' }).catch(() => null),
+        pass.press('Enter'),
+      ]);
+      if (HOME_URL.test(page.url())) return;
+    }
+
+    await dismissBlockingOverlays(page);
+
+    // 2) APEX programmatic submit
+    await page
+      .evaluate(() => {
+        const w = window as typeof window & {
+          apex?: { submit?: (label: string) => void; page?: { submit?: (label: string) => void } };
+        };
+        if (w.apex?.page?.submit) w.apex.page.submit('LOGIN');
+        else if (w.apex?.submit) w.apex.submit('LOGIN');
+      })
+      .catch(() => undefined);
+    await page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null);
+    if (HOME_URL.test(page.url())) return;
+
+    if ((await btn.count()) === 0) {
+      throw new Error('Login submit control #login-btn not found');
+    }
+
+    await btn.scrollIntoViewIfNeeded();
+
+    // 3) Force click through any remaining overlay
     await Promise.all([
       page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null),
-      pass.press('Enter'),
+      btn.click({ force: true, timeout: 15_000 }),
     ]);
+    if (HOME_URL.test(page.url())) return;
+
+    // 4) DOM click fallback
+    await btn.evaluate((el: HTMLElement) => el.click());
+    await page.waitForURL(HOME_URL, { timeout: 30_000, waitUntil: 'domcontentloaded' }).catch(() => null);
+    if (HOME_URL.test(page.url())) return;
   }
 
   if (!HOME_URL.test(page.url())) {
@@ -171,6 +174,7 @@ async function submitLogin(scope: Page | Frame): Promise<void> {
 }
 
 export async function performLogin(page: Page, user: string, pass: string): Promise<void> {
+  await dismissBlockingOverlays(page);
   await waitForLoginForm(page);
   const scope = await findLoginScope(page);
   await fillLoginForm(scope, user, pass);
