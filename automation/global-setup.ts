@@ -36,7 +36,6 @@ async function globalSetup(config: FullConfig): Promise<void> {
     const scope = await waitForLoginForm(page, 60_000);
     await fillLoginForm(scope, user, pass);
     await page.waitForURL(/\/home/i, { timeout: 90_000 });
-    const authDir = path.resolve(__dirname, '.auth');
     fs.mkdirSync(authDir, { recursive: true });
     await context.storageState({ path: path.join(authDir, 'user.json') });
     console.log('Global setup: saved .auth/user.json');

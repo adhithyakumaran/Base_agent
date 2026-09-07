@@ -116,7 +116,7 @@ async function main() {
   const page = await context.newPage();
 
   try {
-    await page.goto(login, { waitUntil: 'load', timeout: 90_000 });
+    await page.goto(loginTarget, { waitUntil: 'load', timeout: 90_000 });
     console.log('Loaded URL:', page.url());
     console.log('Title:', await page.title());
 

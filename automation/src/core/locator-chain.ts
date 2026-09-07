@@ -52,6 +52,8 @@ export const LOCATORS = {
     submit: [
       '#login-btn',
       'button#login-btn',
+      'button.t-Button--hot#login-btn',
+      'button.t-Button--hot:has-text("LOGIN")',
       'button:has-text("LOGIN")',
       'button:has-text("Login")',
       'input[type="button"][value*="LOGIN" i]',

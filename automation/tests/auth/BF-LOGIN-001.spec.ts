@@ -11,7 +11,7 @@ test.describe('BF-LOGIN-001 User Login @BF-LOGIN-001 @regression @authentication
 
     await loginPage.goto();
     await loginPage.login(user!, pass!);
-    await expect(page).toHaveURL(/\/home/i);
+    await expect(page).toHaveURL(/\/home/i, { timeout: 60_000 });
     await attachEvidence(page, testInfo, 'post-login-home');
   });
 

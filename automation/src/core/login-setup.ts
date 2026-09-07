@@ -69,14 +69,39 @@ export async function fillLoginForm(
   }
   if (!filledPass) throw new Error('Password field not found');
 
+  await submitLogin(scope);
+}
+
+async function submitLogin(scope: Page | Frame): Promise<void> {
   for (const selector of LOCATORS.login.submit) {
     const locator = scope.locator(selector).first();
-    if ((await locator.count()) > 0) {
-      await locator.click({ timeout: 15_000 });
+    if (!(await locator.isVisible().catch(() => false))) continue;
+    await locator.scrollIntoViewIfNeeded();
+    await locator.click({ timeout: 15_000 });
+    return;
+  }
+
+  const roleButton = scope.getByRole('button', { name: /^login$/i }).first();
+  if (await roleButton.isVisible().catch(() => false)) {
+    await roleButton.click({ timeout: 15_000 });
+    return;
+  }
+
+  for (const selector of LOCATORS.login.password) {
+    const pass = scope.locator(selector).first();
+    if (await pass.isVisible().catch(() => false)) {
+      await pass.press('Enter');
       return;
     }
   }
+
   throw new Error('Login submit control not found');
+}
+
+export async function performLogin(page: Page, user: string, pass: string): Promise<void> {
+  await waitForLoginForm(page);
+  const scope = await findLoginScope(page);
+  await fillLoginForm(scope, user, pass);
 }
 
 export async function dumpLoginFailure(page: Page, reportsDir: string, reason: string): Promise<string> {
