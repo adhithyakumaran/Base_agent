@@ -1,5 +1,6 @@
 import { test, expect } from '../../src/fixtures/test-base';
 import { attachEvidence } from '../../src/core/evidence';
+import { refreshAuthStorage } from '../../src/fixtures/auth';
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -12,6 +13,7 @@ test.describe('BF-LOGIN-001 User Login @BF-LOGIN-001 @regression @authentication
     await loginPage.goto();
     await loginPage.login(user!, pass!);
     await expect(page).toHaveURL(/\/home/i, { timeout: 60_000 });
+    await refreshAuthStorage(page);
     await attachEvidence(page, testInfo, 'post-login-home');
   });
 

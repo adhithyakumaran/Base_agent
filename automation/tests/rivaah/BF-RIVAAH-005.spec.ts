@@ -1,5 +1,9 @@
-import { test, expect } from '../../src/fixtures/test-base';
+import { test, expect, ensureAuthenticated } from '../../src/fixtures/test-base';
 import { appPath } from '../../src/core/app-url';
+
+test.beforeEach(async ({ page }) => {
+  await ensureAuthenticated(page);
+});
 
 test.describe('BF-RIVAAH-005 Rivaah @BF-RIVAAH-005 @regression @rivaah', () => {
   test('TC-BF-RIVAAH-005-P01 rivaah page loads from nav @sanity', async ({ authenticatedPage, page }) => {

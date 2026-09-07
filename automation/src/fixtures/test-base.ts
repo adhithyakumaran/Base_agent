@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import { gotoHome } from './navigation';
+import { ensureAuthenticated } from './auth';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
 import { ProductSearchPage } from '../pages/product-search.page';
@@ -32,11 +32,12 @@ export const test = base.extend<Fixtures>({
     if (!user || !pass) {
       test.skip(true, 'EA_USER_USERNAME / EA_USER_PASSWORD not configured');
     }
-    await gotoHome(page);
-    await expect(page).toHaveURL(/\/home/i, { timeout: 60_000 });
+    await ensureAuthenticated(page);
+    await expect(page).toHaveURL(/\/home/i, { timeout: 30_000 });
     await use(homePage);
   },
 });
 
 export { expect };
+export { ensureAuthenticated, refreshAuthStorage } from './auth';
 export { gotoApp, gotoAppUrl, gotoHome, gotoLogin } from './navigation';
