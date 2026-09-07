@@ -53,6 +53,38 @@ Open **http://127.0.0.1:43123** — prompt box, sanity report, agent output pane
 
 **LLM:** Groq (`GROQ_API_KEY` in `.env`). Swap to Claude via `LLM_PROVIDER=anthropic`. See `docs/architecture/QA_ORCHESTRATOR.md`.
 
+### Windows / downloaded ZIP
+
+If you extracted a ZIP instead of cloning, sync to the latest code first (commit `9d31c2a`+):
+
+```bash
+cd ~/Downloads/baseagentmain/Base_agent-main   # your folder
+git init
+git remote add origin https://github.com/adhithyakumaran/Base_agent.git
+git fetch origin
+git checkout -b main origin/main
+```
+
+Back up local `.env` and `automation/config/.env` before `git checkout` if you edited them.
+
+**litellm import error on Python 3.10** (`cannot import name 'NotRequired' from 'typing'`):
+
+```bash
+pip install "litellm>=1.40,<1.57"
+python -c "import litellm; print('litellm OK')"
+```
+
+Or upgrade to Python 3.11+. Then reinstall: `pip install -e ".[llm]"`.
+
+**Playwright login / sanity:** in `automation/config/.env`, set base URL **without** `/login`:
+
+```env
+EA_BASE_URL=https://dev-ea.titanrts.com/ords/r/tjdcom/ea
+EA_LOGIN_URL=/login
+```
+
+Run setup check: `python scripts/check_setup.py`
+
 ## Repo map
 
 | Path | Purpose |

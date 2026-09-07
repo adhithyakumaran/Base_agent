@@ -35,8 +35,11 @@ def main() -> int:
         import litellm  # noqa: F401
 
         all_ok &= check("litellm (Groq LLM)", True)
-    except ImportError:
-        all_ok &= check("litellm (Groq LLM)", False, 'run: pip install -e ".[llm]"')
+    except ImportError as exc:
+        hint = 'pip install -e ".[llm]"'
+        if "NotRequired" in str(exc):
+            hint = 'pip install "litellm>=1.40,<1.57"  (litellm 1.57+ needs Python 3.11+)'
+        all_ok &= check("litellm (Groq LLM)", False, hint)
 
     groq = os.environ.get("GROQ_API_KEY") or _read_env_key("GROQ_API_KEY")
     all_ok &= check("GROQ_API_KEY in .env", bool(groq), ENV_FILE.as_posix())
