@@ -41,6 +41,18 @@ npm run test:regression
 npm run test:flow -- "@BF-LOGIN-001"
 ```
 
+### Login URL resolves without `/ea` (e.g. `.../tjdcom/login`)
+
+Relative paths like `login` **replace** the last URL segment (`ea`) per browser URL rules.
+Use `./login` or the absolute URL built from `EA_BASE_URL`:
+
+```env
+EA_BASE_URL=https://dev-ea.titanrts.com/ords/r/tjdcom/ea
+EA_LOGIN_URL=login
+```
+
+Latest code uses absolute URLs for login setup automatically after `git pull`.
+
 ### Login setup fails (404 at `dev-ea.titanrts.com/login`)
 
 Playwright treats paths starting with `/` as **domain-root** paths. With

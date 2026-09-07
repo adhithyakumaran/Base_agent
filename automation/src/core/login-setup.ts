@@ -93,8 +93,9 @@ export async function dumpLoginFailure(page: Page, reportsDir: string, reason: s
   const usernameMatches = await countMatchingInputs(page, LOCATORS.login.username);
   const blockedByWaf = /not acceptable|406|blocked due to suspicious/i.test(`${title}\n${html}`);
   const wrongRootPath =
-    /404|not found/i.test(`${title}\n${html}`) &&
-    !page.url().includes('/ords/r/tjdcom/ea/');
+    (/404|not found|isn't available/i.test(`${title}\n${html}`) &&
+      !page.url().includes('/ords/r/tjdcom/ea/')) ||
+    /\/tjdcom\/login\b/i.test(page.url());
 
   return [
     reason,

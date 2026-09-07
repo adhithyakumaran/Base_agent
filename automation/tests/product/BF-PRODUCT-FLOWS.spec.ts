@@ -1,15 +1,16 @@
 import { test, expect } from '../../src/fixtures/test-base';
+import { appPath } from '../../src/core/app-url';
 
 test.describe('BF-BEST-DEAL-008 Best Deal @BF-BEST-DEAL-008 @regression @product-browse', () => {
   test('TC-BF-BEST-DEAL-008-P01 product discount page loads @sanity', async ({ page }) => {
-    await page.goto('product-discount');
+    await page.goto(appPath('product-discount'));
     await expect(page.locator('#P92_DISCOUNT, .t-Body-content')).toBeTruthy();
   });
 });
 
 test.describe('BF-PRODUCT-CATALOGUE-006 Product Catalogue @BF-PRODUCT-CATALOGUE-006 @regression', () => {
   test('TC-BF-PRODUCT-CATALOGUE-006-P01 catalogue page loads @sanity', async ({ page }) => {
-    await page.goto('product-catalogue');
+    await page.goto(appPath('product-catalogue'));
     await expect(page.locator('body')).toBeVisible();
   });
 });
@@ -30,7 +31,7 @@ test.describe('BF-PRODUCT-004 View Product @BF-PRODUCT-004 @regression @product-
 
 test.describe('BF-PRODUCT-003 Search Product @BF-PRODUCT-003 @regression @product-search', () => {
   test('TC-BF-PRODUCT-003-P01 direct product search page @sanity', async ({ page }) => {
-    await page.goto('product-detail-item-search');
+    await page.goto(appPath('product-detail-item-search'));
     await expect(page.locator('#P6_SKU')).toBeVisible();
   });
 });

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { launchUatBrowser, newUatContext } from './src/core/browser-launch';
-import { loginPath, normalizeBaseUrl, resolveAppUrl } from './src/core/app-url';
+import { loginUrl, normalizeBaseUrl } from './src/core/app-url';
 import {
   dumpLoginFailure,
   fillLoginForm,
@@ -27,12 +27,11 @@ async function globalSetup(config: FullConfig): Promise<void> {
   const browser = await launchUatBrowser(headless);
   const context = await newUatContext(browser, baseURL);
   const page = await context.newPage();
-  const login = loginPath();
-  const loginUrl = resolveAppUrl(baseURL, process.env.EA_LOGIN_URL, 'login');
-  console.log(`Global setup: login ${loginUrl} as ${user} (headless=${headless})`);
+  const loginTarget = loginUrl();
+  console.log(`Global setup: login ${loginTarget} as ${user} (headless=${headless})`);
 
   try {
-    await page.goto(login, { waitUntil: 'load', timeout: 90_000 });
+    await page.goto(loginTarget, { waitUntil: 'load', timeout: 90_000 });
     await page.waitForLoadState('domcontentloaded').catch(() => undefined);
     const scope = await waitForLoginForm(page, 60_000);
     await fillLoginForm(scope, user, pass);

@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { loginPath } from '../core/app-url';
+import { loginUrl } from '../core/app-url';
 import { LOCATORS, LocatorResolver } from '../core/locator-chain';
 
 export class LoginPage {
@@ -10,7 +10,7 @@ export class LoginPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto(loginPath());
+    await this.page.goto(loginUrl());
   }
 
   async login(username: string, password: string): Promise<void> {

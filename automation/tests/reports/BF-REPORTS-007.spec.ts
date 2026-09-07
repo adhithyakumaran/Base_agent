@@ -1,4 +1,5 @@
 import { test, expect } from '../../src/fixtures/test-base';
+import { appPath } from '../../src/core/app-url';
 
 const REPORTS: Array<{ name: string; path: string }> = [
   { name: 'Order Status', path: 'ea1/29' },
@@ -10,13 +11,13 @@ const REPORTS: Array<{ name: string; path: string }> = [
 
 test.describe('BF-REPORTS-007 Reports @BF-REPORTS-007 @regression @read-only-sanity @no-transaction', () => {
   test('TC-BF-REPORTS-007-P01 reports master page loads @sanity', async ({ page }) => {
-    await page.goto('ea1/51');
+    await page.goto(appPath('ea1/51'));
     await expect(page.locator('body')).toBeVisible();
   });
 
   for (const report of REPORTS) {
     test(`TC-BF-REPORTS-007-P0x ${report.name} page loads @regression`, async ({ page }) => {
-      await page.goto(report.path);
+      await page.goto(appPath(report.path));
       await expect(page.locator('body')).toBeVisible();
     });
   }

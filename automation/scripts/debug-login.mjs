@@ -90,11 +90,10 @@ async function main() {
   const baseURL = normalizeBaseUrl(process.env.EA_BASE_URL);
   const user = process.env.EA_USER_USERNAME;
   const pass = process.env.EA_USER_PASSWORD;
-  const login = toAppRelativePath(process.env.EA_LOGIN_URL, 'login');
-  const loginUrl = resolveAppUrl(baseURL, process.env.EA_LOGIN_URL, 'login');
+  const loginTarget = resolveAppUrl(baseURL, process.env.EA_LOGIN_URL, 'login');
   const headless = process.env.EA_HEADLESS === 'true';
 
-  console.log(`Debug login: ${loginUrl}`);
+  console.log(`Debug login: ${loginTarget}`);
   console.log(`headless=${headless}, user=${user ? '[set]' : '[missing]'}`);
 
   const browser = await chromium.launch({
