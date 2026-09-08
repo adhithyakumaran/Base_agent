@@ -67,23 +67,46 @@ export class HomePage {
     await dismissBlockingOverlays(this.page);
     await this.page.waitForURL(/\/home/i, { timeout: 15_000 }).catch(() => undefined);
 
-    try {
-      const menu = await this.resolver.firstVisible([...LOCATORS.userMenu.menu], 'user menu', 10_000);
-      await menu.click({ force: true });
-      await dismissBlockingOverlays(this.page);
-      const signOut = await this.resolver.firstVisible([...LOCATORS.userMenu.signOut], 'sign out', 10_000);
-      await signOut.click({ force: true });
-    } catch {
-      await this.page.evaluate(() => {
-        const menuBtn = document.querySelector<HTMLElement>('#L21731618447730172, [data-menu*="menu_L"]');
-        menuBtn?.click();
-        const link = document.querySelector<HTMLAnchorElement>("a[href*='apex_authentication.logout']");
-        link?.click();
-      });
+    const menu = await this.resolver.firstVisible([...LOCATORS.userMenu.menu], 'user menu', 10_000);
+    await menu.click({ force: true });
+    await dismissBlockingOverlays(this.page);
+
+    const signOut = await this.resolver.firstVisible([...LOCATORS.userMenu.signOut], 'sign out', 10_000);
+    await Promise.all([
+      this.page.waitForURL(/login/i, { timeout: 25_000, waitUntil: 'domcontentloaded' }).catch(() => null),
+      signOut.click({ force: true }),
+    ]);
+
+    if (!/\/login/i.test(this.page.url())) {
+      const logoutUrl = await this.resolveLogoutUrl();
+      if (!logoutUrl) {
+        throw new Error('Sign out did not reach login and no apex_authentication.logout URL was found');
+      }
+      await this.page.goto(logoutUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     }
 
-    await this.page.waitForURL(/login/i, { timeout: 30_000 });
+    await this.page.waitForURL(/login/i, { timeout: 30_000, waitUntil: 'domcontentloaded' });
     await dismissBlockingOverlays(this.page);
+  }
+
+  /** APEX logout href from user menu, or built from the active session id in the current URL. */
+  private async resolveLogoutUrl(): Promise<string | null> {
+    const href = await this.page
+      .locator("a[href*='apex_authentication.logout']")
+      .first()
+      .getAttribute('href')
+      .catch(() => null);
+    if (href) {
+      return href.startsWith('http') ? href : new URL(href, this.page.url()).href;
+    }
+
+    const sessionMatch = this.page.url().match(/[?&]session=(\d+)/i);
+    if (sessionMatch) {
+      const origin = new URL(this.page.url()).origin;
+      return `${origin}/ords/apex_authentication.logout?p_app_id=1002&p_session_id=${sessionMatch[1]}`;
+    }
+
+    return null;
   }
 
   async openCustomerDrawer(): Promise<void> {
