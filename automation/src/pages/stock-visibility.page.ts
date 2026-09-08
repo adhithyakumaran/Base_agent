@@ -22,11 +22,11 @@ export class StockVisibilityPage {
 
     if (/\/login/i.test(this.page.url())) {
       await ensureAuthenticated(this.page);
-      if (homePage) {
-        await homePage.openProductStockVisibility();
-      } else {
-        await this.gotoStockPage();
-      }
+      await this.gotoStockPage();
+    }
+
+    if (/gold-coin-stock/i.test(this.page.url())) {
+      await this.gotoStockPage();
     }
 
     await this.expectLoaded();
@@ -35,9 +35,10 @@ export class StockVisibilityPage {
   private async gotoStockPage(): Promise<void> {
     await dismissBlockingOverlays(this.page);
     await this.page.goto(appUrl('product-stock-visibility?clear=114'), {
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'load',
       timeout: 60_000,
     });
+    await dismissBlockingOverlays(this.page);
   }
 
   async expectLoaded(): Promise<void> {
@@ -45,21 +46,16 @@ export class StockVisibilityPage {
       throw new Error(`Stock Visibility redirected to login — ${this.page.url()}`);
     }
 
-    try {
-      await this.resolver.firstVisible([...LOCATORS.stockVisibility.sku], 'stock sku input', 25_000);
-      return;
-    } catch {
-      await this.page.goto(appUrl('ea1/47?clear=47'), { waitUntil: 'domcontentloaded', timeout: 60_000 }).catch(() => undefined);
-      await dismissBlockingOverlays(this.page);
-    }
+    await this.page.waitForURL(/product-stock-visibility/i, { timeout: 20_000 }).catch(() => undefined);
+    await dismissBlockingOverlays(this.page);
 
     try {
-      await this.resolver.firstVisible([...LOCATORS.stockVisibility.sku], 'stock sku input', 20_000);
+      await this.resolver.firstVisible([...LOCATORS.stockVisibility.sku], 'stock sku input', 30_000);
     } catch {
       const title = await this.page.title().catch(() => 'unknown');
       throw new Error(
         `Stock Visibility page did not expose a SKU field (url=${this.page.url()}, title=${title}). ` +
-          `Confirm BALA can open Product Stock Visibility from Home in the browser.`
+          `Open Home → Stock Visibility manually and confirm #P114_SKU is present for user BALA.`
       );
     }
   }

@@ -3,6 +3,16 @@ import { appUrl } from '../core/app-url';
 import { dismissBlockingOverlays } from '../core/apex-overlays';
 import { LOCATORS, LocatorResolver } from '../core/locator-chain';
 
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/** Match home card label exactly — avoids "Gold Coin Stock Visibility" when asking for "Stock Visibility". */
+export function locateHomeCard(page: Page, cardText: string) {
+  const exact = new RegExp(`^\\s*${escapeRegExp(cardText)}\\s*$`, 'i');
+  return page.locator('a.custom-card-wrap, li.custom-card-item a').filter({ hasText: exact });
+}
+
 export class HomePage {
   private readonly resolver: LocatorResolver;
 
@@ -14,16 +24,13 @@ export class HomePage {
     await dismissBlockingOverlays(this.page);
     await this.page.waitForURL(/\/home/i, { timeout: 15_000 });
 
-    const card = this.page
-      .locator('a.custom-card-wrap, li.custom-card-item a')
-      .filter({ hasText: cardText })
-      .first();
+    const card = locateHomeCard(this.page, cardText);
 
     try {
-      await card.waitFor({ state: 'visible', timeout: 12_000 });
-      await card.scrollIntoViewIfNeeded();
+      await card.first().waitFor({ state: 'visible', timeout: 12_000 });
+      await card.first().scrollIntoViewIfNeeded();
       await dismissBlockingOverlays(this.page);
-      await card.click({ force: true, timeout: 10_000 });
+      await card.first().click({ force: true, timeout: 10_000 });
       return;
     } catch {
       if (!fallbackUrl) throw new Error(`Home card "${cardText}" not found or not clickable`);
@@ -32,7 +39,7 @@ export class HomePage {
   }
 
   async openItemSearch(): Promise<void> {
-    await this.openCardByText('Item Search', appUrl('product-detail-item-search'));
+    await this.openCardByText('Item Search', appUrl('product-detail-item-search?clear=6'));
   }
 
   async openProductStockVisibility(): Promise<void> {
@@ -60,13 +67,22 @@ export class HomePage {
     await dismissBlockingOverlays(this.page);
     await this.page.waitForURL(/\/home/i, { timeout: 15_000 }).catch(() => undefined);
 
-    const menu = await this.resolver.firstVisible([...LOCATORS.userMenu.menu], 'user menu', 10_000);
-    await menu.click({ force: true });
-    await dismissBlockingOverlays(this.page);
+    try {
+      const menu = await this.resolver.firstVisible([...LOCATORS.userMenu.menu], 'user menu', 10_000);
+      await menu.click({ force: true });
+      await dismissBlockingOverlays(this.page);
+      const signOut = await this.resolver.firstVisible([...LOCATORS.userMenu.signOut], 'sign out', 10_000);
+      await signOut.click({ force: true });
+    } catch {
+      await this.page.evaluate(() => {
+        const menuBtn = document.querySelector<HTMLElement>('#L21731618447730172, [data-menu*="menu_L"]');
+        menuBtn?.click();
+        const link = document.querySelector<HTMLAnchorElement>("a[href*='apex_authentication.logout']");
+        link?.click();
+      });
+    }
 
-    const signOut = await this.resolver.firstVisible([...LOCATORS.userMenu.signOut], 'sign out', 10_000);
-    await signOut.click({ force: true });
-    await this.page.waitForURL(/login/i, { timeout: 30_000 }).catch(() => undefined);
+    await this.page.waitForURL(/login/i, { timeout: 30_000 });
     await dismissBlockingOverlays(this.page);
   }
 
