@@ -33,6 +33,7 @@ export const test = base.extend<Fixtures>({
       test.skip(true, 'EA_USER_USERNAME / EA_USER_PASSWORD not configured');
     }
     await ensureAuthenticated(page);
+    await dismissBlockingOverlays(page);
     await expect(page).toHaveURL(/\/home/i, { timeout: 30_000 });
     await use(homePage);
   },

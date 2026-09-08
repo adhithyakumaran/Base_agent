@@ -58,25 +58,31 @@ export class HomePage {
 
   async signOut(): Promise<void> {
     await dismissBlockingOverlays(this.page);
+    await this.page.waitForURL(/\/home/i, { timeout: 15_000 }).catch(() => undefined);
+
     const menu = await this.resolver.firstVisible([...LOCATORS.userMenu.menu], 'user menu', 10_000);
-    await menu.click();
+    await menu.click({ force: true });
+    await dismissBlockingOverlays(this.page);
+
     const signOut = await this.resolver.firstVisible([...LOCATORS.userMenu.signOut], 'sign out', 10_000);
-    await signOut.click();
+    await signOut.click({ force: true });
     await this.page.waitForURL(/login/i, { timeout: 30_000 }).catch(() => undefined);
     await dismissBlockingOverlays(this.page);
   }
 
   async openCustomerDrawer(): Promise<void> {
     await dismissBlockingOverlays(this.page);
+    await this.page.waitForURL(/\/home/i, { timeout: 15_000 }).catch(() => undefined);
     const customer = await this.resolver.firstVisible([...LOCATORS.home.customer], 'customer selector', 10_000);
-    await customer.click();
+    await customer.click({ force: true });
   }
 
   async openSettings(): Promise<void> {
     await dismissBlockingOverlays(this.page);
     const menu = await this.resolver.firstVisible([...LOCATORS.userMenu.menu], 'user menu', 10_000);
-    await menu.click();
+    await menu.click({ force: true });
+    await dismissBlockingOverlays(this.page);
     const settings = await this.resolver.firstVisible([...LOCATORS.userMenu.settings], 'settings', 10_000);
-    await settings.click();
+    await settings.click({ force: true });
   }
 }

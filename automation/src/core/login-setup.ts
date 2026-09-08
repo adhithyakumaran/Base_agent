@@ -178,6 +178,9 @@ export async function performLogin(page: Page, user: string, pass: string): Prom
   await waitForLoginForm(page);
   const scope = await findLoginScope(page);
   await fillLoginForm(scope, user, pass);
+  if (HOME_URL.test(page.url())) {
+    await dismissBlockingOverlays(page);
+  }
 }
 
 export async function dumpLoginFailure(page: Page, reportsDir: string, reason: string): Promise<string> {
