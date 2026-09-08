@@ -71,20 +71,19 @@ export class HomePage {
     await menu.click({ force: true });
     await dismissBlockingOverlays(this.page);
 
-    const signOut = await this.resolver.firstVisible([...LOCATORS.userMenu.signOut], 'sign out', 10_000);
-    await Promise.all([
-      this.page.waitForURL(/login/i, { timeout: 25_000, waitUntil: 'domcontentloaded' }).catch(() => null),
-      signOut.click({ force: true }),
-    ]);
+    // APEX keeps Sign Out in DOM but hidden until menu opens — navigate via logout href instead of clicking invisible item
+    await this.page
+      .locator("a[href*='apex_authentication.logout']")
+      .first()
+      .waitFor({ state: 'attached', timeout: 5_000 })
+      .catch(() => undefined);
 
-    if (!/\/login/i.test(this.page.url())) {
-      const logoutUrl = await this.resolveLogoutUrl();
-      if (!logoutUrl) {
-        throw new Error('Sign out did not reach login and no apex_authentication.logout URL was found');
-      }
-      await this.page.goto(logoutUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+    const logoutUrl = await this.resolveLogoutUrl();
+    if (!logoutUrl) {
+      throw new Error('Could not resolve APEX logout URL after opening user menu');
     }
 
+    await this.page.goto(logoutUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     await this.page.waitForURL(/login/i, { timeout: 30_000, waitUntil: 'domcontentloaded' });
     await dismissBlockingOverlays(this.page);
   }
@@ -96,13 +95,17 @@ export class HomePage {
       .first()
       .getAttribute('href')
       .catch(() => null);
+
+    const origin = new URL(this.page.url()).origin;
+
     if (href) {
-      return href.startsWith('http') ? href : new URL(href, this.page.url()).href;
+      if (/^https?:\/\//i.test(href)) return href;
+      if (href.startsWith('/')) return `${origin}${href}`;
+      return `${origin}/ords/${href.replace(/^\/?/, '')}`;
     }
 
     const sessionMatch = this.page.url().match(/[?&]session=(\d+)/i);
     if (sessionMatch) {
-      const origin = new URL(this.page.url()).origin;
       return `${origin}/ords/apex_authentication.logout?p_app_id=1002&p_session_id=${sessionMatch[1]}`;
     }
 
