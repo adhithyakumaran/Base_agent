@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from qa_orchestrator.models import OrchestratorResult
+from qa_orchestrator.text_sanitize import strip_markdown
 
 
 def build_markdown_report(
@@ -30,7 +31,7 @@ def build_markdown_report(
         f"- **Validation phase:** {validation.phase}",
         "",
         "## Intent",
-        intent.reasoning,
+        strip_markdown(intent.reasoning),
         "",
         f"- **Primary flows:** {', '.join(intent.flow_ids) or '—'}",
         f"- **Supporting (DRAFT):** {', '.join(intent.supporting_flow_ids) or '—'}",
@@ -74,7 +75,7 @@ def build_markdown_report(
             f"- **LLM calls:** {result.llm_calls} · **Suite runs:** {result.steps}",
             f"- **Tokens:** in {result.tokens_in} / out {result.tokens_out}",
             "",
-            validation.summary,
+            strip_markdown(validation.summary),
             "",
         ]
     )

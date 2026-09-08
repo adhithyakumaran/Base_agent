@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge, Textarea } from "@/components/ui/input";
+import { ReportPreview } from "@/components/report-preview";
 import type { AgentRun } from "@/lib/types";
 
 type AgentInsights = {
@@ -189,7 +190,7 @@ export function QaConsole() {
                 <span>Combined report</span>
                 <Badge tone={tone(activeRun.conclusion)}>{activeRun.conclusion || activeRun.status}</Badge>
               </div>
-              <pre className="ea-report-preview">{activeRun.report!.markdown.slice(0, 3200)}</pre>
+              <ReportPreview markdown={activeRun.report!.markdown} />
               <div className="ea-export-row">
                 <span className="ea-export-label">
                   <Download size={14} /> Export

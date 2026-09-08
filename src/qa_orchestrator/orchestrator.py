@@ -88,6 +88,7 @@ class QaOrchestrator:
             llm_summary, _ = self.llm.summarize(
                 prompt=(
                     "Write a concise enterprise QA analysis (3-4 sentences). "
+                    "Plain text only — no markdown, bullets, asterisks, or code fences. "
                     "State intent, suites run, pass/fail honestly, and any SME follow-ups. "
                     "Do not declare PASS without evidence.\n"
                     f"Goal: {req.goal}\n"

@@ -74,10 +74,20 @@ export const LOCATORS = {
       '#P114_SKU',
       "input[name='P114_SKU']",
       'input#P114_SKU',
+      '#P47_SKU',
+      "input[name='P47_SKU']",
+      'input#P47_SKU',
       'input[placeholder*="Item code" i]',
       'input[placeholder*="14 Digit" i]',
+      'input[placeholder*="14 digit" i]',
     ],
-    search: ['#P47_SEARCH', 'button#P47_SEARCH', 'button:has-text("Search")', "[id='P47_SEARCH']"],
+    search: [
+      '#P47_SEARCH',
+      'button#P47_SEARCH',
+      'button:has-text("Search")',
+      "[id='P47_SEARCH']",
+      'button.t-Button--hot:has-text("Search")',
+    ],
   },
   home: {
     storeStock: ['#B74402876591024608', 'button:has-text("STORE STOCK")'],
@@ -85,7 +95,14 @@ export const LOCATORS = {
     orso: ['text=ORSO Recommendation'],
   },
   rivaah: {
-    nav: ['#t_MenuNav_3i', "a[role='menuitem'][id='t_MenuNav_3i']", 'text=Rivaah'],
+    nav: [
+      '#t_MenuNav_3i',
+      "a[role='menuitem'][id='t_MenuNav_3i']",
+      'a.a-MenuBar-label:has-text("Rivaah")',
+      'a.a-MenuBar-label[aria-current="true"]',
+      '.t-Header-nav-list a:has-text("Rivaah")',
+      'text=Rivaah',
+    ],
     back: ['#B50666671840999844', 'button#B50666671840999844', 'button:has-text("Back")'],
     cards: {
       trousseauStyling: [
@@ -107,6 +124,7 @@ export const LOCATORS = {
       ],
       weddingWishlist: [
         "a.t-Card-wrap[href*='dreams-in-gold']",
+        'a.t-Card-wrap:has-text("Rivaah Wedding Wishlist")',
         'a.t-Card-wrap:has-text("Wedding Wishlist")',
         'a.t-Card-wrap:has-text("Dreams in Gold")',
       ],

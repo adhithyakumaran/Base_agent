@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { appUrl } from '../core/app-url';
 import { dismissBlockingOverlays } from '../core/apex-overlays';
 import { LOCATORS, LocatorResolver } from '../core/locator-chain';
+import type { HomePage } from './home.page';
 
 export class RivaahPage {
   private readonly resolver: LocatorResolver;
@@ -10,30 +11,47 @@ export class RivaahPage {
     this.resolver = new LocatorResolver(page);
   }
 
-  /** Open Rivaah via direct URL — reliable when nav menu id differs per session. */
-  async open(): Promise<void> {
+  /** Prefer top-nav (matches real user path); fall back to direct URL with APEX page reset. */
+  async open(homePage?: HomePage): Promise<void> {
     await dismissBlockingOverlays(this.page);
-    await this.page.goto(appUrl('rivaah'), { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+    if (homePage && /\/home/i.test(this.page.url())) {
+      try {
+        await homePage.openRivaahFromNav();
+        await this.page.waitForURL(/rivaah/i, { timeout: 45_000, waitUntil: 'domcontentloaded' });
+        await this.expectCardsLoaded();
+        return;
+      } catch {
+        // fall through to direct navigation
+      }
+    }
+
+    await this.page.goto(appUrl('rivaah?clear=38'), { waitUntil: 'load', timeout: 60_000 });
+    await dismissBlockingOverlays(this.page);
     await this.expectCardsLoaded();
   }
 
-  async openFromHome(homePage: { openRivaahFromNav: () => Promise<void> }): Promise<void> {
-    try {
-      if (/\/home/i.test(this.page.url())) {
-        await homePage.openRivaahFromNav();
-      } else {
-        await this.open();
-        return;
-      }
-    } catch {
-      await this.open();
-      return;
-    }
-    await this.expectCardsLoaded();
+  async openFromHome(homePage: HomePage): Promise<void> {
+    await this.open(homePage);
   }
 
   async expectCardsLoaded(): Promise<void> {
-    await this.page.locator('a.t-Card-wrap').first().waitFor({ state: 'visible', timeout: 30_000 });
+    if (/\/login/i.test(this.page.url())) {
+      throw new Error(`Rivaah requires login — landed on ${this.page.url()}`);
+    }
+
+    await this.resolver.firstVisible(
+      [
+        'a.t-Card-wrap',
+        'li.t-Cards-item a.t-Card-wrap',
+        'h3.t-Card-title',
+        'text=Wedding Trousseau Styling',
+        'text=Engagement Rings',
+        '.t-Body-content',
+      ],
+      'Rivaah cards',
+      35_000
+    );
   }
 
   async openCard(cardKey: keyof typeof LOCATORS.rivaah.cards): Promise<void> {

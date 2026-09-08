@@ -8,6 +8,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
+import { markdownToPlainText } from "@/lib/markdown-format";
 import type { AgentRun, ChannelConfig } from "@/lib/types";
 
 export const TEST_REPORT_EMAIL = "adhithyakumaran2005@gmail.com";
@@ -157,7 +158,7 @@ export async function deliverReport(
     `Reason: ${run.reasonCode || "n/a"}`,
     `Tokens in/out: ${run.usage.tokensIn}/${run.usage.tokensOut}`,
     "",
-    run.report?.markdown?.slice(0, 3500) || "",
+    run.report?.markdown ? markdownToPlainText(run.report.markdown).slice(0, 3500) : "",
   ].join("\n");
 
   const results: DeliveryResult[] = [];

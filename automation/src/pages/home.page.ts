@@ -36,7 +36,7 @@ export class HomePage {
   }
 
   async openProductStockVisibility(): Promise<void> {
-    await this.openCardByText('Stock Visibility', appUrl('product-stock-visibility'));
+    await this.openCardByText('Stock Visibility', appUrl('product-stock-visibility?clear=114'));
   }
 
   async openRivaahFromNav(): Promise<void> {

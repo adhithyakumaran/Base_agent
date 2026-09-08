@@ -6,30 +6,65 @@ import {
   TextRun,
 } from "docx";
 import { jsPDF } from "jspdf";
+import { markdownToPlainLines, parseReportMarkdown } from "./markdown-format";
 
-export function markdownToPlainLines(markdown: string): string[] {
-  return markdown
-    .replace(/\r\n/g, "\n")
-    .split("\n")
-    .map((line) => line.replace(/^#+\s*/, "").replace(/\*\*/g, "").replace(/`/g, "").trim())
-    .filter(Boolean);
-}
+export { markdownToPlainLines, markdownToPlainText } from "./markdown-format";
 
 export async function buildDocxBuffer(title: string, markdown: string): Promise<Buffer> {
-  const lines = markdownToPlainLines(markdown);
+  const blocks = parseReportMarkdown(markdown);
   const children: Paragraph[] = [
     new Paragraph({
-      text: title,
+      children: [new TextRun({ text: title, font: "Calibri", bold: true, size: 32 })],
       heading: HeadingLevel.HEADING_1,
     }),
     new Paragraph({
-      children: [new TextRun({ text: `Generated ${new Date().toISOString()}`, italics: true })],
+      children: [
+        new TextRun({
+          text: `Generated ${new Date().toLocaleString()}`,
+          font: "Calibri",
+          italics: true,
+          size: 20,
+          color: "525252",
+        }),
+      ],
     }),
     new Paragraph({ text: "" }),
   ];
 
-  for (const line of lines) {
-    children.push(new Paragraph({ text: line.replace(/^##\s*/, "") }));
+  for (const block of blocks) {
+    if (block.type === "h1") {
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ text: block.text, font: "Calibri", bold: true, size: 28 })],
+          heading: HeadingLevel.HEADING_1,
+        })
+      );
+      continue;
+    }
+    if (block.type === "h2") {
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ text: block.text, font: "Calibri", bold: true, size: 24 })],
+          heading: HeadingLevel.HEADING_2,
+        })
+      );
+      continue;
+    }
+    if (block.type === "h3") {
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ text: block.text, font: "Calibri", bold: true, size: 22 })],
+          heading: HeadingLevel.HEADING_3,
+        })
+      );
+      continue;
+    }
+    const prefix = block.type === "li" ? "• " : "";
+    children.push(
+      new Paragraph({
+        children: [new TextRun({ text: `${prefix}${block.text}`, font: "Calibri", size: 22 })],
+      })
+    );
   }
 
   const doc = new Document({
@@ -57,11 +92,26 @@ export async function buildPdfBuffer(title: string, markdown: string): Promise<B
   doc.text(`Generated ${new Date().toLocaleString()}`, margin, y);
   y += 22;
 
-  doc.setFontSize(10);
   doc.setTextColor(10, 10, 10);
 
-  for (const line of markdownToPlainLines(markdown)) {
-    const wrapped = doc.splitTextToSize(line, pageWidth);
+  for (const block of parseReportMarkdown(markdown)) {
+    if (block.type === "h1") {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+    } else if (block.type === "h2") {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      y += 6;
+    } else if (block.type === "h3") {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+    } else {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+    }
+
+    const text = block.type === "li" ? `• ${block.text}` : block.text;
+    const wrapped = doc.splitTextToSize(text, pageWidth);
     const blockHeight = wrapped.length * 13;
     if (y + blockHeight > doc.internal.pageSize.getHeight() - margin) {
       doc.addPage();

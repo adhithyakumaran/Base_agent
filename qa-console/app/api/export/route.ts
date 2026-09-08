@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildDocxBuffer, buildPdfBuffer } from "@/lib/export-report";
+import { buildDocxBuffer, buildPdfBuffer, markdownToPlainText } from "@/lib/export-report";
 import { readState } from "@/lib/store";
 
 export async function GET(req: Request) {
@@ -25,7 +25,8 @@ export async function GET(req: Request) {
   }
 
   if (format === "txt") {
-    return new NextResponse(run.report.summary + "\n\n" + run.report.markdown, {
+    const plain = markdownToPlainText(run.report.markdown);
+    return new NextResponse(`${run.report.summary}\n\n${plain}`, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Content-Disposition": `attachment; filename="${filenameBase}.txt"`,
