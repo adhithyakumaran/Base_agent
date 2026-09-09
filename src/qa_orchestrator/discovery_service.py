@@ -79,12 +79,32 @@ class DiscoveryService:
         for p in pages:
             errors.extend(p.get("errors") or [])
         if errors:
-            suggestions.append(f"Technical signals during crawl ({len(errors)}): consider blocking defects before new tests.")
-        if intent.execution_mode == "new_feature":
             suggestions.append(
-                "Draft new scenario/case/script from crawl diff → SME approval before adding to sanity suite."
+                f"Technical signals during crawl ({len(errors)}): consider blocking defects before new tests."
+            )
+        if intent.execution_mode == "new_feature":
+            for fid in intent.flow_ids[:3]:
+                suggestions.append(
+                    f"Proposed automation update for {fid}: extend "
+                    f"automation/test-design/flows/{fid}/test-cases.yaml with new UI scenario; "
+                    f"generate Playwright spec automation/tests/**/{fid}.spec.ts; SME approval required."
+                )
+            suggestions.append(
+                "Draft pipeline: scenario → test case (P0/P1) → Playwright script with KB locators → "
+                "per-flow suite.yaml → add @sanity tag after SME sign-off."
+            )
+            suggestions.append(
+                "Use Browser Recorder (ScoutAI console) to capture DOM components, locators, and interaction "
+                "paths — merge into discovery/uat_ea/flows/ YAML before automation generation."
             )
         flows = report.get("flows") or []
         if flows:
-            suggestions.append("Candidate flow path captured from crawl — map to BF-* flow YAML when SME confirms.")
+            suggestions.append(
+                "Candidate flow path captured from crawl — map to BF-* flow YAML when SME confirms."
+            )
+        if not suggestions and intent.execution_mode in {"new_feature", "discover"}:
+            suggestions.append(
+                "Run Browser Recorder session with DOM snapshots + interactions enabled to gather "
+                "components for future script authoring."
+            )
         return suggestions

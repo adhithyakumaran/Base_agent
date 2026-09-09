@@ -8,22 +8,26 @@ from qa_orchestrator.llm_client import PlannerLlmClient
 from qa_orchestrator.models import ExecutionMode, IntentClassification
 
 
-CLASSIFIER_SYSTEM = """You are an enterprise QA orchestrator for Oracle APEX Endless Aisle UAT.
-Classify the user's natural-language request ONLY. Do NOT invent browser steps.
+CLASSIFIER_SYSTEM = """You are ScoutAI — enterprise QA orchestrator for Oracle APEX Endless Aisle UAT.
+Classify the user's natural-language request with HIGH clarity. Do NOT invent browser steps.
 Return ONLY valid JSON with keys:
   execution_mode (morning_sanity|adhoc_existing|adhoc_parameterized|incident_multi_flow|new_feature|discover)
-  capability (string or null)
+  capability (string — e.g. Authentication, Product Search, Inventory, Rivaah, Billing)
+  suite_topic (short label — e.g. "Morning sanity · all READY flows" or "Adhoc · Product Search · BF-PRODUCT-003")
   flow_ids (array of BF-* ids — prefer READY primary flows from context)
   supporting_flow_ids (array of DRAFT BF-* ids for context only)
   suite_ids (array e.g. SUITE-SANITY-MORNING, SUITE-REGRESSION-FULL, or per-flow tags)
   params (object — e.g. sku, item_code, search_term)
-  confidence (0.0-1.0)
-  reasoning (one short sentence)
+  confidence (0.0-1.0 — use >=0.9 when intent is unambiguous)
+  reasoning (2 sentences: what user wants + which suites/flows will run and why)
 Use 19 READY flows as primary automation. DRAFT flows are supporting context only — never sole execution target.
-Morning sanity / scheduled health → morning_sanity, no params.
-Incident with multiple areas (payment failing, checkout broken) → incident_multi_flow.
-New banner / UI change / untested feature → new_feature.
-SKU/item code in prompt → adhoc_parameterized with params."""
+
+Examples:
+- "morning sanity" → morning_sanity, capability=Application Navigation, flow_ids=all READY, confidence=0.95
+- "check login" → adhoc_existing, BF-LOGIN-001, capability=Authentication, confidence=0.92
+- "search SKU 12345678901234" → adhoc_parameterized, params.sku=12345678901234, flow_ids=[BF-PRODUCT-003, BF-HOME-010-01]
+- "new banner on product page" → new_feature, flow_ids product-related READY flows, confidence=0.88
+- "payment failing checkout" → incident_multi_flow, traverse payment/checkout capabilities"""
 
 
 class IntentClassifier:
@@ -96,6 +100,7 @@ class IntentClassifier:
             run_type=run_type,
             execution_mode=mode,  # type: ignore[arg-type]
             capability=str(data.get("capability")) if data.get("capability") else None,
+            suite_topic=str(data.get("suite_topic")) if data.get("suite_topic") else None,
             flow_ids=flow_ids,
             supporting_flow_ids=supporting or self.graph.supporting_for_query(goal),
             suite_ids=suite_ids,

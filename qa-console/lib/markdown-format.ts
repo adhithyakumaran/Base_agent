@@ -4,7 +4,8 @@ export type ReportBlock =
   | { type: "h3"; text: string }
   | { type: "p"; text: string }
   | { type: "li"; text: string }
-  | { type: "code"; text: string };
+  | { type: "code"; text: string }
+  | { type: "img"; src: string; alt: string };
 
 /** Strip markdown to clean plain text (no stray * or ` artifacts). */
 export function markdownToPlainText(markdown: string): string {
@@ -15,6 +16,7 @@ export function markdownToPlainText(markdown: string): string {
       if (block.type === "h3") return block.text;
       if (block.type === "li") return `• ${block.text}`;
       if (block.type === "code") return block.text;
+      if (block.type === "img") return `[image: ${block.alt}]`;
       return block.text;
     })
     .join("\n")

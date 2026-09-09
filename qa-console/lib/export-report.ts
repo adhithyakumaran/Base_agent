@@ -6,7 +6,7 @@ import {
   TextRun,
 } from "docx";
 import { jsPDF } from "jspdf";
-import { markdownToPlainLines, parseReportMarkdown } from "./markdown-format";
+import { parseReportMarkdown } from "./markdown-format";
 
 export { markdownToPlainLines, markdownToPlainText } from "./markdown-format";
 
@@ -59,6 +59,9 @@ export async function buildDocxBuffer(title: string, markdown: string): Promise<
       );
       continue;
     }
+    if (block.type === "img") {
+      continue;
+    }
     const prefix = block.type === "li" ? "• " : "";
     children.push(
       new Paragraph({
@@ -95,6 +98,9 @@ export async function buildPdfBuffer(title: string, markdown: string): Promise<B
   doc.setTextColor(10, 10, 10);
 
   for (const block of parseReportMarkdown(markdown)) {
+    if (block.type === "img") {
+      continue;
+    }
     if (block.type === "h1") {
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);

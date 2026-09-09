@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test';
+import { captureStepEvidence, wrapPageWithEvidence } from '../core/evidence';
 import { ensureAuthenticated } from './auth';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
@@ -11,9 +12,21 @@ type Fixtures = {
   productSearchPage: ProductSearchPage;
   stockVisibilityPage: StockVisibilityPage;
   authenticatedPage: HomePage;
+  recordStep: (label: string) => Promise<void>;
 };
 
 export const test = base.extend<Fixtures>({
+  page: async ({ page }, use, testInfo) => {
+    wrapPageWithEvidence(page, testInfo);
+    await captureStepEvidence(page, testInfo, 'test-start');
+    await use(page);
+    await captureStepEvidence(page, testInfo, 'test-end');
+  },
+  recordStep: async ({ page }, use, testInfo) => {
+    await use(async (label: string) => {
+      await captureStepEvidence(page, testInfo, label);
+    });
+  },
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
   },

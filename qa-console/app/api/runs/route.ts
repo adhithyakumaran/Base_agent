@@ -18,7 +18,12 @@ export async function POST(req: Request) {
 
   const type = (body.type || "adhoc") as AgentRun["type"];
   const knowledgeIds: string[] = Array.isArray(body.knowledgeIds) ? body.knowledgeIds : [];
-  const notify: string[] = Array.isArray(body.channels) ? body.channels : ["email", "whatsapp"];
+  const notify: string[] =
+    Array.isArray(body.channels) && body.channels.length > 0
+      ? body.channels
+      : body.notify === false
+        ? []
+        : ["email", "whatsapp"];
 
   // Hard lock: one command at a time
   const gate = await readState();

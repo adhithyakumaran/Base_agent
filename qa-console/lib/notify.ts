@@ -11,8 +11,7 @@ import path from "path";
 import { markdownToPlainText } from "@/lib/markdown-format";
 import type { AgentRun, ChannelConfig } from "@/lib/types";
 
-export const TEST_REPORT_EMAIL = "adhithyakumaran2005@gmail.com";
-export const TEST_REPORT_WHATSAPP = "+919965985951";
+import { TEST_REPORT_EMAIL, TEST_REPORT_WHATSAPP } from "@/lib/channel-defaults";
 
 export type DeliveryResult = {
   channel: string;
@@ -148,7 +147,7 @@ export async function deliverReport(
   channels: ChannelConfig,
   selected: string[]
 ): Promise<DeliveryResult[]> {
-  const title = `Apex QA · ${run.conclusion || run.status} · ${run.type}`;
+  const title = `ScoutAI · ${run.conclusion || run.status} · ${run.type}`;
   const body = [
     run.report?.summary || run.goal,
     "",

@@ -1,6 +1,6 @@
-# Apex QA Agent Console
+# ScoutAI · Enterprise QA Console
 
-Enterprise light-theme UI for the QA orchestrator.
+Dark emerald enterprise UI for the ScoutAI QA orchestrator.
 
 ## Run locally
 
@@ -25,14 +25,18 @@ Open **http://127.0.0.1:43123**
 
 ## Features
 
-- Natural language prompt → Groq intent classification → Playwright suite execution
-- **Generate sanity report** — all 19 READY flows
-- **Agent output panel** — intent, suites, discovery/LLM insights, live trace
-- **Export** combined report as MD, PDF, or DOCX
+- **ScoutAI** branding with emerald dark theme + animated background
+- Natural language prompt → high-clarity intent classification → Playwright suite execution
+- **Run 19 sanity suites** — all READY flows with screenshot/DOM evidence on clicks
+- **Browser Recorder** panel — capture console, network, interactions, DOM snapshots for KB discovery
+- **Report channels** — save email & WhatsApp test inboxes; scheduled sanity delivery
+- **Delivery inbox** — view queued/sent report deliveries
+- **Automation suggestions** when new features are detected
+- Export combined report as MD, PDF, or DOCX (Inter typography)
 
 ## Theme
 
-Light background, orange primary buttons (`#EA580C`), black text, Inter sans-serif.
+Dark background, emerald accent (`#34d399`), Inter sans-serif, `>>` `-` company mark in header.
 
 ## Environment
 

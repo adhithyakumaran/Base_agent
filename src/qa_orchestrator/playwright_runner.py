@@ -150,11 +150,16 @@ class PlaywrightRunner:
                     }
                 except json.JSONDecodeError:
                     pass
+            evidence = collect_evidence(cwd)
+            if evidence:
+                meta["evidence"] = evidence
+            screenshot = evidence[0]["path"] if evidence else None
             return StepObservation(
                 step_index=step_index,
                 action="playwright_suite",
                 ok=ok,
                 message=cmd if ok else (proc.stderr.strip() or f"exit {proc.returncode}"),
+                screenshot_path=screenshot,
                 meta=meta,
             )
         except subprocess.TimeoutExpired:
@@ -258,3 +263,32 @@ def resolve_automation_dir() -> Path:
         if (candidate / "package.json").exists():
             return candidate
     return Path("automation")
+
+
+def collect_evidence(automation_dir: Path, *, limit: int = 24) -> list[dict[str, Any]]:
+    """Scan reports/evidence for screenshots and DOM snapshots from the latest run."""
+    evidence_root = automation_dir / "reports" / "evidence"
+    items: list[dict[str, Any]] = []
+    if not evidence_root.exists():
+        return items
+
+    pngs = sorted(evidence_root.rglob("*.png"), key=lambda p: p.stat().st_mtime, reverse=True)
+    for png in pngs[:limit]:
+        rel = str(png.relative_to(automation_dir)).replace("\\", "/")
+        html = png.with_suffix(".html")
+        meta = png.with_suffix(".json")
+        entry: dict[str, Any] = {
+            "type": "screenshot",
+            "path": rel,
+            "label": png.stem,
+        }
+        if html.exists():
+            entry["dom_path"] = str(html.relative_to(automation_dir)).replace("\\", "/")
+        if meta.exists():
+            try:
+                entry["meta"] = json.loads(meta.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                pass
+        items.append(entry)
+    return items
+

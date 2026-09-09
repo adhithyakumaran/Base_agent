@@ -6,12 +6,16 @@ import {
   Download,
   FileText,
   Loader2,
-  ShieldCheck,
+  Radar,
   Sparkles,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge, Textarea } from "@/components/ui/input";
 import { ReportPreview } from "@/components/report-preview";
+import { BrowserRecorderPanel } from "@/components/browser-recorder";
+import { ScoutBackground } from "@/components/scout-background";
+import { DeliveryInbox, SettingsPanel } from "@/components/settings-panel";
 import type { AgentRun } from "@/lib/types";
 
 type AgentInsights = {
@@ -19,13 +23,17 @@ type AgentInsights = {
   capability?: string;
   confidence?: number;
   reasoning?: string;
+  suiteTopic?: string;
   flowIds?: string[];
   supportingFlows?: string[];
   suiteIds?: string[];
   commands?: string[];
   discoverySuggestions?: string[];
+  automationSuggestions?: string[];
+  evidence?: { path: string; label?: string; dom_path?: string }[];
   findings?: { severity: string; code: string; message: string }[];
   executor?: string;
+  classifier?: string;
 };
 
 function parseInsights(run: AgentRun | null): AgentInsights {
@@ -36,27 +44,54 @@ function parseInsights(run: AgentRun | null): AgentInsights {
   const suite = (local.suite_plan as Record<string, unknown>) || {};
   const discovery = (local.discovery as Record<string, unknown>) || {};
   const validation = (local.validation as Record<string, unknown>) || {};
+  const execution = (local.execution as Record<string, unknown>) || {};
   const findings = Array.isArray(validation.findings)
     ? (validation.findings as { severity: string; code: string; message: string }[])
     : [];
+
+  const evidence: AgentInsights["evidence"] = [];
+  const observations = Array.isArray(execution.observations)
+    ? (execution.observations as { meta?: { evidence?: AgentInsights["evidence"] } }[])
+    : [];
+  for (const obs of observations) {
+    for (const ev of obs.meta?.evidence || []) {
+      evidence.push(ev);
+    }
+  }
+
+  const discoverySuggestions = Array.isArray(discovery.suggestions)
+    ? discovery.suggestions.map(String)
+    : [];
+  const automationSuggestions = discoverySuggestions.filter(
+    (s) => s.includes("automation") || s.includes("Playwright") || s.includes("Browser Recorder")
+  );
 
   return {
     executionMode: String(intent.execution_mode || ""),
     capability: intent.capability ? String(intent.capability) : undefined,
     confidence: typeof intent.confidence === "number" ? intent.confidence : undefined,
     reasoning: intent.reasoning ? String(intent.reasoning) : undefined,
+    suiteTopic: intent.suite_topic ? String(intent.suite_topic) : undefined,
     flowIds: Array.isArray(intent.flow_ids) ? intent.flow_ids.map(String) : [],
     supportingFlows: Array.isArray(intent.supporting_flow_ids)
       ? intent.supporting_flow_ids.map(String)
       : [],
     suiteIds: Array.isArray(suite.suite_ids) ? suite.suite_ids.map(String) : [],
     commands: Array.isArray(suite.commands) ? suite.commands.map(String) : [],
-    discoverySuggestions: Array.isArray(discovery.suggestions)
-      ? discovery.suggestions.map(String)
-      : [],
+    discoverySuggestions,
+    automationSuggestions,
+    evidence: evidence.slice(0, 12),
     findings,
     executor: local.executor ? String(local.executor) : undefined,
+    classifier: local.classifier ? String(local.classifier) : undefined,
   };
+}
+
+function clarityTone(confidence?: number) {
+  if (confidence == null) return "neutral" as const;
+  if (confidence >= 0.85) return "ok" as const;
+  if (confidence >= 0.65) return "warn" as const;
+  return "bad" as const;
 }
 
 function tone(conclusion?: string) {
@@ -74,6 +109,7 @@ export function QaConsole() {
   const [error, setError] = useState<string | null>(null);
   const [activeRun, setActiveRun] = useState<AgentRun | null>(null);
   const [health, setHealth] = useState<Record<string, unknown> | null>(null);
+  const [notifyChannels] = useState(["email", "whatsapp"]);
 
   const insights = useMemo(() => parseInsights(activeRun), [activeRun]);
 
@@ -99,7 +135,7 @@ export function QaConsole() {
       const res = await fetch("/api/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goal, type, channels: [] }),
+        body: JSON.stringify({ goal, type, channels: notifyChannels }),
       });
       const json = await res.json();
       if (res.status === 409) {
@@ -118,142 +154,175 @@ export function QaConsole() {
   const reportReady = Boolean(activeRun?.report?.markdown);
 
   return (
-    <div className="ea-shell">
-      <header className="ea-header">
-        <div className="ea-brand">
-          <div className="ea-logo" aria-hidden>
-            <ShieldCheck size={22} strokeWidth={2.2} />
+    <div className="scout-shell">
+      <ScoutBackground />
+
+      <header className="scout-header">
+        <div className="scout-brand">
+          <div className="scout-logo">
+            <Radar size={22} strokeWidth={2.2} />
           </div>
           <div>
-            <h1 className="ea-title">Apex QA Agent</h1>
-            <p className="ea-subtitle">Enterprise test orchestration · Groq intent · Playwright execution</p>
+            <p className="scout-company">
+              <span className="scout-company-mark">&gt;&gt;</span>
+              <span className="scout-company-dash">-</span>
+            </p>
+            <h1 className="scout-title">ScoutAI</h1>
+            <p className="scout-subtitle">
+              Enterprise QA orchestration · intent classification · Playwright evidence
+            </p>
           </div>
         </div>
-        <div className="ea-meta">
+        <div className="scout-meta">
           <Badge tone="info">{String(health?.primary_ready_flows ?? 19)} READY flows</Badge>
           <Badge tone={health?.llm_enabled ? "ok" : "warn"}>
-            {health?.llm_enabled ? "Groq LLM on" : "Deterministic classify"}
+            {health?.llm_enabled ? "LLM classify on" : "Deterministic classify"}
           </Badge>
           <Badge tone="neutral">{String(health?.executor ?? "playwright")}</Badge>
         </div>
       </header>
 
-      {error && <div className="ea-alert">{error}</div>}
+      <section className="scout-hero">
+        <p className="scout-hero-kicker">BUILD AGENTS THAT THINK LIKE HUMANS</p>
+        <h2 className="scout-hero-title">
+          Synthetically trained. Symbolically steered.
+          <br />
+          Deploy QA agents that adapt, act, and learn.
+        </h2>
+      </section>
 
-      <main className="ea-grid">
-        <section className="ea-panel ea-command">
-          <div className="ea-panel-head">
-            <Sparkles size={18} />
-            <span>Natural language command</span>
-          </div>
-          <Textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Describe what to test — e.g. morning sanity, check SKU search, new banner on product page…"
-            className="ea-prompt"
-            disabled={busy}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && prompt.trim()) {
-                e.preventDefault();
-                runAgent(prompt, "adhoc");
-              }
-            }}
-          />
-          <div className="ea-actions">
-            <Button
-              disabled={busy || !prompt.trim()}
-              onClick={() => runAgent(prompt, "adhoc")}
-              className="ea-btn-primary"
-            >
-              {busy ? <Loader2 size={16} className="ea-spin" /> : <Bot size={16} />}
-              Run agent
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={busy}
-              onClick={() =>
-                runAgent(
-                  prompt.includes("sanity") ? prompt : `morning sanity check — ${prompt}`,
-                  "sanity"
-                )
-              }
-            >
-              Generate sanity report
-            </Button>
-          </div>
-          <p className="ea-hint">⌘/Ctrl + Enter runs the agent. Sanity uses all 19 approved Playwright suites.</p>
+      {error && <div className="scout-alert">{error}</div>}
 
-          {reportReady && activeRun && (
-            <div className="ea-report-block">
-              <div className="ea-panel-head">
-                <FileText size={18} />
-                <span>Combined report</span>
-                <Badge tone={tone(activeRun.conclusion)}>{activeRun.conclusion || activeRun.status}</Badge>
-              </div>
-              <ReportPreview markdown={activeRun.report!.markdown} />
-              <div className="ea-export-row">
-                <span className="ea-export-label">
-                  <Download size={14} /> Export
-                </span>
-                {(["md", "pdf", "docx"] as const).map((fmt) => (
-                  <a
-                    key={fmt}
-                    href={`/api/export?runId=${activeRun.id}&format=${fmt}`}
-                    className="ea-export-link"
-                  >
-                    {fmt.toUpperCase()}
-                  </a>
-                ))}
-              </div>
+      <main className="scout-grid">
+        <div className="scout-main-col">
+          <section className="scout-panel scout-command">
+            <div className="scout-panel-head">
+              <Sparkles size={18} />
+              <span>Natural language command</span>
             </div>
-          )}
-        </section>
+            <Textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Describe what to test — morning sanity, SKU search, new banner on product page…"
+              className="scout-prompt"
+              disabled={busy}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && prompt.trim()) {
+                  e.preventDefault();
+                  runAgent(prompt, "adhoc");
+                }
+              }}
+            />
+            <div className="scout-actions">
+              <Button disabled={busy || !prompt.trim()} onClick={() => runAgent(prompt, "adhoc")} className="scout-btn-emerald">
+                {busy ? <Loader2 size={16} className="scout-spin" /> : <Bot size={16} />}
+                Run ScoutAI
+              </Button>
+              <Button variant="secondary" disabled={busy} onClick={() => runAgent(`morning sanity check — ${prompt}`, "sanity")}>
+                <Zap size={16} />
+                Run 19 sanity suites
+              </Button>
+            </div>
+            <p className="scout-hint">⌘/Ctrl + Enter · Reports route to your saved email & WhatsApp inbox</p>
 
-        <aside className="ea-panel ea-output">
-          <div className="ea-panel-head">
-            <Bot size={18} />
-            <span>Agent output</span>
-            {activeRun && (
-              <Badge tone={tone(activeRun.conclusion)}>{activeRun.conclusion || activeRun.status}</Badge>
+            {reportReady && activeRun && (
+              <div className="scout-report-block">
+                <div className="scout-panel-head">
+                  <FileText size={18} />
+                  <span>Enterprise report</span>
+                  <Badge tone={tone(activeRun.conclusion)}>{activeRun.conclusion || activeRun.status}</Badge>
+                </div>
+                <ReportPreview markdown={activeRun.report!.markdown} evidence={insights.evidence} />
+                <div className="scout-export-row">
+                  <span className="scout-export-label">
+                    <Download size={14} /> Export
+                  </span>
+                  {(["md", "pdf", "docx"] as const).map((fmt) => (
+                    <a key={fmt} href={`/api/export?runId=${activeRun.id}&format=${fmt}`} className="scout-export-link">
+                      {fmt.toUpperCase()}
+                    </a>
+                  ))}
+                </div>
+              </div>
             )}
+          </section>
+
+          <BrowserRecorderPanel />
+          <SettingsPanel />
+          <DeliveryInbox />
+        </div>
+
+        <aside className="scout-panel scout-output">
+          <div className="scout-panel-head">
+            <Bot size={18} />
+            <span>ScoutAI output</span>
+            {activeRun && <Badge tone={tone(activeRun.conclusion)}>{activeRun.conclusion || activeRun.status}</Badge>}
           </div>
 
           {!activeRun ? (
-            <div className="ea-empty">
-              Run the agent to see intent classification, suite selection, discovery suggestions, and LLM
-              analysis here.
+            <div className="scout-empty">
+              Run ScoutAI to see high-clarity intent classification, suite selection, evidence captures, and
+              automation suggestions for new features.
             </div>
           ) : (
-            <div className="ea-output-scroll">
-              <OutputBlock title="Intent" badge={insights.executionMode}>
+            <div className="scout-output-scroll">
+              <OutputBlock title="Intent classification" badge={insights.executionMode}>
+                {insights.suiteTopic && <p className="scout-topic">{insights.suiteTopic}</p>}
                 {insights.reasoning && <p>{insights.reasoning}</p>}
                 <ul>
                   {insights.capability && <li>Capability: {insights.capability}</li>}
                   {insights.confidence != null && (
-                    <li>Confidence: {Math.round(insights.confidence * 100)}%</li>
+                    <li>
+                      Clarity:{" "}
+                      <Badge tone={clarityTone(insights.confidence)}>
+                        {insights.confidence >= 0.85 ? "HIGH" : insights.confidence >= 0.65 ? "MEDIUM" : "LOW"}{" "}
+                        {Math.round(insights.confidence * 100)}%
+                      </Badge>
+                    </li>
                   )}
-                  {insights.flowIds?.length ? (
-                    <li>Primary flows: {insights.flowIds.join(", ")}</li>
-                  ) : null}
-                  {insights.supportingFlows?.length ? (
-                    <li>Supporting (DRAFT): {insights.supportingFlows.join(", ")}</li>
-                  ) : null}
+                  {insights.classifier && <li>Classifier: {insights.classifier}</li>}
+                  {insights.flowIds?.length ? <li>Primary flows: {insights.flowIds.join(", ")}</li> : null}
                 </ul>
               </OutputBlock>
 
               <OutputBlock title="Suite selection" badge={insights.executor}>
-                {insights.suiteIds?.length ? (
-                  <p>Suites: {insights.suiteIds.join(", ")}</p>
-                ) : null}
+                {insights.suiteIds?.length ? <p>Suites: {insights.suiteIds.join(", ")}</p> : null}
                 {insights.commands?.map((cmd) => (
-                  <code key={cmd} className="ea-code">
+                  <code key={cmd} className="scout-code">
                     {cmd}
                   </code>
                 ))}
               </OutputBlock>
 
+              {insights.evidence && insights.evidence.length > 0 && (
+                <OutputBlock title="Evidence captures" badge={`${insights.evidence.length}`}>
+                  <div className="scout-evidence-grid">
+                    {insights.evidence.slice(0, 6).map((ev) => (
+                      <figure key={ev.path} className="scout-evidence-card">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`/api/evidence?path=${encodeURIComponent(ev.path)}`}
+                          alt={ev.label || "capture"}
+                        />
+                        <figcaption>{ev.label || ev.path.split("/").pop()}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </OutputBlock>
+              )}
+
+              {insights.automationSuggestions && insights.automationSuggestions.length > 0 && (
+                <OutputBlock title="Automation script suggestions" badge="new feature">
+                  <ul>
+                    {insights.automationSuggestions.map((s) => (
+                      <li key={s}>{s}</li>
+                    ))}
+                  </ul>
+                </OutputBlock>
+              )}
+
               {insights.discoverySuggestions && insights.discoverySuggestions.length > 0 && (
-                <OutputBlock title="Discovery & new feature insights" badge="crawl">
+                <OutputBlock title="Discovery insights" badge="crawl">
                   <ul>
                     {insights.discoverySuggestions.map((s) => (
                       <li key={s}>{s}</li>
@@ -276,20 +345,22 @@ export function QaConsole() {
 
               <OutputBlock title="Live trace">
                 {activeRun.traces.map((t) => (
-                  <div key={t.id} className="ea-trace">
-                    <span className="ea-trace-kind">{t.kind}</span>
+                  <div key={t.id} className="scout-trace">
+                    <span className="scout-trace-kind">{t.kind}</span>
                     <span>{t.message}</span>
                   </div>
                 ))}
               </OutputBlock>
 
-              <OutputBlock title="Usage">
-                <ul>
-                  <li>LLM calls: {activeRun.usage.llmCalls}</li>
-                  <li>Suite runs: {activeRun.usage.steps}</li>
-                  <li>Tokens: {activeRun.usage.tokensIn} in / {activeRun.usage.tokensOut} out</li>
-                </ul>
-              </OutputBlock>
+              {activeRun.channelsNotified?.length ? (
+                <OutputBlock title="Report delivery" badge="sent">
+                  <ul>
+                    {activeRun.channelsNotified.map((c) => (
+                      <li key={c}>{c}</li>
+                    ))}
+                  </ul>
+                </OutputBlock>
+              ) : null}
             </div>
           )}
         </aside>
@@ -308,12 +379,12 @@ function OutputBlock({
   children: React.ReactNode;
 }) {
   return (
-    <div className="ea-out-block">
-      <div className="ea-out-head">
+    <div className="scout-out-block">
+      <div className="scout-out-head">
         <span>{title}</span>
-        {badge && <span className="ea-out-badge">{badge}</span>}
+        {badge && <span className="scout-out-badge">{badge}</span>}
       </div>
-      <div className="ea-out-body">{children}</div>
+      <div className="scout-out-body">{children}</div>
     </div>
   );
 }

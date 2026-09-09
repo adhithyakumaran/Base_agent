@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { AppState, HistoryItem } from "@/lib/types";
 import { MODEL_OPTIONS } from "@/lib/types";
-import { TEST_REPORT_EMAIL, TEST_REPORT_WHATSAPP } from "@/lib/notify";
+import { TEST_REPORT_EMAIL, TEST_REPORT_WHATSAPP } from "@/lib/channel-defaults";
 import { uid } from "@/lib/utils";
 
 const DATA_DIR = path.join(process.cwd(), "data");

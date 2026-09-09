@@ -39,6 +39,7 @@ class IntentClassification(BaseModel):
     run_type: str = "adhoc"
     execution_mode: ExecutionMode = "adhoc_existing"
     capability: str | None = None
+    suite_topic: str | None = None
     flow_ids: list[str] = Field(default_factory=list)
     supporting_flow_ids: list[str] = Field(default_factory=list)
     suite_ids: list[str] = Field(default_factory=list)

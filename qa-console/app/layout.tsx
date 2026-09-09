@@ -8,9 +8,9 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Apex QA Agent · Enterprise Console",
+  title: "ScoutAI · Enterprise QA Console",
   description:
-    "Enterprise QA agent console — Groq intent classification, Playwright suite execution, and exportable reports.",
+    "ScoutAI enterprise QA console — high-clarity intent classification, Playwright evidence capture, and exportable reports.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
