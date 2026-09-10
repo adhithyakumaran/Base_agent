@@ -47,7 +47,7 @@ def test_discover_kb_snapshot_includes_patterns():
 
 def test_flow_catalog_tool():
     kb = InMemoryKnowledgeProvider()
-    load_kb_docs_from_dir(kb, "discovery/uat_ea/kb")
+    load_kb_docs_from_dir(kb, "data/discovery-kb/kb")
     tool = ApexFlowCatalogTool(kb)
     raw = tool.execute({}, ExecutionContext(run_id="t", permissions=[]))
     assert raw.ok

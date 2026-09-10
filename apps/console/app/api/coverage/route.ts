@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { repoRoot } from "@/lib/repo-root";
 
-const REPO = path.resolve(process.cwd(), "..");
+const REPO = repoRoot();
 const INDEX = path.join(REPO, "data", "discovery-kb", "flows", "index.yaml");
 const TESTS = path.join(REPO, "apps", "automation", "tests");
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { repoRoot } from "@/lib/repo-root";
 
 export async function GET(req: Request) {
   const rel = new URL(req.url).searchParams.get("path");
@@ -8,9 +9,10 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Invalid path" }, { status: 400 });
   }
 
+  const root = repoRoot();
   const automationCandidates = [
-    path.resolve(process.cwd(), "..", "apps", "automation"),
-    path.resolve(process.cwd(), "..", "automation"),
+    path.join(root, "apps", "automation"),
+    path.join(root, "automation"),
   ];
   let automationRoot = automationCandidates[0];
   for (const candidate of automationCandidates) {

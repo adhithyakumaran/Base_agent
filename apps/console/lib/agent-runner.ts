@@ -1,9 +1,10 @@
 import { spawn } from "child_process";
 import path from "path";
 import type { AgentRun, KnowledgePill, TraceEvent } from "@/lib/types";
+import { repoRoot } from "@/lib/repo-root";
 import { uid } from "@/lib/utils";
 
-const REPO_ROOT = path.resolve(process.cwd(), "..");
+const REPO_ROOT = repoRoot();
 const LOCAL_AGENT_URL = process.env.LOCAL_AGENT_URL || "http://127.0.0.1:43124";
 
 function extractPills(pills: KnowledgePill[]) {
@@ -95,12 +96,19 @@ async function invokePythonAgentSpawn(
     if (opts.model && opts.model !== "disabled") {
       args.push("--model", opts.model);
     }
-    const py = spawn("python3", args, {
+    const pyBin = process.platform === "win32" ? "python" : "python3";
+    const py = spawn(pyBin, args, {
       cwd: REPO_ROOT,
       env: {
         ...process.env,
         LLM_ENABLED: opts.model === "disabled" ? "false" : "true",
-        PYTHONPATH: path.join(REPO_ROOT, "src") + ":" + REPO_ROOT,
+        QA_DISCOVERY_ROOT: path.join(REPO_ROOT, "data", "discovery-kb"),
+        QA_AUTOMATION_DIR: path.join(REPO_ROOT, "apps", "automation"),
+        PYTHONPATH: [
+          path.join(REPO_ROOT, "services", "agent-runtime"),
+          path.join(REPO_ROOT, "services", "qa-orchestrator"),
+          REPO_ROOT,
+        ].join(path.delimiter),
       },
     });
     let stdout = "";

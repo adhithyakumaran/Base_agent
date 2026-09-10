@@ -142,7 +142,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Base Agent runtime CLI")
     parser.add_argument("goal", help="Natural language goal")
-    parser.add_argument("--kb-dir", default="discovery/uat_ea/kb", help="KB JSON directory")
+    parser.add_argument("--kb-dir", default="data/discovery-kb/kb", help="KB JSON directory")
     args = parser.parse_args()
     runtime = build_default_runtime(kb_dir=args.kb_dir)
     result = runtime.run(args.goal)

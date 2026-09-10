@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { spawn } from "child_process";
 import path from "path";
+import { repoRoot } from "@/lib/repo-root";
 
-const REPO = path.resolve(process.cwd(), "..");
+const REPO = repoRoot();
 const SCRIPT = path.join(REPO, "scripts", "browser_recorder.py");
 
 function pythonBin() {

@@ -257,6 +257,7 @@ def resolve_automation_dir() -> Path:
     raw = os.environ.get("QA_AUTOMATION_DIR")
     if raw:
         return Path(raw)
+    here = Path(__file__).resolve()
     for parent in here.parents:
         for sub in ("apps/automation", "automation"):
             candidate = parent / sub
