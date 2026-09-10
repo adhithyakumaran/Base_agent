@@ -194,7 +194,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=43124)
-    parser.add_argument("--discovery-root", default=str(ROOT / "discovery/uat_ea"))
+    parser.add_argument("--discovery-root", default=str(ROOT / "data" / "discovery-kb"))
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL_REASONING"))
     args = parser.parse_args()
     os.environ.setdefault("LLM_ENABLED", "true")

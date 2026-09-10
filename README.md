@@ -1,93 +1,85 @@
-# Base Agent — Enterprise Runtime
+# ScoutAI — Enterprise QA Agent
 
-Deterministic-first agent runtime for **QA Agent** and **Security Agent** plugins.
+Deterministic-first agent runtime + **ScoutAI** orchestrator for Oracle APEX Endless Aisle UAT.
 
-Oracle APEX Endless Aisle (Titan/Tanishq UAT) is the first target application. Ground Truth from SME is **optional later** — the runtime must perform well before GT exists, using KB + deterministic rules, and must **never loop until success**.
+> **Repo layout v2:** See [docs/REPO_LAYOUT.md](docs/REPO_LAYOUT.md) for the enterprise folder structure.
 
-## Principles
+## Quick start (local)
 
-- **Deterministic-first + LLM-when-required** (LLM is not the kernel)
-- Structured results: `PASS` | `FAIL` | `BLOCKED` | `UNKNOWN` | `INSUFFICIENT_EVIDENCE`
-- Hard budgets: steps / tools / LLM / pages / cycle detection
-- Plugins: Mock Demo + QA APEX (discovery / sanity / flow catalog + anti-stuck crawler)
-- Deploy path: Azure Pipelines → OCI (`azure-pipelines.yml`, `deploy/Dockerfile`)
-
-## Quick start
-
-Needs **Python 3.10+** (3.11/3.12 recommended) and Node 20+ for the console.
+**Python 3.10+** and **Node 20+** required. On Windows use `python` not `python3`.
 
 ```bash
-python3 -m pip install -e '.[dev,browser]'
-python3 -m pytest tests/unit -q
-python3 -m base_agent.api "echo hello"
-python3 -m base_agent.api "discover the application map" --kb-dir discovery/uat_ea/kb
-python3 -m base_agent.api "list application flows" --kb-dir discovery/uat_ea/kb
-python3 -m base_agent.api "sanity check endless aisle" --kb-dir discovery/uat_ea/kb
-```
-
-Live crawl (optional — secrets via env, never git):
-
-```bash
-export APEX_TARGET_URL='https://…/ords/r/tjdcom/ea/login'
-export APEX_USERNAME='…'
-export APEX_PASSWORD='…'
-python3 -m base_agent.api "discover and crawl the application" --kb-dir discovery/uat_ea/kb
-```
-
-## Local-first (preferred now)
-
-```bash
-# One command — orchestrator (Groq + Playwright) + enterprise console UI
+# One command — backend + ScoutAI console
 ./scripts/start_local_stack.sh
+```
 
-# Or manually:
-# 1) Copy .env.example → .env and set GROQ_API_KEY
-# 2) Orchestrator
+Open **http://127.0.0.1:43123**
+
+### Two terminals (Windows Git Bash)
+
+**Terminal 1 — backend** (repo root `baseagentmain/`):
+
+```bash
+cd ~/Downloads/baseagentmain
 set -a && source .env && set +a
-PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
-# 3) Console (light theme, export MD/PDF/DOCX)
-cd qa-console && LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
+export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+export QA_DISCOVERY_ROOT=data/discovery-kb
+export QA_AUTOMATION_DIR=apps/automation
+export QA_RUNNER=playwright
+python scripts/local_agent_server.py --port 43124
 ```
 
-Open **http://127.0.0.1:43123** — prompt box, sanity report, agent output panel, export.
-
-**LLM:** Groq (`GROQ_API_KEY` in `.env`). Swap to Claude via `LLM_PROVIDER=anthropic`. See `docs/architecture/QA_ORCHESTRATOR.md`.
-
-### Windows / downloaded ZIP
-
-If you extracted a ZIP instead of cloning, sync to the latest code first (commit `9d31c2a`+):
+**Terminal 2 — frontend** (`apps/console/`):
 
 ```bash
-cd ~/Downloads/baseagentmain/Base_agent-main   # your folder
-git init
-git remote add origin https://github.com/adhithyakumaran/Base_agent.git
-git fetch origin
-git checkout -b main origin/main
+cd ~/Downloads/baseagentmain/apps/console
+npm install
+export LOCAL_AGENT_URL=http://127.0.0.1:43124
+npm run dev
 ```
 
-Back up local `.env` and `automation/config/.env` before `git checkout` if you edited them.
-
-**litellm import error on Python 3.10** (`cannot import name 'NotRequired' from 'typing'`):
+### Playwright sanity (19 flows)
 
 ```bash
-pip install "litellm>=1.40,<1.57"
-python -c "import litellm; print('litellm OK')"
+cd apps/automation
+npm run test:sanity
+npm run test:regression    # full regression
+npm run test:negative      # negative / edge cases
 ```
 
-Or upgrade to Python 3.11+. Then reinstall: `pip install -e ".[llm]"`.
+Credentials: `apps/automation/config/.env`
 
-**Playwright login / sanity:** in `automation/config/.env`, set base URL **without** `/login`:
-
-```env
-EA_BASE_URL=https://dev-ea.titanrts.com/ords/r/tjdcom/ea
-EA_LOGIN_URL=/login
-```
-
-Run setup check: `python scripts/check_setup.py`
-
-## Repo map
+## Enterprise repo map
 
 | Path | Purpose |
+|---|---|
+| `apps/console/` | ScoutAI Next.js UI |
+| `apps/automation/` | Playwright tests + scenarios/cases/suites |
+| `services/agent-runtime/` | Base Agent kernel |
+| `services/qa-orchestrator/` | LLM classify → suite select → run → report |
+| `data/discovery-kb/` | Flow KB YAML, recordings, crawl snapshots |
+| `plugins/qa_apex/` | Crawler + APEX skills |
+| `docs/` | Architecture & proposals |
+| `infra/` | Deploy + CI |
+
+## Scenarios location
+
+```text
+apps/automation/test-design/flows/{BF-*}/scenarios.yaml
+apps/automation/test-design/flows/{BF-*}/test-cases.yaml
+data/discovery-kb/flows/{BF-*}.yaml          ← KB source
+```
+
+## Orchestrator modes (NL → suites)
+
+| Ask | Mode | Runs |
+|---|---|---|
+| "morning sanity" | `morning_sanity` | All 19 @sanity suites |
+| "sanity for login" | `adhoc_existing` | BF-LOGIN-001 suite |
+| "full regression" | `regression_suite` | All @regression |
+| "negative login test" | `negative_suite` | @negative tagged tests |
+| "test payment flow" | `incident_multi_flow` | Billing + related flows (synonym map) |
+
 |---|---|
 | `src/qa_orchestrator/` | **Phase 1 product** — intent classify + suite select + Playwright + KB graph |
 | `plugins/mock_demo/` | Deterministic mock tools |

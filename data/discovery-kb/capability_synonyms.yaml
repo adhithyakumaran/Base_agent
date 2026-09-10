@@ -1,0 +1,48 @@
+# Capability synonym map — expands NL queries to KB capabilities
+# Used by FlowKnowledgeGraph.match_capabilities() for payment/checkout/billing etc.
+
+synonyms:
+  payment:
+    - checkout
+    - pay
+    - transaction
+    - order payment
+    - billing payment
+  Billing:
+    - invoice
+    - manual invoice
+    - bills
+    - payment
+  Product Search:
+    - sku
+    - item search
+    - product lookup
+    - search product
+  Inventory:
+    - stock
+    - stock visibility
+    - availability
+  Authentication:
+    - login
+    - logout
+    - sign in
+    - sign out
+  Reporting:
+    - reports
+    - report master
+  Rivaah:
+    - wedding
+    - trousseau
+    - engagement
+  Application Navigation:
+    - home
+    - navigation
+    - dashboard
+  Administration:
+    - admin
+    - administration master
+  Product Browse:
+    - browse
+    - catalogue
+    - catalog
+    - best deal

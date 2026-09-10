@@ -10,7 +10,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-AUTOMATION = ROOT / "automation"
+AUTOMATION = ROOT / "apps" / "automation"
+if not AUTOMATION.is_dir():
+    AUTOMATION = ROOT / "automation"
 ENV_FILE = ROOT / ".env"
 AUTOMATION_ENV = AUTOMATION / "config" / ".env"
 

@@ -35,7 +35,7 @@ def test_technical_rules_error_page():
 
 def test_discover_kb_snapshot_includes_patterns():
     kb = InMemoryKnowledgeProvider()
-    n = load_kb_docs_from_dir(kb, "discovery/uat_ea/kb")
+    n = load_kb_docs_from_dir(kb, "data/discovery-kb/kb")
     assert n >= 10
     tool = ApexDiscoverTool(kb)
     raw = tool.execute({"mode": "kb_snapshot", "max_pages": 40}, ExecutionContext(run_id="t", permissions=[]))

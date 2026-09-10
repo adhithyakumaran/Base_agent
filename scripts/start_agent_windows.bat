@@ -1,16 +1,9 @@
 @echo off
 REM Start QA orchestrator from repo root on Windows
 cd /d "%~dp0.."
-set PYTHONPATH=src;.
-if exist .env (
-  for /f "usebackq tokens=1,* delims==" %%a in (".env") do (
-    set "line=%%a"
-    if not "!line:~0,1!"=="#" (
-      set "%%a=%%b"
-    )
-  )
-)
-set QA_AUTOMATION_DIR=%CD%\automation
+set PYTHONPATH=services\agent-runtime;services\qa-orchestrator;.
+set QA_DISCOVERY_ROOT=data\discovery-kb
+set QA_AUTOMATION_DIR=%CD%\apps\automation
 set QA_RUNNER=playwright
 echo Repo: %CD%
 echo Automation: %QA_AUTOMATION_DIR%
