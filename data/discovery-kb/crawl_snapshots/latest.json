@@ -1,0 +1,13 @@
+{
+  "captured_at": "2026-09-10T09:32:59.984513+00:00",
+  "mode": "dry_run",
+  "stats": {
+    "pages": 0,
+    "skipped": 0,
+    "reason": "dry_run_or_no_seed"
+  },
+  "pages": [],
+  "flows": [],
+  "signatures": {},
+  "page_keys": []
+}

@@ -14,4 +14,4 @@ sys.path.insert(0, str(ROOT))
 def runtime():
     from base_agent.api import build_default_runtime
 
-    return build_default_runtime(kb_dir=str(ROOT / "discovery/uat_ea/kb"))
+    return build_default_runtime(kb_dir=str(ROOT / "data" / "discovery-kb" / "kb"))

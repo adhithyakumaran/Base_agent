@@ -1,5 +1,5 @@
-# Azure Pipelines entrypoint — canonical definition lives in infra/ci/
-# Azure DevOps expects this file at repo root by default.
+# Azure Pipelines — Base Agent + ScoutAI Console → OCI
+# Root entrypoint: azure-pipelines.yml (keep in sync)
 
 trigger:
   branches:
@@ -126,5 +126,4 @@ stages:
                 - script: |
                     echo "Deploy base-agent + apex-qa-console to OCI"
                     echo "Inject vault secrets: APEX_TARGET_URL, APEX_USERNAME, APEX_PASSWORD"
-                    echo "Report channels: REPORT_EMAIL=$(REPORT_EMAIL) REPORT_WHATSAPP=$(REPORT_WHATSAPP)"
                   displayName: OCI deploy checklist

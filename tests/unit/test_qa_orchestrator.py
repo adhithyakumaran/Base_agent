@@ -18,7 +18,7 @@ from qa_orchestrator.suite_selector import SuiteSelector
 from qa_orchestrator.validator import Validator
 
 
-DISCOVERY_ROOT = "discovery/uat_ea"
+DISCOVERY_ROOT = "data/discovery-kb"
 FLOWS_DIR = f"{DISCOVERY_ROOT}/flows"
 
 

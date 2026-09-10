@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Local warm QA Orchestrator HTTP server — intent classify + Playwright execution.
 
-  PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+  PYTHONPATH=services/agent-runtime:services/qa-orchestrator:. python3 scripts/local_agent_server.py --port 43124
 
 POST /run   {"goal":"morning sanity check","run_type":"sanity"}
 POST /chat  same body — chat-friendly alias with structured enterprise output
@@ -21,8 +21,17 @@ from typing import Any
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
-sys.path.insert(0, str(ROOT))
+for entry in (
+    ROOT / "services" / "agent-runtime",
+    ROOT / "services" / "qa-orchestrator",
+    ROOT,
+):
+    entry_str = str(entry)
+    if entry_str not in sys.path:
+        sys.path.insert(0, entry_str)
+legacy_src = ROOT / "src"
+if legacy_src.is_dir() and str(legacy_src) not in sys.path:
+    sys.path.insert(0, str(legacy_src))
 
 
 def _load_dotenv() -> None:
@@ -194,12 +203,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=43124)
-    parser.add_argument("--discovery-root", default=str(ROOT / "discovery/uat_ea"))
+    parser.add_argument("--discovery-root", default=str(ROOT / "data" / "discovery-kb"))
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL_REASONING"))
     args = parser.parse_args()
     os.environ.setdefault("LLM_ENABLED", "true")
     os.environ.setdefault("QA_RUNNER", "playwright")
-    os.environ.setdefault("QA_AUTOMATION_DIR", str(ROOT / "automation"))
+    os.environ.setdefault("QA_AUTOMATION_DIR", str(ROOT / "apps" / "automation"))
     global SERVICE
     SERVICE = LocalOrchestratorService(args.discovery_root, default_model=args.model)
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)

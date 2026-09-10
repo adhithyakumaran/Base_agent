@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "base-agent"
-version = "0.1.0"
-description = "Deterministic-first enterprise agent runtime for QA/Security plugins"
+version = "0.2.0"
+description = "ScoutAI enterprise QA agent — deterministic-first runtime + orchestrator"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Proprietary" }
-authors = [{ name = "Base Agent Team" }]
+authors = [{ name = "ScoutAI Team" }]
 dependencies = [
   "pydantic>=2.6",
   "langgraph>=0.2",
@@ -28,8 +28,8 @@ base-agent = "base_agent.api:main"
 qa-orchestrator = "qa_orchestrator.api:main"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["services/agent-runtime", "services/qa-orchestrator"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["services/agent-runtime", "services/qa-orchestrator"]

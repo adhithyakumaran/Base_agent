@@ -50,7 +50,7 @@ def test_mission_pack(runtime):
 
 def test_all_qa_skills_registered():
     kb = InMemoryKnowledgeProvider()
-    load_kb_docs_from_dir(kb, "discovery/uat_ea/kb")
+    load_kb_docs_from_dir(kb, "data/discovery-kb/kb")
     reg = ToolRegistry()
     register_qa_apex(reg, kb)
     names = {t.name for t in reg.list()}
@@ -71,7 +71,7 @@ def test_all_qa_skills_registered():
 
 def test_page_probe_tool_direct():
     kb = InMemoryKnowledgeProvider()
-    load_kb_docs_from_dir(kb, "discovery/uat_ea/kb")
+    load_kb_docs_from_dir(kb, "data/discovery-kb/kb")
     reg = ToolRegistry()
     register_qa_apex(reg, kb)
     tool = reg.get("qa.apex.page_probe")
