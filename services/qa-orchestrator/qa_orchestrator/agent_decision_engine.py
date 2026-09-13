@@ -46,6 +46,10 @@ class AgentDecisionEngine:
         self.llm_call_count = 0
         self.llm_latency_ms = 0
 
+    def preview_deterministic(self, state: AgentRunState) -> AgentActionType:
+        """Return the deterministic-only action without LLM consultation."""
+        return self._deterministic_decision(state).action
+
     def decide(self, state: AgentRunState) -> tuple[AgentAction, AgentDecisionEntry]:
         deterministic = self._deterministic_decision(state)
         allowed = self._allowed_actions(state, deterministic)
