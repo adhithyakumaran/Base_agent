@@ -6,7 +6,6 @@ import re
 from typing import Any
 
 from qa_orchestrator.coverage_assessment import CoverageAssessor
-from qa_orchestrator.execution_gate import ExecutionGate
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.llm_client import PlannerLlmClient
 from qa_orchestrator.models import (
