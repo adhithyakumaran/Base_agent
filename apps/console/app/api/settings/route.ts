@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
+import { requireApiAuth, requireMutationAuth } from "@/lib/api-auth";
 import { mutateState, pushHistory, readState } from "@/lib/store";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
+
   const state = await readState();
   return NextResponse.json({ schedule: state.schedule, channels: state.channels });
 }
 
 export async function PUT(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
   const body = await req.json();
   const state = await mutateState((s) => {
     if (body.schedule) {

@@ -5,16 +5,18 @@ from typing import Any
 from qa_orchestrator.intent_classifier import IntentClassifier
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.llm_client import PlannerLlmClient
-from qa_orchestrator.models import ExecutionPlan, IntentClassification, PlanStep
+from qa_orchestrator.models import ExecutionPlan, IntentClassification, PlanStep, PlanningResult
+from qa_orchestrator.qa_planner import QaPlanner
 
 
 class Planner:
-    """Intent classification planner — maps NL prompts to execution modes and flows."""
+    """Intent classification + QA planning facade."""
 
     def __init__(self, graph: FlowKnowledgeGraph, llm: PlannerLlmClient) -> None:
         self.graph = graph
         self.llm = llm
         self.classifier = IntentClassifier(graph, llm)
+        self.qa_planner = QaPlanner(graph, llm)
 
     def classify(
         self,
@@ -25,6 +27,16 @@ class Planner:
     ) -> IntentClassification:
         return self.classifier.classify(goal, run_type=run_type, context_packets=context_packets)
 
+    def plan_request(
+        self,
+        goal: str,
+        *,
+        run_type: str = "adhoc",
+        context_packets: list[dict[str, Any]] | None = None,
+    ) -> PlanningResult:
+        intent = self.classify(goal, run_type=run_type, context_packets=context_packets)
+        return self.qa_planner.plan(intent, context_packets=context_packets)
+
     def plan(
         self,
         goal: str,
@@ -32,9 +44,9 @@ class Planner:
         run_type: str = "adhoc",
         context_packets: list[dict[str, Any]] | None = None,
     ) -> ExecutionPlan:
-        """Backward-compatible plan view synthesized from intent classification."""
-        intent = self.classify(goal, run_type=run_type, context_packets=context_packets)
-        return intent_to_execution_plan(intent)
+        """Backward-compatible plan view synthesized from QA planning."""
+        planning = self.plan_request(goal, run_type=run_type, context_packets=context_packets)
+        return intent_to_execution_plan(planning.intent)
 
 
 def intent_to_execution_plan(intent: IntentClassification) -> ExecutionPlan:

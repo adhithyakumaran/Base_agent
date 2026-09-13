@@ -73,6 +73,7 @@ class LocalOrchestratorService:
         *,
         run_type: str = "adhoc",
         model: str | None = None,
+        run_id: str | None = None,
         context_packets: list[dict[str, Any]] | None = None,
         skip_discovery: bool = False,
         skip_execution: bool = False,
@@ -83,6 +84,7 @@ class LocalOrchestratorService:
                 goal=goal,
                 run_type=run_type,
                 model=model or self.default_model,
+                run_id=run_id,
                 context_packets=context_packets or [],
                 skip_discovery=skip_discovery,
                 skip_execution=skip_execution,
@@ -168,6 +170,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         run_type = str(body.get("run_type") or body.get("type") or "adhoc")
         model = body.get("model")
+        run_id = body.get("run_id")
         context_packets = body.get("context_packets") if isinstance(body.get("context_packets"), list) else []
         skip_discovery = bool(body.get("skip_discovery"))
         skip_execution = bool(body.get("skip_execution"))
@@ -176,6 +179,7 @@ class Handler(BaseHTTPRequestHandler):
                 goal,
                 run_type=run_type,
                 model=model,
+                run_id=str(run_id) if run_id else None,
                 context_packets=context_packets,
                 skip_discovery=skip_discovery,
                 skip_execution=skip_execution,

@@ -38,7 +38,7 @@ function extractPills(pills: KnowledgePill[]) {
 
 async function invokeWarmAgent(
   goal: string,
-  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[] }
+  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[]; runId?: string }
 ): Promise<{
   ok: boolean;
   result?: Record<string, unknown>;
@@ -48,10 +48,16 @@ async function invokeWarmAgent(
   try {
     const res = await fetch(`${LOCAL_AGENT_URL}/run`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.SCOUT_API_TOKEN
+          ? { Authorization: `Bearer ${process.env.SCOUT_API_TOKEN}` }
+          : {}),
+      },
       body: JSON.stringify({
         goal,
         run_type: opts.runType,
+        run_id: opts.runId,
         model: opts.model === "disabled" ? null : opts.model,
         context_packets: opts.contextPackets,
       }),
@@ -76,7 +82,7 @@ async function invokeWarmAgent(
 
 async function invokePythonAgentSpawn(
   goal: string,
-  opts: { runType: string; model: string }
+  opts: { runType: string; model: string; runId?: string }
 ): Promise<{
   ok: boolean;
   result?: Record<string, unknown>;
@@ -95,6 +101,9 @@ async function invokePythonAgentSpawn(
     ];
     if (opts.model && opts.model !== "disabled") {
       args.push("--model", opts.model);
+    }
+    if (opts.runId) {
+      args.push("--run-id", opts.runId);
     }
     const pyBin = process.platform === "win32" ? "python" : "python3";
     const py = spawn(pyBin, args, {
@@ -146,7 +155,7 @@ async function invokePythonAgentSpawn(
 
 async function invokePythonAgent(
   goal: string,
-  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[] }
+  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[]; runId?: string }
 ) {
   const warm = await invokeWarmAgent(goal, opts);
   if (warm.ok) return warm;
@@ -213,6 +222,7 @@ export async function executeRun(
     runType: run.type === "scheduled" ? "sanity" : run.type,
     model: run.model,
     contextPackets,
+    runId: run.id,
   });
   await push("info", `Orchestrator bridge via ${invoked.via || "unknown"}`);
 

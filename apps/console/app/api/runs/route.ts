@@ -1,17 +1,23 @@
 import { NextResponse } from "next/server";
 import { executeRun } from "@/lib/agent-runner";
 import { deliverReport } from "@/lib/notify";
+import { requireApiAuth, requireMutationAuth } from "@/lib/api-auth";
 import { hasActiveRun, mutateState, pushHistory, readState } from "@/lib/store";
 import type { AgentRun } from "@/lib/types";
 import { uid } from "@/lib/utils";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
+
   const { readState } = await import("@/lib/store");
   const state = await readState();
   return NextResponse.json({ runs: state.runs, locked: hasActiveRun(state) });
 }
 
 export async function POST(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
   const body = await req.json();
   const goal = String(body.goal || "").trim();
   if (!goal) return NextResponse.json({ error: "Command required" }, { status: 400 });

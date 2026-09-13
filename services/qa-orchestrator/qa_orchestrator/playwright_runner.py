@@ -18,6 +18,8 @@ from qa_orchestrator.models import (
     StepObservation,
     SuiteSelectionPlan,
 )
+from qa_orchestrator.param_validator import params_to_env, validate_run_params
+from qa_orchestrator.suite_commands import build_flow_command, build_sanity_command
 
 
 @dataclass
@@ -40,6 +42,14 @@ class PlaywrightRunner:
             flow_id=os.environ.get("QA_FLOW_ID"),
             dry_run=env_dry,
         )
+        self._run_id: str | None = os.environ.get("QA_RUN_ID")
+        self._flow_ids: list[str] = []
+
+    def set_run_context(self, *, run_id: str | None = None, flow_ids: list[str] | None = None) -> None:
+        if run_id:
+            self._run_id = run_id
+        if flow_ids:
+            self._flow_ids = list(flow_ids)
 
     @property
     def mode(self) -> str:
@@ -57,7 +67,12 @@ class PlaywrightRunner:
         error_parts: list[str] = []
 
         for i, cmd in enumerate(selection.commands or ["npm run test:sanity"]):
-            obs = self._run_command(cmd, step_index=i, params=selection.params)
+            obs = self._run_command(
+                cmd,
+                step_index=i,
+                params=selection.params,
+                flow_ids=selection.flow_ids,
+            )
             observations.append(obs)
             if not obs.ok:
                 overall_ok = False
@@ -76,17 +91,24 @@ class PlaywrightRunner:
         suite = suite or self.config.suite
         flow_id = flow_id or self.config.flow_id
         if flow_id:
-            cmd = f"npm run test:flow -- @{flow_id}"
+            cmd = build_flow_command(flow_id, polarity="positive")
         elif suite == "sanity":
-            cmd = "npm run test:sanity"
+            cmd = build_sanity_command(positive_only=True)
         elif suite == "regression":
             cmd = "npm run test:regression"
         else:
-            cmd = f"npm run test:flow -- @{suite}"
+            cmd = build_flow_command(suite, polarity="positive")
         selection = SuiteSelectionPlan(commands=[cmd], flow_ids=[flow_id] if flow_id else [], suite_ids=[suite])
         return self.run_selection(selection)
 
-    def _run_command(self, cmd: str, *, step_index: int, params: dict[str, Any]) -> StepObservation:
+    def _run_command(
+        self,
+        cmd: str,
+        *,
+        step_index: int,
+        params: dict[str, Any],
+        flow_ids: list[str] | None = None,
+    ) -> StepObservation:
         cwd = self.config.automation_dir.resolve()
         if not cwd.exists():
             return StepObservation(
@@ -107,8 +129,21 @@ class PlaywrightRunner:
             )
 
         env = _enrich_path(os.environ.copy())
-        for key, value in (params or {}).items():
-            env[f"QA_PARAM_{str(key).upper()}"] = str(value)
+        if self._run_id:
+            env["QA_RUN_ID"] = self._run_id
+        active_flows = flow_ids or self._flow_ids
+        if active_flows:
+            env["QA_FLOW_ID"] = active_flows[0]
+        try:
+            validated = validate_run_params(params)
+        except ValueError as exc:
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=False,
+                message=f"invalid params: {exc}",
+            )
+        env.update(params_to_env(validated))
 
         resolved = _resolve_command(cmd, env)
         if isinstance(resolved, str) and resolved.startswith("ERROR:"):
@@ -150,7 +185,7 @@ class PlaywrightRunner:
                     }
                 except json.JSONDecodeError:
                     pass
-            evidence = collect_evidence(cwd)
+            evidence = collect_evidence(cwd, run_id=self._run_id)
             if evidence:
                 meta["evidence"] = evidence
             screenshot = evidence[0]["path"] if evidence else None
@@ -266,28 +301,43 @@ def resolve_automation_dir() -> Path:
     return Path("apps/automation")
 
 
-def collect_evidence(automation_dir: Path, *, limit: int = 24) -> list[dict[str, Any]]:
-    """Scan reports/evidence for screenshots and DOM snapshots from the latest run."""
+def collect_evidence(
+    automation_dir: Path,
+    *,
+    run_id: str | None = None,
+    limit: int = 24,
+) -> list[dict[str, Any]]:
+    """Collect evidence artifacts scoped to a single run_id."""
     evidence_root = automation_dir / "reports" / "evidence"
     items: list[dict[str, Any]] = []
     if not evidence_root.exists():
         return items
 
-    pngs = sorted(evidence_root.rglob("*.png"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if run_id:
+        scan_root = evidence_root / run_id
+        if not scan_root.exists():
+            return items
+        pngs = sorted(scan_root.rglob("*.png"), key=lambda p: p.stat().st_mtime, reverse=True)
+    else:
+        pngs = sorted(evidence_root.rglob("*.png"), key=lambda p: p.stat().st_mtime, reverse=True)
+
     for png in pngs[:limit]:
         rel = str(png.relative_to(automation_dir)).replace("\\", "/")
-        html = png.with_suffix(".html")
         meta = png.with_suffix(".json")
         entry: dict[str, Any] = {
             "type": "screenshot",
             "path": rel,
-            "label": png.stem,
+            "label": png.parent.name,
         }
-        if html.exists():
-            entry["dom_path"] = str(html.relative_to(automation_dir)).replace("\\", "/")
+        dom = png.with_suffix(".html")
+        if dom.exists():
+            entry["dom_path"] = str(dom.relative_to(automation_dir)).replace("\\", "/")
         if meta.exists():
             try:
-                entry["meta"] = json.loads(meta.read_text(encoding="utf-8"))
+                meta_data = json.loads(meta.read_text(encoding="utf-8"))
+                entry["meta"] = meta_data
+                if run_id and meta_data.get("runId") and meta_data.get("runId") != run_id:
+                    continue
             except json.JSONDecodeError:
                 pass
         items.append(entry)
