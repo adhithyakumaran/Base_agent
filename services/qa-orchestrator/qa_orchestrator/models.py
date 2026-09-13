@@ -444,6 +444,7 @@ class PlanningResult(BaseModel):
     reasoning_summary: str = ""
     next_actions: list[str] = Field(default_factory=list)
     planner: str = "deterministic"
+    retrieval_diagnostics: dict[str, Any] | None = None
 
 
 FailureType = Literal[
