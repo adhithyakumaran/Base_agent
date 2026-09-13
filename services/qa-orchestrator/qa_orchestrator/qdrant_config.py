@@ -23,9 +23,13 @@ class QdrantConfig:
     score_threshold: float | None = None
     dense_dimensions: int = 64
     hybrid_enabled: bool = True
+    upsert_batch_size: int = 64
 
     @classmethod
     def from_env(cls) -> QdrantConfig:
+        from qa_orchestrator.embedding_config import EmbeddingConfig
+
+        emb = EmbeddingConfig.from_env()
         threshold_raw = os.environ.get("QA_QDRANT_SCORE_THRESHOLD")
         threshold = float(threshold_raw) if threshold_raw else None
         return cls(
@@ -35,6 +39,7 @@ class QdrantConfig:
             timeout_ms=int(os.environ.get("QA_QDRANT_TIMEOUT_MS", "5000")),
             top_k=int(os.environ.get("QA_QDRANT_TOP_K", "8")),
             score_threshold=threshold,
-            dense_dimensions=int(os.environ.get("QA_EMBEDDING_DIMENSIONS", "64")),
+            dense_dimensions=emb.dimensions,
             hybrid_enabled=_env_bool("QA_QDRANT_HYBRID_ENABLED", default=True),
+            upsert_batch_size=int(os.environ.get("QA_QDRANT_UPSERT_BATCH_SIZE", "64")),
         )

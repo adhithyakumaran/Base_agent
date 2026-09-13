@@ -10,6 +10,7 @@ from typing import Any, Protocol
 
 from qa_orchestrator.embedding_provider import (
     DeterministicEmbeddingProvider,
+    EmbeddingProvider,
     build_sparse_vector,
     sparse_dot,
 )
@@ -17,6 +18,14 @@ from qa_orchestrator.qa_knowledge_models import QaKnowledgeDocument
 from qa_orchestrator.qdrant_config import QdrantConfig
 
 logger = logging.getLogger(__name__)
+
+
+class CollectionCompatibilityError(RuntimeError):
+    """Embedding/Qdrant configuration mismatch — reindex required."""
+
+    def __init__(self, message: str, *, reindex_required: bool = True) -> None:
+        super().__init__(message)
+        self.reindex_required = reindex_required
 
 
 @dataclass
@@ -32,8 +41,8 @@ def document_point_uuid(document_id: str) -> str:
     return str(uuid.UUID(digest))
 
 
-def document_payload(doc: QaKnowledgeDocument) -> dict[str, Any]:
-    return {
+def document_payload(doc: QaKnowledgeDocument, embedding: EmbeddingProvider | None = None) -> dict[str, Any]:
+    payload = {
         "document_id": doc.document_id,
         "document_type": doc.document_type,
         "flow_id": doc.flow_id,
@@ -52,7 +61,22 @@ def document_payload(doc: QaKnowledgeDocument) -> dict[str, Any]:
         "source_hash": doc.source_hash,
         "indexed_at": doc.indexed_at,
         "version": doc.version,
+        "embedding_provider": doc.embedding_provider,
+        "embedding_model": doc.embedding_model,
+        "embedding_dimensions": doc.embedding_dimensions,
+        "embedding_version": doc.embedding_version,
     }
+    if embedding is not None:
+        meta = embedding.metadata()
+        payload.update(
+            {
+                "embedding_provider": meta.get("embedding_provider", doc.embedding_provider),
+                "embedding_model": meta.get("embedding_model", doc.embedding_model),
+                "embedding_dimensions": meta.get("embedding_dimensions", doc.embedding_dimensions),
+                "embedding_version": meta.get("embedding_version", doc.embedding_version),
+            }
+        )
+    return payload
 
 
 def payload_to_document(payload: dict[str, Any]) -> QaKnowledgeDocument | None:
@@ -79,6 +103,10 @@ def payload_to_document(payload: dict[str, Any]) -> QaKnowledgeDocument | None:
             source_hash=str(payload.get("source_hash") or ""),
             indexed_at=str(payload.get("indexed_at") or ""),
             version=int(payload.get("version") or 1),
+            embedding_provider=str(payload.get("embedding_provider") or ""),
+            embedding_model=str(payload.get("embedding_model") or ""),
+            embedding_dimensions=int(payload.get("embedding_dimensions") or 0),
+            embedding_version=str(payload.get("embedding_version") or ""),
         )
     except Exception as exc:
         logger.warning("invalid qdrant payload ignored: %s", exc)
@@ -89,9 +117,9 @@ class VectorStoreBackend(Protocol):
     @property
     def available(self) -> bool: ...
 
-    def ensure_collection(self) -> None: ...
+    def ensure_collection(self, *, embedding: EmbeddingProvider | None = None) -> None: ...
 
-    def upsert(self, points: list[StoredPoint]) -> None: ...
+    def upsert(self, points: list[StoredPoint], *, batch_size: int = 64) -> None: ...
 
     def delete_by_document_ids(self, document_ids: list[str]) -> None: ...
 
@@ -107,21 +135,24 @@ class VectorStoreBackend(Protocol):
         limit: int,
         filters: dict[str, Any] | None = None,
         score_threshold: float | None = None,
+        hybrid: bool = True,
     ) -> list[tuple[QaKnowledgeDocument, float, str]]: ...
 
 
 class InMemoryVectorStore:
     """Deterministic hybrid store used by unit tests and Qdrant fallback."""
 
-    def __init__(self, embedding: DeterministicEmbeddingProvider | None = None) -> None:
+    def __init__(self, embedding: EmbeddingProvider | None = None) -> None:
         self.embedding = embedding or DeterministicEmbeddingProvider()
         self._points: dict[str, StoredPoint] = {}
         self.available = True
+        self._collection_meta: dict[str, Any] = {}
 
-    def ensure_collection(self) -> None:
-        return None
+    def ensure_collection(self, *, embedding: EmbeddingProvider | None = None) -> None:
+        emb = embedding or self.embedding
+        self._collection_meta = emb.metadata()
 
-    def upsert(self, points: list[StoredPoint]) -> None:
+    def upsert(self, points: list[StoredPoint], *, batch_size: int = 64) -> None:
         for point in points:
             self._points[point.document.document_id] = point
 
@@ -168,6 +199,7 @@ class InMemoryVectorStore:
         limit: int,
         filters: dict[str, Any] | None = None,
         score_threshold: float | None = None,
+        hybrid: bool = True,
     ) -> list[tuple[QaKnowledgeDocument, float, str]]:
         dense_scores: dict[str, float] = {}
         sparse_scores: dict[str, float] = {}
@@ -179,18 +211,25 @@ class InMemoryVectorStore:
             dense_scores[doc_id] = dense
             sparse_scores[doc_id] = sparse
 
-        fused = _rrf_fuse([dense_scores, sparse_scores], k=60)
-        ranked = sorted(fused.items(), key=lambda x: x[1], reverse=True)
+        if hybrid:
+            fused = _rrf_fuse([dense_scores, sparse_scores], k=60)
+            ranked = sorted(fused.items(), key=lambda x: x[1], reverse=True)
+        else:
+            ranked = sorted(dense_scores.items(), key=lambda x: x[1], reverse=True)
+
         out: list[tuple[QaKnowledgeDocument, float, str]] = []
         for doc_id, score in ranked[:limit]:
             if score_threshold is not None and score < score_threshold:
                 continue
             point = self._points[doc_id]
-            method = "HYBRID_RRF"
-            if dense_scores.get(doc_id, 0) >= sparse_scores.get(doc_id, 0):
-                method = "DENSE"
+            if hybrid:
+                method = "HYBRID_RRF"
+                if dense_scores.get(doc_id, 0) >= sparse_scores.get(doc_id, 0):
+                    method = "DENSE"
+                else:
+                    method = "SPARSE"
             else:
-                method = "SPARSE"
+                method = "DENSE"
             out.append((point.document, score, method))
         return out
 
@@ -210,7 +249,7 @@ class QdrantVectorStore:
     DENSE_NAME = "dense"
     SPARSE_NAME = "sparse"
 
-    def __init__(self, config: QdrantConfig, embedding: DeterministicEmbeddingProvider) -> None:
+    def __init__(self, config: QdrantConfig, embedding: EmbeddingProvider) -> None:
         self.config = config
         self.embedding = embedding
         self._client = None
@@ -240,15 +279,20 @@ class QdrantVectorStore:
             self._init_error = str(exc)
             logger.warning("qdrant unavailable, fallback enabled: %s", exc)
 
-    def ensure_collection(self) -> None:
+    def ensure_collection(self, *, embedding: EmbeddingProvider | None = None) -> None:
         if not self._available or self._client is None:
             return
         from qdrant_client.http import models
 
+        emb = embedding or self.embedding
+        meta = emb.metadata()
         exists = False
         try:
-            self._client.get_collection(self.config.collection)
+            info = self._client.get_collection(self.config.collection)
             exists = True
+            self._validate_existing_collection(info, meta)
+        except CollectionCompatibilityError:
+            raise
         except Exception:
             exists = False
         if exists:
@@ -257,7 +301,7 @@ class QdrantVectorStore:
             collection_name=self.config.collection,
             vectors_config={
                 self.DENSE_NAME: models.VectorParams(
-                    size=self.embedding.dimensions,
+                    size=emb.dimensions,
                     distance=models.Distance.COSINE,
                 )
             },
@@ -266,27 +310,72 @@ class QdrantVectorStore:
             },
         )
 
-    def upsert(self, points: list[StoredPoint]) -> None:
+    def _validate_existing_collection(self, info: Any, meta: dict[str, str | int | bool]) -> None:
+        params = info.config.params.vectors
+        dense = params.get(self.DENSE_NAME) if isinstance(params, dict) else None
+        if dense is None and hasattr(params, "size"):
+            size = params.size
+        elif dense is not None:
+            size = dense.size
+        else:
+            size = None
+        expected = int(meta.get("embedding_dimensions") or self.embedding.dimensions)
+        if size is not None and int(size) != expected:
+            raise CollectionCompatibilityError(
+                f"qdrant collection dimension mismatch: stored={size} expected={expected}; reindex required"
+            )
+        stored_meta = self._read_collection_embedding_meta()
+        if not stored_meta:
+            return
+        for key in ("embedding_provider", "embedding_model", "embedding_version"):
+            if stored_meta.get(key) and meta.get(key) and stored_meta.get(key) != meta.get(key):
+                raise CollectionCompatibilityError(
+                    f"embedding metadata mismatch on {key}: stored={stored_meta.get(key)} expected={meta.get(key)}; reindex required"
+                )
+
+    def _read_collection_embedding_meta(self) -> dict[str, Any]:
+        if not self._client:
+            return {}
+        offset = None
+        records, offset = self._client.scroll(
+            collection_name=self.config.collection,
+            limit=1,
+            offset=offset,
+            with_payload=[
+                "embedding_provider",
+                "embedding_model",
+                "embedding_dimensions",
+                "embedding_version",
+            ],
+            with_vectors=False,
+        )
+        if not records:
+            return {}
+        return dict(records[0].payload or {})
+
+    def upsert(self, points: list[StoredPoint], *, batch_size: int = 64) -> None:
         if not self._available or self._client is None:
             raise RuntimeError("qdrant unavailable")
         from qdrant_client.http import models
 
-        qdrant_points = []
-        for point in points:
-            qdrant_points.append(
-                models.PointStruct(
-                    id=document_point_uuid(point.document.document_id),
-                    vector={
-                        self.DENSE_NAME: point.dense,
-                        self.SPARSE_NAME: models.SparseVector(
-                            indices=list(point.sparse.keys()),
-                            values=list(point.sparse.values()),
-                        ),
-                    },
-                    payload=point.payload,
+        for start in range(0, len(points), max(1, batch_size)):
+            chunk = points[start : start + batch_size]
+            qdrant_points = []
+            for point in chunk:
+                qdrant_points.append(
+                    models.PointStruct(
+                        id=document_point_uuid(point.document.document_id),
+                        vector={
+                            self.DENSE_NAME: point.dense,
+                            self.SPARSE_NAME: models.SparseVector(
+                                indices=list(point.sparse.keys()),
+                                values=list(point.sparse.values()),
+                            ),
+                        },
+                        payload=point.payload,
+                    )
                 )
-            )
-        self._client.upsert(collection_name=self.config.collection, points=qdrant_points, wait=True)
+            self._client.upsert(collection_name=self.config.collection, points=qdrant_points, wait=True)
 
     def delete_by_document_ids(self, document_ids: list[str]) -> None:
         if not self._available or self._client is None or not document_ids:
@@ -386,13 +475,15 @@ class QdrantVectorStore:
         limit: int,
         filters: dict[str, Any] | None = None,
         score_threshold: float | None = None,
+        hybrid: bool = True,
     ) -> list[tuple[QaKnowledgeDocument, float, str]]:
         if not self._available or self._client is None:
             return []
         from qdrant_client.http import models
 
         q_filter = self._build_filter(filters)
-        if self.config.hybrid_enabled:
+        use_hybrid = hybrid and self.config.hybrid_enabled
+        if use_hybrid:
             response = self._client.query_points(
                 collection_name=self.config.collection,
                 prefetch=[
@@ -437,18 +528,33 @@ class QdrantVectorStore:
 
 def build_stored_point(
     doc: QaKnowledgeDocument,
-    embedding: DeterministicEmbeddingProvider,
+    embedding: EmbeddingProvider,
+    *,
+    dense: list[float] | None = None,
 ) -> StoredPoint:
-    dense = embedding.embed_query(doc.text)
+    vector = dense if dense is not None else embedding.embed_query(doc.text)
+    meta = embedding.metadata()
+    doc.embedding_provider = str(meta.get("embedding_provider") or doc.embedding_provider)
+    doc.embedding_model = str(meta.get("embedding_model") or doc.embedding_model)
+    doc.embedding_dimensions = int(meta.get("embedding_dimensions") or embedding.dimensions)
+    doc.embedding_version = str(meta.get("embedding_version") or doc.embedding_version)
     sparse = build_sparse_vector(doc.text)
-    return StoredPoint(document=doc, dense=dense, sparse=sparse, payload=document_payload(doc))
+    return StoredPoint(
+        document=doc,
+        dense=vector,
+        sparse=sparse,
+        payload=document_payload(doc, embedding),
+    )
 
 
 def create_vector_store(
     config: QdrantConfig,
-    embedding: DeterministicEmbeddingProvider | None = None,
+    embedding: EmbeddingProvider | None = None,
 ) -> VectorStoreBackend:
-    emb = embedding or DeterministicEmbeddingProvider(config.dense_dimensions)
+    from qa_orchestrator.embedding_config import EmbeddingConfig
+    from qa_orchestrator.embedding_provider import create_embedding_provider
+
+    emb = embedding or create_embedding_provider(EmbeddingConfig.from_env())
     if config.enabled:
         qdrant = QdrantVectorStore(config, emb)
         if qdrant.available:
