@@ -31,31 +31,15 @@ from qa_orchestrator.generation_journal import load_journal, save_journal, new_j
 from qa_orchestrator.models import GeneratorJournal
 from qa_orchestrator.execution_gate import ExecutionGate
 
+from tests.unit.conftest_generation import automation_dir  # noqa: F401 — re-export fixture
+
+
 DISCOVERY_ROOT = "data/discovery-kb"
 
 
 @pytest.fixture(autouse=True)
 def disable_llm(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LLM_ENABLED", "false")
-
-
-@pytest.fixture
-def automation_dir(tmp_path: Path) -> Path:
-    root = tmp_path / "automation"
-    (root / "tests" / "product").mkdir(parents=True)
-    (root / "tests" / "product" / "QA-PARAM-SKU.spec.ts").write_text("// existing param test", encoding="utf-8")
-    (root / "src" / "fixtures").mkdir(parents=True)
-    (root / "src" / "fixtures" / "test-base.ts").write_text("export const test = {};", encoding="utf-8")
-    (root / "src" / "pages").mkdir(parents=True)
-    (root / "src" / "pages" / "product-search.page.ts").write_text("export class ProductSearchPage {}", encoding="utf-8")
-    (root / "scripts").mkdir(parents=True)
-    script = Path("apps/automation/scripts/validate-generated-spec.mjs")
-    if script.exists():
-        (root / "scripts" / "validate-generated-spec.mjs").write_text(
-            script.read_text(encoding="utf-8"),
-            encoding="utf-8",
-        )
-    return root
 
 
 @pytest.fixture
@@ -174,7 +158,7 @@ def test_code_generation_produces_spec():
     scenario = build_scenario(flow_id="BF-PRODUCT-003", request=_generation_request(), exploration=_exploration())
     test_case = build_test_case(scenario)
     actions = build_action_model(test_case, exploration=_exploration())
-    spec = generate_spec(scenario=scenario, test_case=test_case, actions=actions)
+    spec, _meta = generate_spec(scenario=scenario, test_case=test_case, actions=actions)
     assert "test.describe" in spec
     assert test_case.test_case_id in spec
     assert "src/fixtures/test-base" in spec
@@ -184,7 +168,7 @@ def test_code_generation_produces_spec():
 def test_generated_spec_syntax_validation():
     scenario = build_scenario(flow_id="BF-PRODUCT-003", request=_generation_request(), exploration=_exploration())
     test_case = build_test_case(scenario)
-    spec = generate_spec(
+    spec, _meta = generate_spec(
         scenario=scenario,
         test_case=test_case,
         actions=build_action_model(test_case, exploration=_exploration()),
@@ -279,7 +263,7 @@ def test_existing_auth_fixture_reused_in_spec():
         exploration=_exploration(),
     )
     test_case = build_test_case(scenario)
-    spec = generate_spec(
+    spec, _meta = generate_spec(
         scenario=scenario,
         test_case=test_case,
         actions=build_action_model(test_case, exploration=_exploration()),
@@ -291,7 +275,7 @@ def test_existing_auth_fixture_reused_in_spec():
 def test_evidence_fixture_reused_in_spec():
     scenario = build_scenario(flow_id="BF-PRODUCT-003", request=_generation_request(), exploration=_exploration())
     test_case = build_test_case(scenario)
-    spec = generate_spec(
+    spec, _meta = generate_spec(
         scenario=scenario,
         test_case=test_case,
         actions=build_action_model(test_case, exploration=_exploration()),
