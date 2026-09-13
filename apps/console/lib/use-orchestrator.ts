@@ -7,8 +7,14 @@ export type OrchestratorStatus = {
   environment: string;
   executor: string;
   llmEnabled: boolean;
-  approvedFlows: number;
-  smeReadyFlows: number;
+  flowCounts: {
+    total: number;
+    smeReady: number;
+    approved: number;
+    executable: number;
+    awaitingApproval: number;
+    pendingArtifacts: number;
+  };
   pendingApprovals: number;
   safetyGate: string;
   agentMode: string;

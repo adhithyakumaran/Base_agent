@@ -42,7 +42,13 @@ export function FlowsView({ onRunFlow }: { onRunFlow?: (goal: string) => void })
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["id"]>("sme_ready");
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState<FlowRow[]>([]);
-  const [totals, setTotals] = useState<{ approved: number; smeReady: number } | null>(null);
+  const [totals, setTotals] = useState<{
+    all?: number;
+    approved: number;
+    smeReady: number;
+    executable?: number;
+    pendingApproval?: number;
+  } | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<FlowDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -105,7 +111,8 @@ export function FlowsView({ onRunFlow }: { onRunFlow?: (goal: string) => void })
         <div>
           <h1>Approved QA flows</h1>
           <p className="view-subtitle">
-            {totals?.approved ?? "—"} approved · {totals?.smeReady ?? "—"} SME-ready enterprise E2E assets
+            {totals?.all ?? "—"} total · {totals?.smeReady ?? "—"} SME-ready · {totals?.approved ?? "—"} approved ·{" "}
+            {totals?.executable ?? "—"} executable · {totals?.pendingApproval ?? "—"} awaiting approval
           </p>
         </div>
       </header>

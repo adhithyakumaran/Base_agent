@@ -218,7 +218,8 @@ export function ScoutApp() {
           <div className="topbar-status" role="status" aria-live="polite">
             <span className={orchestrator?.connected ? "dot dot--ok" : "dot dot--bad"} aria-hidden />
             <span>{orchestrator?.connected ? "Orchestrator connected" : "Orchestrator offline"}</span>
-            <span>{orchestrator?.approvedFlows ?? "—"} approved</span>
+            <span>{orchestrator?.flowCounts?.executable ?? "—"} executable</span>
+            <span>{orchestrator?.flowCounts?.smeReady ?? "—"} SME-ready</span>
           </div>
 
           <div className="topbar-actions">

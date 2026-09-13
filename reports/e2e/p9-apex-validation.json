@@ -1,0 +1,1430 @@
+{
+  "environment": "UAT",
+  "timestamp": "2026-09-13T18:25:29.833315+00:00",
+  "preflight": {
+    "status": "ENVIRONMENT_BLOCKED",
+    "environment": "UAT",
+    "apex_reachable": true,
+    "apex_http_status": 406,
+    "credentials_configured": true,
+    "playwright_installed": true,
+    "node_modules_present": true,
+    "evidence_dir_writable": true,
+    "ground_truth_dir_exists": true,
+    "login_probe_ok": false,
+    "login_probe_error": "",
+    "blocked_reason": "login_probe_skipped",
+    "checks": [
+      {
+        "name": "apex_url",
+        "ok": true,
+        "detail": "HTTP 406"
+      },
+      {
+        "name": "node_modules",
+        "ok": true
+      },
+      {
+        "name": "playwright_cli",
+        "ok": true
+      },
+      {
+        "name": "evidence_writable",
+        "ok": true
+      },
+      {
+        "name": "ground_truth_dir",
+        "ok": true
+      },
+      {
+        "name": "credentials",
+        "ok": true
+      },
+      {
+        "name": "login_probe",
+        "ok": false,
+        "detail": "skipped"
+      }
+    ]
+  },
+  "inventory": {
+    "flows": [
+      {
+        "flow_id": "BF-ADMINISTRATION-009",
+        "name": "Administration",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-ADMINISTRATION-009: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-BEST-DEAL-008",
+        "name": "Best Deal",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-BEST-DEAL-008: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-BESTDEAL-008",
+        "name": "Best Deal Product Detail",
+        "kb_status": "SUPERSEDED",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-BESTDEAL-008: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-BROWSE-009",
+        "name": "Browse All Products",
+        "kb_status": "DRAFT",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-BROWSE-009: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-CAT-EAR-010",
+        "name": "Category Earrings Browse",
+        "kb_status": "DRAFT",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-CAT-EAR-010: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-FINDPRICE-004",
+        "name": "Find Price Lookup",
+        "kb_status": "DRAFT",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-FINDPRICE-004: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-HOME-010",
+        "name": "Home Page / Application Navigation Map",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-HOME-010: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-HOME-010-01",
+        "name": "Item Search",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-HOME-010-01: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-HOME-010-C01",
+        "name": "Home Page Utility Components",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-HOME-010-C01: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-ITEMCODE-011",
+        "name": "Item Code Or QR Search",
+        "kb_status": "DRAFT",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-ITEMCODE-011: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-ITEMSEARCH-007",
+        "name": "Item SKU Search (legacy path)",
+        "kb_status": "SUPERSEDED",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-ITEMSEARCH-007: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-LOGIN-001",
+        "name": "User Login",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-LOGIN-001: APPROVED artifact + sme_ready + KB safety checks satisfied",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-LOGIN-HOME-005",
+        "name": "Login To Home (superseded)",
+        "kb_status": "DRAFT",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-LOGIN-HOME-005: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-LOGOUT-002",
+        "name": "User Logout",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-LOGOUT-002: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-MANUAL-INVOICE-009",
+        "name": "Manual Invoice",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-MANUAL-INVOICE-009: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-PRODUCT-003",
+        "name": "Search Product",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "APPROVED",
+        "executable": false,
+        "reason_code": "approval.stale",
+        "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-PRODUCT-004",
+        "name": "View Product",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-PRODUCT-004: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-PRODUCT-CATALOGUE-006",
+        "name": "Product Catalogue",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-PRODUCT-CATALOGUE-006: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-PRODUCT-STOCK-VISIBILITY-009",
+        "name": "Product Stock Visibility",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-PRODUCT-STOCK-VISIBILITY-009: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-REPORTS-007",
+        "name": "Reports",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-REPORTS-007: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-REPORTS-012",
+        "name": "Reports Submenu Browse",
+        "kb_status": "SUPERSEDED",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-REPORTS-012: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-RIVAAH-005",
+        "name": "Rivaah Main Menu",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-RIVAAH-005: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-RIVAAH-005-01",
+        "name": "Wedding Trousseau Styling",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-RIVAAH-005-01: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-RIVAAH-005-02",
+        "name": "Trousseau Set Image",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-RIVAAH-005-02: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-RIVAAH-005-03",
+        "name": "Engagement Rings",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-RIVAAH-005-03: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-RIVAAH-005-04",
+        "name": "Wedding Experts",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-RIVAAH-005-04: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-RIVAAH-005-05",
+        "name": "Rivaah Wedding Wishlist",
+        "kb_status": "READY",
+        "sme_ready": true,
+        "approval_status": "PENDING_SME_APPROVAL",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "message": "BF-RIVAAH-005-05: artifact approval is PENDING_SME_APPROVAL",
+        "in_catalog": true
+      },
+      {
+        "flow_id": "BF-RIVAAH-013",
+        "name": "Rivaah Wedding Browse",
+        "kb_status": "SUPERSEDED",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-RIVAAH-013: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-RIVAAH-TRO-014",
+        "name": "Rivaah Wedding Trousseau",
+        "kb_status": "SUPERSEDED",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-RIVAAH-TRO-014: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-STD-BROWSE-015",
+        "name": "Standard Product Browse",
+        "kb_status": "DRAFT",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-STD-BROWSE-015: missing test-cases.yaml approval status",
+        "in_catalog": false
+      },
+      {
+        "flow_id": "BF-STOCKVIS-006",
+        "name": "Stock Visibility Search",
+        "kb_status": "SUPERSEDED",
+        "sme_ready": false,
+        "approval_status": null,
+        "executable": false,
+        "reason_code": "approval.missing",
+        "message": "BF-STOCKVIS-006: missing test-cases.yaml approval status",
+        "in_catalog": false
+      }
+    ],
+    "totals": {
+      "total_flows": 31,
+      "sme_ready": 19,
+      "kb_ready": 19,
+      "approved": 2,
+      "pending_approval": 17,
+      "rejected": 0,
+      "executable": 1,
+      "blocked": 30,
+      "draft": 6,
+      "superseded": 6
+    }
+  },
+  "flows_tested": [
+    {
+      "flow_id": "BF-LOGIN-001",
+      "name": "User Login",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-LOGIN-001: APPROVED artifact + sme_ready + KB safety checks satisfied",
+      "in_catalog": true,
+      "category": "authentication"
+    },
+    {
+      "flow_id": "BF-PRODUCT-003",
+      "name": "Search Product",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "APPROVED",
+      "executable": false,
+      "reason_code": "approval.stale",
+      "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required",
+      "in_catalog": true,
+      "category": "parameterized_search"
+    },
+    {
+      "flow_id": "BF-LOGOUT-002",
+      "name": "User Logout",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "PENDING_SME_APPROVAL",
+      "executable": false,
+      "reason_code": "approval.pending",
+      "message": "BF-LOGOUT-002: artifact approval is PENDING_SME_APPROVAL",
+      "in_catalog": true,
+      "category": "logout"
+    },
+    {
+      "flow_id": "BF-HOME-010",
+      "name": "Home Page / Application Navigation Map",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "PENDING_SME_APPROVAL",
+      "executable": false,
+      "reason_code": "approval.pending",
+      "message": "BF-HOME-010: artifact approval is PENDING_SME_APPROVAL",
+      "in_catalog": true,
+      "category": "navigation"
+    },
+    {
+      "flow_id": "BF-PRODUCT-004",
+      "name": "View Product",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "PENDING_SME_APPROVAL",
+      "executable": false,
+      "reason_code": "approval.pending",
+      "message": "BF-PRODUCT-004: artifact approval is PENDING_SME_APPROVAL",
+      "in_catalog": true,
+      "category": "product_view"
+    },
+    {
+      "flow_id": "BF-HOME-010-01",
+      "name": "Item Search",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "PENDING_SME_APPROVAL",
+      "executable": false,
+      "reason_code": "approval.pending",
+      "message": "BF-HOME-010-01: artifact approval is PENDING_SME_APPROVAL",
+      "in_catalog": true,
+      "category": "item_search"
+    },
+    {
+      "flow_id": "BF-PRODUCT-STOCK-VISIBILITY-009",
+      "name": "Product Stock Visibility",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "PENDING_SME_APPROVAL",
+      "executable": false,
+      "reason_code": "approval.pending",
+      "message": "BF-PRODUCT-STOCK-VISIBILITY-009: artifact approval is PENDING_SME_APPROVAL",
+      "in_catalog": true,
+      "category": "stock_visibility"
+    },
+    {
+      "flow_id": "BF-BEST-DEAL-008",
+      "name": "Best Deal",
+      "kb_status": "READY",
+      "sme_ready": true,
+      "approval_status": "PENDING_SME_APPROVAL",
+      "executable": false,
+      "reason_code": "approval.pending",
+      "message": "BF-BEST-DEAL-008: artifact approval is PENDING_SME_APPROVAL",
+      "in_catalog": true,
+      "category": "promotions"
+    }
+  ],
+  "runs": [
+    {
+      "id": "p9_nl_check_login",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Check login",
+      "category": "authentication",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": [
+        "BF-LOGIN-001"
+      ],
+      "gate": {
+        "flow_id": "BF-LOGIN-001",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "approval_status": "PENDING_SME_APPROVAL",
+        "message": "BF-LOGIN-001: artifact approval is PENDING_SME_APPROVAL"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {},
+        "expected": {},
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_nl_check_login",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 7,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL"
+    },
+    {
+      "id": "p9_nl_search_sku",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Search SKU ABC123",
+      "category": "parameterized_search",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": [
+        "BF-PRODUCT-003"
+      ],
+      "gate": {
+        "flow_id": "BF-PRODUCT-003",
+        "executable": false,
+        "reason_code": "approval.stale",
+        "approval_status": "APPROVED",
+        "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {
+          "sku": "ABC123"
+        },
+        "expected": {
+          "sku": "ABC123"
+        },
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_nl_search_sku",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 17,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL"
+    },
+    {
+      "id": "p9_nl_item_code_variant",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Search for the product using item code ABC123",
+      "category": "parameterized_search",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": [
+        "BF-PRODUCT-003"
+      ],
+      "gate": {
+        "flow_id": "BF-PRODUCT-003",
+        "executable": false,
+        "reason_code": "approval.stale",
+        "approval_status": "APPROVED",
+        "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {
+          "sku": "ABC123"
+        },
+        "expected": {
+          "sku": "ABC123"
+        },
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_nl_item_code_variant",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 16,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL"
+    },
+    {
+      "id": "p9_exact_flow_id",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "BF-PRODUCT-003",
+      "category": "exact_id",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": [
+        "BF-PRODUCT-003"
+      ],
+      "gate": {
+        "flow_id": "BF-PRODUCT-003",
+        "executable": false,
+        "reason_code": "approval.stale",
+        "approval_status": "APPROVED",
+        "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {},
+        "expected": {},
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_exact_flow_id",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 12,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL"
+    },
+    {
+      "id": "p9_invalid_login",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Test invalid login",
+      "category": "negative",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": [
+        "BF-LOGIN-001"
+      ],
+      "gate": {
+        "flow_id": "BF-LOGIN-001",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "approval_status": "PENDING_SME_APPROVAL",
+        "message": "BF-LOGIN-001: artifact approval is PENDING_SME_APPROVAL"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {},
+        "expected": {},
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_invalid_login",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 7,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL"
+    },
+    {
+      "id": "p9_logout",
+      "passed": false,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": false,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": false,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Log out of the application",
+      "category": "logout",
+      "expected_flow": "BF-LOGOUT-002",
+      "selected_flow": [],
+      "gate": {
+        "flow_id": "BF-LOGOUT-002",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "approval_status": "PENDING_SME_APPROVAL",
+        "message": "BF-LOGOUT-002: artifact approval is PENDING_SME_APPROVAL"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {},
+        "expected": {},
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_logout",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 9,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL"
+    },
+    {
+      "id": "p9_live_login",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Check login",
+      "category": "live_execution",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": [
+        "BF-LOGIN-001"
+      ],
+      "gate": {
+        "flow_id": "BF-LOGIN-001",
+        "executable": false,
+        "reason_code": "approval.pending",
+        "approval_status": "PENDING_SME_APPROVAL",
+        "message": "BF-LOGIN-001: artifact approval is PENDING_SME_APPROVAL"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {},
+        "expected": {},
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_live_login",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 7,
+      "blocked": true,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL",
+      "resume": true
+    },
+    {
+      "id": "p9_live_sku",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1,
+      "terminal_status": "WAITING_FOR_APPROVAL",
+      "reached_executing": false,
+      "execution_ok": false,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Search SKU ABC123",
+      "category": "live_execution",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": [
+        "BF-PRODUCT-003"
+      ],
+      "gate": {
+        "flow_id": "BF-PRODUCT-003",
+        "executable": false,
+        "reason_code": "approval.stale",
+        "approval_status": "APPROVED",
+        "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required"
+      },
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "verification": null,
+      "parameter_trace": {
+        "validated_parameters": {
+          "sku": "ABC123"
+        },
+        "expected": {
+          "sku": "ABC123"
+        },
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_live_sku",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 17,
+      "blocked": true,
+      "false_pass": false,
+      "final_result": "WAITING_FOR_APPROVAL",
+      "resume": true
+    },
+    {
+      "id": "p9_offline_approval_resume",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "COMPLETED",
+        "NEEDS_REVIEW",
+        "FAILED"
+      ],
+      "actual_status": "FAILED",
+      "expected_outcome": "PASS",
+      "actual_outcome": "FAIL",
+      "decisions": [
+        "PLAN",
+        "RESUME",
+        "RUN_EXISTING_TEST"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 3,
+      "terminal_status": "FAILED",
+      "reached_executing": true,
+      "execution_ok": true,
+      "verification_pass": false,
+      "recovery_attempted": false,
+      "recovery_count": 0,
+      "recovery_verified": false,
+      "terminal_accurate": true,
+      "plan_ok": true,
+      "approval_routed_correctly": true,
+      "request": "Check login",
+      "category": "approval_resume",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": [
+        "BF-LOGIN-001"
+      ],
+      "gate": {
+        "flow_id": "BF-LOGIN-001",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "approval_status": "APPROVED",
+        "message": "BF-LOGIN-001: APPROVED artifact + sme_ready + KB safety checks satisfied"
+      },
+      "agent_state": "FAILED",
+      "verification": {
+        "phase": "B",
+        "conclusion": "FAIL",
+        "reason_code": "validator.gt_expectation_failed",
+        "summary": "Approved GT gt-login-positive expectations not met: min_passed_tests expected >= 1, got 0",
+        "findings": [
+          {
+            "code": "gt.expectation_failed",
+            "severity": "error",
+            "message": "min_passed_tests expected >= 1, got 0"
+          }
+        ],
+        "gt_refs": [
+          "gt-login-positive"
+        ]
+      },
+      "parameter_trace": {
+        "validated_parameters": {},
+        "expected": {},
+        "parameter_ok": true,
+        "env_params": {}
+      },
+      "evidence": {
+        "run_id": "p9-p9_offline_approval_resume",
+        "count": 0,
+        "paths": [],
+        "complete": false
+      },
+      "elapsed_ms": 8,
+      "blocked": false,
+      "false_pass": false,
+      "final_result": "FAIL",
+      "resume": true
+    }
+  ],
+  "execution_matrix": [
+    {
+      "request": "Check login",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": "BF-LOGIN-001",
+      "gate": "approval.pending",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    },
+    {
+      "request": "Search SKU ABC123",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": "BF-PRODUCT-003",
+      "gate": "approval.stale",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    },
+    {
+      "request": "Search for the product using item code ABC123",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": "BF-PRODUCT-003",
+      "gate": "approval.stale",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    },
+    {
+      "request": "BF-PRODUCT-003",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": "BF-PRODUCT-003",
+      "gate": "approval.stale",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    },
+    {
+      "request": "Test invalid login",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": "BF-LOGIN-001",
+      "gate": "approval.pending",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    },
+    {
+      "request": "Log out of the application",
+      "expected_flow": "BF-LOGOUT-002",
+      "selected_flow": null,
+      "gate": "approval.pending",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    },
+    {
+      "request": "Check login",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": "BF-LOGIN-001",
+      "gate": "approval.pending",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": true
+    },
+    {
+      "request": "Search SKU ABC123",
+      "expected_flow": "BF-PRODUCT-003",
+      "selected_flow": "BF-PRODUCT-003",
+      "gate": "approval.stale",
+      "agent_state": "WAITING_FOR_APPROVAL",
+      "final_result": "WAITING_FOR_APPROVAL",
+      "blocked": true
+    },
+    {
+      "request": "Check login",
+      "expected_flow": "BF-LOGIN-001",
+      "selected_flow": "BF-LOGIN-001",
+      "gate": "gate.executable",
+      "agent_state": "FAILED",
+      "final_result": "FAIL",
+      "blocked": false
+    }
+  ],
+  "metrics": {
+    "live_flow_execution_rate": 0.0,
+    "live_execution_success_rate": 0.0,
+    "verification_success_rate": 0.0,
+    "false_pass_rate": 0.0,
+    "false_fail_rate": 0.0,
+    "approval_routing_accuracy": 0.8571,
+    "recovery_success_rate": 0.0,
+    "evidence_completeness": 0.0,
+    "parameter_traceability_rate": 3.0,
+    "decision_trace_completeness": 1.0,
+    "resume_success_rate": 0.3333,
+    "average_run_duration_ms": 11.11,
+    "p95_run_duration_ms": 17,
+    "human_intervention_rate": 0.8889,
+    "environment_status": "ENVIRONMENT_BLOCKED",
+    "blocked_live_scenarios": 2
+  },
+  "failures": [
+    {
+      "scenario": "p9_logout",
+      "reason": "WAITING_FOR_APPROVAL",
+      "blocked": false
+    }
+  ],
+  "healing": {
+    "status": "COMPLETED",
+    "passed": true,
+    "scenarios": [
+      {
+        "id": "p61_approval_pause_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "COMPLETED",
+          "FAILED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "PASS",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_healing_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "NEEDS_REVIEW",
+          "COMPLETED",
+          "FAILED",
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "NEEDS_REVIEW",
+        "expected_outcome": "NEEDS_REVIEW",
+        "actual_outcome": "NEEDS_REVIEW",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST",
+          "RESUME"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "NEEDS_REVIEW",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      }
+    ],
+    "metrics": {
+      "runs": 2,
+      "planning_success_rate": 1.0,
+      "terminal_state_accuracy": 1.0,
+      "execution_attempt_rate": 1.0,
+      "execution_attempt_success_rate": 1.0,
+      "verification_success_rate": 0.0,
+      "approval_routing_accuracy": 1.0,
+      "recovery_attempt_rate": 0.0,
+      "recovery_success_rate": 0.0,
+      "recovery_failure_rate": 0.0,
+      "false_recovery_rate": 0.0,
+      "average_recoveries_per_failed_run": 0.0,
+      "waiting_for_approval_rate": 0.0,
+      "blocked_rate": 0.0,
+      "needs_review_rate": 0.5,
+      "decision_trace_completeness": 1.0
+    }
+  },
+  "controlled_failures": {
+    "status": "COMPLETED",
+    "passed": true,
+    "scenarios": [
+      {
+        "id": "locator_healing",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "NEEDS_REVIEW",
+          "COMPLETED"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "ambiguous_verification",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "max_recovery_limit",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "NEEDS_REVIEW",
+          "COMPLETED"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      }
+    ],
+    "metrics": {
+      "runs": 3,
+      "planning_success_rate": 1.0,
+      "terminal_state_accuracy": 1.0,
+      "execution_attempt_rate": 0.6667,
+      "execution_attempt_success_rate": 1.0,
+      "verification_success_rate": 0.0,
+      "approval_routing_accuracy": 1.0,
+      "recovery_attempt_rate": 0.0,
+      "recovery_success_rate": 0.0,
+      "recovery_failure_rate": 0.0,
+      "false_recovery_rate": 0.0,
+      "average_recoveries_per_failed_run": 0.0,
+      "waiting_for_approval_rate": 0.3333,
+      "blocked_rate": 0.0,
+      "needs_review_rate": 0.0,
+      "decision_trace_completeness": 1.0
+    }
+  },
+  "approvals": [
+    {
+      "scenario": "p9_offline_approval_resume",
+      "flow_id": "BF-LOGIN-001",
+      "pause_state": "WAITING_FOR_APPROVAL",
+      "reason": "approval.pending"
+    }
+  ],
+  "resume": [
+    {
+      "run_id": "p9-p9_offline_approval_resume",
+      "same_run_id": true,
+      "resume_decisions": [
+        "PLAN",
+        "RESUME",
+        "RUN_EXISTING_TEST"
+      ],
+      "status": "FAILED",
+      "conclusion": "FAIL"
+    }
+  ],
+  "frontend": {
+    "inventory_totals": {
+      "total_flows": 31,
+      "sme_ready": 19,
+      "kb_ready": 19,
+      "approved": 1,
+      "pending_approval": 18,
+      "rejected": 0,
+      "executable": 0,
+      "blocked": 31,
+      "draft": 6,
+      "superseded": 6
+    },
+    "misleading_approved_label": true,
+    "recommended_display": {
+      "total_flows": 31,
+      "sme_ready": 19,
+      "approved": 1,
+      "executable": 0,
+      "awaiting_approval": 18
+    }
+  },
+  "limitations": [
+    "Live Oracle APEX execution blocked: login_probe_skipped",
+    "Evidence completeness not measured \u2014 live browser execution unavailable",
+    "Live recovery retry against real APEX not exercised in blocked environment",
+    "Live browser evidence and Ground Truth validation against real APEX not completed"
+  ],
+  "passed": 8,
+  "total": 9
+}

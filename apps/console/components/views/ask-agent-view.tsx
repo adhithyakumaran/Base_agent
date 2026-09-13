@@ -51,7 +51,10 @@ export function AskAgentView({
         <div className="system-strip" role="status" aria-live="polite">
           <span>{orchestrator?.environment || "UAT"}</span>
           <span>{orchestrator?.connected ? "Orchestrator connected" : "Orchestrator offline"}</span>
-          <span>{orchestrator?.approvedFlows ?? "—"} approved flows</span>
+          <span>{orchestrator?.flowCounts?.total ?? "—"} total flows</span>
+          <span>{orchestrator?.flowCounts?.smeReady ?? "—"} SME-ready</span>
+          <span>{orchestrator?.flowCounts?.executable ?? "—"} executable</span>
+          <span>{orchestrator?.flowCounts?.awaitingApproval ?? "—"} awaiting approval</span>
           <span>{orchestrator?.executor || "playwright"} executor</span>
           <span>{orchestrator?.safetyGate || "deterministic"} safety gate</span>
         </div>
@@ -91,7 +94,9 @@ export function AskAgentView({
           </div>
           <div>
             <span className="meta-label">Knowledge</span>
-            <strong>{orchestrator?.smeReadyFlows ?? "—"} SME-ready flows</strong>
+            <strong>
+              {orchestrator?.flowCounts?.smeReady ?? "—"} SME-ready · {orchestrator?.flowCounts?.executable ?? "—"} executable
+            </strong>
           </div>
           <div>
             <span className="meta-label">Execution</span>
