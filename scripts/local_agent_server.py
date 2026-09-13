@@ -136,7 +136,7 @@ class Handler(BaseHTTPRequestHandler):
                     "ok": True,
                     "service": "qa-orchestrator",
                     "version": "2.0",
-                    "architecture": "classify → suite_select → playwright → report",
+                    "architecture": "classify → plan → agent_loop → playwright → report",
                     "boot_ms": SERVICE.boot_ms,
                     "runs_served": SERVICE.runs,
                     "llm_enabled": orch.llm.enabled,
