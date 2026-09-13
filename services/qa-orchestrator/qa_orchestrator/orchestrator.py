@@ -15,6 +15,7 @@ from qa_orchestrator.models import DiscoveryResult, ExecutionPlan, OrchestratorR
 from qa_orchestrator.openclaw_adapter import OpenClawAdapter
 from qa_orchestrator.planner import intent_to_execution_plan
 from qa_orchestrator.playwright_runner import PlaywrightRunner
+from qa_orchestrator.qa_planner import QaPlanner
 from qa_orchestrator.reporter import build_markdown_report
 from qa_orchestrator.suite_selector import SuiteSelector
 from qa_orchestrator.validator import Validator
@@ -50,6 +51,7 @@ class QaOrchestrator:
         self.legacy_kb = KbRag(self.kb_dir) if self.kb_dir.exists() else None
         self.llm = PlannerLlmClient.from_env(model_id=model)
         self.classifier = IntentClassifier(self.graph, self.llm)
+        self.qa_planner = QaPlanner(self.graph, self.llm)
         self.selector = SuiteSelector(self.graph)
         self.discovery = DiscoveryService(self.graph, dry_run=_default_crawl_dry_run())
         self.executor = _build_executor()
@@ -63,18 +65,22 @@ class QaOrchestrator:
         if req.model:
             self.llm = PlannerLlmClient.from_env(model_id=req.model)
             self.classifier = IntentClassifier(self.graph, self.llm)
+            self.qa_planner = QaPlanner(self.graph, self.llm)
 
         intent = self.classifier.classify(
             req.goal,
             run_type=req.run_type,
             context_packets=req.context_packets,
         )
-        suite_plan = self.selector.select(intent)
-        plan = intent_to_execution_plan(intent)
+        planning = self.qa_planner.plan(intent, context_packets=req.context_packets)
+        suite_plan = self.selector.select(planning.intent)
+        plan = intent_to_execution_plan(planning.intent)
 
         discovery: DiscoveryResult | None = None
-        if not req.skip_discovery and intent.execution_mode in {"new_feature", "discover"}:
-            discovery = self.discovery.discover(intent, suite_plan)
+        if not req.skip_discovery and (
+            planning.exploration_required or intent.execution_mode in {"new_feature", "discover"}
+        ):
+            discovery = self.discovery.discover(planning.intent, suite_plan)
 
         if req.skip_execution:
             from qa_orchestrator.models import ExecutionResult
@@ -97,6 +103,7 @@ class QaOrchestrator:
                     "Do not declare PASS without evidence.\n"
                     f"Goal: {req.goal}\n"
                     f"Mode: {intent.execution_mode}\n"
+                    f"Strategy: {planning.strategy}\n"
                     f"Flows: {', '.join(suite_plan.flow_ids) or 'n/a'}\n"
                     f"Commands: {', '.join(suite_plan.commands)}\n"
                     f"Execution ok: {execution.ok}\n"
@@ -123,6 +130,7 @@ class QaOrchestrator:
             goal=req.goal,
             run_type=req.run_type,
             intent=intent,
+            planning=planning,
             suite_plan=suite_plan,
             discovery=discovery,
             plan=plan,
@@ -136,6 +144,9 @@ class QaOrchestrator:
             kb_refs=plan.kb_refs,
             metadata={
                 "classifier": intent.classifier,
+                "planner": planning.planner,
+                "planning_strategy": planning.strategy,
+                "execution_allowed": planning.execution_allowed,
                 "execution_mode": intent.execution_mode,
                 "run_id": req.run_id,
                 "executor": getattr(self.executor, "mode", type(self.executor).__name__),
@@ -173,6 +184,7 @@ class QaOrchestrator:
                 "validation_phase": result.validation.phase,
                 "report_markdown": result.report_markdown,
                 "intent": result.intent.model_dump(),
+                "planning": result.planning.model_dump() if result.planning else None,
                 "suite_plan": result.suite_plan.model_dump(),
                 "discovery": result.discovery.model_dump() if result.discovery else None,
                 "plan": result.plan.model_dump(),

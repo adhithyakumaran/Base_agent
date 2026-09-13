@@ -81,6 +81,50 @@ def build_markdown_report(
     if intent.params:
         lines.append(f"- **Parameters:** `{intent.params}`")
 
+    if result.planning:
+        planning = result.planning
+        lines.extend(
+            [
+                "",
+                "## QA planning",
+                f"- **Strategy:** `{planning.strategy}`",
+                f"- **Secondary:** {', '.join(planning.secondary_strategies) or '—'}",
+                f"- **Risk:** {planning.risk_level}",
+                f"- **Execution allowed:** {planning.execution_allowed}",
+                f"- **Human approval required:** {planning.requires_human_approval}",
+                f"- **Polarity:** {planning.polarity}",
+                f"- **Candidate flows:** {', '.join(planning.candidate_flows[:8]) or '—'}",
+                f"- **Selected flows:** {', '.join(planning.selected_flows) or '—'}",
+                f"- **Coverage:** {planning.coverage_assessment}",
+                f"- **Expected evidence:** {', '.join(planning.expected_evidence) or '—'}",
+            ]
+        )
+        if planning.blocked_flows:
+            lines.append(f"- **Blocked flows:** {', '.join(planning.blocked_flows[:8])}")
+        if planning.next_actions:
+            lines.append("- **Next actions:**")
+            for action in planning.next_actions:
+                lines.append(f"  - {action}")
+        if planning.exploration:
+            lines.extend(
+                [
+                    "",
+                    "### Exploration contract",
+                    f"- **Target URL:** {planning.exploration.target_url or '—'}",
+                    f"- **Read only:** {planning.exploration.read_only}",
+                    f"- **Max pages:** {planning.exploration.max_pages}",
+                ]
+            )
+        if planning.generation:
+            lines.extend(
+                [
+                    "",
+                    "### Generation contract",
+                    f"- **Objective:** {planning.generation.scenario_objective}",
+                    f"- **Approval required:** {planning.generation.approval_required}",
+                ]
+            )
+
     lines.extend(
         [
             "",
