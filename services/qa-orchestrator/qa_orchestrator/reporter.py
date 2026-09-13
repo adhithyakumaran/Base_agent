@@ -125,6 +125,33 @@ def build_markdown_report(
                 ]
             )
 
+    if result.exploration:
+        exp = result.exploration
+        lines.extend(
+            [
+                "",
+                "## Browser exploration",
+                f"- **Status:** `{exp.status}`",
+                f"- **Exploration ID:** `{exp.exploration_id}`",
+                f"- **Target:** {exp.target_url or '—'}",
+                f"- **Pages inspected:** {len(exp.pages)}",
+                f"- **Elements discovered:** {len(exp.elements)}",
+                f"- **Actions performed:** {len(exp.actions)}",
+                f"- **Evidence captures:** {len(exp.evidence)}",
+            ]
+        )
+        if exp.business_signals:
+            lines.append("- **Business signals:**")
+            for sig in exp.business_signals[:8]:
+                lines.append(f"  - {sig}")
+        if exp.warnings:
+            lines.append("- **Warnings:**")
+            for warn in exp.warnings[:6]:
+                lines.append(f"  - {warn}")
+        if exp.discovery_candidates:
+            cand = exp.discovery_candidates[0]
+            lines.append(f"- **Discovery candidate:** `{cand.candidate_id}` · status `{cand.status}`")
+
     lines.extend(
         [
             "",
