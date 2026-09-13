@@ -2,10 +2,28 @@ import type { Locator, Page } from '@playwright/test';
 
 export type LocatorChain = string[];
 
+function readHealingOverrides(): Record<string, string[]> {
+  const raw = process.env.QA_HEALING_LOCATOR_OVERRIDE;
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as Record<string, string[]>;
+  } catch {
+    return {};
+  }
+}
+
+function prependHealingOverride(label: string, chain: LocatorChain): LocatorChain {
+  const overrides = readHealingOverrides();
+  const extra = overrides[label];
+  if (extra?.length) return [...extra, ...chain];
+  return chain;
+}
+
 export class LocatorResolver {
   constructor(private readonly page: Page) {}
 
   async resolve(chain: LocatorChain, label: string): Promise<Locator> {
+    chain = prependHealingOverride(label, chain);
     for (const selector of chain) {
       const locator = this.page.locator(selector);
       const count = await locator.count();
@@ -18,7 +36,9 @@ export class LocatorResolver {
   }
 
   async firstVisible(chain: LocatorChain, label: string, timeoutMs = 5000): Promise<Locator> {
-    const deadline = Date.now() + timeoutMs;
+    chain = prependHealingOverride(label, chain);
+    const timingBoost = Number(process.env.QA_HEALING_TIMING_MS || 0);
+    const deadline = Date.now() + timeoutMs + timingBoost;
     while (Date.now() < deadline) {
       for (const selector of chain) {
         const locator = this.page.locator(selector);

@@ -11,3 +11,10 @@ generated/drafts/**/*
 !generated/drafts/.gitkeep
 generated/journals/**/*
 !generated/journals/.gitkeep
+healing/proposals/**/*
+!healing/proposals/.gitkeep
+healing/journals/**/*
+!healing/journals/.gitkeep
+healing/approved/**/*
+!healing/approved/.gitkeep
+!healing/approved/locator-overlays.json
