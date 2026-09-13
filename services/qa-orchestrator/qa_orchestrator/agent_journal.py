@@ -4,12 +4,20 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
-from qa_orchestrator.agent_models import AgentRunState
+from qa_orchestrator.agent_models import AgentDecisionEntry, AgentFailureRecord, AgentRunState
 
 
 def journal_path(base_dir: str | Path, run_id: str) -> Path:
     return Path(base_dir) / run_id / "journal.json"
+
+
+def load_journal(run_id: str, *, base_dir: str | Path = "reports/agent") -> dict[str, Any]:
+    path = journal_path(base_dir, run_id)
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def save_journal(state: AgentRunState, *, base_dir: str | Path = "reports/agent") -> Path:

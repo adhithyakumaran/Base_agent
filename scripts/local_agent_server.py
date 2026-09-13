@@ -50,6 +50,7 @@ def _load_dotenv() -> None:
 
 _load_dotenv()
 
+from qa_orchestrator.legacy_guard import assert_canonical_agent_path, canonical_path_metadata
 from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest  # noqa: E402
 
 
@@ -78,6 +79,7 @@ class LocalOrchestratorService:
         skip_discovery: bool = False,
         skip_execution: bool = False,
     ) -> dict[str, Any]:
+        assert_canonical_agent_path("local_agent_server")
         t0 = time.perf_counter()
         result = self.orchestrator.run(
             RunRequest(
@@ -99,6 +101,33 @@ class LocalOrchestratorService:
         payload["local"]["llm_provider"] = result.metadata.get("llm_provider", "groq")
         payload["local"]["primary_flows"] = len(self.orchestrator.graph.ready_flow_ids())
         payload["local"]["draft_flows"] = len(self.orchestrator.graph.draft_flow_ids())
+        payload["local"]["canonical"] = canonical_path_metadata()
+        return payload
+
+    def get_agent(self, run_id: str) -> dict[str, Any]:
+        snapshot = self.orchestrator.get_agent_state(run_id)
+        return {
+            "ok": True,
+            "run_id": run_id,
+            "status": snapshot.state.status,
+            "final_result": snapshot.state.final_result,
+            "checkpoint": snapshot.checkpoint,
+            "approval_pause_kind": snapshot.approval_pause_kind,
+            "journal_summary": [entry.model_dump() for entry in snapshot.state.decision_journal[-10:]],
+            "state_path": str(
+                __import__("qa_orchestrator.agent_state_store", fromlist=["state_path"]).state_path(
+                    self.orchestrator.agent_loop.config.journal_dir,
+                    run_id,
+                )
+            ),
+        }
+
+    def resume_agent(self, run_id: str, *, resume_token: str | None = None, reason: str = "approval granted") -> dict[str, Any]:
+        result = self.orchestrator.resume_agent(run_id, resume_token=resume_token, resume_reason=reason)
+        orch_result = self.orchestrator.agent_loop.to_orchestrator_result(result)
+        orch_result.metadata.update(result.orchestrator_metadata)
+        payload = self.orchestrator.to_agent_payload(orch_result)
+        payload["agent"]["decision_journal"] = [entry.model_dump() for entry in result.state.decision_journal]
         return payload
 
 
@@ -127,6 +156,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
+        if path.startswith("/agent/") and path.count("/") == 2:
+            run_id = path.split("/")[-1]
+            assert SERVICE is not None
+            try:
+                self._json(200, SERVICE.get_agent(run_id))
+            except Exception as exc:  # noqa: BLE001
+                self._json(404, {"ok": False, "error": f"{type(exc).__name__}:{exc}"})
+            return
         if path in {"/health", "/"}:
             assert SERVICE is not None
             orch = SERVICE.orchestrator
@@ -153,6 +190,26 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
+        if path.startswith("/agent/") and path.endswith("/resume"):
+            run_id = path.split("/")[2]
+            assert SERVICE is not None
+            length = int(self.headers.get("Content-Length") or 0)
+            raw = self.rfile.read(length) if length else b"{}"
+            try:
+                body = json.loads(raw.decode("utf-8") or "{}")
+            except json.JSONDecodeError:
+                self._json(400, {"ok": False, "error": "invalid_json"})
+                return
+            try:
+                payload = SERVICE.resume_agent(
+                    run_id,
+                    resume_token=body.get("resume_token"),
+                    reason=str(body.get("reason") or "approval granted"),
+                )
+                self._json(200, {"ok": True, "result": payload})
+            except Exception as exc:  # noqa: BLE001
+                self._json(400, {"ok": False, "error": f"{type(exc).__name__}:{exc}"})
+            return
         if path not in {"/run", "/chat"}:
             self._json(404, {"ok": False, "error": "not_found"})
             return

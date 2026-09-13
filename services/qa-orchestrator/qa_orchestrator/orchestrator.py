@@ -93,6 +93,16 @@ class QaOrchestrator:
         req = request if isinstance(request, RunRequest) else RunRequest(goal=request)
         return self.agent_loop.run(req)
 
+    def get_agent_state(self, run_id: str):
+        from qa_orchestrator.agent_resume import AgentResumeService
+
+        return AgentResumeService(self).get_state(run_id)
+
+    def resume_agent(self, run_id: str, *, resume_token: str | None = None, resume_reason: str = "approval granted"):
+        from qa_orchestrator.agent_resume import AgentResumeService
+
+        return AgentResumeService(self).resume(run_id, resume_token=resume_token, resume_reason=resume_reason)
+
     def to_agent_payload(self, result: OrchestratorResult) -> dict[str, Any]:
         agent_state = result.metadata.get("agent_status")
         return {

@@ -11,6 +11,9 @@ from qa_orchestrator.agent_config import AgentConfig
 from qa_orchestrator.agent_decision_engine import AgentDecisionEngine
 from qa_orchestrator.agent_executor import AgentExecutor
 from qa_orchestrator.agent_journal import save_journal
+from qa_orchestrator.agent_metrics import metrics_from_single_run
+from qa_orchestrator.agent_resume import build_snapshot_from_state
+from qa_orchestrator.agent_state_store import save_snapshot
 from qa_orchestrator.agent_models import (
     AgentAction,
     AgentDecisionEntry,
@@ -263,6 +266,8 @@ class ControlledAgentLoop:
             state.reason_code = "healing.pending_approval"
             state.summary = state.healing_result.message
             state.final_result = "WAITING_FOR_APPROVAL"
+            state.metadata["approval_pause_kind"] = "healing"
+            state.metadata["checkpoint"] = "after_healing_proposal"
             return state
         state.status = "NEEDS_REVIEW"
         state.reason_code = "recovery.exhausted"
@@ -310,12 +315,15 @@ class ControlledAgentLoop:
                 exploration=state.exploration,
                 run_id=state.run_id,
             )
-            return self._terminal(
+            paused = self._terminal(
                 state,
                 "WAITING_FOR_APPROVAL",
                 "generation.pending_approval",
                 "Generated artifacts require SME approval",
             )
+            paused.metadata["approval_pause_kind"] = "generation"
+            paused.metadata["checkpoint"] = "after_generation"
+            return paused
 
         if planning.requires_human_approval or (
             not planning.execution_allowed and planning.strategy in {"ASK_USER", "GENERATE"}
@@ -357,7 +365,24 @@ class ControlledAgentLoop:
             "BLOCKED": "BLOCKED",
             "WAITING_FOR_APPROVAL": "WAITING_FOR_APPROVAL",
         }.get(status, status)
+        if status == "WAITING_FOR_APPROVAL" and "approval_pause_kind" not in state.metadata:
+            state.metadata["approval_pause_kind"] = "execution_gate"
+            state.metadata["checkpoint"] = "before_execution"
         return state
+
+    def _continue_from_state(self, state: AgentRunState, req: RunRequest) -> AgentRunResult:
+        started = time.perf_counter()
+        deadline = started + (self.config.timeout_ms / 1000.0)
+        while state.iteration < self.config.max_iterations and time.perf_counter() < deadline:
+            state.iteration += 1
+            state.updated_at = datetime.now(timezone.utc).isoformat()
+            state = self._run_iteration(state, req)
+            if state.status in _TERMINAL:
+                break
+        if state.status not in _TERMINAL:
+            state.status = "NEEDS_REVIEW"
+            state.reason_code = state.reason_code or "agent.max_iterations"
+        return self._finalize(state, req, started)
 
     def _classify_execution_failure(self, state: AgentRunState) -> AgentFailureRecord:
         execution = state.execution or ExecutionResult(ok=False, mode="missing", observations=[])
@@ -413,21 +438,27 @@ class ControlledAgentLoop:
             }.get(state.status, state.status)
 
         save_journal(state, base_dir=self.config.journal_dir)
+        if state.status == "WAITING_FOR_APPROVAL":
+            pause_kind = str(state.metadata.get("approval_pause_kind", "execution_gate"))
+            snapshot = build_snapshot_from_state(
+                state,
+                req,
+                pause_kind=pause_kind,
+                automation_dir=self.orchestrator.graph.automation_dir,
+            )
+            save_snapshot(snapshot, base_dir=self.config.journal_dir)
         orchestrator_result = self._to_orchestrator_result(state, req)
-        metrics = AgentMetrics(
-            planning_success_rate=1.0 if state.plan else 0.0,
-            execution_success_rate=1.0 if state.execution and state.execution.ok else 0.0,
-            recovery_success_rate=1.0
-            if any(r.recovery_attempted and "HEALED" in r.recovery_outcome for r in state.recovery_history)
-            else 0.0,
-            approval_escalation_rate=1.0 if state.status == "WAITING_FOR_APPROVAL" else 0.0,
-            average_iterations=float(state.iteration),
-            average_recoveries=float(state.recovery_count),
-            blocked_rate=1.0 if state.status == "BLOCKED" else 0.0,
-            needs_review_rate=1.0 if state.status == "NEEDS_REVIEW" else 0.0,
-            evidence_completeness=min(1.0, len(state.evidence_paths) / 3.0) if state.execution else 0.0,
-            decision_trace_completeness=1.0 if state.decision_journal else 0.0,
+        metrics = metrics_from_single_run(
+            AgentRunResult(
+                state=state,
+                conclusion=state.final_result or state.status,
+                reason_code=state.reason_code or orchestrator_result.reason_code,
+                summary=state.summary or orchestrator_result.summary,
+            )
         )
+        metrics.execution_success_rate = metrics.execution_attempt_success_rate
+        metrics.approval_escalation_rate = metrics.waiting_for_approval_rate
+        metrics.recovery_success_rate = metrics.recovery_success_rate
         return AgentRunResult(
             state=state,
             conclusion=state.final_result,

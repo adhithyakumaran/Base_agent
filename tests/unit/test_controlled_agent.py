@@ -31,6 +31,22 @@ def agent_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("QA_AGENT_JOURNAL_DIR", str(tmp_path / "agent-journals"))
     monkeypatch.setenv("QA_AGENT_MAX_ITERATIONS", "5")
     monkeypatch.setenv("QA_AGENT_MAX_RECOVERIES", "2")
+    _reset_login_artifact_for_tests()
+
+
+def _reset_login_artifact_for_tests() -> None:
+    import re
+    from pathlib import Path
+
+    artifact = Path("apps/automation/test-design/flows/BF-LOGIN-001/test-cases.yaml")
+    if artifact.exists():
+        text = artifact.read_text(encoding="utf-8")
+        text = re.sub(r"^status:\s*APPROVED\s*$", "status: PENDING_SME_APPROVAL", text, flags=re.MULTILINE)
+        text = re.sub(r"^status:\s*REJECTED\s*$", "status: PENDING_SME_APPROVAL", text, flags=re.MULTILINE)
+        artifact.write_text(text, encoding="utf-8")
+    approval_log = Path("apps/automation/approval/approval-log.json")
+    if approval_log.exists():
+        approval_log.unlink()
 
 
 def test_agent_config_defaults():
