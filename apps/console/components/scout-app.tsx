@@ -1,0 +1,240 @@
+"use client";
+
+import { useCallback, useState } from "react";
+import {
+  Activity,
+  CheckSquare,
+  ClipboardList,
+  History,
+  LayoutDashboard,
+  Menu,
+  Radio,
+  Settings2,
+  Shield,
+  Stethoscope,
+  Video,
+  Workflow,
+  X,
+} from "lucide-react";
+import { AskAgentView } from "@/components/views/ask-agent-view";
+import { ApprovalsView } from "@/components/views/approvals-view";
+import { ConnectorsView } from "@/components/views/connectors-view";
+import { EvidenceView } from "@/components/views/evidence-view";
+import { FlowsView } from "@/components/views/flows-view";
+import { HealingView } from "@/components/views/healing-view";
+import { HistoryView } from "@/components/views/history-view";
+import { LiveRunsView } from "@/components/views/live-runs-view";
+import { RecorderView } from "@/components/views/recorder-view";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { useOrchestratorStatus } from "@/lib/use-orchestrator";
+import type { AgentRun } from "@/lib/types";
+
+export type ScoutView =
+  | "ask"
+  | "runs"
+  | "flows"
+  | "evidence"
+  | "healing"
+  | "recorder"
+  | "approvals"
+  | "history"
+  | "connectors";
+
+const NAV: { group: string; items: { id: ScoutView; label: string; icon: React.ReactNode }[] }[] = [
+  {
+    group: "Operate",
+    items: [
+      { id: "ask", label: "Ask Agent", icon: <LayoutDashboard size={18} /> },
+      { id: "runs", label: "Runs", icon: <Activity size={18} /> },
+      { id: "flows", label: "Flows", icon: <Workflow size={18} /> },
+    ],
+  },
+  {
+    group: "Investigate",
+    items: [
+      { id: "evidence", label: "Evidence", icon: <ClipboardList size={18} /> },
+      { id: "healing", label: "Healing", icon: <Stethoscope size={18} /> },
+      { id: "recorder", label: "Recorder", icon: <Video size={18} /> },
+    ],
+  },
+  {
+    group: "Govern",
+    items: [
+      { id: "approvals", label: "Approvals", icon: <CheckSquare size={18} /> },
+      { id: "history", label: "History", icon: <History size={18} /> },
+    ],
+  },
+  {
+    group: "Configure",
+    items: [{ id: "connectors", label: "Connectors", icon: <Settings2 size={18} /> }],
+  },
+];
+
+export function ScoutApp() {
+  const [view, setView] = useState<ScoutView>("ask");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [prompt, setPrompt] = useState("Check login and product search on Endless Aisle UAT");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [activeRun, setActiveRun] = useState<AgentRun | null>(null);
+  const [notifyChannels] = useState(["email", "whatsapp"]);
+  const { status: orchestrator } = useOrchestratorStatus();
+
+  const runAgent = useCallback(
+    async (goal: string, type: "adhoc" | "sanity" = "adhoc") => {
+      if (busy) return;
+      setBusy(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/runs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ goal, type, channels: notifyChannels }),
+        });
+        const json = await res.json();
+        if (res.status === 409) {
+          setError(json.error || "Another run is in progress.");
+          return;
+        }
+        if (!res.ok) throw new Error(json.error || "Run failed");
+        setActiveRun(json.run as AgentRun);
+        setView("runs");
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        setBusy(false);
+      }
+    },
+    [busy, notifyChannels]
+  );
+
+  function renderView() {
+    switch (view) {
+      case "ask":
+        return (
+          <AskAgentView
+            orchestrator={orchestrator}
+            busy={busy}
+            error={error}
+            prompt={prompt}
+            setPrompt={setPrompt}
+            onRun={runAgent}
+            activeRun={activeRun}
+          />
+        );
+      case "runs":
+        return <LiveRunsView runId={activeRun?.id} initialRun={activeRun} />;
+      case "flows":
+        return <FlowsView onRunFlow={(goal) => runAgent(goal, "adhoc")} />;
+      case "evidence":
+        return <EvidenceView run={activeRun} />;
+      case "healing":
+        return <HealingView />;
+      case "recorder":
+        return <RecorderView />;
+      case "approvals":
+        return <ApprovalsView />;
+      case "history":
+        return <HistoryView />;
+      case "connectors":
+        return <ConnectorsView />;
+      default:
+        return null;
+    }
+  }
+
+  return (
+    <div className="app-shell">
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
+
+      <aside className={`app-sidebar ${sidebarOpen ? "app-sidebar--open" : ""}`} aria-label="Primary">
+        <div className="app-sidebar__brand">
+          <div className="app-logo" aria-hidden>
+            <Radio size={18} />
+          </div>
+          <div>
+            <strong>ScoutAI</strong>
+            <span>Enterprise QA Agent</span>
+          </div>
+          <button
+            type="button"
+            className="sidebar-close"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close navigation"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <nav className="app-nav">
+          {NAV.map((section) => (
+            <div key={section.group} className="app-nav__group">
+              <span className="app-nav__label">{section.group}</span>
+              <ul>
+                {section.items.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      className={view === item.id ? "nav-item nav-item--active" : "nav-item"}
+                      onClick={() => {
+                        setView(item.id);
+                        setSidebarOpen(false);
+                      }}
+                      aria-current={view === item.id ? "page" : undefined}
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                      {item.id === "approvals" && orchestrator?.pendingApprovals ? (
+                        <span className="nav-badge">{orchestrator.pendingApprovals}</span>
+                      ) : null}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      <div className="app-main">
+        <header className="app-topbar">
+          <button
+            type="button"
+            className="icon-button mobile-only"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open navigation"
+          >
+            <Menu size={18} />
+          </button>
+
+          <div className="topbar-title">
+            <Shield size={16} aria-hidden />
+            <span>ScoutAI</span>
+            <span className="topbar-env">{orchestrator?.environment || "UAT"}</span>
+          </div>
+
+          <div className="topbar-status" role="status" aria-live="polite">
+            <span className={orchestrator?.connected ? "dot dot--ok" : "dot dot--bad"} aria-hidden />
+            <span>{orchestrator?.connected ? "Orchestrator connected" : "Orchestrator offline"}</span>
+            <span>{orchestrator?.approvedFlows ?? "—"} approved</span>
+          </div>
+
+          <div className="topbar-actions">
+            {orchestrator?.pendingApprovals ? (
+              <button type="button" className="topbar-chip" onClick={() => setView("approvals")}>
+                Approvals {orchestrator.pendingApprovals}
+              </button>
+            ) : null}
+            <StatusBadge status={orchestrator?.connected ? "APPROVED" : "BLOCKED"} compact />
+          </div>
+        </header>
+
+        <main id="main-content" className="app-content">
+          {renderView()}
+        </main>
+      </div>
+    </div>
+  );
+}

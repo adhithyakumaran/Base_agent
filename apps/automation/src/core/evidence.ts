@@ -1,19 +1,54 @@
 import type { Page, TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { getLastOverlayUsage } from './healing-overlays';
 
 export type EvidenceCapture = {
+  runId: string;
+  testId: string;
+  stepId: string;
+  flowId?: string;
   label: string;
   screenshotPath: string;
   domPath: string;
   metaPath: string;
   url: string;
   capturedAt: string;
+  locator_source?: string;
+  healing_id?: string;
+  overlay_version?: string;
+  overlay_hash?: string;
 };
 
-export function evidenceDir(testInfo: TestInfo): string {
-  const safeTitle = testInfo.titlePath.join('_').replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, 120);
-  const dir = path.join('reports', 'evidence', safeTitle);
+function sanitizeSegment(value: string, max = 96): string {
+  return value.replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, max);
+}
+
+export function resolveRunId(testInfo: TestInfo): string {
+  return (
+    process.env.QA_RUN_ID?.trim() ||
+    testInfo.project.metadata?.runId?.toString() ||
+    `local-${testInfo.workerIndex}`
+  );
+}
+
+export function resolveTestId(testInfo: TestInfo): string {
+  const title = testInfo.title;
+  const tcMatch = title.match(/TC-[A-Z0-9-]+/);
+  if (tcMatch) return tcMatch[0];
+  return sanitizeSegment(testInfo.titlePath.join('_'), 120);
+}
+
+export function resolveFlowId(): string | undefined {
+  const raw = process.env.QA_FLOW_ID?.trim();
+  if (raw) return raw.replace(/^@/, '');
+  return undefined;
+}
+
+export function evidenceDir(testInfo: TestInfo, stepId: string): string {
+  const runId = resolveRunId(testInfo);
+  const testId = resolveTestId(testInfo);
+  const dir = path.join('reports', 'evidence', runId, testId, sanitizeSegment(stepId, 72));
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
@@ -23,10 +58,11 @@ export async function captureStepEvidence(
   testInfo: TestInfo,
   label: string
 ): Promise<EvidenceCapture> {
-  const dir = evidenceDir(testInfo);
-  const safe = label.replace(/[^a-z0-9_-]+/gi, '_').slice(0, 72);
-  const stamp = Date.now();
-  const base = path.join(dir, `${stamp}_${safe}`);
+  const runId = resolveRunId(testInfo);
+  const testId = resolveTestId(testInfo);
+  const stepId = sanitizeSegment(label, 72);
+  const dir = evidenceDir(testInfo, stepId);
+  const base = path.join(dir, 'capture');
   const screenshotPath = `${base}.png`;
   const domPath = `${base}.html`;
   const metaPath = `${base}.json`;
@@ -36,6 +72,10 @@ export async function captureStepEvidence(
   fs.writeFileSync(domPath, html, 'utf8');
 
   const capture: EvidenceCapture = {
+    runId,
+    testId,
+    stepId,
+    flowId: resolveFlowId(),
     label,
     screenshotPath,
     domPath,
@@ -43,6 +83,13 @@ export async function captureStepEvidence(
     url: page.url(),
     capturedAt: new Date().toISOString(),
   };
+  const overlayUsage = getLastOverlayUsage(label);
+  if (overlayUsage && overlayUsage.locator_source !== 'KB_CHAIN') {
+    capture.locator_source = overlayUsage.locator_source;
+    capture.healing_id = overlayUsage.healing_id;
+    capture.overlay_version = overlayUsage.overlay_version;
+    capture.overlay_hash = overlayUsage.overlay_hash;
+  }
   fs.writeFileSync(metaPath, JSON.stringify(capture, null, 2), 'utf8');
 
   await testInfo.attach(`${label}-screenshot`, { path: screenshotPath, contentType: 'image/png' });

@@ -3,7 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 
-from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest
+from qa_orchestrator.run_request import RunRequest
+from qa_orchestrator.orchestrator import QaOrchestrator
 
 
 def main() -> None:
@@ -14,6 +15,7 @@ def main() -> None:
     parser.add_argument("--model", default=None, help="Model id (groq/*, claude-*, or disabled)")
     parser.add_argument("--skip-discovery", action="store_true")
     parser.add_argument("--skip-execution", action="store_true")
+    parser.add_argument("--run-id", default=None, help="Run id for evidence scoping")
     args = parser.parse_args()
 
     orch = QaOrchestrator(discovery_root=args.discovery_root, model=args.model)
@@ -22,6 +24,7 @@ def main() -> None:
             goal=args.goal,
             run_type=args.type,
             model=args.model,
+            run_id=args.run_id,
             skip_discovery=args.skip_discovery,
             skip_execution=args.skip_execution,
         )

@@ -1,5 +1,5 @@
-import { test, expect } from '../src/fixtures/test-base';
-import { gotoLogin } from '../src/fixtures/navigation';
+import { test, expect } from '../../src/fixtures/test-base';
+import { gotoLogin } from '../../src/fixtures/navigation';
 
 test.describe('BF-LOGIN-001 User Login @BF-LOGIN-001 @negative @authentication', () => {
   test('TC-BF-LOGIN-001-N01 invalid credentials show login error @negative', async ({ page, loginPage }) => {
