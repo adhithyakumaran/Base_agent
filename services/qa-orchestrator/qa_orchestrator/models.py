@@ -446,6 +446,109 @@ class PlanningResult(BaseModel):
     planner: str = "deterministic"
 
 
+FailureType = Literal[
+    "LOCATOR",
+    "TIMING",
+    "NAVIGATION",
+    "AUTHENTICATION",
+    "DATA",
+    "APPLICATION",
+    "INFRASTRUCTURE",
+    "UNKNOWN",
+]
+
+HealingProposalStatus = Literal["DRAFT", "PENDING_SME_APPROVAL", "APPROVED", "REJECTED"]
+HealingOutcomeStatus = Literal[
+    "NOT_HEALABLE",
+    "NO_CANDIDATE",
+    "NEEDS_REVIEW",
+    "HEALED_PENDING_APPROVAL",
+    "HEALING_FAILED",
+    "REVERTED",
+]
+
+
+class FailureClassification(BaseModel):
+    type: FailureType
+    test_id: str = ""
+    flow_id: str = ""
+    step_id: str = ""
+    error_message: str = ""
+    stack: str = ""
+    screenshot_path: str | None = None
+    dom_evidence_path: str | None = None
+    console_evidence: list[str] = Field(default_factory=list)
+    network_evidence: list[str] = Field(default_factory=list)
+    confidence: float = 0.0
+    healing_eligible: bool = False
+    reason: str = ""
+    locator_label: str | None = None
+    original_locator: str | None = None
+
+
+class HealingLocatorCandidate(BaseModel):
+    primary: str
+    fallbacks: list[str] = Field(default_factory=list)
+    confidence: float = 0.0
+    evidence: str = ""
+    reason: str = ""
+    css_selectors: list[str] = Field(default_factory=list)
+    validated: bool = False
+
+
+class HealingAttemptRecord(BaseModel):
+    attempt: int
+    candidate: HealingLocatorCandidate
+    applied: bool = False
+    retry_ok: bool = False
+    evidence_dir: str = ""
+    message: str = ""
+
+
+class HealingProposal(BaseModel):
+    healing_id: str
+    flow_id: str
+    test_id: str
+    step_id: str = ""
+    locator_label: str = ""
+    old_locator: str = ""
+    new_locator: str = ""
+    fallbacks: list[str] = Field(default_factory=list)
+    reason: str = ""
+    evidence: list[str] = Field(default_factory=list)
+    confidence: float = 0.0
+    validation: dict[str, Any] = Field(default_factory=dict)
+    result: str = ""
+    status: HealingProposalStatus = "DRAFT"
+    failure_type: FailureType = "UNKNOWN"
+    created_at: str = ""
+
+
+class HealingJournal(BaseModel):
+    healing_id: str
+    run_id: str = ""
+    flow_id: str = ""
+    test_id: str = ""
+    failure: FailureClassification | None = None
+    attempts: list[HealingAttemptRecord] = Field(default_factory=list)
+    proposal: HealingProposal | None = None
+    outcome: HealingOutcomeStatus = "NOT_HEALABLE"
+    evidence_paths: list[str] = Field(default_factory=list)
+    timestamp: str = ""
+    healer_version: str = "p3.0"
+
+
+class HealingResult(BaseModel):
+    healing_id: str
+    status: HealingOutcomeStatus
+    failure: FailureClassification | None = None
+    proposal: HealingProposal | None = None
+    journal: HealingJournal | None = None
+    attempts_used: int = 0
+    message: str = ""
+    execution_still_blocked: bool = True
+
+
 class OrchestratorResult(BaseModel):
     conclusion: str
     reason_code: str
@@ -458,6 +561,7 @@ class OrchestratorResult(BaseModel):
     discovery: DiscoveryResult | None = None
     exploration: ExplorationResult | None = None
     generation_result: GenerationResult | None = None
+    healing_result: HealingResult | None = None
     plan: ExecutionPlan
     execution: ExecutionResult
     validation: ValidationResult

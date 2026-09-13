@@ -267,6 +267,27 @@ def build_markdown_report(
         for f in validation.findings:
             lines.append(f"- **{f.severity.upper()}** `{f.code}` — {f.message}")
 
+    if result.healing_result:
+        healing = result.healing_result
+        lines.extend(
+            [
+                "",
+                "## Self-healing",
+                f"- **Status:** `{healing.status}` · `{healing.healing_id}`",
+                f"- **Attempts:** {healing.attempts_used}",
+                f"- **Message:** {healing.message}",
+            ]
+        )
+        if healing.failure:
+            lines.append(
+                f"- **Failure type:** `{healing.failure.type}` · eligible={healing.failure.healing_eligible}"
+            )
+        if healing.proposal:
+            lines.append(
+                f"- **Proposal:** `{healing.proposal.status}` · confidence={healing.proposal.confidence:.2f}"
+            )
+            lines.append(f"- **Locator:** `{healing.proposal.old_locator}` → `{healing.proposal.new_locator}`")
+
     if result.kb_refs:
         lines.extend(["", "## KB refs", ", ".join(result.kb_refs)])
 
