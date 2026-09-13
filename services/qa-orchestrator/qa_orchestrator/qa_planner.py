@@ -7,6 +7,7 @@ from typing import Any
 
 from qa_orchestrator.coverage_assessment import CoverageAssessor
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
+from qa_orchestrator.knowledge_retriever import KnowledgeRetriever
 from qa_orchestrator.llm_client import PlannerLlmClient
 from qa_orchestrator.models import (
     ExecutionGateSnapshot,
@@ -41,9 +42,15 @@ Prefer REUSE_EXISTING when approved coverage exists. Use EXPLORE for new/changed
 class QaPlanner:
     """Transform intent + KB context into a validated PlanningResult."""
 
-    def __init__(self, graph: FlowKnowledgeGraph, llm: PlannerLlmClient | None = None) -> None:
+    def __init__(
+        self,
+        graph: FlowKnowledgeGraph,
+        llm: PlannerLlmClient | None = None,
+        retriever: KnowledgeRetriever | None = None,
+    ) -> None:
         self.graph = graph
         self.llm = llm or PlannerLlmClient(enabled=False)
+        self.retriever = retriever
         self.policy = PlannerPolicy()
         self.coverage = CoverageAssessor(graph)
 
@@ -56,7 +63,7 @@ class QaPlanner:
         policy = self.policy.evaluate_request(intent.goal)
         llm_proposal = self._propose_llm(intent, context_packets=context_packets)
 
-        candidate_flows = self._resolve_candidates(intent, llm_proposal)
+        candidate_flows, retrieval_diag = self._resolve_candidates(intent, llm_proposal)
         candidate_flows, superseded_notes = self._redirect_superseded(candidate_flows)
 
         validated_params, param_error = self._validate_parameters(intent, llm_proposal)
@@ -149,6 +156,7 @@ class QaPlanner:
             reasoning_summary=str(reasoning or intent.reasoning),
             next_actions=next_actions,
             planner=planner_tag,
+            retrieval_diagnostics=retrieval_diag,
         )
 
     def _propose_llm(
@@ -177,9 +185,14 @@ class QaPlanner:
         )
         return data
 
-    def _resolve_candidates(self, intent: IntentClassification, llm_proposal: dict[str, Any] | None) -> list[str]:
+    def _resolve_candidates(
+        self,
+        intent: IntentClassification,
+        llm_proposal: dict[str, Any] | None,
+    ) -> tuple[list[str], dict[str, Any] | None]:
         seen: set[str] = set()
         out: list[str] = []
+        retrieval_diag: dict[str, Any] | None = None
 
         def add(flow_ids: list[str]) -> None:
             for fid in flow_ids:
@@ -198,7 +211,17 @@ class QaPlanner:
             if not out:
                 add([str(x) for x in self.graph.search_flows(intent.goal, limit=4)])
 
-        return out
+        if self.retriever is not None:
+            retrieval = self.retriever.retrieve(
+                intent.goal,
+                sme_ready_only=False,
+                approval_only=False,
+                top_k=6,
+            )
+            retrieval_diag = retrieval.diagnostics.model_dump()
+            add(retrieval.flow_ids)
+
+        return out, retrieval_diag
 
     def _redirect_superseded(self, flow_ids: list[str]) -> tuple[list[str], list[str]]:
         notes: list[str] = []
