@@ -128,7 +128,12 @@ def validate_syntax_typescript(content: str) -> GenerationValidation:
     return GenerationValidation(valid=True, reason_code="generation.syntax_ok", message="Syntax check passed")
 
 
-def validate_playwright_discovery(spec_path: Path, automation_dir: Path) -> GenerationValidation:
+def validate_playwright_discovery(
+    spec_path: Path,
+    automation_dir: Path,
+    *,
+    test_case: GeneratedTestCase | None = None,
+) -> GenerationValidation:
     script = automation_dir / "scripts" / "validate-generated-spec.mjs"
     if not script.exists():
         return GenerationValidation(
@@ -136,9 +141,12 @@ def validate_playwright_discovery(spec_path: Path, automation_dir: Path) -> Gene
             reason_code="generation.discovery_skipped",
             message="Discovery validator script not present — skipped",
         )
+    args = [str(spec_path.relative_to(automation_dir))]
+    if test_case is not None:
+        args.extend([test_case.flow_id, test_case.test_case_id])
     try:
         proc = subprocess.run(
-            ["node", str(script), str(spec_path.relative_to(automation_dir))],
+            ["node", str(script), *args],
             cwd=str(automation_dir),
             capture_output=True,
             text=True,
@@ -147,9 +155,9 @@ def validate_playwright_discovery(spec_path: Path, automation_dir: Path) -> Gene
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
         return GenerationValidation(
-            valid=True,
-            reason_code="generation.discovery_skipped",
-            message=f"Playwright discovery skipped: {exc}",
+            valid=False,
+            reason_code="generation.discovery_failed",
+            message=f"Playwright discovery failed: {exc}",
         )
     if proc.returncode != 0:
         detail = proc.stderr.strip() or proc.stdout.strip() or "playwright test --list failed"
@@ -168,8 +176,90 @@ def validate_playwright_discovery(spec_path: Path, automation_dir: Path) -> Gene
             reason_code="generation.discovery_failed",
             message=str(payload.get("error") or "Test discovery failed"),
         )
+    checks = [{"discovery": payload}]
+    if test_case is not None:
+        tags = payload.get("tags") or {}
+        for key, expected in (
+            ("flow_id", test_case.flow_id),
+            ("test_case_id", test_case.test_case_id),
+            ("generated", "@generated"),
+            ("draft", "@draft"),
+        ):
+            if expected and not tags.get(key):
+                return GenerationValidation(
+                    valid=False,
+                    reason_code="generation.discovery_tags_missing",
+                    message=f"Discovery missing required tag: {key}",
+                    checks=checks,
+                )
     return GenerationValidation(
         valid=True,
         reason_code="generation.discovery_ok",
         message="Playwright test discovery passed",
+        checks=checks,
+    )
+
+
+def validate_typescript_compile(spec_path: Path, automation_dir: Path) -> GenerationValidation:
+    tsconfig = automation_dir / "tsconfig.generated.json"
+    if not tsconfig.exists():
+        return GenerationValidation(
+            valid=True,
+            reason_code="generation.typescript_skipped",
+            message="tsconfig.generated.json not present — TypeScript check skipped",
+        )
+    tsc_bin = automation_dir / "node_modules" / "typescript" / "bin" / "tsc"
+    if not tsc_bin.exists():
+        return GenerationValidation(
+            valid=False,
+            reason_code="generation.typescript_invalid",
+            message="TypeScript compiler not available in automation node_modules",
+        )
+    try:
+        proc = subprocess.run(
+            [str(tsc_bin), "--noEmit", "-p", str(tsconfig.relative_to(automation_dir))],
+            cwd=str(automation_dir),
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        return GenerationValidation(
+            valid=False,
+            reason_code="generation.typescript_invalid",
+            message=f"TypeScript validation failed to run: {exc}",
+        )
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "tsc failed").strip()
+        return GenerationValidation(
+            valid=False,
+            reason_code="generation.typescript_invalid",
+            message=detail[:800],
+        )
+    return GenerationValidation(
+        valid=True,
+        reason_code="generation.typescript_ok",
+        message="TypeScript validation passed",
+    )
+
+
+def validate_fixture_imports(content: str, automation_dir: Path) -> GenerationValidation:
+    fixture_path = automation_dir / "src" / "fixtures" / "test-base.ts"
+    if not fixture_path.exists():
+        return GenerationValidation(
+            valid=False,
+            reason_code="generation.fixture_missing",
+            message="Required fixture test-base.ts not found",
+        )
+    if "src/fixtures/test-base" not in content:
+        return GenerationValidation(
+            valid=False,
+            reason_code="generation.import_missing",
+            message="Generated spec must import test-base fixture",
+        )
+    return GenerationValidation(
+        valid=True,
+        reason_code="generation.fixture_ok",
+        message="Fixture import validated",
     )

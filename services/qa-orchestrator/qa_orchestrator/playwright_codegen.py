@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from qa_orchestrator.codegen_bridge import invoke_codegen_bridge
 from qa_orchestrator.models import GeneratedAction, GeneratedTestCase, TestPolarity, TestScenario
 from qa_orchestrator.page_object_registry import resolve_domain, resolve_page_object
 
@@ -11,9 +12,27 @@ def generate_spec(
     scenario: TestScenario,
     test_case: GeneratedTestCase,
     actions: list[GeneratedAction],
-) -> str:
+    automation_dir=None,
+) -> tuple[str, dict]:
+    """Return (spec_content, bridge_metadata)."""
+    bridge_meta: dict = {"bridgeAvailable": False, "serializer": "python-fallback"}
+    body_lines: list[str] | None = None
+
+    if automation_dir is not None:
+        bridge = invoke_codegen_bridge(
+            automation_dir,
+            {
+                "flow_id": test_case.flow_id,
+                "test_case_id": test_case.test_case_id,
+                "actions": [a.model_dump() for a in actions],
+            },
+        )
+        bridge_meta = bridge
+        if bridge.get("ok") and bridge.get("bodyLines"):
+            body_lines = list(bridge["bodyLines"])
+
     domain = resolve_domain(test_case.flow_id)
-    import_depth = "../../"
+    import_depth = "../../../"
     tags = _build_tags(test_case.flow_id, test_case.polarity, domain)
     describe_title = f"{test_case.flow_id} {scenario.title} {tags}"
     test_title = f"{test_case.test_case_id} {scenario.objective} @generated @draft"
@@ -23,7 +42,6 @@ def generate_spec(
         f"import {{ test, expect }} from '{import_depth}src/fixtures/test-base';",
     ]
 
-    binding = resolve_page_object(test_case.flow_id)
     uses_auth_fixture = any(a.page_object_method == "openItemSearch" for a in actions)
     uses_product = any(a.page_object == "ProductSearchPage" for a in actions)
     if uses_product and not uses_auth_fixture:
@@ -38,10 +56,11 @@ def generate_spec(
     fixture_args = _fixture_args(actions, uses_auth_fixture, uses_product)
     lines.append(f"  test('{_escape(test_title)}', async ({fixture_args}) => {{")
 
-    body = _render_body(actions, test_case)
-    lines.extend([f"    {line}" for line in body])
+    if body_lines is None:
+        body_lines = _render_body(actions, test_case)
+    lines.extend([f"    {line}" for line in body_lines])
     lines.extend(["  });", "});", ""])
-    return "\n".join(lines)
+    return "\n".join(lines), bridge_meta
 
 
 def _build_tags(flow_id: str, polarity: TestPolarity, domain: str) -> str:
@@ -55,12 +74,14 @@ def _fixture_args(actions: list[GeneratedAction], uses_auth: bool, uses_product:
         args.extend(["authenticatedPage", "productSearchPage"])
     elif uses_product:
         args.append("productSearchPage")
-    if not args:
-        args.append("page")
-    if "page" not in args:
+    needs_page = any(
+        a.type == "assert" and a.locator
+        for a in actions
+    ) or not uses_auth
+    if needs_page and "page" not in args:
         args.append("page")
     args.append("recordStep")
-    return ", ".join(args)
+    return "{ " + ", ".join(args) + " }"
 
 
 def _render_body(actions: list[GeneratedAction], test_case: GeneratedTestCase) -> list[str]:
@@ -72,18 +93,15 @@ def _render_body(actions: list[GeneratedAction], test_case: GeneratedTestCase) -
                 if action.value_source == "QA_PARAM_SKU":
                     lines.append("const sku = process.env.QA_PARAM_SKU;")
                     lines.append("test.skip(!sku, 'QA_PARAM_SKU not set');")
-                    if "authenticatedPage" in _fixture_args(actions, True, True):
+                    if any(a.page_object_method == "openItemSearch" for a in actions):
                         lines.append("await authenticatedPage.openItemSearch();")
                     lines.append("await productSearchPage.searchItemCode(sku!);")
                 else:
                     lines.append("await productSearchPage.searchItemCode();")
             elif method == "expectResultRegion":
-                lines.append(
-                    "await productSearchPage.expectResultRegion();"
-                )
-                lines.append(
-                    "// Business assertion: product result region visible for searched SKU"
-                )
+                lines.append("await productSearchPage.expectResultRegion();")
+                text = action.assertion_text or action.expectation or "expected business outcome"
+                lines.append(f"// Business assertion [{action.assertion_source or 'EXPLORATION'}]: {text}")
             elif method == "openItemSearch":
                 lines.append("await authenticatedPage.openItemSearch();")
             elif method == "expectLoaded":
@@ -96,21 +114,26 @@ def _render_body(actions: list[GeneratedAction], test_case: GeneratedTestCase) -
         elif action.type == "click" and action.locator:
             lines.append(f"await {action.locator.primary}.click();")
         elif action.type == "assert":
-            if action.locator:
-                lines.append(
-                    f"await expect({action.locator.primary}).toBeVisible();"
-                )
-            if action.expectation and "product result" in action.expectation.lower():
-                lines.append(
-                    "await expect(page.locator('.t-Body-content, .t-Region, .a-IRR-table').first()).toBeVisible();"
-                )
-            elif action.expectation:
-                lines.append(f"// Expected: {action.expectation}")
+            if action.page_object == "ProductSearchPage" and action.page_object_method == "expectResultRegion":
+                lines.append("await productSearchPage.expectResultRegion();")
+            elif action.expectation or action.assertion_text:
+                text = action.assertion_text or action.expectation or ""
+                source = action.assertion_source or "USER_REQUIREMENT"
+                lines.append(f"// Business assertion [{source}]: {text}")
+                if "result" in text.lower() or "filter" in text.lower():
+                    lines.append("await productSearchPage.expectResultRegion();")
+            else:
+                lines.append("// MISSING business assertion — generation must not execute")
         elif action.type == "navigate":
             lines.append("// Navigate via existing fixtures/page objects during approved execution")
-    if not lines:
-        lines.append(f"// Draft assertion placeholder: {test_case.expected}")
-        lines.append("await expect(page.locator('body')).toBeVisible();")
+    if not any(
+        a.type == "assert" or (a.type == "page_object" and a.page_object_method == "expectResultRegion")
+        for a in actions
+    ):
+        text = test_case.expected or "business outcome not specified"
+        lines.append(f"// Business assertion [USER_REQUIREMENT]: {text}")
+        if "result" in text.lower() or test_case.flow_id.startswith("BF-PRODUCT"):
+            lines.append("await productSearchPage.expectResultRegion();")
     lines.append("await recordStep('generated-draft-complete');")
     return lines
 

@@ -287,6 +287,8 @@ GenerationOutcomeStatus = Literal[
     "READY_FOR_APPROVAL",
 ]
 LocatorSource = Literal["OBSERVED", "GENERATED", "FALLBACK"]
+AssertionQuality = Literal["STRONG", "MODERATE", "WEAK", "MISSING"]
+AssertionSource = Literal["USER_REQUIREMENT", "GROUND_TRUTH", "EXISTING_TEST", "EXPLORATION"]
 
 
 class GeneratedLocator(BaseModel):
@@ -306,6 +308,11 @@ class GeneratedAction(BaseModel):
     value: str | None = None
     expectation: str | None = None
     evidence_required: bool = True
+    assertion_quality: AssertionQuality | None = None
+    assertion_source: AssertionSource | None = None
+    assertion_text: str | None = None
+    evidence_source: str | None = None
+    locator_verified: bool | None = None
 
 
 class TestCaseStep(BaseModel):
@@ -354,6 +361,20 @@ class GenerationValidation(BaseModel):
     checks: list[dict[str, Any]] = Field(default_factory=list)
 
 
+class GenerationQualityReport(BaseModel):
+    code_valid: bool = False
+    typescript_valid: bool = False
+    test_discovered: bool = False
+    locator_quality: bool = False
+    assertion_quality: AssertionQuality = "MISSING"
+    page_object_valid: bool = False
+    parameter_valid: bool = False
+    evidence_ready: bool = False
+    traceability_complete: bool = False
+    warnings: list[str] = Field(default_factory=list)
+    mandatory_pass: bool = False
+
+
 class GeneratorJournal(BaseModel):
     generation_id: str
     request: str
@@ -365,8 +386,17 @@ class GeneratorJournal(BaseModel):
     locators: list[GeneratedLocator] = Field(default_factory=list)
     generated_file: str | None = None
     validation: GenerationValidation | None = None
+    quality_report: GenerationQualityReport | None = None
     review_status: ArtifactStatus = "DRAFT"
     timestamp: str = ""
+    generator_version: str = "p2.1"
+    playwright_version: str = ""
+    codegen_bridge_available: bool = False
+    codegen_bridge_reason: str = ""
+    assertion_quality: AssertionQuality | None = None
+    locator_verification: list[dict[str, Any]] = Field(default_factory=list)
+    parameter_trace: list[dict[str, str]] = Field(default_factory=list)
+    generated_code_hash: str = ""
 
 
 class GenerationResult(BaseModel):
@@ -378,6 +408,7 @@ class GenerationResult(BaseModel):
     actions: list[GeneratedAction] = Field(default_factory=list)
     generated_spec_path: str | None = None
     validation: GenerationValidation | None = None
+    quality_report: GenerationQualityReport | None = None
     journal: GeneratorJournal | None = None
     discovery_candidate_id: str | None = None
     message: str = ""

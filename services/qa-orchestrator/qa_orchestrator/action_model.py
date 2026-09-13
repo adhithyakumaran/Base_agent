@@ -121,14 +121,29 @@ def build_action_model(
                 GeneratedAction(type="click", locator=locator_from_element(filter_el))
             )
         elif step.action == "assert":
-            target = result_el or filter_el or sku_el
             expectation = step.expected or test_case.expected
-            if target:
+            if binding and binding.class_name == "ProductSearchPage" and (
+                "result" in expectation.lower() or "filter" in expectation.lower() or result_el
+            ):
+                actions.append(
+                    GeneratedAction(
+                        type="page_object",
+                        page_object="ProductSearchPage",
+                        page_object_method="expectResultRegion",
+                        expectation=expectation,
+                        assertion_text=expectation,
+                        evidence_source="exploration" if result_el else "user_request",
+                    )
+                )
+            elif target := (result_el or filter_el):
+                loc = locator_from_element(target)
                 actions.append(
                     GeneratedAction(
                         type="assert",
-                        locator=locator_from_element(target),
+                        locator=loc,
                         expectation=expectation,
+                        assertion_text=expectation,
+                        evidence_source="exploration",
                     )
                 )
             else:
@@ -136,6 +151,8 @@ def build_action_model(
                     GeneratedAction(
                         type="assert",
                         expectation=expectation,
+                        assertion_text=expectation,
+                        evidence_source="user_request" if expectation else None,
                     )
                 )
         elif step.action == "navigate":

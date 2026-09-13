@@ -96,7 +96,12 @@ def resolve_domain(flow_id: str) -> str:
     return FLOW_DOMAIN.get(flow_id, "product")
 
 
+def _page_object_ts_path(automation_dir: Path, binding: PageObjectBinding) -> Path:
+    rel = binding.import_path.removeprefix("../../")
+    if not rel.endswith(".ts"):
+        rel = rel.replace(".page", ".page.ts")
+    return automation_dir / rel
+
+
 def page_object_file_exists(automation_dir: Path, binding: PageObjectBinding) -> bool:
-    rel = binding.import_path.replace("../../", "src/")
-    path = automation_dir / rel.replace(".page", ".page.ts")
-    return path.exists()
+    return _page_object_ts_path(automation_dir, binding).exists()
