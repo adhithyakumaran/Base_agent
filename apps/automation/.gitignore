@@ -18,3 +18,4 @@ healing/journals/**/*
 healing/approved/**/*
 !healing/approved/.gitkeep
 !healing/approved/locator-overlays.json
+reports/healing/

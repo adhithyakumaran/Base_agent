@@ -281,9 +281,12 @@ def test_approved_proposal_updates_locator_chain(graph: FlowKnowledgeGraph):
         status="APPROVED",
     )
     apply_approved_proposal(graph.automation_dir, proposal)
-    overlays = load_overlays(graph.automation_dir)
-    assert "BF-PRODUCT-003" in overlays
-    assert "search button" in overlays["BF-PRODUCT-003"]
+    from qa_orchestrator.healing_overlay import load_overlay_store
+
+    store = load_overlay_store(graph.automation_dir)
+    assert store["schema"] == "healing_locator_overlay_v1"
+    assert store["overlay_hash"]
+    assert any(e["healing_id"] == "heal-approved-1" for e in store["entries"])
 
 
 def test_rejected_proposal_does_not_update_kb(graph: FlowKnowledgeGraph):
