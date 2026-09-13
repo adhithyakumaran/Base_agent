@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any
+import time
+from typing import Any, Literal
 
-from qa_orchestrator.embedding_provider import DeterministicEmbeddingProvider, build_sparse_vector
+from qa_orchestrator.embedding_provider import EmbeddingProvider, build_sparse_vector, create_embedding_provider
+from qa_orchestrator.embedding_config import EmbeddingConfig
 from qa_orchestrator.intent_classifier import _extract_sku
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.knowledge_indexer import KnowledgeIndexer
@@ -17,9 +19,12 @@ from qa_orchestrator.qa_knowledge_models import (
     RetrievedKnowledgeItem,
 )
 from qa_orchestrator.qdrant_config import QdrantConfig
+from qa_orchestrator.query_preprocessing import preprocess_query
 from qa_orchestrator.vector_store import InMemoryVectorStore, VectorStoreBackend, create_vector_store
 
 logger = logging.getLogger(__name__)
+
+RetrievalMode = Literal["hybrid", "dense", "lexical"]
 
 FLOW_ID_RE = re.compile(r"\bBF-[A-Z0-9-]+(?:-[A-Z0-9]+)*\b")
 TEST_ID_RE = re.compile(r"\bTC-[A-Z0-9-]+(?:-[A-Z0-9]+)*\b")
@@ -58,17 +63,20 @@ class KnowledgeRetriever:
         *,
         config: QdrantConfig | None = None,
         store: VectorStoreBackend | None = None,
-        embedding: DeterministicEmbeddingProvider | None = None,
+        embedding: EmbeddingProvider | None = None,
+        embedding_config: EmbeddingConfig | None = None,
         indexer: KnowledgeIndexer | None = None,
     ) -> None:
         self.graph = graph
         self.config = config or QdrantConfig.from_env()
-        self.embedding = embedding or DeterministicEmbeddingProvider(self.config.dense_dimensions)
+        self.embedding_config = embedding_config or EmbeddingConfig.from_env()
+        self.embedding = embedding or create_embedding_provider(self.embedding_config)
         self.store = store or create_vector_store(self.config, self.embedding)
         self.indexer = indexer or KnowledgeIndexer(
             discovery_root=graph.discovery_root,
             automation_dir=graph.automation_dir,
             config=self.config,
+            embedding_config=self.embedding_config,
             store=self.store,
             embedding=self.embedding,
         )
@@ -98,14 +106,31 @@ class KnowledgeRetriever:
         sme_ready_only: bool = True,
         approval_only: bool = True,
         top_k: int | None = None,
+        retrieval_mode: RetrievalMode = "hybrid",
     ) -> RetrievalResult:
+        started = time.perf_counter()
+        preprocessed, preprocess_meta = preprocess_query(query)
         limit = top_k or self.config.top_k
         diagnostics = RetrievalDiagnostics(
             query=query,
+            original_query=query,
+            preprocessed_query=preprocessed,
             qdrant_enabled=self.config.enabled,
             qdrant_available=getattr(self.store, "available", True),
             top_k=limit,
+            embedding_provider=self.embedding.provider_name,
+            embedding_model=self.embedding.model_name,
+            embedding_dimensions=self.embedding.dimensions,
+            embedding_version=self.embedding.embedding_version,
         )
+
+        if retrieval_mode == "lexical":
+            diagnostics.method = "LEXICAL_FALLBACK"
+            diagnostics.fallback_reason = "retrieval_mode=lexical"
+            result = self._lexical_fallback(preprocessed, diagnostics, limit=limit)
+            diagnostics.latency_ms = int((time.perf_counter() - started) * 1000)
+            result.diagnostics = diagnostics
+            return result
 
         if not self._can_use_vector_search():
             diagnostics.method = "LEXICAL_FALLBACK"
@@ -114,20 +139,29 @@ class KnowledgeRetriever:
                 if not self.config.enabled
                 else getattr(self.store, "init_error", None) or "vector store unavailable"
             )
-            return self._lexical_fallback(query, diagnostics, limit=limit)
+            result = self._lexical_fallback(preprocessed, diagnostics, limit=limit)
+            diagnostics.latency_ms = int((time.perf_counter() - started) * 1000)
+            result.diagnostics = diagnostics
+            return result
 
         try:
             self.ensure_index()
         except Exception as exc:
             diagnostics.method = "LEXICAL_FALLBACK"
             diagnostics.fallback_reason = f"index failed: {exc}"
-            return self._lexical_fallback(query, diagnostics, limit=limit)
+            result = self._lexical_fallback(preprocessed, diagnostics, limit=limit)
+            diagnostics.latency_ms = int((time.perf_counter() - started) * 1000)
+            result.diagnostics = diagnostics
+            return result
 
         if not getattr(self.store, "available", True):
             diagnostics.method = "LEXICAL_FALLBACK"
             init_error = getattr(self.store, "init_error", None)
             diagnostics.fallback_reason = init_error or "qdrant unavailable"
-            return self._lexical_fallback(query, diagnostics, limit=limit)
+            result = self._lexical_fallback(preprocessed, diagnostics, limit=limit)
+            diagnostics.latency_ms = int((time.perf_counter() - started) * 1000)
+            result.diagnostics = diagnostics
+            return result
 
         filters: dict[str, Any] = {}
         if flow_id:
@@ -141,12 +175,13 @@ class KnowledgeRetriever:
         if approval_only:
             filters["approval_only"] = True
 
-        exact_ids = extract_exact_identifiers(query)
+        exact_ids = extract_exact_identifiers(preprocessed)
         diagnostics.exact_id_hits = exact_ids
         exact_items = self._exact_id_lookup(query, exact_ids, filters)
 
-        query_dense = self.embedding.embed_query(query)
-        query_sparse = build_sparse_vector(query)
+        query_dense = self.embedding.embed_query(preprocessed)
+        query_sparse = build_sparse_vector(preprocessed)
+        use_hybrid = retrieval_mode == "hybrid"
         try:
             hits = self.store.search(
                 query_dense=query_dense,
@@ -154,11 +189,15 @@ class KnowledgeRetriever:
                 limit=limit,
                 filters=filters or None,
                 score_threshold=self.config.score_threshold,
+                hybrid=use_hybrid,
             )
         except Exception as exc:
             diagnostics.method = "LEXICAL_FALLBACK"
             diagnostics.fallback_reason = f"search failed: {exc}"
-            return self._lexical_fallback(query, diagnostics, limit=limit)
+            result = self._lexical_fallback(preprocessed, diagnostics, limit=limit)
+            diagnostics.latency_ms = int((time.perf_counter() - started) * 1000)
+            result.diagnostics = diagnostics
+            return result
 
         merged: dict[str, RetrievedKnowledgeItem] = {}
         for item in exact_items:
@@ -193,6 +232,7 @@ class KnowledgeRetriever:
         diagnostics.filtered = filtered
 
         flow_ids = self._flow_ids_from_items(items)
+        diagnostics.latency_ms = int((time.perf_counter() - started) * 1000)
         return RetrievalResult(query=query, items=items, flow_ids=flow_ids, diagnostics=diagnostics)
 
     def _exact_id_lookup(

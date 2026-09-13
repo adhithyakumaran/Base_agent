@@ -19,7 +19,7 @@ from qa_orchestrator.knowledge_retriever import KnowledgeRetriever, extract_exac
 from qa_orchestrator.models import IntentClassification
 from qa_orchestrator.qa_planner import QaPlanner
 from qa_orchestrator.qdrant_config import QdrantConfig
-from qa_orchestrator.retrieval_eval import evaluate_retriever
+from qa_orchestrator.retrieval_eval import BENCHMARK_CASES, evaluate_retriever
 from qa_orchestrator.vector_store import (
     InMemoryVectorStore,
     build_stored_point,
@@ -350,7 +350,8 @@ def test_corrupted_payload_handling():
 def test_deterministic_evaluation_metrics():
     retriever = _retriever()
     report = evaluate_retriever(retriever, k=5)
-    assert report["case_count"] == 10
+    assert report["case_count"] == len(BENCHMARK_CASES)
+    assert 25 <= report["case_count"] <= 40
     assert report["recall_at_k"] >= 0.0
     assert "mrr" in report
     assert "exact_id_hit_rate" in report

@@ -37,6 +37,10 @@ class QaKnowledgeDocument(BaseModel):
     source_hash: str = ""
     indexed_at: str = ""
     version: int = 1
+    embedding_provider: str = ""
+    embedding_model: str = ""
+    embedding_dimensions: int = 0
+    embedding_version: str = ""
 
 
 class RetrievedKnowledgeItem(BaseModel):
@@ -60,6 +64,13 @@ class RetrievalDiagnostics(BaseModel):
     selected: list[str] = Field(default_factory=list)
     top_k: int = 0
     exact_id_hits: list[str] = Field(default_factory=list)
+    original_query: str = ""
+    preprocessed_query: str = ""
+    embedding_provider: str = ""
+    embedding_model: str = ""
+    embedding_dimensions: int = 0
+    embedding_version: str = ""
+    latency_ms: int = 0
 
 
 class RetrievalResult(BaseModel):
@@ -82,3 +93,8 @@ class IndexingStats(BaseModel):
     deleted: int = 0
     failed: int = 0
     errors: list[str] = Field(default_factory=list)
+    documents_seen: int = 0
+    embedded: int = 0
+    upserted: int = 0
+    embedding_failed: int = 0
+    batches: int = 0
