@@ -12,6 +12,10 @@ import {
 dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
 
 async function globalSetup(config: FullConfig): Promise<void> {
+  if (process.env.EA_SKIP_GLOBAL_SETUP === 'true') {
+    console.warn('Skipping auth storage — EA_SKIP_GLOBAL_SETUP=true');
+    return;
+  }
   const baseURL = normalizeBaseUrl(
     process.env.EA_BASE_URL ?? (config.projects[0]?.use?.baseURL as string)
   );

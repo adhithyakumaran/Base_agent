@@ -7,6 +7,7 @@ from typing import Any
 import yaml
 
 from qa_orchestrator.flow_kb import YamlFlowKb, _tokenize
+from qa_orchestrator.execution_gate import ExecutionGate, ExecutionGateDecision
 
 
 def _load_yaml_fenced(path: Path) -> dict[str, Any]:
@@ -43,6 +44,7 @@ class FlowKnowledgeGraph:
         self.catalog = self._load_catalog()
         self._cap_to_flows = self._build_capability_map()
         self._synonyms = self._load_synonyms()
+        self.execution_gate = ExecutionGate(self)
 
     def _load_capabilities(self) -> dict[str, Any]:
         path = self.discovery_root / "capabilities.yaml"
@@ -95,6 +97,13 @@ class FlowKnowledgeGraph:
 
     def ready_flow_ids(self) -> list[str]:
         return self.flow_kb.ready_flow_ids
+
+    def executable_flow_ids(self) -> list[str]:
+        """KB-ready flows that also pass unified approval + safety gating."""
+        return [fid for fid in self.flow_kb.ready_flow_ids if self._is_primary(fid)]
+
+    def evaluate_execution(self, flow_id: str) -> ExecutionGateDecision:
+        return self.execution_gate.evaluate(flow_id)
 
     def draft_flow_ids(self) -> list[str]:
         return self.flow_kb.draft_flow_ids
@@ -181,12 +190,8 @@ class FlowKnowledgeGraph:
         return "\n".join(lines)
 
     def _is_primary(self, flow_id: str) -> bool:
-        meta = self.flow_meta(flow_id)
-        if not meta:
-            return False
-        if meta.get("status") in self.PRIMARY_STATUSES:
-            return self.is_automated(flow_id)
-        return flow_id in set(self.flow_kb.index.get("sme_ready", []))
+        """Flow is executable for orchestrator suite selection (unified gate)."""
+        return self.execution_gate.evaluate(flow_id).executable
 
     def match_capabilities(self, query: str) -> list[str]:
         q = query.lower()

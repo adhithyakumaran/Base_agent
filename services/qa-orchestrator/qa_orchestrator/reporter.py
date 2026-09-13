@@ -81,6 +81,77 @@ def build_markdown_report(
     if intent.params:
         lines.append(f"- **Parameters:** `{intent.params}`")
 
+    if result.planning:
+        planning = result.planning
+        lines.extend(
+            [
+                "",
+                "## QA planning",
+                f"- **Strategy:** `{planning.strategy}`",
+                f"- **Secondary:** {', '.join(planning.secondary_strategies) or '—'}",
+                f"- **Risk:** {planning.risk_level}",
+                f"- **Execution allowed:** {planning.execution_allowed}",
+                f"- **Human approval required:** {planning.requires_human_approval}",
+                f"- **Polarity:** {planning.polarity}",
+                f"- **Candidate flows:** {', '.join(planning.candidate_flows[:8]) or '—'}",
+                f"- **Selected flows:** {', '.join(planning.selected_flows) or '—'}",
+                f"- **Coverage:** {planning.coverage_assessment}",
+                f"- **Expected evidence:** {', '.join(planning.expected_evidence) or '—'}",
+            ]
+        )
+        if planning.blocked_flows:
+            lines.append(f"- **Blocked flows:** {', '.join(planning.blocked_flows[:8])}")
+        if planning.next_actions:
+            lines.append("- **Next actions:**")
+            for action in planning.next_actions:
+                lines.append(f"  - {action}")
+        if planning.exploration:
+            lines.extend(
+                [
+                    "",
+                    "### Exploration contract",
+                    f"- **Target URL:** {planning.exploration.target_url or '—'}",
+                    f"- **Read only:** {planning.exploration.read_only}",
+                    f"- **Max pages:** {planning.exploration.max_pages}",
+                ]
+            )
+        if planning.generation:
+            lines.extend(
+                [
+                    "",
+                    "### Generation contract",
+                    f"- **Objective:** {planning.generation.scenario_objective}",
+                    f"- **Approval required:** {planning.generation.approval_required}",
+                ]
+            )
+
+    if result.exploration:
+        exp = result.exploration
+        lines.extend(
+            [
+                "",
+                "## Browser exploration",
+                f"- **Status:** `{exp.status}`",
+                f"- **Exploration ID:** `{exp.exploration_id}`",
+                f"- **Target:** {exp.target_url or '—'}",
+                f"- **Pages inspected:** {len(exp.pages)}",
+                f"- **Elements discovered:** {len(exp.elements)}",
+                f"- **Actions performed:** {len(exp.actions)}",
+                f"- **Evidence captures:** {len(exp.evidence)}",
+            ]
+        )
+        if exp.business_signals:
+            lines.append("- **Business signals:**")
+            for sig in exp.business_signals[:8]:
+                lines.append(f"  - {sig}")
+        if exp.warnings:
+            lines.append("- **Warnings:**")
+            for warn in exp.warnings[:6]:
+                lines.append(f"  - {warn}")
+        if exp.discovery_candidates:
+            cand = exp.discovery_candidates[0]
+            lines.append(f"- **Discovery candidate:** `{cand.candidate_id}` · status `{cand.status}`")
+
     lines.extend(
         [
             "",
@@ -91,6 +162,35 @@ def build_markdown_report(
         lines.append(f"- {note}")
     lines.append(f"- **Suite IDs:** {', '.join(suite.suite_ids) or '—'}")
     lines.append(f"- **Flows to execute:** {', '.join(suite.flow_ids) or '—'}")
+    if suite.blocked_flows:
+        lines.append(f"- **Blocked by execution gate:** {', '.join(suite.blocked_flows)}")
+
+    if suite.execution_gates:
+        lines.extend(
+            [
+                "",
+                "## Execution gating",
+                "",
+                "Canonical rule: **APPROVED** artifact (not stale) **+** KB `sme_ready` **+** existing KB safety checks.",
+                "",
+            ]
+        )
+        executable_gates = [g for g in suite.execution_gates if g.executable]
+        blocked_gates = [g for g in suite.execution_gates if not g.executable]
+        if executable_gates:
+            lines.append("### Executable")
+            for gate in executable_gates:
+                lines.append(f"- `{gate.flow_id}` · `{gate.reason_code}` — {gate.message}")
+        if blocked_gates:
+            lines.append("")
+            lines.append("### Blocked")
+            for gate in blocked_gates:
+                approval = gate.approval_status or "missing"
+                lines.append(
+                    f"- `{gate.flow_id}` · `{gate.reason_code}` "
+                    f"(approval={approval}, sme_ready={gate.in_sme_ready}) — {gate.message}"
+                )
+
     lines.append("")
     lines.append("### Commands")
     for cmd in suite.commands:
@@ -159,6 +259,7 @@ def build_markdown_report(
             "## Policy",
             "- ScoutAI classifies intent; Playwright executes approved suites deterministically",
             "- Morning sanity runs all 19 READY flows with zero LLM at execution time",
+            "- Execution requires APPROVED test-cases.yaml + KB sme_ready + catalog safety checks",
             "- Evidence captured on navigation and interactions during suite runs",
             "- Phase A: honest NEEDS_REVIEW until SME approves Ground Truth",
             "- New features: crawl + propose automation drafts → SME approval before promotion",

@@ -1,0 +1,11 @@
+{
+  "id": "gt-login-positive",
+  "status": "approved",
+  "subject": "login",
+  "tags": ["BF-LOGIN-001", "verify login", "positive login", "authentication"],
+  "expectations": {
+    "execution_ok": true,
+    "min_passed_tests": 1
+  },
+  "description": "Approved GT for positive login flow execution"
+}

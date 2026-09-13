@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { spawn } from "child_process";
 import path from "path";
+import { requireApiAuth, requireMutationAuth } from "@/lib/api-auth";
 import { repoRoot } from "@/lib/repo-root";
 
 const REPO = repoRoot();
@@ -46,6 +47,9 @@ function runPython(args: string[]): Promise<Record<string, unknown>> {
 }
 
 export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
+
   const url = new URL(req.url);
   const sessionId = url.searchParams.get("sessionId") || "scout-default";
   const offset = url.searchParams.get("offset");
@@ -71,6 +75,9 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
+
   const body = await req.json();
   const sessionId = String(body.sessionId || "scout-default");
   const config = body.config || {};
@@ -89,6 +96,9 @@ export async function PUT(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
+
   const body = await req.json();
   const sessionId = String(body.sessionId || "scout-default");
   const maxSeconds = Number(body.maxSeconds || 30);

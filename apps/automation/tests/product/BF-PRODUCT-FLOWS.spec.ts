@@ -30,7 +30,7 @@ test.describe('BF-PRODUCT-004 View Product @BF-PRODUCT-004 @regression @product-
 });
 
 test.describe('BF-PRODUCT-003 Search Product @BF-PRODUCT-003 @regression @product-search', () => {
-  test('TC-BF-PRODUCT-003-P01 direct product search page @sanity', async ({
+  test('TC-BF-PRODUCT-003-P01 direct product search page @sanity @positive', async ({
     authenticatedPage,
     productSearchPage,
   }) => {
