@@ -1,38 +1,52 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import { repoRoot } from "@/lib/repo-root";
+import { listPendingArtifacts, transitionArtifact } from "@/lib/approval-store";
+import { requireApiAuth, requireMutationAuth } from "@/lib/api-auth";
 
-const REPO = repoRoot();
-const FLOWS_INDEX = path.join(REPO, "data", "discovery-kb", "flows", "index.yaml");
-const DESIGN = path.join(REPO, "apps", "automation", "test-design", "flows");
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
 
-function extractSmeReady(raw: string): string[] {
-  const block = raw.match(/sme_ready:\s*\n((?:\s+-\s+BF-[^\n]+\n?)+)/);
-  if (!block) return [];
-  return [...block[1].matchAll(/-\s+(BF-[A-Z0-9-]+)/g)].map((m) => m[1]);
+  const artifacts = await listPendingArtifacts();
+  const pending = artifacts.filter((a) => a.status === "PENDING_SME_APPROVAL");
+  return NextResponse.json({
+    status: "ok",
+    pendingCount: pending.length,
+    artifacts,
+    security_boundary: "scout_api_token_v1",
+  });
 }
 
-export async function GET() {
-  const flows: { flowId: string; status: string; scenarios: string; testCases: string; scripts: string }[] = [];
-  try {
-    const indexRaw = await fs.readFile(FLOWS_INDEX, "utf8");
-    for (const flowId of extractSmeReady(indexRaw)) {
-      const designDir = path.join(DESIGN, flowId);
-      let scenarios = "0";
-      let testCases = "0";
-      try {
-        const sc = await fs.readFile(path.join(designDir, "scenarios.yaml"), "utf8");
-        scenarios = String((sc.match(/^- id:/gm) || []).length || (sc.match(/scenarios:/g) ? 1 : 0));
-        const tc = await fs.readFile(path.join(designDir, "test-cases.yaml"), "utf8");
-        testCases = String((tc.match(/^- id: TC-/gm) || []).length);
-      } catch {
-        /* optional */
-      }
-      flows.push({ flowId, status: "PENDING_SME_REVIEW", scenarios, testCases, scripts: "1+" });
-    }
-  } catch {
-    /* fallback */
+export async function POST(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
+
+  const body = await req.json();
+  const flowId = String(body.flowId || "").trim();
+  const artifact = String(body.artifact || "test-cases.yaml").trim();
+  const action = String(body.action || "").trim().toLowerCase();
+  const approver = String(body.approver || body.approverIdentity || "").trim();
+  const note = body.note ? String(body.note) : undefined;
+
+  if (!flowId) {
+    return NextResponse.json({ error: "flowId required" }, { status: 400 });
   }
-  return NextResponse.json({ status: "PENDING_SME_REVIEW", flows });
+  if (action !== "approve" && action !== "reject") {
+    return NextResponse.json({ error: "action must be approve or reject" }, { status: 400 });
+  }
+
+  try {
+    const record = await transitionArtifact({
+      flowId,
+      artifact: artifact as "test-cases.yaml" | "scenarios.yaml" | "suite.yaml",
+      action,
+      approver,
+      note,
+    });
+    return NextResponse.json({ ok: true, record });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : String(e) },
+      { status: 400 }
+    );
+  }
 }

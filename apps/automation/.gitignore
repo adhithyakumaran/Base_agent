@@ -7,3 +7,7 @@ dist/
 test-results/
 playwright-report/
 blob-report/
+generated/drafts/**/*
+!generated/drafts/.gitkeep
+generated/journals/**/*
+!generated/journals/.gitkeep

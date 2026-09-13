@@ -6,15 +6,18 @@ from pathlib import Path
 from typing import Any
 
 from qa_orchestrator.discovery_service import DiscoveryService
+from qa_orchestrator.exploration_service import ExplorationService
 from qa_orchestrator.flow_kb import YamlFlowKb
 from qa_orchestrator.intent_classifier import IntentClassifier
 from qa_orchestrator.kb_rag import KbRag
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.llm_client import PlannerLlmClient
-from qa_orchestrator.models import DiscoveryResult, ExecutionPlan, OrchestratorResult
+from qa_orchestrator.generation_service import GenerationService
+from qa_orchestrator.models import DiscoveryResult, ExecutionPlan, ExplorationResult, GenerationResult, OrchestratorResult
 from qa_orchestrator.openclaw_adapter import OpenClawAdapter
 from qa_orchestrator.planner import intent_to_execution_plan
 from qa_orchestrator.playwright_runner import PlaywrightRunner
+from qa_orchestrator.qa_planner import QaPlanner
 from qa_orchestrator.reporter import build_markdown_report
 from qa_orchestrator.suite_selector import SuiteSelector
 from qa_orchestrator.validator import Validator
@@ -25,6 +28,7 @@ class RunRequest:
     goal: str
     run_type: str = "adhoc"
     model: str | None = None
+    run_id: str | None = None
     context_packets: list[dict[str, Any]] = field(default_factory=list)
     skip_discovery: bool = False
     skip_execution: bool = False
@@ -49,36 +53,63 @@ class QaOrchestrator:
         self.legacy_kb = KbRag(self.kb_dir) if self.kb_dir.exists() else None
         self.llm = PlannerLlmClient.from_env(model_id=model)
         self.classifier = IntentClassifier(self.graph, self.llm)
+        self.qa_planner = QaPlanner(self.graph, self.llm)
         self.selector = SuiteSelector(self.graph)
         self.discovery = DiscoveryService(self.graph, dry_run=_default_crawl_dry_run())
+        self.exploration = ExplorationService(self.graph, dry_run=_default_explore_dry_run())
+        self.generation = GenerationService(self.graph)
         self.executor = _build_executor()
         gt_path = Path(gt_dir) if gt_dir else root / "gt"
+        gt_path.mkdir(parents=True, exist_ok=True)
         validator_kb = self.legacy_kb or _KbShim(self.flow_kb)
-        self.validator = Validator(validator_kb, gt_dir=gt_path if gt_path.exists() else None)
+        self.validator = Validator(validator_kb, gt_dir=gt_path)
 
     def run(self, request: RunRequest | str) -> OrchestratorResult:
         req = request if isinstance(request, RunRequest) else RunRequest(goal=request)
         if req.model:
             self.llm = PlannerLlmClient.from_env(model_id=req.model)
             self.classifier = IntentClassifier(self.graph, self.llm)
+            self.qa_planner = QaPlanner(self.graph, self.llm)
 
         intent = self.classifier.classify(
             req.goal,
             run_type=req.run_type,
             context_packets=req.context_packets,
         )
-        suite_plan = self.selector.select(intent)
-        plan = intent_to_execution_plan(intent)
+        planning = self.qa_planner.plan(intent, context_packets=req.context_packets)
+        suite_plan = self.selector.select(planning.intent)
+        plan = intent_to_execution_plan(planning.intent)
 
         discovery: DiscoveryResult | None = None
-        if not req.skip_discovery and intent.execution_mode in {"new_feature", "discover"}:
-            discovery = self.discovery.discover(intent, suite_plan)
+        exploration: ExplorationResult | None = None
+        if not req.skip_discovery and planning.exploration_required and planning.exploration:
+            if planning.strategy != "BLOCK":
+                exploration = self.exploration.run_from_planning(
+                    planning,
+                    exploration_id=req.run_id or None,
+                )
+        if (
+            not req.skip_discovery
+            and exploration is None
+            and intent.execution_mode in {"new_feature", "discover"}
+        ):
+            discovery = self.discovery.discover(planning.intent, suite_plan)
 
-        if req.skip_execution:
+        generation_result: GenerationResult | None = None
+        if planning.generation_required and planning.generation and planning.strategy != "BLOCK":
+            generation_result = self.generation.generate_from_planning(
+                planning,
+                exploration=exploration,
+                generation_id=req.run_id,
+            )
+
+        if req.skip_execution or planning.strategy in {"EXPLORE", "GENERATE", "BLOCK", "ASK_USER"}:
             from qa_orchestrator.models import ExecutionResult
 
             execution = ExecutionResult(ok=True, mode="skipped", observations=[])
         elif hasattr(self.executor, "run_selection"):
+            if req.run_id and hasattr(self.executor, "set_run_context"):
+                self.executor.set_run_context(run_id=req.run_id, flow_ids=suite_plan.flow_ids)  # type: ignore[attr-defined]
             execution = self.executor.run_selection(suite_plan)  # type: ignore[attr-defined]
         else:
             execution = self.executor.run_plan(plan)
@@ -93,6 +124,9 @@ class QaOrchestrator:
                     "Do not declare PASS without evidence.\n"
                     f"Goal: {req.goal}\n"
                     f"Mode: {intent.execution_mode}\n"
+                    f"Strategy: {planning.strategy}\n"
+                    f"Exploration: {exploration.status if exploration else 'n/a'}\n"
+                    f"Generation: {generation_result.status if generation_result else 'n/a'}\n"
                     f"Flows: {', '.join(suite_plan.flow_ids) or 'n/a'}\n"
                     f"Commands: {', '.join(suite_plan.commands)}\n"
                     f"Execution ok: {execution.ok}\n"
@@ -119,8 +153,11 @@ class QaOrchestrator:
             goal=req.goal,
             run_type=req.run_type,
             intent=intent,
+            planning=planning,
             suite_plan=suite_plan,
             discovery=discovery,
+            exploration=exploration,
+            generation_result=generation_result,
             plan=plan,
             execution=execution,
             validation=validation,
@@ -132,7 +169,13 @@ class QaOrchestrator:
             kb_refs=plan.kb_refs,
             metadata={
                 "classifier": intent.classifier,
+                "planner": planning.planner,
+                "planning_strategy": planning.strategy,
+                "execution_allowed": planning.execution_allowed,
+                "exploration_status": exploration.status if exploration else None,
+                "generation_status": generation_result.status if generation_result else None,
                 "execution_mode": intent.execution_mode,
+                "run_id": req.run_id,
                 "executor": getattr(self.executor, "mode", type(self.executor).__name__),
                 "validation_phase": validation.phase,
                 "llm_enabled": self.llm.enabled,
@@ -168,6 +211,9 @@ class QaOrchestrator:
                 "validation_phase": result.validation.phase,
                 "report_markdown": result.report_markdown,
                 "intent": result.intent.model_dump(),
+                "planning": result.planning.model_dump() if result.planning else None,
+                "exploration": result.exploration.model_dump() if result.exploration else None,
+                "generation_result": result.generation_result.model_dump() if result.generation_result else None,
                 "suite_plan": result.suite_plan.model_dump(),
                 "discovery": result.discovery.model_dump() if result.discovery else None,
                 "plan": result.plan.model_dump(),
@@ -182,6 +228,12 @@ def _build_executor() -> PlaywrightRunner | OpenClawAdapter:
     if runner_mode in {"openclaw", "mock"}:
         return OpenClawAdapter(mode="mock" if runner_mode == "mock" else None)
     return PlaywrightRunner()
+
+
+def _default_explore_dry_run() -> bool:
+    if os.environ.get("QA_EXPLORE_LIVE", "").lower() in {"1", "true", "yes"}:
+        return False
+    return _default_crawl_dry_run()
 
 
 def _default_crawl_dry_run() -> bool:
