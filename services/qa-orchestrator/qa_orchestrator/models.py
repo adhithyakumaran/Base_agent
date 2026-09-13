@@ -51,10 +51,24 @@ class IntentClassification(BaseModel):
     classifier: str = "deterministic"
 
 
+class ExecutionGateSnapshot(BaseModel):
+    flow_id: str
+    executable: bool
+    reason_code: str
+    message: str
+    approval_status: str | None = None
+    kb_ready: bool = False
+    in_sme_ready: bool = False
+    catalog_automated: bool = False
+    approval_stale: bool = False
+
+
 class SuiteSelectionPlan(BaseModel):
     execution_mode: ExecutionMode = "adhoc_existing"
     suite_ids: list[str] = Field(default_factory=list)
     flow_ids: list[str] = Field(default_factory=list)
+    blocked_flows: list[str] = Field(default_factory=list)
+    execution_gates: list[ExecutionGateSnapshot] = Field(default_factory=list)
     commands: list[str] = Field(default_factory=list)
     params: dict[str, Any] = Field(default_factory=dict)
     runner: str = "playwright"

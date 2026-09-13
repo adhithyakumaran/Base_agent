@@ -104,6 +104,40 @@ class Validator:
         if suite_plan and not suite_plan.commands and execution.mode != "skipped":
             findings.append(ValidationFinding(code="suite.empty", severity="error", message="No suite commands selected"))
 
+        if suite_plan and suite_plan.blocked_flows:
+            for gate in suite_plan.execution_gates:
+                if gate.executable:
+                    continue
+                findings.append(
+                    ValidationFinding(
+                        code=gate.reason_code,
+                        severity="warn",
+                        message=gate.message,
+                    )
+                )
+            if suite_plan.flow_ids:
+                findings.append(
+                    ValidationFinding(
+                        code="gate.partial_block",
+                        severity="info",
+                        message=(
+                            f"{len(suite_plan.blocked_flows)} flow(s) blocked; "
+                            f"{len(suite_plan.flow_ids)} executable"
+                        ),
+                    )
+                )
+            elif execution.mode != "skipped":
+                findings.append(
+                    ValidationFinding(
+                        code="gate.no_executable_flows",
+                        severity="error",
+                        message=(
+                            "All candidate flows blocked by execution gate "
+                            "(requires APPROVED artifact + sme_ready + KB safety)"
+                        ),
+                    )
+                )
+
         if intent and intent.execution_mode == "morning_sanity" and suite_plan:
             if suite_plan.suite_ids != ["SUITE-SANITY-MORNING"] and "SUITE-SANITY-MORNING" not in suite_plan.suite_ids:
                 findings.append(
