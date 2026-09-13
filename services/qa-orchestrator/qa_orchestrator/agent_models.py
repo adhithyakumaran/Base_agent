@@ -90,6 +90,16 @@ class AgentDecisionEntry(BaseModel):
     checkpoint: str | None = None
     previous_state: str | None = None
     new_state: str | None = None
+    decision_source: AgentDecisionSource = "RULE"
+    model: str | None = None
+    model_version: str | None = None
+    proposal: dict[str, Any] | None = None
+    validation_result: str | None = None
+    policy_result: str | None = None
+    final_action: AgentActionType | str | None = None
+    evidence_refs: list[str] = Field(default_factory=list)
+    llm_invoked: bool = False
+    llm_accepted: bool = False
 
 
 class AgentFailureRecord(BaseModel):
@@ -156,6 +166,16 @@ class AgentMetrics(BaseModel):
     average_recoveries: float = 0.0
     evidence_completeness: float = 0.0
     decision_trace_completeness: float = 0.0
+    deterministic_decision_accuracy: float = 0.0
+    llm_proposal_accuracy: float = 0.0
+    policy_rejection_accuracy: float = 0.0
+    final_action_accuracy: float = 0.0
+    unsafe_proposal_rejection_rate: float = 0.0
+    prompt_injection_rejection_rate: float = 0.0
+    hallucinated_evidence_rejection_rate: float = 0.0
+    low_confidence_escalation_accuracy: float = 0.0
+    average_llm_calls_per_run: float = 0.0
+    average_llm_latency_ms: float = 0.0
     # Deprecated aliases kept for backward-compatible payloads
     execution_success_rate: float = 0.0
     approval_escalation_rate: float = 0.0
