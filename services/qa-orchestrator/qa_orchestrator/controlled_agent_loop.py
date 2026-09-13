@@ -58,7 +58,7 @@ class ControlledAgentLoop:
     def __init__(self, orchestrator) -> None:
         self.orchestrator = orchestrator
         self.config = AgentConfig.from_env()
-        self.engine = AgentDecisionEngine(self.config)
+        self.engine = AgentDecisionEngine(self.config, llm_client=getattr(orchestrator, "llm", None))
         self.policy = PolicyValidator()
         self.executor = AgentExecutor(orchestrator)
 
@@ -537,6 +537,8 @@ class ControlledAgentLoop:
                 "agent_status": state.status,
                 "agent_iterations": state.iteration,
                 "agent_recoveries": state.recovery_count,
+                "agent_llm_calls": self.engine.llm_call_count,
+                "agent_llm_latency_ms": self.engine.llm_latency_ms,
                 "retrieval_used": state.retrieval_used,
             },
         )
