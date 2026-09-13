@@ -152,6 +152,28 @@ def build_markdown_report(
             cand = exp.discovery_candidates[0]
             lines.append(f"- **Discovery candidate:** `{cand.candidate_id}` · status `{cand.status}`")
 
+    if result.generation_result:
+        gen = result.generation_result
+        lines.extend(
+            [
+                "",
+                "## Test generation",
+                f"- **Status:** `{gen.status}`",
+                f"- **Generation ID:** `{gen.generation_id}`",
+                f"- **Flow:** {gen.flow_id}",
+                f"- **Spec path:** `{gen.generated_spec_path or '—'}`",
+                f"- **Blocked execution:** {gen.blocked_execution}",
+            ]
+        )
+        if gen.validation:
+            lines.append(f"- **Validation:** `{gen.validation.reason_code}` — {gen.validation.message}")
+        if gen.scenario:
+            lines.append(f"- **Scenario:** `{gen.scenario.scenario_id}` · {gen.scenario.status}")
+        if gen.test_case:
+            lines.append(f"- **Test case:** `{gen.test_case.test_case_id}` · {gen.test_case.status}")
+        if gen.journal:
+            lines.append(f"- **Journal:** `{gen.journal.generation_id}` · review `{gen.journal.review_status}`")
+
     lines.extend(
         [
             "",

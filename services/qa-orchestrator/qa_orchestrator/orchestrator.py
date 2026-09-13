@@ -12,7 +12,8 @@ from qa_orchestrator.intent_classifier import IntentClassifier
 from qa_orchestrator.kb_rag import KbRag
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.llm_client import PlannerLlmClient
-from qa_orchestrator.models import DiscoveryResult, ExecutionPlan, ExplorationResult, OrchestratorResult
+from qa_orchestrator.generation_service import GenerationService
+from qa_orchestrator.models import DiscoveryResult, ExecutionPlan, ExplorationResult, GenerationResult, OrchestratorResult
 from qa_orchestrator.openclaw_adapter import OpenClawAdapter
 from qa_orchestrator.planner import intent_to_execution_plan
 from qa_orchestrator.playwright_runner import PlaywrightRunner
@@ -56,6 +57,7 @@ class QaOrchestrator:
         self.selector = SuiteSelector(self.graph)
         self.discovery = DiscoveryService(self.graph, dry_run=_default_crawl_dry_run())
         self.exploration = ExplorationService(self.graph, dry_run=_default_explore_dry_run())
+        self.generation = GenerationService(self.graph)
         self.executor = _build_executor()
         gt_path = Path(gt_dir) if gt_dir else root / "gt"
         gt_path.mkdir(parents=True, exist_ok=True)
@@ -93,6 +95,14 @@ class QaOrchestrator:
         ):
             discovery = self.discovery.discover(planning.intent, suite_plan)
 
+        generation_result: GenerationResult | None = None
+        if planning.generation_required and planning.generation and planning.strategy != "BLOCK":
+            generation_result = self.generation.generate_from_planning(
+                planning,
+                exploration=exploration,
+                generation_id=req.run_id,
+            )
+
         if req.skip_execution or planning.strategy in {"EXPLORE", "GENERATE", "BLOCK", "ASK_USER"}:
             from qa_orchestrator.models import ExecutionResult
 
@@ -116,6 +126,7 @@ class QaOrchestrator:
                     f"Mode: {intent.execution_mode}\n"
                     f"Strategy: {planning.strategy}\n"
                     f"Exploration: {exploration.status if exploration else 'n/a'}\n"
+                    f"Generation: {generation_result.status if generation_result else 'n/a'}\n"
                     f"Flows: {', '.join(suite_plan.flow_ids) or 'n/a'}\n"
                     f"Commands: {', '.join(suite_plan.commands)}\n"
                     f"Execution ok: {execution.ok}\n"
@@ -146,6 +157,7 @@ class QaOrchestrator:
             suite_plan=suite_plan,
             discovery=discovery,
             exploration=exploration,
+            generation_result=generation_result,
             plan=plan,
             execution=execution,
             validation=validation,
@@ -161,6 +173,7 @@ class QaOrchestrator:
                 "planning_strategy": planning.strategy,
                 "execution_allowed": planning.execution_allowed,
                 "exploration_status": exploration.status if exploration else None,
+                "generation_status": generation_result.status if generation_result else None,
                 "execution_mode": intent.execution_mode,
                 "run_id": req.run_id,
                 "executor": getattr(self.executor, "mode", type(self.executor).__name__),
@@ -200,6 +213,7 @@ class QaOrchestrator:
                 "intent": result.intent.model_dump(),
                 "planning": result.planning.model_dump() if result.planning else None,
                 "exploration": result.exploration.model_dump() if result.exploration else None,
+                "generation_result": result.generation_result.model_dump() if result.generation_result else None,
                 "suite_plan": result.suite_plan.model_dump(),
                 "discovery": result.discovery.model_dump() if result.discovery else None,
                 "plan": result.plan.model_dump(),

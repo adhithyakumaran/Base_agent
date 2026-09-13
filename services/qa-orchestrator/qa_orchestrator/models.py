@@ -266,7 +266,7 @@ class ExplorationResult(BaseModel):
 
 
 class GenerationRequest(BaseModel):
-    """Contract for a future test generator — no Playwright code emitted here."""
+    """Contract consumed by the test generation pipeline."""
 
     flow_context: list[str] = Field(default_factory=list)
     scenario_objective: str
@@ -275,6 +275,113 @@ class GenerationRequest(BaseModel):
     expected_outcomes: list[str] = Field(default_factory=list)
     test_data_requirements: dict[str, Any] = Field(default_factory=dict)
     approval_required: bool = True
+
+
+ArtifactStatus = Literal["DRAFT", "PENDING_SME_APPROVAL", "APPROVED", "REJECTED"]
+GenerationOutcomeStatus = Literal[
+    "GENERATED",
+    "INVALID",
+    "VALIDATION_FAILED",
+    "BLOCKED",
+    "NEEDS_REVIEW",
+    "READY_FOR_APPROVAL",
+]
+LocatorSource = Literal["OBSERVED", "GENERATED", "FALLBACK"]
+
+
+class GeneratedLocator(BaseModel):
+    primary: str
+    fallbacks: list[str] = Field(default_factory=list)
+    source: LocatorSource = "OBSERVED"
+    confidence: float = 0.0
+    playwright_code: str = ""
+
+
+class GeneratedAction(BaseModel):
+    type: Literal["navigate", "fill", "click", "assert", "wait", "page_object"]
+    locator: GeneratedLocator | None = None
+    page_object: str | None = None
+    page_object_method: str | None = None
+    value_source: str | None = None
+    value: str | None = None
+    expectation: str | None = None
+    evidence_required: bool = True
+
+
+class TestCaseStep(BaseModel):
+    step_id: str
+    action: str
+    target: str = ""
+    input: str | None = None
+    expected: str = ""
+    evidence_required: bool = True
+    generated_action: GeneratedAction | None = None
+
+
+class TestScenario(BaseModel):
+    scenario_id: str
+    flow_id: str
+    title: str
+    objective: str
+    preconditions: list[str] = Field(default_factory=list)
+    test_data: dict[str, str] = Field(default_factory=dict)
+    actions: list[str] = Field(default_factory=list)
+    expected_outcomes: list[str] = Field(default_factory=list)
+    polarity: TestPolarity = "positive"
+    source: Literal["DISCOVERY", "USER_REQUEST", "EXISTING_FLOW", "RECORDER"] = "DISCOVERY"
+    evidence_refs: list[str] = Field(default_factory=list)
+    confidence: float = 0.0
+    status: ArtifactStatus = "DRAFT"
+
+
+class GeneratedTestCase(BaseModel):
+    test_case_id: str
+    flow_id: str
+    scenario_id: str
+    title: str
+    polarity: TestPolarity = "positive"
+    preconditions: list[str] = Field(default_factory=list)
+    test_data: dict[str, str] = Field(default_factory=dict)
+    steps: list[TestCaseStep] = Field(default_factory=list)
+    expected: str = ""
+    status: ArtifactStatus = "DRAFT"
+
+
+class GenerationValidation(BaseModel):
+    valid: bool
+    reason_code: str
+    message: str
+    checks: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class GeneratorJournal(BaseModel):
+    generation_id: str
+    request: str
+    flow_id: str
+    scenario_id: str
+    test_case_id: str
+    source_observations: list[str] = Field(default_factory=list)
+    actions: list[GeneratedAction] = Field(default_factory=list)
+    locators: list[GeneratedLocator] = Field(default_factory=list)
+    generated_file: str | None = None
+    validation: GenerationValidation | None = None
+    review_status: ArtifactStatus = "DRAFT"
+    timestamp: str = ""
+
+
+class GenerationResult(BaseModel):
+    generation_id: str
+    status: GenerationOutcomeStatus
+    flow_id: str
+    scenario: TestScenario | None = None
+    test_case: GeneratedTestCase | None = None
+    actions: list[GeneratedAction] = Field(default_factory=list)
+    generated_spec_path: str | None = None
+    validation: GenerationValidation | None = None
+    journal: GeneratorJournal | None = None
+    discovery_candidate_id: str | None = None
+    message: str = ""
+    blocked_execution: bool = True
 
 
 class PlanningResult(BaseModel):
@@ -319,6 +426,7 @@ class OrchestratorResult(BaseModel):
     suite_plan: SuiteSelectionPlan
     discovery: DiscoveryResult | None = None
     exploration: ExplorationResult | None = None
+    generation_result: GenerationResult | None = None
     plan: ExecutionPlan
     execution: ExecutionResult
     validation: ValidationResult
