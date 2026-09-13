@@ -86,6 +86,10 @@ class AgentDecisionEntry(BaseModel):
     confidence: float = 1.0
     approved: bool = True
     result: str = ""
+    resume_reason: str | None = None
+    checkpoint: str | None = None
+    previous_state: str | None = None
+    new_state: str | None = None
 
 
 class AgentFailureRecord(BaseModel):
@@ -135,16 +139,26 @@ class AgentRunState(BaseModel):
 
 class AgentMetrics(BaseModel):
     planning_success_rate: float = 0.0
-    execution_success_rate: float = 0.0
+    terminal_state_accuracy: float = 0.0
+    execution_attempt_rate: float = 0.0
+    execution_attempt_success_rate: float = 0.0
+    verification_success_rate: float = 0.0
+    approval_routing_accuracy: float = 0.0
+    recovery_attempt_rate: float = 0.0
     recovery_success_rate: float = 0.0
+    recovery_failure_rate: float = 0.0
     false_recovery_rate: float = 0.0
-    approval_escalation_rate: float = 0.0
-    average_iterations: float = 0.0
-    average_recoveries: float = 0.0
+    average_recoveries_per_failed_run: float = 0.0
+    waiting_for_approval_rate: float = 0.0
     blocked_rate: float = 0.0
     needs_review_rate: float = 0.0
+    average_iterations: float = 0.0
+    average_recoveries: float = 0.0
     evidence_completeness: float = 0.0
     decision_trace_completeness: float = 0.0
+    # Deprecated aliases kept for backward-compatible payloads
+    execution_success_rate: float = 0.0
+    approval_escalation_rate: float = 0.0
 
 
 class AgentRunResult(BaseModel):

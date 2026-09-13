@@ -2,6 +2,7 @@
   "name": "base-agent",
   "private": true,
   "scripts": {
-    "agent:run": "PYTHONPATH=services/qa-orchestrator python3 -m qa_orchestrator.agent_cli"
+    "agent:run": "PYTHONPATH=services/qa-orchestrator python3 -m qa_orchestrator.agent_cli run",
+    "agent:resume": "PYTHONPATH=services/qa-orchestrator python3 -m qa_orchestrator.agent_cli resume"
   }
 }
