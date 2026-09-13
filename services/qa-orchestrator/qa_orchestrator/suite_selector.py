@@ -2,6 +2,13 @@ from __future__ import annotations
 
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.models import IntentClassification, SuiteSelectionPlan
+from qa_orchestrator.suite_commands import (
+    build_flow_command,
+    build_negative_flow_commands,
+    build_positive_flow_commands,
+    build_regression_command,
+    build_sanity_command,
+)
 
 
 class SuiteSelector:
@@ -23,20 +30,22 @@ class SuiteSelector:
             sanity = self.graph.sanity_suite()
             suite_ids = [str(sanity.get("id") or "SUITE-SANITY-MORNING")]
             flow_ids = list(sanity.get("flows") or self.graph.ready_flow_ids())
-            commands = ["npm run test:sanity"]
-            notes.append("Morning sanity: all READY flows, zero LLM at execution time")
+            commands = [build_sanity_command(positive_only=True)]
+            notes.append("Morning sanity: all READY flows, positive-only, zero LLM at execution time")
 
         elif mode == "regression_suite":
             reg = self.graph.regression_suite()
             suite_ids = [str(reg.get("id") or "SUITE-REGRESSION-FULL")]
             flow_ids = self.graph.ready_flow_ids()
-            commands = ["npm run test:regression"]
+            commands = [build_regression_command()]
             notes.append("Full regression suite — all @regression tagged flows")
 
         elif mode == "negative_suite":
-            flow_ids = _unique_primary(self.graph, intent.flow_ids) or self.graph.flows_for_query_semantic(intent.goal, limit=4)
+            flow_ids = _unique_primary(self.graph, intent.flow_ids) or self.graph.flows_for_query_semantic(
+                intent.goal, limit=4
+            )
             if flow_ids:
-                commands = [f"npm run test:negative -- @{fid}" for fid in flow_ids[:5]]
+                commands = build_negative_flow_commands(flow_ids[:5])
                 suite_ids = [f"NEG-{fid}" for fid in flow_ids[:5]]
             else:
                 commands = ["npm run test:negative"]
@@ -55,21 +64,21 @@ class SuiteSelector:
             flow_ids = _unique_primary(self.graph, flow_ids)
             if not flow_ids:
                 flow_ids = self.graph.flows_for_query_semantic(intent.goal, limit=6)
-            commands = [f"npm run test:flow -- @{fid}" for fid in flow_ids]
+            commands = build_positive_flow_commands(flow_ids)
             suite_ids = [f"FLOW-{fid}" for fid in flow_ids]
             notes.append(f"Incident / keyword traversal: {len(flow_ids)} related READY flow suite(s)")
 
         elif mode in {"new_feature", "discover"}:
             flow_ids = _unique_primary(self.graph, intent.flow_ids) or self.graph.search_flows(intent.goal, limit=1)
             if flow_ids:
-                commands = [f"npm run test:flow -- @{flow_ids[0]}"]
+                commands = [build_flow_command(flow_ids[0], polarity="positive")]
                 suite_ids = [f"FLOW-{flow_ids[0]}"]
             notes.append("Primary suite run plus discovery crawl for KB/suite suggestions")
 
         elif mode == "adhoc_parameterized":
             flow_ids = _unique_primary(self.graph, intent.flow_ids) or ["BF-PRODUCT-003"]
             fid = flow_ids[0]
-            commands = [f"npm run test:flow -- @{fid}"]
+            commands = [build_flow_command(fid, polarity="positive")]
             suite_ids = [f"FLOW-{fid}"]
             notes.append(f"Parameterized run — pass params via env: {params}")
 
@@ -77,19 +86,25 @@ class SuiteSelector:
             flow_ids = _unique_primary(self.graph, intent.flow_ids)
             if not flow_ids:
                 flow_ids = self.graph.flows_for_query_semantic(intent.goal, limit=3)
+            negative_goal = any(
+                k in intent.goal.lower()
+                for k in ("negative", "invalid", "wrong password", "error case", "bad login")
+            )
+            polarity = "negative" if negative_goal else "positive"
             if len(flow_ids) == 1:
                 fid = flow_ids[0]
-                commands = [f"npm run test:flow -- @{fid}"]
+                commands = [build_flow_command(fid, polarity=polarity)]
                 suite_ids = [f"FLOW-{fid}"]
-                notes.append(f"Adhoc sanity for single flow {fid}")
+                notes.append(f"Adhoc {polarity} run for single flow {fid}")
             elif flow_ids:
-                commands = [f"npm run test:flow -- @{fid}" for fid in flow_ids[:5]]
+                builder = build_negative_flow_commands if polarity == "negative" else build_positive_flow_commands
+                commands = builder(flow_ids[:5])
                 suite_ids = [f"FLOW-{fid}" for fid in flow_ids[:5]]
-                notes.append(f"Adhoc multi-flow: {len(flow_ids)} suite(s)")
+                notes.append(f"Adhoc multi-flow ({polarity}): {len(flow_ids)} suite(s)")
             else:
                 suite_ids = ["SUITE-SANITY-MORNING"]
-                commands = ["npm run test:sanity"]
-                notes.append("No READY flow match — fallback to sanity suite")
+                commands = [build_sanity_command(positive_only=True)]
+                notes.append("No READY flow match — fallback to positive sanity suite")
 
         draft_refs = [f for f in intent.supporting_flow_ids if f in self.graph.draft_flow_ids()]
         if draft_refs:

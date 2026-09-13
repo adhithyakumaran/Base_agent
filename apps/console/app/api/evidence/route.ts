@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { requireApiAuth } from "@/lib/api-auth";
 import { repoRoot } from "@/lib/repo-root";
 
 export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   const rel = new URL(req.url).searchParams.get("path");
   if (!rel || rel.includes("..")) {
     return NextResponse.json({ error: "Invalid path" }, { status: 400 });

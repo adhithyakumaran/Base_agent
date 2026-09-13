@@ -25,6 +25,7 @@ class RunRequest:
     goal: str
     run_type: str = "adhoc"
     model: str | None = None
+    run_id: str | None = None
     context_packets: list[dict[str, Any]] = field(default_factory=list)
     skip_discovery: bool = False
     skip_execution: bool = False
@@ -53,8 +54,9 @@ class QaOrchestrator:
         self.discovery = DiscoveryService(self.graph, dry_run=_default_crawl_dry_run())
         self.executor = _build_executor()
         gt_path = Path(gt_dir) if gt_dir else root / "gt"
+        gt_path.mkdir(parents=True, exist_ok=True)
         validator_kb = self.legacy_kb or _KbShim(self.flow_kb)
-        self.validator = Validator(validator_kb, gt_dir=gt_path if gt_path.exists() else None)
+        self.validator = Validator(validator_kb, gt_dir=gt_path)
 
     def run(self, request: RunRequest | str) -> OrchestratorResult:
         req = request if isinstance(request, RunRequest) else RunRequest(goal=request)
@@ -79,6 +81,8 @@ class QaOrchestrator:
 
             execution = ExecutionResult(ok=True, mode="skipped", observations=[])
         elif hasattr(self.executor, "run_selection"):
+            if req.run_id and hasattr(self.executor, "set_run_context"):
+                self.executor.set_run_context(run_id=req.run_id, flow_ids=suite_plan.flow_ids)  # type: ignore[attr-defined]
             execution = self.executor.run_selection(suite_plan)  # type: ignore[attr-defined]
         else:
             execution = self.executor.run_plan(plan)
@@ -133,6 +137,7 @@ class QaOrchestrator:
             metadata={
                 "classifier": intent.classifier,
                 "execution_mode": intent.execution_mode,
+                "run_id": req.run_id,
                 "executor": getattr(self.executor, "mode", type(self.executor).__name__),
                 "validation_phase": validation.phase,
                 "llm_enabled": self.llm.enabled,

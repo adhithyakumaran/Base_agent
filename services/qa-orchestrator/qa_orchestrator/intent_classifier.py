@@ -144,7 +144,10 @@ class IntentClassifier:
             reasoning = "Full regression — all @regression tagged approved suites"
         elif any(k in g for k in ("negative", "invalid", "error case", "edge case", "wrong password", "bad sku")):
             mode = "negative_suite"
-            flow_ids = self.graph.flows_for_query_semantic(goal, limit=4)
+            if "login" in g:
+                flow_ids = self._primary_or(["BF-LOGIN-001"])
+            else:
+                flow_ids = self.graph.flows_for_query_semantic(goal, limit=4)
             reasoning = "Negative / edge-case validation for matched flow(s)"
         elif any(k in g for k in ("sanity",)) and run_type != "sanity":
             mode = "adhoc_existing"
@@ -168,7 +171,7 @@ class IntentClassifier:
             flow_ids = self._filter_primary(self.graph.search_flows(goal, limit=1))
             reasoning = "Discovery/crawl request"
         else:
-            sku = _extract_param(g, r"\b(?:sku|item\s*code|itemcode|product\s*id)[:\s#-]*([a-z0-9-]{4,})\b")
+            sku = _extract_sku(goal)
             if sku:
                 mode = "adhoc_parameterized"
                 params["sku"] = sku
@@ -247,4 +250,13 @@ class IntentClassifier:
 
 def _extract_param(text: str, pattern: str) -> str | None:
     m = re.search(pattern, text, re.IGNORECASE)
+    return m.group(1) if m else None
+
+
+def _extract_sku(goal: str) -> str | None:
+    m = re.search(
+        r"\b(?:search\s+)?(?:sku|item\s*code|itemcode|product\s*id)[:\s#-]*([A-Za-z0-9-]{3,32})\b",
+        goal,
+        re.IGNORECASE,
+    )
     return m.group(1) if m else None

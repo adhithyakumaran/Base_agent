@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from qa_orchestrator.gt_eval import evaluate_gt_expectations, goal_matches_gt
 from qa_orchestrator.kb_rag import KbRag
 from qa_orchestrator.models import (
     DiscoveryResult,
@@ -36,8 +37,9 @@ class Validator:
         suite_plan: SuiteSelectionPlan | None = None,
         discovery: DiscoveryResult | None = None,
     ) -> ValidationResult:
-        if self._approved_gt and self._has_gt_coverage(goal):
-            return self._validate_phase_b(goal, plan, execution, llm_summary)
+        matched_gt = self._matching_gt(goal)
+        if matched_gt:
+            return self._validate_phase_b(goal, plan, execution, matched_gt)
         return self._validate_phase_a(
             goal,
             run_type,
@@ -100,9 +102,7 @@ class Validator:
             )
 
         if suite_plan and not suite_plan.commands and execution.mode != "skipped":
-            findings.append(
-                ValidationFinding(code="suite.empty", severity="error", message="No suite commands selected")
-            )
+            findings.append(ValidationFinding(code="suite.empty", severity="error", message="No suite commands selected"))
 
         if intent and intent.execution_mode == "morning_sanity" and suite_plan:
             if suite_plan.suite_ids != ["SUITE-SANITY-MORNING"] and "SUITE-SANITY-MORNING" not in suite_plan.suite_ids:
@@ -156,37 +156,33 @@ class Validator:
         goal: str,
         plan: ExecutionPlan,
         execution: ExecutionResult,
-        llm_summary: str,
+        matched_gt: tuple[str, dict[str, Any]],
     ) -> ValidationResult:
+        gt_id, fact = matched_gt
         findings: list[ValidationFinding] = []
-        if not execution.ok:
+        meta_list = [o.meta or {} for o in execution.observations if o.meta]
+
+        passed, failures = evaluate_gt_expectations(fact, execution.ok, meta_list)
+        if not passed:
             return ValidationResult(
                 phase="B",
                 conclusion="FAIL",
-                reason_code="validator.gt_execution_failed",
-                summary="Execution failed — GT comparison skipped",
-                findings=findings,
-                gt_refs=list(self._approved_gt.keys())[:5],
-            )
-
-        matched = [gid for gid, fact in self._approved_gt.items() if _goal_matches_gt(goal, fact)]
-        if matched:
-            return ValidationResult(
-                phase="B",
-                conclusion="PASS",
-                reason_code="validator.gt_match",
-                summary=llm_summary or "Approved GT matched observed behaviour",
-                findings=findings,
-                gt_refs=matched,
+                reason_code="validator.gt_expectation_failed",
+                summary=f"Approved GT {gt_id} expectations not met: {'; '.join(failures)}",
+                findings=[
+                    ValidationFinding(code="gt.expectation_failed", severity="error", message=f)
+                    for f in failures
+                ],
+                gt_refs=[gt_id],
             )
 
         return ValidationResult(
             phase="B",
-            conclusion="NEEDS_REVIEW",
-            reason_code="validator.gt_partial",
-            summary="GT loaded but no matching approved fact for this goal yet",
+            conclusion="PASS",
+            reason_code="validator.gt_match",
+            summary="Approved GT expectations satisfied by structured execution results",
             findings=findings,
-            gt_refs=[],
+            gt_refs=[gt_id],
         )
 
     def _load_approved_gt(self) -> dict[str, dict[str, Any]]:
@@ -202,15 +198,8 @@ class Validator:
                 approved[path.stem] = doc
         return approved
 
-    def _has_gt_coverage(self, goal: str) -> bool:
-        return any(_goal_matches_gt(goal, fact) for fact in self._approved_gt.values())
-
-
-def _goal_matches_gt(goal: str, fact: dict[str, Any]) -> bool:
-    subjects = [
-        str(fact.get("subject", "")),
-        str(fact.get("id", "")),
-        " ".join(str(t) for t in fact.get("tags", [])),
-    ]
-    g = goal.lower()
-    return any(s and s.lower() in g for s in subjects)
+    def _matching_gt(self, goal: str) -> tuple[str, dict[str, Any]] | None:
+        for gid, fact in self._approved_gt.items():
+            if goal_matches_gt(goal, fact):
+                return gid, fact
+        return None
