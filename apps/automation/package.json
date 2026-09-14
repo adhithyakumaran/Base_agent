@@ -17,6 +17,8 @@
     "test:unit-url": "playwright test tests/unit/app-url.spec.ts",
     "debug:login": "node scripts/debug-login.mjs",
     "debug:login:headed": "EA_HEADLESS=false node scripts/debug-login.mjs",
+    "agent:live": "node scripts/agent-live.mjs",
+    "agent:run": "node scripts/agent-live.mjs",
     "report": "playwright show-report",
     "install:browsers": "playwright install chromium"
   },

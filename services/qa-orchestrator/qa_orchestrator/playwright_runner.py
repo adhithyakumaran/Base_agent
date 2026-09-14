@@ -21,6 +21,17 @@ from qa_orchestrator.models import (
 from qa_orchestrator.param_validator import params_to_env, validate_run_params
 from qa_orchestrator.suite_commands import build_flow_command, build_sanity_command
 
+try:
+    from qa_orchestrator.live_browser_config import (
+        apply_live_browser_env,
+        load_live_browser_config,
+        require_live_environment,
+    )
+    from qa_orchestrator.live_browser_events import get_event_store
+    from qa_orchestrator.live_browser_registry import LiveBrowserSession, LiveBrowserSessionMeta, register_session
+except ImportError:  # pragma: no cover
+    load_live_browser_config = None  # type: ignore
+
 
 @dataclass
 class PlaywrightRunnerConfig:
@@ -61,6 +72,44 @@ class PlaywrightRunner:
     def run_selection(self, selection: SuiteSelectionPlan) -> ExecutionResult:
         if self.config.dry_run:
             return self._dry_run(selection)
+        live_cfg = load_live_browser_config() if load_live_browser_config else None
+        if live_cfg and live_cfg.is_live and os.environ.get("QA_RUNNER", "").lower() in {"dry_run", "dry-run", "mock"}:
+            return ExecutionResult(
+                ok=False,
+                mode="live_browser_blocked",
+                error="LIVE mode cannot silently fall back to dry_run",
+                observations=[
+                    StepObservation(
+                        step_index=0,
+                        action="live_browser",
+                        ok=False,
+                        message="LIVE mode cannot silently fall back to dry_run",
+                    )
+                ],
+            )
+        if live_cfg and live_cfg.is_live:
+            blocked = require_live_environment(live_cfg)
+            if blocked:
+                return ExecutionResult(
+                    ok=False,
+                    mode="live_browser_blocked",
+                    error=blocked,
+                    observations=[
+                        StepObservation(
+                            step_index=0,
+                            action="live_browser",
+                            ok=False,
+                            message=blocked,
+                        )
+                    ],
+                )
+            if self._run_id:
+                get_event_store(self._run_id).emit(
+                    phase="PLAN",
+                    action="LIVE_MODE",
+                    value_summary=live_cfg.run_mode,
+                    status="OK",
+                )
         t0 = time.perf_counter()
         observations: list[StepObservation] = []
         overall_ok = True
@@ -145,6 +194,56 @@ class PlaywrightRunner:
             )
         env.update(params_to_env(validated))
 
+        live_cfg = load_live_browser_config() if load_live_browser_config else None
+        if live_cfg and live_cfg.is_live:
+            if not self._run_id:
+                return StepObservation(
+                    step_index=step_index,
+                    action="live_browser",
+                    ok=False,
+                    message="live mode requires QA_RUN_ID",
+                )
+            env = apply_live_browser_env(live_cfg, env, run_id=self._run_id)
+            env["EA_SKIP_GLOBAL_SETUP"] = "true"
+            register_session(
+                LiveBrowserSession(
+                    meta=LiveBrowserSessionMeta(
+                        run_id=self._run_id,
+                        browser_session_id=f"live-{self._run_id}",
+                        profile_dir=env["QA_LIVE_PROFILE_DIR"],
+                        channel=live_cfg.browser_channel,
+                        headless=live_cfg.headless,
+                        keep_open=live_cfg.keep_browser_open,
+                        status="STARTING",
+                    )
+                )
+            )
+            from pathlib import Path
+            import json as _json
+
+            meta_path = Path(env["QA_LIVE_PROFILE_DIR"]) / "session.json"
+            meta_path.write_text(
+                _json.dumps(
+                    {
+                        "run_id": self._run_id,
+                        "browser_session_id": f"live-{self._run_id}",
+                        "profile_dir": env["QA_LIVE_PROFILE_DIR"],
+                        "status": "ACTIVE",
+                        "channel": live_cfg.browser_channel,
+                        "headless": live_cfg.headless,
+                        "keep_open": live_cfg.keep_browser_open,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+            get_event_store(self._run_id).emit(
+                phase="EXECUTE",
+                action="START",
+                flow_id=env.get("QA_FLOW_ID", ""),
+                value_summary=f"channel={live_cfg.browser_channel} headless={live_cfg.headless}",
+            )
+
         resolved = _resolve_command(cmd, env)
         if isinstance(resolved, str) and resolved.startswith("ERROR:"):
             return StepObservation(
@@ -175,6 +274,26 @@ class PlaywrightRunner:
                 "stderr_tail": proc.stderr[-4000:],
                 "params": params,
             }
+            if live_cfg and live_cfg.is_live and self._run_id:
+                stderr = proc.stderr or ""
+                stdout = proc.stdout or ""
+                combined = stderr + stdout
+                if "BROWSER_UNAVAILABLE" in combined:
+                    ok = False
+                    meta["browser_status"] = "BROWSER_UNAVAILABLE"
+                elif "BROWSER_DISCONNECTED" in combined:
+                    ok = False
+                    meta["browser_status"] = "BROWSER_DISCONNECTED"
+                else:
+                    meta["browser_status"] = "LIVE"
+                if live_cfg.keep_browser_open:
+                    meta["browser_keep_open"] = True
+                    get_event_store(self._run_id).emit(
+                        phase="COMPLETE",
+                        action="KEEP_OPEN",
+                        status="OK" if ok else "FAIL",
+                        value_summary="Browser remains open for inspection.",
+                    )
             report_path = cwd / "reports" / "results.json"
             if report_path.exists():
                 try:
