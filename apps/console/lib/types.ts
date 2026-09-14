@@ -26,6 +26,7 @@ export type AgentRun = {
   usage: { tokensIn: number; tokensOut: number; toolCalls: number; steps: number; llmCalls: number };
   channelsNotified?: string[];
   knowledgePillIds?: string[];
+  executionMode?: "DRY_RUN" | "CI" | "LIVE" | "LIVE_DEMO";
 };
 
 export type KnowledgePill = {

@@ -49,7 +49,11 @@ async function globalSetup(config: FullConfig): Promise<void> {
     );
     throw new Error(`Global login setup failed:\n${detail}`);
   } finally {
-    await browser.close();
+    if (process.env.QA_KEEP_BROWSER_OPEN !== 'true') {
+      await browser.close();
+    } else {
+      console.log('Global setup: QA_KEEP_BROWSER_OPEN=true — browser left open for live inspection');
+    }
   }
 }
 
