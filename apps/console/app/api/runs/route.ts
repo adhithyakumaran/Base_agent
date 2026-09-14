@@ -15,6 +15,12 @@ export async function GET(req: Request) {
   return NextResponse.json({ runs: state.runs, locked: hasActiveRun(state) });
 }
 
+function resolveExecutionMode(raw: unknown): AgentRun["executionMode"] {
+  const mode = String(raw || "CI").toUpperCase();
+  if (mode === "LIVE_DEMO" || mode === "LIVE" || mode === "DRY_RUN" || mode === "CI") return mode;
+  return "CI";
+}
+
 export async function POST(req: Request) {
   const denied = requireMutationAuth(req);
   if (denied) return denied;
@@ -23,6 +29,7 @@ export async function POST(req: Request) {
   if (!goal) return NextResponse.json({ error: "Command required" }, { status: 400 });
 
   const type = (body.type || "adhoc") as AgentRun["type"];
+  const executionMode = resolveExecutionMode(body.executionMode);
   const knowledgeIds: string[] = Array.isArray(body.knowledgeIds) ? body.knowledgeIds : [];
   const notify: string[] =
     Array.isArray(body.channels) && body.channels.length > 0
@@ -30,8 +37,8 @@ export async function POST(req: Request) {
       : body.notify === false
         ? []
         : ["email", "whatsapp"];
+  const asyncRun = body.async !== false;
 
-  // Hard lock: one command at a time
   const gate = await readState();
   if (hasActiveRun(gate)) {
     return NextResponse.json(
@@ -56,6 +63,7 @@ export async function POST(req: Request) {
       status: "queued",
       model: state.selectedModel,
       llmEnabled: state.selectedModel !== "disabled",
+      executionMode,
       traces: [],
       usage: { tokensIn: 0, tokensOut: 0, toolCalls: 0, steps: 0, llmCalls: 0 },
       knowledgePillIds: knowledgeIds,
@@ -63,48 +71,59 @@ export async function POST(req: Request) {
     };
     runId = run.id;
     state.runs = [run, ...state.runs].slice(0, 100);
-    pushHistory(state, `Started ${type}: ${goal.slice(0, 80)}`, "client", { runId, goal });
+    pushHistory(state, `Started ${type}: ${goal.slice(0, 80)}`, "client", { runId, goal, executionMode });
   });
 
   if (!runId) {
     return NextResponse.json({ error: "Could not acquire run lock", locked: true }, { status: 409 });
   }
 
-  const final = await mutateState(async (state) => {
-    const idx = state.runs.findIndex((r) => r.id === runId);
-    if (idx < 0) return;
-    let run = state.runs[idx];
-    const ids = [...new Set([...(knowledgeIds || []), ...(run.knowledgePillIds || [])])];
-    const pills = state.knowledge.filter((k) => ids.includes(k.id));
-    run.knowledgePillIds = ids;
-    run = await executeRun(run, pills, async (updated) => {
-      const i = state.runs.findIndex((r) => r.id === updated.id);
-      if (i >= 0) state.runs[i] = updated;
-    });
-
-    if (notify.length && run.report) {
-      const deliveries = await deliverReport(run, state.channels, notify);
-      run.channelsNotified = deliveries.map((d) => `${d.channel}:${d.mode}`);
-      run.traces.push({
-        id: uid("tr"),
-        at: new Date().toISOString(),
-        kind: "report",
-        message: `Report delivery: ${deliveries.map((d) => `${d.channel}=${d.mode}`).join(", ")}`,
-        detail: JSON.stringify(deliveries, null, 2),
+  const finishRun = async () => {
+    await mutateState(async (state) => {
+      const idx = state.runs.findIndex((r) => r.id === runId);
+      if (idx < 0) return;
+      let run = state.runs[idx];
+      const ids = [...new Set([...(knowledgeIds || []), ...(run.knowledgePillIds || [])])];
+      const pills = state.knowledge.filter((k) => ids.includes(k.id));
+      run.knowledgePillIds = ids;
+      run = await executeRun(run, pills, async (updated) => {
+        const i = state.runs.findIndex((r) => r.id === updated.id);
+        if (i >= 0) state.runs[i] = updated;
       });
-      pushHistory(state, `Report routed (${run.channelsNotified.join(", ")})`, "system", { runId });
-    }
 
-    state.runs[idx] = run;
-    state.usageTotal.tokensIn += run.usage.tokensIn;
-    state.usageTotal.tokensOut += run.usage.tokensOut;
-    state.usageTotal.runs += 1;
-    pushHistory(state, `Finished ${run.status}: ${run.conclusion}`, "agent", {
-      runId,
-      conclusion: run.conclusion,
+      if (notify.length && run.report) {
+        const deliveries = await deliverReport(run, state.channels, notify);
+        run.channelsNotified = deliveries.map((d) => `${d.channel}:${d.mode}`);
+        run.traces.push({
+          id: uid("tr"),
+          at: new Date().toISOString(),
+          kind: "report",
+          message: `Report delivery: ${deliveries.map((d) => `${d.channel}=${d.mode}`).join(", ")}`,
+          detail: JSON.stringify(deliveries, null, 2),
+        });
+        pushHistory(state, `Report routed (${run.channelsNotified.join(", ")})`, "system", { runId });
+      }
+
+      state.runs[idx] = run;
+      state.usageTotal.tokensIn += run.usage.tokensIn;
+      state.usageTotal.tokensOut += run.usage.tokensOut;
+      state.usageTotal.runs += 1;
+      pushHistory(state, `Finished ${run.status}: ${run.conclusion}`, "agent", {
+        runId,
+        conclusion: run.conclusion,
+      });
     });
-  });
+  };
 
-  const run = final.runs.find((r) => r.id === runId);
+  if (asyncRun) {
+    void finishRun();
+    const state = await readState();
+    const run = state.runs.find((r) => r.id === runId);
+    return NextResponse.json({ run, locked: true, async: true }, { status: 202 });
+  }
+
+  await finishRun();
+  const state = await readState();
+  const run = state.runs.find((r) => r.id === runId);
   return NextResponse.json({ run, locked: false });
 }

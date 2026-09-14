@@ -171,6 +171,11 @@ class Handler(BaseHTTPRequestHandler):
         run_type = str(body.get("run_type") or body.get("type") or "adhoc")
         model = body.get("model")
         run_id = body.get("run_id")
+        execution_mode = body.get("execution_mode") or body.get("executionMode")
+        if execution_mode:
+            from qa_orchestrator.live_browser_config import apply_run_mode_to_environ
+
+            apply_run_mode_to_environ(str(execution_mode))
         context_packets = body.get("context_packets") if isinstance(body.get("context_packets"), list) else []
         skip_discovery = bool(body.get("skip_discovery"))
         skip_execution = bool(body.get("skip_execution"))

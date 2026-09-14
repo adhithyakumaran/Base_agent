@@ -16,6 +16,7 @@ import { ReportPreview } from "@/components/report-preview";
 import { BrowserRecorderPanel } from "@/components/browser-recorder";
 import { ScoutBackground } from "@/components/scout-background";
 import { CoveragePanel, RunHistoryPanel, SmeApprovalQueue } from "@/components/enterprise-panels";
+import { LiveRunPanel } from "@/components/live-run-panel";
 import { DeliveryInbox, SettingsPanel } from "@/components/settings-panel";
 import type { AgentRun } from "@/lib/types";
 
@@ -111,6 +112,8 @@ export function QaConsole() {
   const [activeRun, setActiveRun] = useState<AgentRun | null>(null);
   const [health, setHealth] = useState<Record<string, unknown> | null>(null);
   const [notifyChannels] = useState(["email", "whatsapp"]);
+  const [executionMode, setExecutionMode] = useState<"DRY_RUN" | "CI" | "LIVE" | "LIVE_DEMO">("CI");
+  const [environmentUrl, setEnvironmentUrl] = useState("");
 
   const insights = useMemo(() => parseInsights(activeRun), [activeRun]);
 
@@ -126,7 +129,27 @@ export function QaConsole() {
 
   useEffect(() => {
     refreshHealth();
+    fetch("/api/orchestrator", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((json) => setEnvironmentUrl(String(json.environment || "UAT")))
+      .catch(() => setEnvironmentUrl("UAT"));
   }, [refreshHealth]);
+
+  useEffect(() => {
+    if (!busy || !activeRun?.id) return;
+    const timer = setInterval(async () => {
+      const res = await fetch(`/api/runs/${activeRun.id}`, { cache: "no-store" });
+      if (!res.ok) return;
+      const json = await res.json();
+      if (json.run) {
+        setActiveRun(json.run as AgentRun);
+        if (json.run.status !== "running" && json.run.status !== "queued") {
+          setBusy(false);
+        }
+      }
+    }, 1500);
+    return () => clearInterval(timer);
+  }, [busy, activeRun?.id]);
 
   async function runAgent(goal: string, type: "adhoc" | "sanity") {
     if (busy) return;
@@ -136,18 +159,19 @@ export function QaConsole() {
       const res = await fetch("/api/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goal, type, channels: notifyChannels }),
+        body: JSON.stringify({ goal, type, channels: notifyChannels, executionMode, async: true }),
       });
       const json = await res.json();
       if (res.status === 409) {
         setError(json.error || "Another run is in progress.");
+        setBusy(false);
         return;
       }
-      if (!res.ok) throw new Error(json.error || "Run failed");
+      if (!res.ok && res.status !== 202) throw new Error(json.error || "Run failed");
       setActiveRun(json.run as AgentRun);
+      if (!json.async) setBusy(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
-    } finally {
       setBusy(false);
     }
   }
@@ -214,6 +238,41 @@ export function QaConsole() {
                 }
               }}
             />
+            <div className="scout-exec-mode">
+              <p className="scout-exec-label">Execution mode</p>
+              <label>
+                <input
+                  type="radio"
+                  name="exec-mode"
+                  checked={executionMode === "DRY_RUN"}
+                  onChange={() => setExecutionMode("DRY_RUN")}
+                />
+                Safe / Dry Run
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="exec-mode"
+                  checked={executionMode === "LIVE"}
+                  onChange={() => setExecutionMode("LIVE")}
+                />
+                Live Browser
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="exec-mode"
+                  checked={executionMode === "LIVE_DEMO"}
+                  onChange={() => setExecutionMode("LIVE_DEMO")}
+                />
+                Live Demo
+              </label>
+              {(executionMode === "LIVE" || executionMode === "LIVE_DEMO") && (
+                <p className="scout-live-warning">
+                  Environment: {environmentUrl} — This will interact with the real configured application.
+                </p>
+              )}
+            </div>
             <div className="scout-actions">
               <Button disabled={busy || !prompt.trim()} onClick={() => runAgent(prompt, "adhoc")} className="scout-btn-emerald">
                 {busy ? <Loader2 size={16} className="scout-spin" /> : <Bot size={16} />}
@@ -247,6 +306,15 @@ export function QaConsole() {
               </div>
             )}
           </section>
+
+          <LiveRunPanel
+            runId={activeRun?.id || null}
+            goal={activeRun?.goal}
+            flowId={insights.flowIds?.[0]}
+            runStatus={activeRun?.status}
+            conclusion={activeRun?.conclusion}
+            liveMode={activeRun?.executionMode === "LIVE" || activeRun?.executionMode === "LIVE_DEMO"}
+          />
 
           <BrowserRecorderPanel />
           <SmeApprovalQueue />

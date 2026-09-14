@@ -719,3 +719,81 @@ body {
     max-height: none;
   }
 }
+
+.scout-exec-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+}
+
+.scout-exec-mode label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.scout-live-warning {
+  color: #fbbf24;
+  font-size: 0.8rem;
+}
+
+.live-run-panel {
+  margin-top: 1rem;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.live-run-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.live-run-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: #34d399;
+}
+
+.badge-live {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  color: #34d399;
+  font-weight: 600;
+}
+
+.live-event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.live-event-list li {
+  display: grid;
+  grid-template-columns: 1.5rem 5rem 1fr auto auto;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  font-size: 0.82rem;
+}
+
+.live-run-footer {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.live-run-complete {
+  color: #34d399;
+}
+
+.live-run-error {
+  color: #f87171;
+}
+

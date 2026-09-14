@@ -29,6 +29,9 @@ export default defineConfig({
   use: {
     baseURL,
     storageState: process.env.EA_USER_USERNAME ? '.auth/user.json' : undefined,
+    headless:
+      process.env.QA_BROWSER_HEADLESS === 'true' ||
+      (process.env.QA_BROWSER_HEADLESS !== 'false' && process.env.EA_HEADLESS !== 'false'),
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

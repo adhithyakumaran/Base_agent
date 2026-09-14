@@ -38,7 +38,13 @@ function extractPills(pills: KnowledgePill[]) {
 
 async function invokeWarmAgent(
   goal: string,
-  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[]; runId?: string }
+  opts: {
+    runType: string;
+    model: string;
+    contextPackets: Record<string, unknown>[];
+    runId?: string;
+    executionMode?: string;
+  }
 ): Promise<{
   ok: boolean;
   result?: Record<string, unknown>;
@@ -60,6 +66,7 @@ async function invokeWarmAgent(
         run_id: opts.runId,
         model: opts.model === "disabled" ? null : opts.model,
         context_packets: opts.contextPackets,
+        execution_mode: opts.executionMode,
       }),
       signal: AbortSignal.timeout(120_000),
     });
@@ -155,7 +162,13 @@ async function invokePythonAgentSpawn(
 
 async function invokePythonAgent(
   goal: string,
-  opts: { runType: string; model: string; contextPackets: Record<string, unknown>[]; runId?: string }
+  opts: {
+    runType: string;
+    model: string;
+    contextPackets: Record<string, unknown>[];
+    runId?: string;
+    executionMode?: string;
+  }
 ) {
   const warm = await invokeWarmAgent(goal, opts);
   if (warm.ok) return warm;
@@ -223,6 +236,7 @@ export async function executeRun(
     model: run.model,
     contextPackets,
     runId: run.id,
+    executionMode: run.executionMode,
   });
   await push("info", `Orchestrator bridge via ${invoked.via || "unknown"}`);
 

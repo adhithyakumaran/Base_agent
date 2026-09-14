@@ -93,7 +93,20 @@ export async function attachEvidence(page: Page, testInfo: TestInfo, label: stri
 }
 
 /** Wrap page to capture evidence before/after clicks and navigation. */
-export function wrapPageWithEvidence(page: Page, testInfo: TestInfo): void {
+export function wrapPageWithEvidence(
+  page: Page,
+  testInfo: TestInfo,
+  opts?: { liveEvents?: boolean }
+): void {
+  if (opts?.liveEvents) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { wrapPageLiveActions } = require('./live-events') as typeof import('./live-events');
+      wrapPageLiveActions(page);
+    } catch {
+      /* optional */
+    }
+  }
   let busy = false;
   const snap = async (label: string) => {
     if (busy) return;
