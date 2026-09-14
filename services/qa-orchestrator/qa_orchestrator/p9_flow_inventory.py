@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from qa_orchestrator.execution_gate import ExecutionGate
@@ -20,6 +21,51 @@ class FlowInventoryRow:
     reason_code: str
     message: str
     in_catalog: bool
+
+
+def list_duplicate_flow_ids_in_index(*, discovery_root: str | Path = "data/discovery-kb") -> list[str]:
+    """Return flow IDs that appear more than once in index.yaml flows list or sme_ready."""
+    index_path = Path(discovery_root) / "flows" / "index.yaml"
+    if not index_path.exists():
+        return []
+    raw = index_path.read_text(encoding="utf-8")
+    import re
+
+    flow_ids: list[str] = []
+    sme_ids: list[str] = []
+    for line in raw.splitlines():
+        hit = re.match(r"^\s+-\s+(BF-[A-Z0-9-]+)\s*$", line)
+        if hit:
+            sme_ids.append(hit.group(1))
+        id_hit = re.match(r"^\s+-\s+id:\s*(BF-[A-Z0-9-]+)\s*$", line)
+        if id_hit:
+            flow_ids.append(id_hit.group(1))
+    dupes: set[str] = set()
+    for bucket in (flow_ids, sme_ids):
+        seen: set[str] = set()
+        for fid in bucket:
+            if fid in seen:
+                dupes.add(fid)
+            seen.add(fid)
+    return sorted(dupes)
+
+
+def canonical_inventory_summary(inventory: dict[str, Any]) -> dict[str, int]:
+    """Single canonical inventory block for P9 JSON/Markdown reports."""
+    totals = inventory.get("totals") or {}
+    flows = inventory.get("flows") or []
+    stale = sum(1 for row in flows if row.get("reason_code") == "approval.stale")
+    blocked = sum(1 for row in flows if not row.get("executable"))
+    return {
+        "total_flows": int(totals.get("total_flows", len(flows))),
+        "sme_ready_flows": int(totals.get("sme_ready", 0)),
+        "approved_flows": int(totals.get("approved", 0)),
+        "executable_flows": int(totals.get("executable", 0)),
+        "pending_approval_flows": int(totals.get("pending_approval", 0)),
+        "rejected_flows": int(totals.get("rejected", 0)),
+        "stale_flows": stale,
+        "blocked_flows": blocked,
+    }
 
 
 def build_flow_inventory(*, discovery_root: str = "data/discovery-kb") -> dict[str, Any]:
@@ -54,13 +100,16 @@ def build_flow_inventory(*, discovery_root: str = "data/discovery-kb") -> dict[s
         "rejected": sum(1 for r in rows if r.approval_status == "REJECTED"),
         "executable": sum(1 for r in rows if r.executable),
         "blocked": sum(1 for r in rows if not r.executable),
+        "stale": sum(1 for r in rows if r.reason_code == "approval.stale"),
         "draft": sum(1 for r in rows if r.kb_status == "DRAFT"),
         "superseded": sum(1 for r in rows if r.kb_status == "SUPERSEDED"),
     }
-    return {
+    payload = {
         "flows": [row.__dict__ for row in rows],
         "totals": totals,
     }
+    payload["inventory_summary"] = canonical_inventory_summary(payload)
+    return payload
 
 
 def select_validation_subset(

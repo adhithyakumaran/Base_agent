@@ -97,6 +97,7 @@ def test_parameter_trace_validates_sku():
     trace = _parameter_trace(result, {"sku": "ABC123"})
     assert trace["parameter_ok"] is True
     assert trace["validated_parameters"]["sku"] == "ABC123"
+    assert trace["env_map"]["QA_PARAM_SKU"] == "ABC123"
 
 
 def test_offline_p9_validation_runs_without_live_apex(monkeypatch: pytest.MonkeyPatch):

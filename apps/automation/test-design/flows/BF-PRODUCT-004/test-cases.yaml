@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-PRODUCT-004
 flow_name: View Product
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-PRODUCT-004-P01
   title: View Product — primary path succeeds

@@ -1,6 +1,6 @@
 {
   "environment": "UAT",
-  "timestamp": "2026-09-13T18:25:29.833315+00:00",
+  "timestamp": "2026-09-14T07:51:30.968710+00:00",
   "preflight": {
     "status": "ENVIRONMENT_BLOCKED",
     "environment": "UAT",
@@ -54,10 +54,10 @@
         "name": "Administration",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-ADMINISTRATION-009: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-ADMINISTRATION-009: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -65,10 +65,10 @@
         "name": "Best Deal",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-BEST-DEAL-008: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-BEST-DEAL-008: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -120,10 +120,10 @@
         "name": "Home Page / Application Navigation Map",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-HOME-010: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-HOME-010: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -131,10 +131,10 @@
         "name": "Item Search",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-HOME-010-01: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-HOME-010-01: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -142,10 +142,10 @@
         "name": "Home Page Utility Components",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-HOME-010-C01: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-HOME-010-C01: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -197,10 +197,10 @@
         "name": "User Logout",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-LOGOUT-002: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-LOGOUT-002: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -208,10 +208,10 @@
         "name": "Manual Invoice",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-MANUAL-INVOICE-009: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-MANUAL-INVOICE-009: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -220,9 +220,9 @@
         "kb_status": "READY",
         "sme_ready": true,
         "approval_status": "APPROVED",
-        "executable": false,
-        "reason_code": "approval.stale",
-        "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-PRODUCT-003: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -230,10 +230,10 @@
         "name": "View Product",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-PRODUCT-004: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-PRODUCT-004: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -241,10 +241,10 @@
         "name": "Product Catalogue",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-PRODUCT-CATALOGUE-006: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-PRODUCT-CATALOGUE-006: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -252,10 +252,10 @@
         "name": "Product Stock Visibility",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-PRODUCT-STOCK-VISIBILITY-009: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-PRODUCT-STOCK-VISIBILITY-009: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -263,10 +263,10 @@
         "name": "Reports",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-REPORTS-007: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-REPORTS-007: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -285,10 +285,10 @@
         "name": "Rivaah Main Menu",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-RIVAAH-005: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-RIVAAH-005: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -296,10 +296,10 @@
         "name": "Wedding Trousseau Styling",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-RIVAAH-005-01: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-RIVAAH-005-01: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -307,10 +307,10 @@
         "name": "Trousseau Set Image",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-RIVAAH-005-02: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-RIVAAH-005-02: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -318,10 +318,10 @@
         "name": "Engagement Rings",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-RIVAAH-005-03: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-RIVAAH-005-03: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -329,10 +329,10 @@
         "name": "Wedding Experts",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-RIVAAH-005-04: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-RIVAAH-005-04: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -340,10 +340,10 @@
         "name": "Rivaah Wedding Wishlist",
         "kb_status": "READY",
         "sme_ready": true,
-        "approval_status": "PENDING_SME_APPROVAL",
-        "executable": false,
-        "reason_code": "approval.pending",
-        "message": "BF-RIVAAH-005-05: artifact approval is PENDING_SME_APPROVAL",
+        "approval_status": "APPROVED",
+        "executable": true,
+        "reason_code": "gate.executable",
+        "message": "BF-RIVAAH-005-05: APPROVED artifact + sme_ready + KB safety checks satisfied",
         "in_catalog": true
       },
       {
@@ -395,14 +395,35 @@
       "total_flows": 31,
       "sme_ready": 19,
       "kb_ready": 19,
-      "approved": 2,
-      "pending_approval": 17,
+      "approved": 19,
+      "pending_approval": 0,
       "rejected": 0,
-      "executable": 1,
-      "blocked": 30,
+      "executable": 19,
+      "blocked": 12,
+      "stale": 0,
       "draft": 6,
       "superseded": 6
+    },
+    "inventory_summary": {
+      "total_flows": 31,
+      "sme_ready_flows": 19,
+      "approved_flows": 19,
+      "executable_flows": 19,
+      "pending_approval_flows": 0,
+      "rejected_flows": 0,
+      "stale_flows": 0,
+      "blocked_flows": 12
     }
+  },
+  "inventory_summary": {
+    "total_flows": 31,
+    "sme_ready_flows": 19,
+    "approved_flows": 19,
+    "executable_flows": 19,
+    "pending_approval_flows": 0,
+    "rejected_flows": 0,
+    "stale_flows": 0,
+    "blocked_flows": 12
   },
   "flows_tested": [
     {
@@ -423,9 +444,9 @@
       "kb_status": "READY",
       "sme_ready": true,
       "approval_status": "APPROVED",
-      "executable": false,
-      "reason_code": "approval.stale",
-      "message": "BF-PRODUCT-003: APPROVED artifact changed after last SME sign-off \u2014 re-approval required",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-PRODUCT-003: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "parameterized_search"
     },
@@ -434,10 +455,10 @@
       "name": "User Logout",
       "kb_status": "READY",
       "sme_ready": true,
-      "approval_status": "PENDING_SME_APPROVAL",
-      "executable": false,
-      "reason_code": "approval.pending",
-      "message": "BF-LOGOUT-002: artifact approval is PENDING_SME_APPROVAL",
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-LOGOUT-002: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "logout"
     },
@@ -446,10 +467,10 @@
       "name": "Home Page / Application Navigation Map",
       "kb_status": "READY",
       "sme_ready": true,
-      "approval_status": "PENDING_SME_APPROVAL",
-      "executable": false,
-      "reason_code": "approval.pending",
-      "message": "BF-HOME-010: artifact approval is PENDING_SME_APPROVAL",
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-HOME-010: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "navigation"
     },
@@ -458,10 +479,10 @@
       "name": "View Product",
       "kb_status": "READY",
       "sme_ready": true,
-      "approval_status": "PENDING_SME_APPROVAL",
-      "executable": false,
-      "reason_code": "approval.pending",
-      "message": "BF-PRODUCT-004: artifact approval is PENDING_SME_APPROVAL",
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-PRODUCT-004: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "product_view"
     },
@@ -470,10 +491,10 @@
       "name": "Item Search",
       "kb_status": "READY",
       "sme_ready": true,
-      "approval_status": "PENDING_SME_APPROVAL",
-      "executable": false,
-      "reason_code": "approval.pending",
-      "message": "BF-HOME-010-01: artifact approval is PENDING_SME_APPROVAL",
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-HOME-010-01: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "item_search"
     },
@@ -482,10 +503,10 @@
       "name": "Product Stock Visibility",
       "kb_status": "READY",
       "sme_ready": true,
-      "approval_status": "PENDING_SME_APPROVAL",
-      "executable": false,
-      "reason_code": "approval.pending",
-      "message": "BF-PRODUCT-STOCK-VISIBILITY-009: artifact approval is PENDING_SME_APPROVAL",
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-PRODUCT-STOCK-VISIBILITY-009: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "stock_visibility"
     },
@@ -494,10 +515,10 @@
       "name": "Best Deal",
       "kb_status": "READY",
       "sme_ready": true,
-      "approval_status": "PENDING_SME_APPROVAL",
-      "executable": false,
-      "reason_code": "approval.pending",
-      "message": "BF-BEST-DEAL-008: artifact approval is PENDING_SME_APPROVAL",
+      "approval_status": "APPROVED",
+      "executable": true,
+      "reason_code": "gate.executable",
+      "message": "BF-BEST-DEAL-008: APPROVED artifact + sme_ready + KB safety checks satisfied",
       "in_catalog": true,
       "category": "promotions"
     }
@@ -550,7 +571,9 @@
         "validated_parameters": {},
         "expected": {},
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {},
+        "env_map": {},
+        "playwright_parameter_path": []
       },
       "evidence": {
         "run_id": "p9-p9_nl_check_login",
@@ -558,7 +581,7 @@
         "paths": [],
         "complete": false
       },
-      "elapsed_ms": 7,
+      "elapsed_ms": 8,
       "blocked": false,
       "false_pass": false,
       "final_result": "WAITING_FOR_APPROVAL"
@@ -614,7 +637,18 @@
           "sku": "ABC123"
         },
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {
+          "sku": "ABC123"
+        },
+        "env_map": {
+          "QA_PARAM_SKU": "ABC123"
+        },
+        "playwright_parameter_path": [
+          "validated_parameters.sku",
+          "QA_PARAM_SKU",
+          "apps/automation/src/core/run-params.ts",
+          "product-search.page.ts / QA-PARAM-SKU.spec.ts"
+        ]
       },
       "evidence": {
         "run_id": "p9-p9_nl_search_sku",
@@ -625,7 +659,8 @@
       "elapsed_ms": 17,
       "blocked": false,
       "false_pass": false,
-      "final_result": "WAITING_FOR_APPROVAL"
+      "final_result": "WAITING_FOR_APPROVAL",
+      "parameter_trace_required": true
     },
     {
       "id": "p9_nl_item_code_variant",
@@ -678,7 +713,18 @@
           "sku": "ABC123"
         },
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {
+          "sku": "ABC123"
+        },
+        "env_map": {
+          "QA_PARAM_SKU": "ABC123"
+        },
+        "playwright_parameter_path": [
+          "validated_parameters.sku",
+          "QA_PARAM_SKU",
+          "apps/automation/src/core/run-params.ts",
+          "product-search.page.ts / QA-PARAM-SKU.spec.ts"
+        ]
       },
       "evidence": {
         "run_id": "p9-p9_nl_item_code_variant",
@@ -686,10 +732,11 @@
         "paths": [],
         "complete": false
       },
-      "elapsed_ms": 16,
+      "elapsed_ms": 17,
       "blocked": false,
       "false_pass": false,
-      "final_result": "WAITING_FOR_APPROVAL"
+      "final_result": "WAITING_FOR_APPROVAL",
+      "parameter_trace_required": true
     },
     {
       "id": "p9_exact_flow_id",
@@ -738,7 +785,9 @@
         "validated_parameters": {},
         "expected": {},
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {},
+        "env_map": {},
+        "playwright_parameter_path": []
       },
       "evidence": {
         "run_id": "p9-p9_exact_flow_id",
@@ -798,7 +847,9 @@
         "validated_parameters": {},
         "expected": {},
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {},
+        "env_map": {},
+        "playwright_parameter_path": []
       },
       "evidence": {
         "run_id": "p9-p9_invalid_login",
@@ -806,7 +857,7 @@
         "paths": [],
         "complete": false
       },
-      "elapsed_ms": 7,
+      "elapsed_ms": 8,
       "blocked": false,
       "false_pass": false,
       "final_result": "WAITING_FOR_APPROVAL"
@@ -846,9 +897,9 @@
       "gate": {
         "flow_id": "BF-LOGOUT-002",
         "executable": false,
-        "reason_code": "approval.pending",
-        "approval_status": "PENDING_SME_APPROVAL",
-        "message": "BF-LOGOUT-002: artifact approval is PENDING_SME_APPROVAL"
+        "reason_code": "approval.stale",
+        "approval_status": "APPROVED",
+        "message": "BF-LOGOUT-002: APPROVED artifact changed after last SME sign-off \u2014 re-approval required"
       },
       "agent_state": "WAITING_FOR_APPROVAL",
       "verification": null,
@@ -856,7 +907,9 @@
         "validated_parameters": {},
         "expected": {},
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {},
+        "env_map": {},
+        "playwright_parameter_path": []
       },
       "evidence": {
         "run_id": "p9-p9_logout",
@@ -864,7 +917,7 @@
         "paths": [],
         "complete": false
       },
-      "elapsed_ms": 9,
+      "elapsed_ms": 10,
       "blocked": false,
       "false_pass": false,
       "final_result": "WAITING_FOR_APPROVAL"
@@ -916,7 +969,9 @@
         "validated_parameters": {},
         "expected": {},
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {},
+        "env_map": {},
+        "playwright_parameter_path": []
       },
       "evidence": {
         "run_id": "p9-p9_live_login",
@@ -924,7 +979,7 @@
         "paths": [],
         "complete": false
       },
-      "elapsed_ms": 7,
+      "elapsed_ms": 8,
       "blocked": true,
       "false_pass": false,
       "final_result": "WAITING_FOR_APPROVAL",
@@ -981,7 +1036,18 @@
           "sku": "ABC123"
         },
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {
+          "sku": "ABC123"
+        },
+        "env_map": {
+          "QA_PARAM_SKU": "ABC123"
+        },
+        "playwright_parameter_path": [
+          "validated_parameters.sku",
+          "QA_PARAM_SKU",
+          "apps/automation/src/core/run-params.ts",
+          "product-search.page.ts / QA-PARAM-SKU.spec.ts"
+        ]
       },
       "evidence": {
         "run_id": "p9-p9_live_sku",
@@ -993,6 +1059,7 @@
       "blocked": true,
       "false_pass": false,
       "final_result": "WAITING_FOR_APPROVAL",
+      "parameter_trace_required": true,
       "resume": true
     },
     {
@@ -1059,7 +1126,9 @@
         "validated_parameters": {},
         "expected": {},
         "parameter_ok": true,
-        "env_params": {}
+        "env_params": {},
+        "env_map": {},
+        "playwright_parameter_path": []
       },
       "evidence": {
         "run_id": "p9-p9_offline_approval_resume",
@@ -1067,7 +1136,7 @@
         "paths": [],
         "complete": false
       },
-      "elapsed_ms": 8,
+      "elapsed_ms": 9,
       "blocked": false,
       "false_pass": false,
       "final_result": "FAIL",
@@ -1124,7 +1193,7 @@
       "request": "Log out of the application",
       "expected_flow": "BF-LOGOUT-002",
       "selected_flow": null,
-      "gate": "approval.pending",
+      "gate": "approval.stale",
       "agent_state": "WAITING_FOR_APPROVAL",
       "final_result": "WAITING_FOR_APPROVAL",
       "blocked": false
@@ -1166,10 +1235,12 @@
     "approval_routing_accuracy": 0.8571,
     "recovery_success_rate": 0.0,
     "evidence_completeness": 0.0,
-    "parameter_traceability_rate": 3.0,
+    "parameter_traceability_rate": 1.0,
+    "parameter_traceability_applicable_cases": 3,
+    "parameter_traceability_pass_cases": 3,
     "decision_trace_completeness": 1.0,
     "resume_success_rate": 0.3333,
-    "average_run_duration_ms": 11.11,
+    "average_run_duration_ms": 11.78,
     "p95_run_duration_ms": 17,
     "human_intervention_rate": 0.8889,
     "environment_status": "ENVIRONMENT_BLOCKED",
@@ -1398,25 +1469,23 @@
     }
   ],
   "frontend": {
-    "inventory_totals": {
+    "inventory_summary": {
       "total_flows": 31,
-      "sme_ready": 19,
-      "kb_ready": 19,
-      "approved": 1,
-      "pending_approval": 18,
-      "rejected": 0,
-      "executable": 0,
-      "blocked": 31,
-      "draft": 6,
-      "superseded": 6
+      "sme_ready_flows": 19,
+      "approved_flows": 19,
+      "executable_flows": 19,
+      "pending_approval_flows": 0,
+      "rejected_flows": 0,
+      "stale_flows": 0,
+      "blocked_flows": 12
     },
-    "misleading_approved_label": true,
+    "misleading_approved_label": false,
     "recommended_display": {
       "total_flows": 31,
       "sme_ready": 19,
-      "approved": 1,
-      "executable": 0,
-      "awaiting_approval": 18
+      "approved": 19,
+      "executable": 19,
+      "awaiting_approval": 0
     }
   },
   "limitations": [

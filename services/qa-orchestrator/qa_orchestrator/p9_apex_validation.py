@@ -20,7 +20,8 @@ from qa_orchestrator.p9_environment import (
     restore_flow_approval,
     run_environment_preflight,
 )
-from qa_orchestrator.p9_flow_inventory import build_flow_inventory, select_validation_subset
+from qa_orchestrator.p9_flow_inventory import build_flow_inventory, canonical_inventory_summary, select_validation_subset
+from qa_orchestrator.p9_metrics import compute_parameter_traceability_rate
 from qa_orchestrator.playwright_runner import PlaywrightRunner
 from qa_orchestrator.run_request import RunRequest
 
@@ -149,20 +150,33 @@ def _gate_snapshot(orch: QaOrchestrator, flow_id: str | None) -> dict[str, Any]:
 
 
 def _parameter_trace(result: AgentRunResult, expected: dict[str, str] | None) -> dict[str, Any]:
+    from qa_orchestrator.param_validator import params_to_env
+
     plan = result.state.plan
     actual = dict(plan.validated_parameters or {}) if plan else {}
+    env_map = params_to_env(actual) if actual else {}
     env_hits = {}
     for key, value in (expected or {}).items():
         env_name = f"QA_PARAM_{key.upper()}"
-        env_hits[key] = os.environ.get(env_name)
+        env_hits[key] = os.environ.get(env_name) or env_map.get(env_name)
     ok = True
     if expected:
         ok = all(actual.get(k) == v for k, v in expected.items())
+    playwright_path = []
+    if expected and "sku" in expected:
+        playwright_path = [
+            "validated_parameters.sku",
+            "QA_PARAM_SKU",
+            "apps/automation/src/core/run-params.ts",
+            "product-search.page.ts / QA-PARAM-SKU.spec.ts",
+        ]
     return {
         "validated_parameters": actual,
         "expected": expected or {},
         "parameter_ok": ok,
         "env_params": {k: v for k, v in env_hits.items() if v},
+        "env_map": env_map,
+        "playwright_parameter_path": playwright_path,
     }
 
 
@@ -278,6 +292,7 @@ def _aggregate_metrics(rows: list[dict[str, Any]], durations: list[int], preflig
     )
     param_ok = sum(1 for r in rows if r.get("parameter_trace", {}).get("parameter_ok") is True)
     param_total = sum(1 for r in rows if r.get("parameter_trace", {}).get("expected"))
+    trace_rate = compute_parameter_traceability_rate(rows)
     evidence_ok = sum(1 for r in rows if r.get("evidence", {}).get("complete"))
     evidence_total = sum(1 for r in rows if r.get("category") == "live_execution" and not r.get("blocked"))
 
@@ -312,7 +327,15 @@ def _aggregate_metrics(rows: list[dict[str, Any]], durations: list[int], preflig
         ),
         "recovery_success_rate": 0.0,
         "evidence_completeness": round(evidence_ok / max(1, evidence_total), 4) if evidence_total else 0.0,
-        "parameter_traceability_rate": round(param_ok / max(1, param_total), 4) if param_total else 1.0,
+        "parameter_traceability_rate": trace_rate,
+        "parameter_traceability_applicable_cases": sum(
+            1 for r in rows if (r.get("parameter_trace") or {}).get("expected")
+        ),
+        "parameter_traceability_pass_cases": sum(
+            1
+            for r in rows
+            if (r.get("parameter_trace") or {}).get("expected") and (r.get("parameter_trace") or {}).get("parameter_ok")
+        ),
         "decision_trace_completeness": round(
             sum(1 for r in rows if r.get("journal_entries", 0) > 0) / max(1, len(rows)),
             4,
@@ -345,6 +368,7 @@ def run_p9_validation(
         os.environ[key] = value
 
     inventory = build_flow_inventory(discovery_root=discovery_root)
+    inventory_summary = inventory["inventory_summary"]
     preflight = run_environment_preflight(
         automation_dir=automation_dir,
         discovery_root=discovery_root,
@@ -431,6 +455,8 @@ def run_p9_validation(
             elapsed_ms=elapsed,
             blocked=blocked,
         )
+        if scenario.check_parameters:
+            row["parameter_trace_required"] = True
         if scenario.resume_after_approval:
             row["resume"] = True
         rows.append(row)
@@ -440,18 +466,15 @@ def run_p9_validation(
     _reset_flow_artifact_for_eval(orch)
 
     try:
-        from qa_orchestrator.p9_flow_inventory import build_flow_inventory as _inv
-
-        inv = _inv(discovery_root=discovery_root)
         frontend = {
-            "inventory_totals": inv["totals"],
-            "misleading_approved_label": inv["totals"]["approved"] != inv["totals"]["executable"],
+            "inventory_summary": inventory_summary,
+            "misleading_approved_label": inventory_summary["approved_flows"] != inventory_summary["executable_flows"],
             "recommended_display": {
-                "total_flows": inv["totals"]["total_flows"],
-                "sme_ready": inv["totals"]["sme_ready"],
-                "approved": inv["totals"]["approved"],
-                "executable": inv["totals"]["executable"],
-                "awaiting_approval": inv["totals"]["pending_approval"],
+                "total_flows": inventory_summary["total_flows"],
+                "sme_ready": inventory_summary["sme_ready_flows"],
+                "approved": inventory_summary["approved_flows"],
+                "executable": inventory_summary["executable_flows"],
+                "awaiting_approval": inventory_summary["pending_approval_flows"],
             },
         }
     except Exception as exc:
@@ -465,6 +488,7 @@ def run_p9_validation(
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "preflight": preflight,
         "inventory": inventory,
+        "inventory_summary": inventory_summary,
         "flows_tested": P9_SELECTED_FLOWS,
         "runs": rows,
         "execution_matrix": [
@@ -584,14 +608,16 @@ def render_markdown_report(report: dict[str, Any]) -> str:
         "## Flow inventory",
         "",
     ]
-    totals = report.get("inventory", {}).get("totals", {})
+    summary = report.get("inventory_summary") or canonical_inventory_summary(report.get("inventory") or {})
     lines.extend(
         [
-            f"- Total flows: {totals.get('total_flows')}",
-            f"- SME-ready: {totals.get('sme_ready')}",
-            f"- Approved: {totals.get('approved')}",
-            f"- Executable: {totals.get('executable')}",
-            f"- Awaiting approval: {totals.get('pending_approval')}",
+            f"- Total flows: {summary.get('total_flows')}",
+            f"- SME-ready: {summary.get('sme_ready_flows')}",
+            f"- Approved: {summary.get('approved_flows')}",
+            f"- Executable: {summary.get('executable_flows')}",
+            f"- Awaiting approval: {summary.get('pending_approval_flows')}",
+            f"- Stale: {summary.get('stale_flows')}",
+            f"- Blocked (non-executable): {summary.get('blocked_flows')}",
             "",
             "## Selected validation subset",
             "",

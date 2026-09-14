@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-MANUAL-INVOICE-009
 flow_name: Manual Invoice
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-MANUAL-INVOICE-009-P01
   title: Manual Invoice — primary path succeeds
