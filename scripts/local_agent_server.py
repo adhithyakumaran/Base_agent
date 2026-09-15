@@ -61,6 +61,7 @@ from qa_orchestrator.server_auth import (  # noqa: E402
     is_authenticated,
     log_auth_rejection,
     release_concurrency,
+    security_log,
     validate_body_size,
 )
 
@@ -282,6 +283,8 @@ class Handler(BaseHTTPRequestHandler):
         model = body.get("model")
         run_id = body.get("run_id")
         execution_mode = body.get("execution_mode") or body.get("executionMode")
+        if run_id:
+            security_log("run_accepted", run_id=str(run_id), path=path)
         if execution_mode:
             from qa_orchestrator.live_browser_config import apply_run_mode_to_environ
 
