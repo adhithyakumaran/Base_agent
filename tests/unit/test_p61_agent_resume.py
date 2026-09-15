@@ -317,18 +317,12 @@ def test_canonical_cli_does_not_import_legacy_runtime():
 
 
 def test_agent_cli_subcommand_not_legacy_runtime():
+    from tests.canonical_subprocess_env import REPO_ROOT, canonical_subprocess_env
+
     proc = subprocess.run(
         ["python3", "-m", "qa_orchestrator.agent_cli", "--json", "run", "Check login"],
-        cwd="/workspace",
-        env={
-            **dict(__import__("os").environ),
-            "PYTHONPATH": "services/qa-orchestrator",
-            "QA_RUNNER": "dry_run",
-            "LLM_ENABLED": "false",
-            "QA_QDRANT_ENABLED": "false",
-            "QA_EMBEDDING_PROVIDER": "deterministic",
-            "QA_USE_LEGACY_AGENT_RUNTIME": "false",
-        },
+        cwd=str(REPO_ROOT),
+        env=canonical_subprocess_env(),
         capture_output=True,
         text=True,
         timeout=60,

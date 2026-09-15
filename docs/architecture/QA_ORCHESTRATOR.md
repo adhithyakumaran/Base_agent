@@ -49,7 +49,11 @@ pip install -e ".[llm]"
 QA_RUNNER=dry_run LLM_ENABLED=false python -m qa_orchestrator.api "morning sanity check" --type sanity
 
 # HTTP server (console / chat clients)
-PYTHONPATH=src:. QA_RUNNER=dry_run python3 scripts/local_agent_server.py --port 43124
+export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+QA_RUNNER=dry_run LLM_ENABLED=false python3 scripts/local_agent_server.py --host 127.0.0.1 --port 43124
+
+# Canonical agent CLI (dry run)
+QA_RUNNER=dry_run LLM_ENABLED=false python -m qa_orchestrator.agent_cli run "morning sanity check"
 
 # Live Playwright execution
 QA_RUNNER=playwright cd automation && npm ci && npm run test:sanity
