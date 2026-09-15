@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { requireRunAccess } from "@/lib/api-auth";
 import { repoRoot } from "@/lib/repo-root";
 
 const REPO = repoRoot();
@@ -8,8 +9,10 @@ function eventsFile(runId: string) {
   return path.join(REPO, "reports", "live-events", `${runId}.jsonl`);
 }
 
-export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
+export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
+  const denied = await requireRunAccess(req, id);
+  if (denied) return denied;
   const file = eventsFile(id);
   const encoder = new TextEncoder();
 

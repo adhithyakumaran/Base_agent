@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { requireApiAuth } from "@/lib/api-auth";
 import { repoRoot } from "@/lib/repo-root";
 import { evaluateFlowExecution } from "@/lib/approval-store";
 
@@ -8,7 +9,9 @@ const REPO = repoRoot();
 const KB_ROOT = path.join(REPO, "data", "discovery-kb", "flows");
 const DESIGN_ROOT = path.join(REPO, "apps", "automation", "test-design", "flows");
 
-export async function GET(_: Request, ctx: { params: Promise<{ id: string }> }) {
+export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   const { id } = await ctx.params;
   if (!/^BF-[A-Z0-9-]+$/.test(id)) {
     return NextResponse.json({ error: "invalid flow id" }, { status: 400 });

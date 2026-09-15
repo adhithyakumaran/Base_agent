@@ -49,6 +49,21 @@ npm run test:negative      # negative / edge cases
 
 Credentials: `apps/automation/config/.env`
 
+### P10.1 local security (recommended)
+
+For development, defaults allow loopback-only access without tokens (`SCOUT_ALLOW_INSECURE_LOCAL=true`).
+
+To exercise authenticated mode locally:
+
+```bash
+# .env
+SCOUT_API_TOKEN=dev-console-token
+SCOUT_INTERNAL_API_TOKEN=dev-warm-token
+SCOUT_AUTO_BROWSER_SESSION=true   # sets httpOnly cookie for same-origin console
+```
+
+Warm server refuses public bind unless `SCOUT_ALLOW_EXTERNAL_BIND=true`. Production requires both tokens (`SCOUT_ENV=production`).
+
 ## Enterprise repo map
 
 | Path | Purpose |
