@@ -14,6 +14,7 @@ from qa_orchestrator.agent_state_store import (
     ResumableAgentSnapshot,
     artifact_fingerprint,
     load_snapshot,
+    mutate_snapshot,
     save_snapshot,
 )
 from qa_orchestrator.execution_gate import ExecutionGate, CANONICAL_ARTIFACT
@@ -55,8 +56,18 @@ class AgentResumeService:
             raise AgentResumeError(str(exc)) from exc
 
         token = resume_token or uuid4().hex
+        idempotent: dict[str, ResumableAgentSnapshot | None] = {"snapshot": None}
+
+        def _capture(snap: ResumableAgentSnapshot) -> None:
+            if snap.last_applied_resume_token == token:
+                idempotent["snapshot"] = snap
+
+        mutate_snapshot(run_id, _capture, base_dir=self.base_dir)
+        if idempotent["snapshot"] is not None:
+            return self._result_from_snapshot(idempotent["snapshot"], note="idempotent resume — no duplicate actions")
+
+        snapshot = load_snapshot(run_id, base_dir=self.base_dir)
         if snapshot.last_applied_resume_token == token:
-            snapshot = load_snapshot(run_id, base_dir=self.base_dir)
             return self._result_from_snapshot(snapshot, note="idempotent resume — no duplicate actions")
 
         state = snapshot.state

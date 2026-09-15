@@ -3,10 +3,12 @@ import path from "path";
 import type { AppState, HistoryItem } from "@/lib/types";
 import { MODEL_OPTIONS } from "@/lib/types";
 import { TEST_REPORT_EMAIL, TEST_REPORT_WHATSAPP } from "@/lib/channel-defaults";
+import { atomicWriteJson, withFileLock } from "@/lib/fs-atomic";
 import { uid } from "@/lib/utils";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const STATE_FILE = path.join(DATA_DIR, "state.json");
+const STATE_LOCK = path.join(DATA_DIR, ".locks", "console-state.lock");
 
 const defaultState = (): AppState => ({
   runs: [],
@@ -51,7 +53,6 @@ function migrate(state: AppState): AppState {
       ? { whatsapp: state.channels.whatsapp }
       : {}),
   };
-  // Force demo test targets unless explicitly customized away from empty
   if (!state.channels.email?.length || state.channels.email.includes(placeholder)) {
     state.channels.email = [TEST_REPORT_EMAIL];
   }
@@ -82,21 +83,22 @@ export async function readState(): Promise<AppState> {
     return migrate(merged);
   } catch {
     const s = defaultState();
-    await fs.writeFile(STATE_FILE, JSON.stringify(s, null, 2));
+    await atomicWriteJson(STATE_FILE, s);
     return s;
   }
 }
 
 export async function writeState(state: AppState): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(STATE_FILE, JSON.stringify(state, null, 2));
+  await atomicWriteJson(STATE_FILE, state);
 }
 
 export async function mutateState(fn: (s: AppState) => void | Promise<void>): Promise<AppState> {
-  const state = await readState();
-  await fn(state);
-  await writeState(state);
-  return state;
+  return withFileLock(STATE_LOCK, async () => {
+    const state = await readState();
+    await fn(state);
+    await writeState(state);
+    return state;
+  });
 }
 
 export function pushHistory(
