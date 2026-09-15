@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { requireApiAuth } from "@/lib/api-auth";
+import { evaluateFlowExecution } from "@/lib/approval-store";
 import { repoRoot } from "@/lib/repo-root";
 
 const REPO = repoRoot();
@@ -86,6 +88,8 @@ async function readApprovalStatus(flowId: string): Promise<string | undefined> {
 }
 
 export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   try {
     const raw = await fs.readFile(INDEX, "utf8");
     const { smeReady, flows } = parseIndex(raw);
@@ -97,7 +101,12 @@ export async function GET(req: Request) {
       const testCount = await readTestCount(flow.id);
       const approvalStatus = await readApprovalStatus(flow.id);
       const inSme = smeReady.has(flow.id);
-      const executable = inSme && approvalStatus === "APPROVED" && flow.status === "READY";
+      let executable = false;
+      try {
+        executable = (await evaluateFlowExecution(flow.id)).executable;
+      } catch {
+        executable = false;
+      }
       enriched.push({
         ...flow,
         name: flow.name || flow.id,

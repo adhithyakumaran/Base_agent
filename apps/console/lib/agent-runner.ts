@@ -2,6 +2,7 @@ import { spawn } from "child_process";
 import path from "path";
 import type { AgentRun, KnowledgePill, TraceEvent } from "@/lib/types";
 import { repoRoot } from "@/lib/repo-root";
+import { internalAgentHeaders } from "@/lib/internal-agent";
 import { uid } from "@/lib/utils";
 
 const REPO_ROOT = repoRoot();
@@ -56,9 +57,7 @@ async function invokeWarmAgent(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(process.env.SCOUT_API_TOKEN
-          ? { Authorization: `Bearer ${process.env.SCOUT_API_TOKEN}` }
-          : {}),
+        ...(internalAgentHeaders()),
       },
       body: JSON.stringify({
         goal,

@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { buildDocxBuffer, buildPdfBuffer, markdownToPlainText } from "@/lib/export-report";
+import { requireApiAuth } from "@/lib/api-auth";
+import { assertRunAccessible } from "@/lib/run-access";
 import { readState } from "@/lib/store";
 
 export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   const { searchParams } = new URL(req.url);
   const format = (searchParams.get("format") || "json").toLowerCase();
   const runId = searchParams.get("runId");
+  if (runId && !(await assertRunAccessible(runId))) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   const state = await readState();
   const run = runId ? state.runs.find((r) => r.id === runId) : state.runs[0];
   if (!run?.report) {

@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { requireApiAuth } from "@/lib/api-auth";
+import { fetchInternalAgent } from "@/lib/internal-agent";
 import { repoRoot } from "@/lib/repo-root";
 import { evaluateFlowExecution, listPendingArtifacts } from "@/lib/approval-store";
 
-const AGENT_URL = process.env.NEXT_PUBLIC_AGENT_URL || "http://127.0.0.1:43124";
 const REPO = repoRoot();
 const INDEX = path.join(REPO, "data", "discovery-kb", "flows", "index.yaml");
 const DESIGN_ROOT = path.join(REPO, "apps", "automation", "test-design", "flows");
@@ -45,7 +46,10 @@ async function readApprovalStatus(flowId: string): Promise<string | undefined> {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
+
   let raw = "";
   try {
     raw = await fs.readFile(INDEX, "utf8");
@@ -74,7 +78,7 @@ export async function GET() {
   let health: Record<string, unknown> | null = null;
   let connected = false;
   try {
-    const res = await fetch(`${AGENT_URL}/health`, { cache: "no-store" });
+    const res = await fetchInternalAgent("/health", { cache: "no-store" });
     if (res.ok) {
       health = await res.json();
       connected = true;
@@ -100,7 +104,7 @@ export async function GET() {
       pendingArtifacts,
     },
     pendingApprovals: pendingArtifacts,
-    safetyGate: "deterministic",
+    safetyGate: "python_execution_gate_authoritative",
     agentMode: health?.llm_enabled ? "assisted" : "controlled",
     health,
   });
