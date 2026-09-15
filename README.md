@@ -70,7 +70,7 @@ Warm server refuses public bind unless `SCOUT_ALLOW_EXTERNAL_BIND=true`. Product
 |---|---|
 | `apps/console/` | ScoutAI Next.js UI |
 | `apps/automation/` | Playwright tests + scenarios/cases/suites |
-| `services/agent-runtime/` | Base Agent kernel |
+| `services/agent-runtime/` | Shared LLM gateway + legacy skill library (not product runtime) |
 | `services/qa-orchestrator/` | LLM classify → suite select → run → report |
 | `data/discovery-kb/` | Flow KB YAML, recordings, crawl snapshots |
 | `plugins/qa_apex/` | Crawler + APEX skills |
