@@ -219,23 +219,20 @@ class PlaywrightRunner:
                 )
             )
             from pathlib import Path
-            import json as _json
+            from qa_orchestrator.fs_atomic import atomic_write_json
 
             meta_path = Path(env["QA_LIVE_PROFILE_DIR"]) / "session.json"
-            meta_path.write_text(
-                _json.dumps(
-                    {
-                        "run_id": self._run_id,
-                        "browser_session_id": f"live-{self._run_id}",
-                        "profile_dir": env["QA_LIVE_PROFILE_DIR"],
-                        "status": "ACTIVE",
-                        "channel": live_cfg.browser_channel,
-                        "headless": live_cfg.headless,
-                        "keep_open": live_cfg.keep_browser_open,
-                    },
-                    indent=2,
-                ),
-                encoding="utf-8",
+            atomic_write_json(
+                meta_path,
+                {
+                    "run_id": self._run_id,
+                    "browser_session_id": f"live-{self._run_id}",
+                    "profile_dir": env["QA_LIVE_PROFILE_DIR"],
+                    "status": "ACTIVE",
+                    "channel": live_cfg.browser_channel,
+                    "headless": live_cfg.headless,
+                    "keep_open": live_cfg.keep_browser_open,
+                },
             )
             get_event_store(self._run_id).emit(
                 phase="EXECUTE",

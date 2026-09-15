@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from qa_orchestrator.fs_atomic import atomic_write_json
+
 
 def session_meta_path(profile_dir: Path) -> Path:
     return profile_dir / "session.json"
@@ -28,7 +30,7 @@ def read_session_meta(profile_dir: Path) -> dict[str, Any]:
 
 def write_session_meta(profile_dir: Path, meta: dict[str, Any]) -> None:
     profile_dir.mkdir(parents=True, exist_ok=True)
-    session_meta_path(profile_dir).write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    atomic_write_json(session_meta_path(profile_dir), meta)
 
 
 def close_signal_present(profile_dir: Path) -> bool:

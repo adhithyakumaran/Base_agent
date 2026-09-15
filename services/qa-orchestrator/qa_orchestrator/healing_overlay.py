@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from qa_orchestrator.fs_atomic import atomic_write_json, named_lock
 from qa_orchestrator.models import HealingProposal
 
 OVERLAY_SCHEMA = "healing_locator_overlay_v1"
@@ -70,41 +71,42 @@ def migrate_legacy_store(legacy: Any) -> dict[str, Any]:
 def apply_approved_proposal(automation_dir: Path, proposal: HealingProposal) -> Path:
     if proposal.status != "APPROVED":
         raise ValueError("Only APPROVED proposals may update locator overlays")
-    store = load_overlay_store(automation_dir)
-    selectors: list[str] = []
-    if proposal.new_locator:
-        css = primary_to_css(proposal.new_locator)
-        if css:
-            selectors.append(css)
-    for fb in proposal.fallbacks:
-        css = primary_to_css(fb) if "getBy" in fb or fb.startswith("page.") else fb
-        if css and css not in selectors:
-            selectors.append(css)
-    if not selectors:
-        raise ValueError("Approved proposal has no usable CSS selectors for overlay")
-
-    entry = {
-        "healing_id": proposal.healing_id,
-        "flow_id": proposal.flow_id,
-        "test_id": proposal.test_id or "",
-        "step_id": proposal.step_id or "",
-        "locator_label": proposal.locator_label or "default",
-        "status": "APPROVED",
-        "revoked": False,
-        "selectors": selectors,
-        "old_locator": proposal.old_locator,
-        "new_locator": proposal.new_locator,
-        "approved_at": datetime.now(timezone.utc).isoformat(),
-        "entry_version": 1,
-    }
-    entries = [e for e in store.get("entries", []) if not _same_target(e, entry)]
-    entries.append(entry)
-    store["entries"] = entries
-    store = finalize_store(store)
-
     path = overlays_path(automation_dir)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(store, indent=2), encoding="utf-8")
+    lock = named_lock(automation_dir / "healing" / "approved", "locator-overlays")
+    with lock:
+        store = load_overlay_store(automation_dir)
+        selectors: list[str] = []
+        if proposal.new_locator:
+            css = primary_to_css(proposal.new_locator)
+            if css:
+                selectors.append(css)
+        for fb in proposal.fallbacks:
+            css = primary_to_css(fb) if "getBy" in fb or fb.startswith("page.") else fb
+            if css and css not in selectors:
+                selectors.append(css)
+        if not selectors:
+            raise ValueError("Approved proposal has no usable CSS selectors for overlay")
+
+        entry = {
+            "healing_id": proposal.healing_id,
+            "flow_id": proposal.flow_id,
+            "test_id": proposal.test_id or "",
+            "step_id": proposal.step_id or "",
+            "locator_label": proposal.locator_label or "default",
+            "status": "APPROVED",
+            "revoked": False,
+            "selectors": selectors,
+            "old_locator": proposal.old_locator,
+            "new_locator": proposal.new_locator,
+            "approved_at": datetime.now(timezone.utc).isoformat(),
+            "entry_version": 1,
+        }
+        entries = [e for e in store.get("entries", []) if not _same_target(e, entry)]
+        entries.append(entry)
+        store["entries"] = entries
+        store = finalize_store(store)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        atomic_write_json(path, store)
     return path
 
 

@@ -29,10 +29,16 @@ function closeSignalPath(dir: string): string {
   return path.join(dir, 'close.signal');
 }
 
+function atomicWriteJson(filePath: string, payload: Record<string, unknown>): void {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  const tmp = `${filePath}.tmp.${process.pid}`;
+  fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), 'utf8');
+  fs.renameSync(tmp, filePath);
+}
+
 export function writeSessionMeta(partial: Record<string, unknown>): void {
   const dir = profileDir();
   if (!dir) return;
-  fs.mkdirSync(dir, { recursive: true });
   const metaPath = sessionMetaPath(dir);
   let existing: Record<string, unknown> = {};
   if (fs.existsSync(metaPath)) {
@@ -42,7 +48,26 @@ export function writeSessionMeta(partial: Record<string, unknown>): void {
       existing = {};
     }
   }
-  fs.writeFileSync(metaPath, JSON.stringify({ ...existing, ...partial }, null, 2), 'utf8');
+  atomicWriteJson(metaPath, { ...existing, ...partial });
+}
+
+function emitBrowserEvent(action: string, status: string, valueSummary = ''): void {
+  const eventsFile = process.env.QA_LIVE_EVENTS_PATH;
+  if (!eventsFile) return;
+  appendSequencedEvent(eventsFile, {
+    run_id: process.env.QA_RUN_ID || '',
+    timestamp: new Date().toISOString(),
+    source: 'PLAYWRIGHT',
+    flow_id: process.env.QA_FLOW_ID || '',
+    phase: 'BROWSER',
+    action,
+    target: '',
+    value_summary: valueSummary,
+    status,
+    duration_ms: 0,
+    evidence_ref: '',
+    step_id: '',
+  });
 }
 
 export async function gracefulCloseFromSignal(context: BrowserContext): Promise<boolean> {
@@ -71,23 +96,7 @@ export async function gracefulCloseFromSignal(context: BrowserContext): Promise<
   }
 
   markLiveBrowserClosed();
-  const eventsFile = process.env.QA_LIVE_EVENTS_PATH;
-  if (eventsFile) {
-    appendSequencedEvent(eventsFile, {
-      run_id: process.env.QA_RUN_ID || '',
-      timestamp: new Date().toISOString(),
-      source: 'PLAYWRIGHT',
-      flow_id: process.env.QA_FLOW_ID || '',
-      phase: 'BROWSER',
-      action: 'CLOSE',
-      target: '',
-      value_summary: '',
-      status: 'OK',
-      duration_ms: 0,
-      evidence_ref: '',
-      step_id: '',
-    });
-  }
+  emitBrowserEvent('CLOSE', 'OK');
   writeSessionMeta({
     status: 'CLOSED',
     closed_at: new Date().toISOString(),
@@ -105,13 +114,40 @@ export async function gracefulCloseFromSignal(context: BrowserContext): Promise<
   return true;
 }
 
+function markDisconnected(reason: string): void {
+  if (isLiveBrowserClosed()) return;
+  markLiveBrowserClosed();
+  writeSessionMeta({
+    status: 'BROWSER_DISCONNECTED',
+    disconnected_at: new Date().toISOString(),
+    disconnect_reason: reason,
+  });
+  emitBrowserEvent('DISCONNECT', 'OK', reason);
+}
+
 export async function watchCloseSignalWhileOpen(context: BrowserContext): Promise<void> {
   const dir = profileDir();
   if (!dir) return;
   const pollMs = Number(process.env.QA_LIVE_CLOSE_POLL_MS || 400);
+
+  context.on('close', () => {
+    markDisconnected('context_closed');
+  });
+
   while (!isLiveBrowserClosed()) {
     const handled = await gracefulCloseFromSignal(context);
     if (handled) break;
+
+    const browser = context.browser();
+    if (!browser || !browser.isConnected() || context.pages().length === 0) {
+      markDisconnected('browser_unavailable');
+      try {
+        await context.close();
+      } catch {
+        /* ignore */
+      }
+      break;
+    }
     await new Promise((r) => setTimeout(r, pollMs));
   }
 }

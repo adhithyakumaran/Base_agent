@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from qa_orchestrator.approval_log import append_approval_record, bootstrap_record
 from qa_orchestrator.execution_gate import CANONICAL_ARTIFACT, ExecutionGate
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 
@@ -97,26 +98,15 @@ def _append_approval_record(
     actor: str,
     decided_at: str,
 ) -> None:
-    records: list[dict[str, Any]] = []
-    if log_path.exists():
-        try:
-            data = json.loads(log_path.read_text(encoding="utf-8"))
-            records = list(data.get("records") or [])
-        except json.JSONDecodeError:
-            records = []
-    records.append(
-        {
-            "flowId": flow_id,
-            "artifact": CANONICAL_ARTIFACT,
-            "status": status,
-            "approver": actor,
-            "decidedAt": decided_at,
-            "source": BOOTSTRAP_SOURCE,
-            "reason": BOOTSTRAP_REASON,
-        }
+    record = bootstrap_record(
+        flow_id=flow_id,
+        status=status,
+        actor=actor,
+        source=BOOTSTRAP_SOURCE,
+        reason=BOOTSTRAP_REASON,
     )
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    log_path.write_text(json.dumps({"records": records}, indent=2), encoding="utf-8")
+    record["decidedAt"] = decided_at
+    append_approval_record(log_path, record)
 
 
 def _validate_bootstrap_candidate(

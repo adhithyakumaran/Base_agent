@@ -1,15 +1,16 @@
-"""P6.1 — persist resumable agent run state."""
+"""P6.1 / P10.2 — persist resumable agent run state with per-run locking."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
 from qa_orchestrator.agent_models import AgentRunState
+from qa_orchestrator.fs_atomic import atomic_write_json, run_file_lock
 
 STATE_SCHEMA_VERSION = "p6.1-v1"
 
@@ -36,8 +37,8 @@ def state_path(base_dir: str | Path, run_id: str) -> Path:
 
 def save_snapshot(snapshot: ResumableAgentSnapshot, *, base_dir: str | Path = "reports/agent") -> Path:
     path = state_path(base_dir, snapshot.run_id)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(snapshot.model_dump(), indent=2), encoding="utf-8")
+    with run_file_lock(Path(base_dir), snapshot.run_id):
+        atomic_write_json(path, snapshot.model_dump())
     return path
 
 
@@ -55,6 +56,20 @@ def load_snapshot(run_id: str, *, base_dir: str | Path = "reports/agent") -> Res
     if snapshot.schema_version != STATE_SCHEMA_VERSION:
         raise ValueError(f"incompatible state schema: {snapshot.schema_version}")
     return snapshot
+
+
+def mutate_snapshot(
+    run_id: str,
+    mutator: Callable[[ResumableAgentSnapshot], None],
+    *,
+    base_dir: str | Path = "reports/agent",
+) -> ResumableAgentSnapshot:
+    with run_file_lock(Path(base_dir), run_id):
+        snapshot = load_snapshot(run_id, base_dir=base_dir)
+        mutator(snapshot)
+        path = state_path(base_dir, run_id)
+        atomic_write_json(path, snapshot.model_dump())
+        return snapshot
 
 
 def artifact_fingerprint(path: Path) -> str:
