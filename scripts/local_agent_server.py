@@ -118,14 +118,22 @@ class LocalOrchestratorService:
 
     def get_agent(self, run_id: str) -> dict[str, Any]:
         snapshot = self.orchestrator.get_agent_state(run_id)
+        state = snapshot.state
         return {
             "ok": True,
             "run_id": run_id,
-            "status": snapshot.state.status,
-            "final_result": snapshot.state.final_result,
+            "status": state.status,
+            "final_result": state.final_result,
+            "reason_code": state.reason_code,
+            "summary": state.summary,
             "checkpoint": snapshot.checkpoint,
             "approval_pause_kind": snapshot.approval_pause_kind,
-            "journal_summary": [entry.model_dump() for entry in snapshot.state.decision_journal[-10:]],
+            "approval_reason": snapshot.approval_reason or state.reason_code or "",
+            "pending_action": snapshot.pending_action,
+            "resume_token": snapshot.resume_token,
+            "last_applied_resume_token": snapshot.last_applied_resume_token,
+            "resumable": state.status == "WAITING_FOR_APPROVAL",
+            "journal_summary": [entry.model_dump() for entry in state.decision_journal[-10:]],
             "state_path": str(
                 __import__("qa_orchestrator.agent_state_store", fromlist=["state_path"]).state_path(
                     self.orchestrator.agent_loop.config.journal_dir,
