@@ -12,6 +12,11 @@ from qa_orchestrator.agent_state_store import ResumableAgentSnapshot, save_snaps
 from qa_orchestrator.orchestrator import QaOrchestrator
 from qa_orchestrator.run_request import RunRequest
 
+from approval_test_helpers import (
+    patch_suite_selector_no_commands,
+    remove_flow_approval_records,
+    set_flow_test_case_status,
+)
 
 DISCOVERY = "data/discovery-kb"
 
@@ -20,7 +25,10 @@ def test_get_agent_state_includes_resume_token(tmp_path: Path, monkeypatch: pyte
     monkeypatch.setenv("QA_AGENT_JOURNAL_DIR", str(tmp_path / "agent"))
     monkeypatch.setenv("QA_RUNNER", "dry_run")
     monkeypatch.setenv("LLM_ENABLED", "false")
+    set_flow_test_case_status("BF-PRODUCT-003", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-PRODUCT-003")
     orch = QaOrchestrator(discovery_root=DISCOVERY, model="disabled")
+    patch_suite_selector_no_commands(monkeypatch, orch)
     result = orch.run_agent(RunRequest(goal="Search SKU ABC123", run_type="adhoc"))
     assert result.state.status == "WAITING_FOR_APPROVAL"
     snap = orch.get_agent_state(result.state.run_id)
@@ -35,8 +43,11 @@ def test_resume_idempotent_via_service(tmp_path: Path, monkeypatch: pytest.Monke
     monkeypatch.setenv("QA_AGENT_JOURNAL_DIR", str(tmp_path / "agent"))
     monkeypatch.setenv("QA_RUNNER", "dry_run")
     monkeypatch.setenv("LLM_ENABLED", "false")
+    set_flow_test_case_status("BF-LOGIN-001", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-LOGIN-001")
     orch = QaOrchestrator(discovery_root=DISCOVERY, model="disabled")
-    paused = orch.run_agent(RunRequest(goal="Check login", run_type="adhoc"))
+    patch_suite_selector_no_commands(monkeypatch, orch)
+    paused = orch.run_agent(RunRequest(goal="run positive login", run_type="adhoc"))
     assert paused.state.status == "WAITING_FOR_APPROVAL"
     token = "ux-resume-token"
 

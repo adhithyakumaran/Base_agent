@@ -221,3 +221,31 @@ def test_canonical_inventory_fields_present():
     ):
         assert key in summary
     assert summary["approved_flows"] >= summary["executable_flows"]
+
+
+def test_controlled_dev_approved_sme_ready_catalog_flows_executable(monkeypatch: pytest.MonkeyPatch):
+    """YAML APPROVED without a fresh approval-log row yields 0 executable in the console."""
+    monkeypatch.setenv("QA_BOOTSTRAP_APPROVALS", "true")
+    bootstrap_approve_sme_ready_flows(enabled=True)
+    graph = FlowKnowledgeGraph(discovery_root=DISCOVERY_ROOT)
+    gate = ExecutionGate(graph)
+    sme_ready = list(dict.fromkeys(graph.flow_kb.index.get("sme_ready") or []))
+    stale_approved: list[str] = []
+    for flow_id in sme_ready:
+        if not graph.is_automated(flow_id):
+            continue
+        artifact = gate.design_root / flow_id / "test-cases.yaml"
+        if not artifact.exists():
+            continue
+        raw = artifact.read_text(encoding="utf-8")
+        if not re.search(r"^status:\s*APPROVED\s*$", raw, re.MULTILINE):
+            continue
+        decision = gate.evaluate(flow_id)
+        if not decision.executable and decision.reason_code == "approval.stale":
+            stale_approved.append(flow_id)
+    assert stale_approved == [], (
+        "Approved SME-ready catalog flows have stale/missing approval audit — "
+        "run: python3 scripts/approve-sme-ready-flows.py --enable"
+    )
+    summary = build_flow_inventory(discovery_root=DISCOVERY_ROOT)["inventory_summary"]
+    assert summary["executable_flows"] == summary["approved_flows"]

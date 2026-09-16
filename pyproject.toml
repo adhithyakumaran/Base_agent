@@ -33,4 +33,4 @@ where = ["services/agent-runtime", "services/qa-orchestrator"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["services/agent-runtime", "services/qa-orchestrator"]
+pythonpath = ["services/agent-runtime", "services/qa-orchestrator", "tests/unit"]

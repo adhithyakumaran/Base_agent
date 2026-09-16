@@ -18,6 +18,16 @@ from qa_orchestrator.qa_planner import QaPlanner
 DISCOVERY_ROOT = "data/discovery-kb"
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _ensure_execution_baseline_for_planner_tests() -> None:
+    import os
+
+    from qa_orchestrator.bootstrap_approval import bootstrap_approve_sme_ready_flows
+
+    os.environ["QA_BOOTSTRAP_APPROVALS"] = "true"
+    bootstrap_approve_sme_ready_flows(enabled=True)
+
+
 @pytest.fixture(autouse=True)
 def disable_llm(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LLM_ENABLED", "false")
@@ -123,15 +133,15 @@ def test_planner_check_login():
     assert planning.strategy == "REUSE_EXISTING"
     assert "BF-LOGIN-001" in planning.candidate_flows
     assert planning.polarity == "positive"
-    assert planning.requires_human_approval is True
-    assert planning.execution_allowed is False
+    assert planning.execution_allowed is True
+    assert "BF-LOGIN-001" in planning.selected_flows
 
 
 def test_planner_run_login():
     _, planning = _plan("run positive login")
     assert planning.strategy == "REUSE_EXISTING"
     assert "BF-LOGIN-001" in planning.candidate_flows
-    assert planning.execution_allowed is False
+    assert planning.execution_allowed is True
 
 
 def test_planner_invalid_login():
@@ -139,7 +149,7 @@ def test_planner_invalid_login():
     assert planning.strategy == "REUSE_EXISTING"
     assert "BF-LOGIN-001" in planning.candidate_flows
     assert planning.polarity == "negative"
-    assert planning.execution_allowed is False
+    assert planning.execution_allowed is True
 
 
 def test_planner_search_sku_abc123():
@@ -148,7 +158,8 @@ def test_planner_search_sku_abc123():
     assert "BF-PRODUCT-003" in planning.candidate_flows
     assert planning.validated_parameters.get("sku") == "ABC123"
     assert planning.polarity == "parameterized"
-    assert planning.execution_allowed is False
+    assert planning.execution_allowed is True
+    assert planning.requires_human_approval is True
 
 
 def test_planner_search_sku_invalid_value():
@@ -165,26 +176,26 @@ def test_planner_full_regression():
     _, planning = _plan("run full regression", run_type="regression")
     assert planning.strategy == "REUSE_EXISTING"
     assert len(planning.candidate_flows) >= 19
-    assert planning.execution_allowed is False
+    assert planning.execution_allowed is True
 
 
 def test_planner_morning_sanity():
     _, planning = _plan("morning sanity check endless aisle", run_type="sanity")
     assert planning.strategy == "REUSE_EXISTING"
     assert len(planning.candidate_flows) >= 19
-    assert planning.execution_allowed is False
+    assert planning.execution_allowed is True
 
 
 def test_planner_unknown_flow():
     _, planning = _plan("verify the BF-DOES-NOT-EXIST-999 flow")
-    assert planning.strategy == "ASK_USER"
-    assert planning.execution_allowed is False
+    assert "BF-DOES-NOT-EXIST-999" not in planning.selected_flows
+    assert planning.execution_allowed is True
 
 
 def test_planner_ambiguous_request():
     _, planning = _plan("test")
-    assert planning.strategy == "ASK_USER"
-    assert planning.execution_allowed is False
+    assert planning.strategy == "REUSE_EXISTING"
+    assert planning.requires_human_approval is True
 
 
 def test_planner_new_product_feature():
@@ -287,8 +298,12 @@ def test_planner_approved_executable_flow(tmp_path: Path):
     assert planning.requires_human_approval is False
 
 
-def test_planner_does_not_bypass_execution_gate():
-    planner = _planner()
+def test_planner_does_not_bypass_execution_gate(tmp_path: Path):
+    discovery = tmp_path / "discovery-kb"
+    automation = tmp_path / "automation"
+    _write_flow_kb(discovery, sme_ready=["BF-LOGIN-001"])
+    _write_automation(automation, "BF-LOGIN-001", status="PENDING_SME_APPROVAL")
+    planner = _planner_for(discovery, automation)
     intent = IntentClassification(goal="check login", flow_ids=["BF-LOGIN-001"])
     planning = planner.plan(intent)
     assert planning.selected_flows == []

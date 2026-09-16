@@ -19,6 +19,12 @@ from qa_orchestrator.models import ExecutionResult, PlanningResult, SuiteSelecti
 from qa_orchestrator.orchestrator import QaOrchestrator
 from qa_orchestrator.run_request import RunRequest
 
+from approval_test_helpers import (
+    patch_suite_selector_no_commands,
+    remove_flow_approval_records,
+    set_flow_test_case_status,
+)
+
 DISCOVERY_ROOT = "data/discovery-kb"
 
 
@@ -45,8 +51,22 @@ def _reset_login_artifact_for_tests() -> None:
         text = re.sub(r"^status:\s*REJECTED\s*$", "status: PENDING_SME_APPROVAL", text, flags=re.MULTILINE)
         artifact.write_text(text, encoding="utf-8")
     approval_log = Path("apps/automation/approval/approval-log.json")
-    if approval_log.exists():
-        approval_log.unlink()
+    if not approval_log.exists():
+        return
+    try:
+        data = json.loads(approval_log.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        approval_log.unlink(missing_ok=True)
+        return
+    records = [
+        r
+        for r in (data.get("records") or [])
+        if not (r.get("flowId") == "BF-LOGIN-001" and r.get("artifact") == "test-cases.yaml")
+    ]
+    if records:
+        approval_log.write_text(json.dumps({"records": records}, indent=2) + "\n", encoding="utf-8")
+    else:
+        approval_log.unlink(missing_ok=True)
 
 
 def test_agent_config_defaults():
@@ -97,16 +117,22 @@ def test_decision_engine_prefers_existing_test_for_suite_commands():
     assert action.type == "RUN_EXISTING_TEST"
 
 
-def test_check_login_waits_for_approval():
+def test_check_login_waits_for_approval(monkeypatch: pytest.MonkeyPatch):
+    set_flow_test_case_status("BF-LOGIN-001", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-LOGIN-001")
     orch = QaOrchestrator(discovery_root=DISCOVERY_ROOT, model="disabled")
-    result = orch.run_agent(RunRequest(goal="Check login", model="disabled"))
+    patch_suite_selector_no_commands(monkeypatch, orch)
+    result = orch.run_agent(RunRequest(goal="run positive login", model="disabled"))
     assert result.state.status == "WAITING_FOR_APPROVAL"
     assert result.conclusion == "WAITING_FOR_APPROVAL"
     assert any(entry.decision == "PLAN" for entry in result.state.decision_journal)
 
 
-def test_search_sku_trace_in_planning():
+def test_search_sku_trace_in_planning(monkeypatch: pytest.MonkeyPatch):
+    set_flow_test_case_status("BF-PRODUCT-003", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-PRODUCT-003")
     orch = QaOrchestrator(discovery_root=DISCOVERY_ROOT, model="disabled")
+    patch_suite_selector_no_commands(monkeypatch, orch)
     result = orch.run_agent(RunRequest(goal="Search SKU ABC123", model="disabled"))
     assert result.state.plan is not None
     assert result.state.plan.validated_parameters.get("sku") == "ABC123"
@@ -158,9 +184,12 @@ def test_journal_persisted_without_secrets(tmp_path: Path):
     assert path == journal_path(tmp_path, "journal-test")
 
 
-def test_orchestrator_payload_includes_agent_metadata():
+def test_orchestrator_payload_includes_agent_metadata(monkeypatch: pytest.MonkeyPatch):
+    set_flow_test_case_status("BF-LOGIN-001", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-LOGIN-001")
     orch = QaOrchestrator(discovery_root=DISCOVERY_ROOT, model="disabled")
-    payload = orch.to_agent_payload(orch.run(RunRequest(goal="Check login", model="disabled")))
+    patch_suite_selector_no_commands(monkeypatch, orch)
+    payload = orch.to_agent_payload(orch.run(RunRequest(goal="run positive login", model="disabled")))
     assert payload["agent"]["status"] == "WAITING_FOR_APPROVAL"
     assert payload["agent"]["journal_path"]
     assert payload["agent"]["metrics"]
@@ -171,6 +200,10 @@ def test_p6_eval_scenario_count():
 
 
 def test_p6_evaluation_runner():
+    set_flow_test_case_status("BF-LOGIN-001", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-LOGIN-001")
+    set_flow_test_case_status("BF-PRODUCT-003", "PENDING_SME_APPROVAL")
+    remove_flow_approval_records("BF-PRODUCT-003")
     orch = QaOrchestrator(discovery_root=DISCOVERY_ROOT, model="disabled")
 
     def _run(scenario):

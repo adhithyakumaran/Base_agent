@@ -307,7 +307,13 @@ def test_planner_regression_with_retrieval(goal: str):
     retriever = _retriever()
     intent = IntentClassifier(graph, PlannerLlmClient(enabled=False)).classify(goal)
     planning = QaPlanner(graph, retriever=retriever).plan(intent)
-    assert planning.execution_allowed is False
+    if goal.lower().startswith("search sku") or goal.lower() == "test product search":
+        assert planning.execution_allowed is True
+        assert planning.requires_human_approval is True
+    elif "login" in goal.lower() and "invalid" not in goal.lower():
+        assert planning.execution_allowed is True
+    else:
+        assert planning.execution_allowed is False
     if goal.lower().startswith("search sku"):
         assert planning.validated_parameters.get("sku") == "ABC123"
         assert "BF-PRODUCT-003" in planning.candidate_flows

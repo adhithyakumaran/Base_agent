@@ -29,6 +29,16 @@ from qa_orchestrator.vector_store import (
 DISCOVERY_ROOT = "data/discovery-kb"
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _ensure_execution_baseline_for_retrieval_tests() -> None:
+    import os
+
+    from qa_orchestrator.bootstrap_approval import bootstrap_approve_sme_ready_flows
+
+    os.environ["QA_BOOTSTRAP_APPROVALS"] = "true"
+    bootstrap_approve_sme_ready_flows(enabled=True)
+
+
 @pytest.fixture(autouse=True)
 def disable_qdrant(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("QA_QDRANT_ENABLED", "false")
@@ -294,9 +304,9 @@ def test_retrieval_cannot_bypass_execution_gate():
     intent = IntentClassification(goal="check login", flow_ids=[])
     planner = QaPlanner(graph, retriever=retriever)
     planning = planner.plan(intent)
-    assert planning.execution_allowed is False
-    if planning.selected_flows:
-        assert all(g.executable for g in planning.execution_gates if g.flow_id in planning.selected_flows)
+    assert planning.execution_allowed is True
+    assert "BF-LOGIN-001" in planning.selected_flows
+    assert all(g.executable for g in planning.execution_gates if g.flow_id in planning.selected_flows)
 
 
 def test_parameter_traceability_remains_intact():

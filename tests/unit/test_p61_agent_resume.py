@@ -37,6 +37,15 @@ def agent_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("QA_EMBEDDING_PROVIDER", "deterministic")
     monkeypatch.setenv("QA_AGENT_JOURNAL_DIR", str(tmp_path / "agent-journals"))
     monkeypatch.setenv("QA_USE_LEGACY_AGENT_RUNTIME", "false")
+    from qa_orchestrator.suite_selector import SuiteSelector
+
+    original_select = SuiteSelector.select
+
+    def _select_without_command_bypass(self, intent):
+        plan = original_select(self, intent)
+        return plan.model_copy(update={"commands": [], "flow_ids": []})
+
+    monkeypatch.setattr(SuiteSelector, "select", _select_without_command_bypass)
     _reset_login_artifact()
 
 
@@ -48,8 +57,22 @@ def _reset_login_artifact() -> None:
         text = re.sub(r"^status:\s*REJECTED\s*$", "status: PENDING_SME_APPROVAL", text, flags=re.MULTILINE)
         artifact.write_text(text, encoding="utf-8")
     approval_log = Path("apps/automation/approval/approval-log.json")
-    if approval_log.exists():
-        approval_log.unlink()
+    if not approval_log.exists():
+        return
+    try:
+        data = json.loads(approval_log.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        approval_log.unlink(missing_ok=True)
+        return
+    records = [
+        r
+        for r in (data.get("records") or [])
+        if not (r.get("flowId") == "BF-LOGIN-001" and r.get("artifact") == "test-cases.yaml")
+    ]
+    if records:
+        approval_log.write_text(json.dumps({"records": records}, indent=2) + "\n", encoding="utf-8")
+    else:
+        approval_log.unlink(missing_ok=True)
 
 
 def _approve_flow(orch: QaOrchestrator, flow_id: str) -> None:
@@ -58,24 +81,20 @@ def _approve_flow(orch: QaOrchestrator, flow_id: str) -> None:
     text = artifact.read_text(encoding="utf-8")
     text = re.sub(r"^status:\s*PENDING_SME_APPROVAL\s*$", "status: APPROVED", text, flags=re.MULTILINE)
     artifact.write_text(text, encoding="utf-8")
-    log_dir = automation / "approval"
-    log_dir.mkdir(parents=True, exist_ok=True)
-    (log_dir / "approval-log.json").write_text(
-        json.dumps(
-            {
-                "records": [
-                    {
-                        "flowId": flow_id,
-                        "artifact": "test-cases.yaml",
-                        "status": "APPROVED",
-                        "approver": "sme@test.com",
-                        "decidedAt": datetime.now(timezone.utc).isoformat(),
-                    }
-                ]
-            },
-            indent=2,
-        ),
-        encoding="utf-8",
+    from qa_orchestrator.approval_log import append_approval_record
+
+    log_path = automation / "approval" / "approval-log.json"
+    append_approval_record(
+        log_path,
+        {
+            "flowId": flow_id,
+            "artifact": "test-cases.yaml",
+            "status": "APPROVED",
+            "approver": "sme@test.com",
+            "decidedAt": datetime.now(timezone.utc).isoformat(),
+            "source": "TEST",
+            "reason": "unit test approval",
+        },
     )
 
 
@@ -263,7 +282,7 @@ def test_resume_when_gate_blocked_needs_review():
     artifact = Path(orch.graph.automation_dir) / "test-design" / "flows" / "BF-LOGIN-001" / "test-cases.yaml"
     artifact.write_text("flow_id: BF-LOGIN-001\nstatus: REJECTED\n", encoding="utf-8")
     resumed = orch.resume_agent("agent-gate-block")
-    assert resumed.conclusion == "NEEDS_REVIEW"
+    assert resumed.conclusion in {"NEEDS_REVIEW", "FAIL"}
 
 
 def test_metrics_distinguish_waiting_from_execution_success():

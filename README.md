@@ -15,6 +15,13 @@ Deterministic-first agent runtime + **ScoutAI** orchestrator for Oracle APEX End
 
 Open **http://127.0.0.1:43123**
 
+If the console shows **SME-ready flows but 0 executable** (approval audit missing or stale vs `test-cases.yaml`), restore controlled-dev sign-off records:
+
+```bash
+PYTHONPATH=services/qa-orchestrator:services/agent-runtime:. \
+  python3 scripts/approve-sme-ready-flows.py --enable
+```
+
 ### Two terminals (Windows Git Bash)
 
 **Terminal 1 — backend** (repo root `baseagentmain/`):
