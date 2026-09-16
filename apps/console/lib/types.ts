@@ -15,6 +15,7 @@ export type AgentRun = {
   status: "queued" | "running" | "resuming" | "waiting_approval" | "completed" | "failed" | "blocked" | "needs_review";
   conclusion?: string;
   reasonCode?: string;
+  decisionDiagnostics?: Record<string, unknown>;
   /** Run-level HITL resume token from agent snapshot (not a secret — scoped to run_id). */
   resumeToken?: string;
   approvalPauseKind?: string;

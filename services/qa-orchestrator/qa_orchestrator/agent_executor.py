@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from qa_orchestrator.agent_models import AgentAction, AgentRunState
+from qa_orchestrator.execution_gate import ExecutionGate
 from qa_orchestrator.models import (
     DiscoveryResult,
     ExecutionPlan,
@@ -124,6 +125,7 @@ class AgentExecutor:
         suite_plan: SuiteSelectionPlan,
         discovery: DiscoveryResult | None,
         llm_summary: str = "",
+        diagnostic_context: dict[str, Any] | None = None,
     ) -> ValidationResult:
         return self.deps.validator.validate(
             goal=request.goal,
@@ -134,6 +136,7 @@ class AgentExecutor:
             intent=intent,
             suite_plan=suite_plan,
             discovery=discovery,
+            diagnostic_context=diagnostic_context,
         )
 
     def capture_evidence(self, state: AgentRunState) -> list[str]:
@@ -199,6 +202,13 @@ class AgentExecutor:
                 suite_plan=suite_plan,
                 discovery=state.discovery,
                 llm_summary=llm_summary,
+                diagnostic_context={
+                    "run_id": state.run_id,
+                    "state": state,
+                    "planning": planning,
+                    "gate": ExecutionGate(self.deps.graph),
+                    "skip_execution": request.skip_execution,
+                },
             )
         elif action.type == "RECOVER_LOCATOR":
             execution = state.execution or ExecutionResult(ok=False, mode="missing", observations=[])

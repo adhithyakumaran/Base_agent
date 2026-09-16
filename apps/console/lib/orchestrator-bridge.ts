@@ -24,9 +24,19 @@ export function applyOrchestratorResultToRun(
   const local = (result.local as Record<string, unknown> | undefined) || {};
   const intent = (local.intent as Record<string, unknown>) || {};
   const discovery = (local.discovery as Record<string, unknown>) || {};
+  const agent = (result.agent as Record<string, unknown> | undefined) || {};
+  const metadata = (result.metadata as Record<string, unknown> | undefined) || {};
+  const diagnostics =
+    (result.decision_diagnostics as Record<string, unknown> | undefined) ||
+    (agent.decision_diagnostics as Record<string, unknown> | undefined) ||
+    (metadata.decision_diagnostics as Record<string, unknown> | undefined) ||
+    (local.decision_diagnostics as Record<string, unknown> | undefined);
 
   run.conclusion = String(result.conclusion || "UNKNOWN");
-  run.reasonCode = String(result.reason_code || "");
+  run.reasonCode = String(result.reason_code || diagnostics?.reason_code || "");
+  if (diagnostics) {
+    run.decisionDiagnostics = diagnostics;
+  }
   run.usage.toolCalls = Number(result.tool_calls || 0);
   run.usage.steps = Number(result.steps || 0);
   run.usage.llmCalls = Number(result.llm_calls || 0);
@@ -56,10 +66,13 @@ export function applyOrchestratorResultToRun(
     id: uid("tr"),
     at: new Date().toISOString(),
     kind: "observe",
-    message: `Validation phase ${String(local.validation_phase || "A")} → ${run.conclusion}`,
+    message: `Validation phase ${String(local.validation_phase || "A")} → ${run.conclusion}${
+      run.reasonCode ? ` (${run.reasonCode})` : ""
+    }`,
     detail: JSON.stringify(
       {
         reason: run.reasonCode,
+        decision_diagnostics: diagnostics ?? run.decisionDiagnostics,
         classifier: local.classifier,
         execution_mode: local.execution_mode,
         executor: local.executor,
@@ -88,6 +101,7 @@ export function applyOrchestratorResultToRun(
       runId: run.id,
       conclusion: run.conclusion,
       reasonCode: run.reasonCode,
+      decisionDiagnostics: run.decisionDiagnostics,
       usage: run.usage,
       traces,
       agent: result,

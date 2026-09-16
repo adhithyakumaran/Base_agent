@@ -114,6 +114,10 @@ class LocalOrchestratorService:
         payload["local"]["primary_flows"] = len(self.orchestrator.graph.ready_flow_ids())
         payload["local"]["draft_flows"] = len(self.orchestrator.graph.draft_flow_ids())
         payload["local"]["canonical"] = canonical_path_metadata()
+        if payload.get("decision_diagnostics"):
+            from qa_orchestrator.decision_diagnostics import log_decision_block
+
+            log_decision_block(payload["decision_diagnostics"], stream=sys.stderr)
         return payload
 
     def get_agent(self, run_id: str) -> dict[str, Any]:
@@ -125,6 +129,7 @@ class LocalOrchestratorService:
             "status": state.status,
             "final_result": state.final_result,
             "reason_code": state.reason_code,
+            "decision_diagnostics": state.decision_diagnostics or state.metadata.get("decision_diagnostics"),
             "summary": state.summary,
             "checkpoint": snapshot.checkpoint,
             "approval_pause_kind": snapshot.approval_pause_kind,

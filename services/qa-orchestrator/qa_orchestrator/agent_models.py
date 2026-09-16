@@ -100,6 +100,7 @@ class AgentDecisionEntry(BaseModel):
     evidence_refs: list[str] = Field(default_factory=list)
     llm_invoked: bool = False
     llm_accepted: bool = False
+    decision_diagnostics: dict[str, Any] | None = None
 
 
 class AgentFailureRecord(BaseModel):
@@ -145,6 +146,7 @@ class AgentRunState(BaseModel):
     reason_code: str | None = None
     summary: str = ""
     metadata: dict[str, Any] = Field(default_factory=dict)
+    decision_diagnostics: dict[str, Any] | None = None
 
 
 class AgentMetrics(BaseModel):

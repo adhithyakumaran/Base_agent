@@ -122,6 +122,7 @@ class ValidationResult(BaseModel):
     summary: str
     findings: list[ValidationFinding] = Field(default_factory=list)
     gt_refs: list[str] = Field(default_factory=list)
+    decision_diagnostics: dict[str, Any] | None = None
 
 
 class FlowCoverageSnapshot(BaseModel):

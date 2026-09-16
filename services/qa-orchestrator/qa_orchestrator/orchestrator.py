@@ -86,6 +86,8 @@ class QaOrchestrator:
                 agent_result.state.run_id,
             )
         )
+        if agent_result.state.decision_diagnostics:
+            result.metadata["decision_diagnostics"] = agent_result.state.decision_diagnostics
         return result
 
     def run_agent(self, request: RunRequest | str):
@@ -109,6 +111,7 @@ class QaOrchestrator:
             "conclusion": result.conclusion,
             "reason_code": result.reason_code,
             "summary": result.summary,
+            "decision_diagnostics": result.metadata.get("decision_diagnostics"),
             "goal": result.goal,
             "tool_calls": result.tool_calls,
             "llm_calls": result.llm_calls,
@@ -120,6 +123,8 @@ class QaOrchestrator:
             "agent": {
                 "run_id": result.metadata.get("run_id"),
                 "status": agent_state,
+                "reason_code": result.reason_code,
+                "decision_diagnostics": result.metadata.get("decision_diagnostics"),
                 "iteration": result.metadata.get("agent_iterations"),
                 "recovery_count": result.metadata.get("agent_recoveries"),
                 "retrieval_used": result.metadata.get("retrieval_used"),

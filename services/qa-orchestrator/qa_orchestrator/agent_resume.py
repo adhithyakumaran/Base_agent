@@ -85,6 +85,36 @@ class AgentResumeService:
             state.reason_code = validation["reason_code"]
             state.summary = validation["message"]
             state.final_result = "NEEDS_REVIEW"
+            from qa_orchestrator.decision_diagnostics import (
+                attach_diagnostic_to_state,
+                build_execution_gate_block_diagnostic,
+                build_terminal_diagnostic,
+                log_decision_block,
+            )
+
+            flow_id = state.current_flow or (state.selected_flows[0] if state.selected_flows else "")
+            gate_diag = None
+            if flow_id and str(validation["reason_code"]).startswith(("approval.", "kb.", "gate.")):
+                gate_diag = build_execution_gate_block_diagnostic(
+                    self.gate,
+                    flow_id,
+                    run_id=run_id,
+                    stage="agent_resume",
+                )
+            attach_diagnostic_to_state(
+                state,
+                gate_diag
+                or build_terminal_diagnostic(
+                    run_id=run_id,
+                    stage="agent_resume",
+                    status="NEEDS_REVIEW",
+                    reason_code=str(validation["reason_code"]),
+                    message=str(validation["message"]),
+                    failed_checks=[str(validation["reason_code"])],
+                    extra={"checkpoint": snapshot.checkpoint, "resume_reason": resume_reason},
+                ),
+            )
+            log_decision_block(state.decision_diagnostics)
             self._append_resume_journal(
                 state,
                 resume_reason=resume_reason,

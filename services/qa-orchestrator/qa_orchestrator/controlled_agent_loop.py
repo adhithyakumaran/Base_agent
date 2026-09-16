@@ -14,6 +14,12 @@ from qa_orchestrator.agent_journal import save_journal
 from qa_orchestrator.agent_metrics import metrics_from_single_run
 from qa_orchestrator.agent_resume import build_snapshot_from_state
 from qa_orchestrator.agent_state_store import save_snapshot
+from qa_orchestrator.decision_diagnostics import (
+    attach_diagnostic_to_state,
+    build_execution_gate_block_diagnostic,
+    build_terminal_diagnostic,
+    log_decision_block,
+)
 from qa_orchestrator.agent_models import (
     AgentAction,
     AgentDecisionEntry,
@@ -185,6 +191,10 @@ class ControlledAgentLoop:
                 state.final_result = state.validation.conclusion
                 state.reason_code = state.validation.reason_code
                 state.summary = state.validation.summary
+                if state.validation.decision_diagnostics:
+                    attach_diagnostic_to_state(state, state.validation.decision_diagnostics)
+                    entry.decision_diagnostics = state.validation.decision_diagnostics
+                    log_decision_block(state.decision_diagnostics)
             return state
 
         if action.type == "RECOVER_LOCATOR":
@@ -232,6 +242,9 @@ class ControlledAgentLoop:
             state.final_result = state.validation.conclusion
             state.reason_code = state.validation.reason_code
             state.summary = state.validation.summary
+            if state.validation.decision_diagnostics:
+                attach_diagnostic_to_state(state, state.validation.decision_diagnostics)
+                log_decision_block(state.decision_diagnostics)
         return state
 
     def _recover(
@@ -365,6 +378,35 @@ class ControlledAgentLoop:
             "BLOCKED": "BLOCKED",
             "WAITING_FOR_APPROVAL": "WAITING_FOR_APPROVAL",
         }.get(status, status)
+        if status in {"WAITING_FOR_APPROVAL", "BLOCKED", "NEEDS_REVIEW"}:
+            from qa_orchestrator.execution_gate import ExecutionGate
+
+            diagnostic: dict[str, Any] | None = None
+            if state.plan and state.plan.execution_gates:
+                gate = ExecutionGate(self.orchestrator.graph)
+                blocked = next((g for g in state.plan.execution_gates if not g.executable), None)
+                if blocked:
+                    diagnostic = build_execution_gate_block_diagnostic(
+                        gate,
+                        blocked.flow_id,
+                        run_id=state.run_id,
+                        stage="execution_gate" if status == "WAITING_FOR_APPROVAL" else "agent_terminal",
+                    )
+            if diagnostic is None:
+                diagnostic = build_terminal_diagnostic(
+                    run_id=state.run_id,
+                    stage="agent_terminal",
+                    status=status,
+                    reason_code=reason_code,
+                    message=summary,
+                    failed_checks=[reason_code],
+                    extra={
+                        "selected_flow_ids": state.selected_flows,
+                        "current_action": state.current_action.type if state.current_action else None,
+                        "approval_pause_kind": state.metadata.get("approval_pause_kind"),
+                    },
+                )
+            attach_diagnostic_to_state(state, diagnostic)
         if status == "WAITING_FOR_APPROVAL" and "approval_pause_kind" not in state.metadata:
             state.metadata["approval_pause_kind"] = "execution_gate"
             state.metadata["checkpoint"] = "before_execution"
@@ -438,8 +480,12 @@ class ControlledAgentLoop:
             }.get(state.status, state.status)
 
         save_journal(state, base_dir=self.config.journal_dir)
-        if state.status == "WAITING_FOR_APPROVAL":
-            pause_kind = str(state.metadata.get("approval_pause_kind", "execution_gate"))
+        if state.status in {"WAITING_FOR_APPROVAL", "NEEDS_REVIEW", "COMPLETED", "FAILED", "BLOCKED"}:
+            pause_kind = str(state.metadata.get("approval_pause_kind", "none"))
+            if state.status == "WAITING_FOR_APPROVAL" and pause_kind == "none":
+                pause_kind = "execution_gate"
+            if state.status == "NEEDS_REVIEW":
+                pause_kind = "after_validation"
             snapshot = build_snapshot_from_state(
                 state,
                 req,
@@ -447,6 +493,19 @@ class ControlledAgentLoop:
                 automation_dir=self.orchestrator.graph.automation_dir,
             )
             save_snapshot(snapshot, base_dir=self.config.journal_dir)
+        if state.decision_diagnostics:
+            log_decision_block(state.decision_diagnostics)
+        elif state.status == "WAITING_FOR_APPROVAL":
+            log_decision_block(
+                build_terminal_diagnostic(
+                    run_id=state.run_id,
+                    stage="agent_terminal",
+                    status=state.status,
+                    reason_code=state.reason_code or "approval.pending",
+                    message=state.summary,
+                    failed_checks=[state.reason_code or "approval.pending"],
+                )
+            )
         orchestrator_result = self._to_orchestrator_result(state, req)
         metrics = metrics_from_single_run(
             AgentRunResult(
@@ -472,6 +531,7 @@ class ControlledAgentLoop:
                 "agent_iterations": state.iteration,
                 "agent_recoveries": state.recovery_count,
                 "agent_elapsed_ms": int((time.perf_counter() - started) * 1000),
+                "decision_diagnostics": state.decision_diagnostics,
             },
         )
 
@@ -537,6 +597,7 @@ class ControlledAgentLoop:
                 "agent_status": state.status,
                 "agent_iterations": state.iteration,
                 "agent_recoveries": state.recovery_count,
+                "decision_diagnostics": state.decision_diagnostics,
                 "agent_llm_calls": self.engine.llm_call_count,
                 "agent_llm_latency_ms": self.engine.llm_latency_ms,
                 "retrieval_used": state.retrieval_used,

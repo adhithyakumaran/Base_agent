@@ -55,7 +55,16 @@ function buildStages(run: AgentRun | null): Stage[] {
       id: "verify",
       label: "Verify",
       state: hasVerify ? "done" : running && hasObserve ? "active" : "waiting",
-      detail: run?.conclusion ? `Result ${run.conclusion}` : "Waiting for ground-truth verification",
+      detail: (() => {
+        const diag = run?.decisionDiagnostics as
+          | { reason_code?: string; message?: string; failed_checks?: string[]; failed_condition?: string }
+          | undefined;
+        if (diag?.reason_code) {
+          const failed = (diag.failed_checks || []).join(", ") || diag.failed_condition || "see trace";
+          return `NEEDS_REVIEW — ${diag.reason_code} (${failed})`;
+        }
+        return run?.conclusion ? `Result ${run.conclusion}` : "Waiting for ground-truth verification";
+      })(),
     },
   ];
 }
