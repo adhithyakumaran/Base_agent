@@ -12,9 +12,14 @@ export type AgentRun = {
   updatedAt: string;
   type: "sanity" | "adhoc" | "flow" | "discover" | "scheduled";
   goal: string;
-  status: "queued" | "running" | "completed" | "failed" | "blocked";
+  status: "queued" | "running" | "resuming" | "waiting_approval" | "completed" | "failed" | "blocked" | "needs_review";
   conclusion?: string;
   reasonCode?: string;
+  /** Run-level HITL resume token from agent snapshot (not a secret — scoped to run_id). */
+  resumeToken?: string;
+  approvalPauseKind?: string;
+  approvalReason?: string;
+  agentCheckpoint?: string;
   model: string;
   llmEnabled: boolean;
   traces: TraceEvent[];

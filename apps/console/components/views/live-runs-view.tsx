@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { RunApprovalPanel } from "@/components/run-approval-panel";
 import { parseInsights } from "@/lib/parse-run-insights";
 import type { AgentRun } from "@/lib/types";
 
@@ -21,8 +22,13 @@ function buildStages(run: AgentRun | null): Stage[] {
   const hasObserve = (insights.evidence?.length || 0) > 0 || traces.some((t) => /evidence|observe|capture/i.test(t.message));
   const hasVerify = traces.some((t) => /verif|ground truth|validation/i.test(t.message)) || run?.conclusion;
 
-  const running = run?.status === "running";
-  const completed = run?.status === "completed" || run?.status === "failed";
+  const running = run?.status === "running" || run?.status === "resuming";
+  const completed =
+    run?.status === "completed" ||
+    run?.status === "failed" ||
+    run?.status === "needs_review" ||
+    run?.status === "blocked";
+  const waiting = run?.status === "waiting_approval" || run?.conclusion === "WAITING_FOR_APPROVAL";
 
   return [
     {
@@ -34,8 +40,10 @@ function buildStages(run: AgentRun | null): Stage[] {
     {
       id: "execute",
       label: "Execute",
-      state: hasExecute ? "done" : running && hasPlan ? "active" : "waiting",
-      detail: insights.commands?.[0] || insights.executor || "Playwright execution",
+      state: waiting ? "waiting" : hasExecute ? "done" : running && hasPlan ? "active" : "waiting",
+      detail: waiting
+        ? "Awaiting operator Approve & Resume"
+        : insights.commands?.[0] || insights.executor || "Playwright execution",
     },
     {
       id: "observe",
@@ -50,6 +58,15 @@ function buildStages(run: AgentRun | null): Stage[] {
       detail: run?.conclusion ? `Result ${run.conclusion}` : "Waiting for ground-truth verification",
     },
   ];
+}
+
+function runStatusBadge(run: AgentRun) {
+  if (run.status === "resuming") return "RUNNING";
+  if (run.status === "waiting_approval" || run.conclusion === "WAITING_FOR_APPROVAL") {
+    return "WAITING_FOR_APPROVAL";
+  }
+  if (run.status === "running") return "RUNNING";
+  return run.conclusion || run.status;
 }
 
 export function LiveRunsView({
@@ -108,7 +125,7 @@ export function LiveRunsView({
     <div className="view-stack">
       <header className="view-header">
         <div>
-          <StatusBadge status={run.status === "running" ? "RUNNING" : run.conclusion || run.status} />
+          <StatusBadge status={runStatusBadge(run)} />
           <h1>{run.goal}</h1>
           <p className="view-subtitle font-mono">
             {insights.flowIds?.[0] || "Flow pending"} · Run {run.id.slice(0, 8).toUpperCase()}
@@ -117,6 +134,8 @@ export function LiveRunsView({
       </header>
 
       {error ? <div className="inline-alert">{error}</div> : null}
+
+      <RunApprovalPanel run={run} onRunUpdated={setRun} />
 
       <section className="panel timeline-panel" aria-label="Execution timeline">
         <ol className="run-timeline">

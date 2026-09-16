@@ -119,5 +119,7 @@ export function pushHistory(
 }
 
 export function hasActiveRun(state: AppState): boolean {
-  return state.runs.some((r) => r.status === "running" || r.status === "queued");
+  return state.runs.some(
+    (r) => r.status === "running" || r.status === "queued" || r.status === "resuming"
+  );
 }
