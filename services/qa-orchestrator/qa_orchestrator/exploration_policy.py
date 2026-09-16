@@ -82,10 +82,11 @@ class ExplorationPolicy:
         hay = " ".join([element_text, element_role, element_name, form_action, value or ""]).lower()
         for pattern in _BLOCKED_TEXT_PATTERNS:
             if re.search(pattern, hay):
+                display = pattern.replace(r"\b", "")
                 return ActionPolicyDecision(
                     allowed=False,
                     reason_code="BLOCKED_ACTION",
-                    message=f"Read-only exploration blocked destructive control: {pattern.strip('\\\\b')}",
+                    message=f"Read-only exploration blocked destructive control: {display}",
                 )
 
         if self.read_only and action_type in {"click", "press", "submit"}:
