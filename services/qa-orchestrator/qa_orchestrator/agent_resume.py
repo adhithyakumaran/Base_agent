@@ -481,6 +481,8 @@ def build_snapshot_from_state(
             "run_id": req.run_id,
             "skip_discovery": req.skip_discovery,
             "skip_execution": req.skip_execution,
+            "execution_mode": req.execution_mode,
+            "allow_skip_execution": req.allow_skip_execution,
             "context_packets": req.context_packets,
         },
     )

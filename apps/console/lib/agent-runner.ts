@@ -66,7 +66,9 @@ async function invokeWarmAgent(
         run_id: opts.runId,
         model: opts.model === "disabled" ? null : opts.model,
         context_packets: opts.contextPackets,
-        execution_mode: opts.executionMode,
+        execution_mode: opts.executionMode ?? "LIVE_DEMO",
+        skip_execution: false,
+        allow_skip_execution: false,
       }),
       signal: AbortSignal.timeout(120_000),
     });

@@ -90,20 +90,37 @@ class LocalOrchestratorService:
         context_packets: list[dict[str, Any]] | None = None,
         skip_discovery: bool = False,
         skip_execution: bool = False,
+        execution_mode: str = "CI",
+        allow_skip_execution: bool = False,
+        run_request: RunRequest | None = None,
     ) -> dict[str, Any]:
         assert_canonical_agent_path("local_agent_server")
         t0 = time.perf_counter()
-        result = self.orchestrator.run(
-            RunRequest(
-                goal=goal,
-                run_type=run_type,
-                model=model or self.default_model,
-                run_id=run_id,
-                context_packets=context_packets or [],
-                skip_discovery=skip_discovery,
-                skip_execution=skip_execution,
-            )
+        req = run_request or RunRequest(
+            goal=goal,
+            run_type=run_type,
+            model=model or self.default_model,
+            run_id=run_id,
+            context_packets=context_packets or [],
+            skip_discovery=skip_discovery,
+            skip_execution=skip_execution,
+            execution_mode=execution_mode,
+            allow_skip_execution=allow_skip_execution,
         )
+        from qa_orchestrator.live_browser_config import apply_run_mode_to_environ
+
+        apply_run_mode_to_environ(req.execution_mode)
+        from qa_orchestrator.run_request_parse import log_run_request_accepted
+
+        log_run_request_accepted(
+            run_id=req.run_id,
+            execution_mode=req.execution_mode,
+            skip_execution=req.skip_execution,
+            run_type=req.run_type,
+            goal=req.goal,
+            stream=sys.stderr,
+        )
+        result = self.orchestrator.run(req)
         self.runs += 1
         payload = self.orchestrator.to_agent_payload(result)
         payload["local"]["elapsed_ms"] = int((time.perf_counter() - t0) * 1000)
@@ -114,6 +131,12 @@ class LocalOrchestratorService:
         payload["local"]["primary_flows"] = len(self.orchestrator.graph.ready_flow_ids())
         payload["local"]["draft_flows"] = len(self.orchestrator.graph.draft_flow_ids())
         payload["local"]["canonical"] = canonical_path_metadata()
+        payload["local"]["request_acceptance"] = {
+            "execution_mode": req.execution_mode,
+            "skip_execution": req.skip_execution,
+            "run_type": req.run_type,
+            "run_id": req.run_id,
+        }
         if payload.get("decision_diagnostics"):
             from qa_orchestrator.decision_diagnostics import log_decision_block
 
@@ -288,32 +311,27 @@ class Handler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             self._json(400, {"ok": False, "error": "invalid_json"})
             return
-        goal = str(body.get("goal") or body.get("message") or "").strip()
-        if not goal:
-            self._json(400, {"ok": False, "error": "goal_required"})
-            return
-        run_type = str(body.get("run_type") or body.get("type") or "adhoc")
-        model = body.get("model")
-        run_id = body.get("run_id")
-        execution_mode = body.get("execution_mode") or body.get("executionMode")
-        if run_id:
-            security_log("run_accepted", run_id=str(run_id), path=path)
-        if execution_mode:
-            from qa_orchestrator.live_browser_config import apply_run_mode_to_environ
+        from qa_orchestrator.run_request_parse import build_run_request_from_body
 
-            apply_run_mode_to_environ(str(execution_mode))
-        context_packets = body.get("context_packets") if isinstance(body.get("context_packets"), list) else []
-        skip_discovery = bool(body.get("skip_discovery"))
-        skip_execution = bool(body.get("skip_execution"))
+        parsed = build_run_request_from_body(body)
+        if parsed.request is None:
+            self._json(
+                parsed.http_status,
+                {
+                    "ok": False,
+                    "error": parsed.error_code or "invalid_request",
+                    "reason_code": parsed.error_code,
+                    "message": parsed.error_message,
+                },
+            )
+            return
+        req = parsed.request
+        if req.run_id:
+            security_log("run_accepted", run_id=str(req.run_id), path=path)
         try:
             result = SERVICE.run(
-                goal,
-                run_type=run_type,
-                model=model,
-                run_id=str(run_id) if run_id else None,
-                context_packets=context_packets,
-                skip_discovery=skip_discovery,
-                skip_execution=skip_execution,
+                req.goal,
+                run_request=req,
             )
             chat_response = {
                 "message": result.get("summary", ""),

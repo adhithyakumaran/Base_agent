@@ -13,3 +13,5 @@ class RunRequest:
     context_packets: list[dict[str, Any]] = field(default_factory=list)
     skip_discovery: bool = False
     skip_execution: bool = False
+    execution_mode: str = "CI"
+    allow_skip_execution: bool = False
