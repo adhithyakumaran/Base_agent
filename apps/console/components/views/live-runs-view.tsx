@@ -61,7 +61,15 @@ function buildStages(run: AgentRun | null): Stage[] {
           | undefined;
         if (diag?.reason_code) {
           const failed = (diag.failed_checks || []).join(", ") || diag.failed_condition || "see trace";
-          return `NEEDS_REVIEW — ${diag.reason_code} (${failed})`;
+          const msg = diag.message ? String(diag.message).slice(0, 120) : "";
+          return [
+            `NEEDS_REVIEW`,
+            `Reason: ${diag.reason_code}`,
+            `Failed check: ${failed}`,
+            msg ? `Detail: ${msg}` : "",
+          ]
+            .filter(Boolean)
+            .join(" · ");
         }
         return run?.conclusion ? `Result ${run.conclusion}` : "Waiting for ground-truth verification";
       })(),
