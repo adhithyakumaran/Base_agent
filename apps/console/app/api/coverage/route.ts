@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { requireApiAuth } from "@/lib/api-auth";
 import { repoRoot } from "@/lib/repo-root";
 
 const REPO = repoRoot();
@@ -24,7 +25,9 @@ async function countSpecs(dir: string, tag?: string): Promise<number> {
   return count;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   try {
     const raw = await fs.readFile(INDEX, "utf8");
     const ready = (raw.match(/status: READY/g) || []).length;

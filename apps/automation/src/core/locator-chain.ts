@@ -1,11 +1,23 @@
 import type { Locator, Page } from '@playwright/test';
+import { resolveLocatorChain, type OverlayUsageMeta } from './healing-overlays';
 
 export type LocatorChain = string[];
 
+export type { OverlayUsageMeta };
+
 export class LocatorResolver {
+  private lastUsage: OverlayUsageMeta | undefined;
+
   constructor(private readonly page: Page) {}
 
+  getLastOverlayUsage(): OverlayUsageMeta | undefined {
+    return this.lastUsage;
+  }
+
   async resolve(chain: LocatorChain, label: string): Promise<Locator> {
+    const resolved = resolveLocatorChain(chain, label);
+    this.lastUsage = resolved.meta;
+    chain = resolved.chain;
     for (const selector of chain) {
       const locator = this.page.locator(selector);
       const count = await locator.count();
@@ -18,7 +30,11 @@ export class LocatorResolver {
   }
 
   async firstVisible(chain: LocatorChain, label: string, timeoutMs = 5000): Promise<Locator> {
-    const deadline = Date.now() + timeoutMs;
+    const resolved = resolveLocatorChain(chain, label);
+    this.lastUsage = resolved.meta;
+    chain = resolved.chain;
+    const timingBoost = Number(process.env.QA_HEALING_TIMING_MS || 0);
+    const deadline = Date.now() + timeoutMs + timingBoost;
     while (Date.now() < deadline) {
       for (const selector of chain) {
         const locator = this.page.locator(selector);

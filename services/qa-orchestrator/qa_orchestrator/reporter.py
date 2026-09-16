@@ -81,6 +81,99 @@ def build_markdown_report(
     if intent.params:
         lines.append(f"- **Parameters:** `{intent.params}`")
 
+    if result.planning:
+        planning = result.planning
+        lines.extend(
+            [
+                "",
+                "## QA planning",
+                f"- **Strategy:** `{planning.strategy}`",
+                f"- **Secondary:** {', '.join(planning.secondary_strategies) or '—'}",
+                f"- **Risk:** {planning.risk_level}",
+                f"- **Execution allowed:** {planning.execution_allowed}",
+                f"- **Human approval required:** {planning.requires_human_approval}",
+                f"- **Polarity:** {planning.polarity}",
+                f"- **Candidate flows:** {', '.join(planning.candidate_flows[:8]) or '—'}",
+                f"- **Selected flows:** {', '.join(planning.selected_flows) or '—'}",
+                f"- **Coverage:** {planning.coverage_assessment}",
+                f"- **Expected evidence:** {', '.join(planning.expected_evidence) or '—'}",
+            ]
+        )
+        if planning.blocked_flows:
+            lines.append(f"- **Blocked flows:** {', '.join(planning.blocked_flows[:8])}")
+        if planning.next_actions:
+            lines.append("- **Next actions:**")
+            for action in planning.next_actions:
+                lines.append(f"  - {action}")
+        if planning.exploration:
+            lines.extend(
+                [
+                    "",
+                    "### Exploration contract",
+                    f"- **Target URL:** {planning.exploration.target_url or '—'}",
+                    f"- **Read only:** {planning.exploration.read_only}",
+                    f"- **Max pages:** {planning.exploration.max_pages}",
+                ]
+            )
+        if planning.generation:
+            lines.extend(
+                [
+                    "",
+                    "### Generation contract",
+                    f"- **Objective:** {planning.generation.scenario_objective}",
+                    f"- **Approval required:** {planning.generation.approval_required}",
+                ]
+            )
+
+    if result.exploration:
+        exp = result.exploration
+        lines.extend(
+            [
+                "",
+                "## Browser exploration",
+                f"- **Status:** `{exp.status}`",
+                f"- **Exploration ID:** `{exp.exploration_id}`",
+                f"- **Target:** {exp.target_url or '—'}",
+                f"- **Pages inspected:** {len(exp.pages)}",
+                f"- **Elements discovered:** {len(exp.elements)}",
+                f"- **Actions performed:** {len(exp.actions)}",
+                f"- **Evidence captures:** {len(exp.evidence)}",
+            ]
+        )
+        if exp.business_signals:
+            lines.append("- **Business signals:**")
+            for sig in exp.business_signals[:8]:
+                lines.append(f"  - {sig}")
+        if exp.warnings:
+            lines.append("- **Warnings:**")
+            for warn in exp.warnings[:6]:
+                lines.append(f"  - {warn}")
+        if exp.discovery_candidates:
+            cand = exp.discovery_candidates[0]
+            lines.append(f"- **Discovery candidate:** `{cand.candidate_id}` · status `{cand.status}`")
+
+    if result.generation_result:
+        gen = result.generation_result
+        lines.extend(
+            [
+                "",
+                "## Test generation",
+                f"- **Status:** `{gen.status}`",
+                f"- **Generation ID:** `{gen.generation_id}`",
+                f"- **Flow:** {gen.flow_id}",
+                f"- **Spec path:** `{gen.generated_spec_path or '—'}`",
+                f"- **Blocked execution:** {gen.blocked_execution}",
+            ]
+        )
+        if gen.validation:
+            lines.append(f"- **Validation:** `{gen.validation.reason_code}` — {gen.validation.message}")
+        if gen.scenario:
+            lines.append(f"- **Scenario:** `{gen.scenario.scenario_id}` · {gen.scenario.status}")
+        if gen.test_case:
+            lines.append(f"- **Test case:** `{gen.test_case.test_case_id}` · {gen.test_case.status}")
+        if gen.journal:
+            lines.append(f"- **Journal:** `{gen.journal.generation_id}` · review `{gen.journal.review_status}`")
+
     lines.extend(
         [
             "",
@@ -173,6 +266,27 @@ def build_markdown_report(
         lines.extend(["", "## Findings"])
         for f in validation.findings:
             lines.append(f"- **{f.severity.upper()}** `{f.code}` — {f.message}")
+
+    if result.healing_result:
+        healing = result.healing_result
+        lines.extend(
+            [
+                "",
+                "## Self-healing",
+                f"- **Status:** `{healing.status}` · `{healing.healing_id}`",
+                f"- **Attempts:** {healing.attempts_used}",
+                f"- **Message:** {healing.message}",
+            ]
+        )
+        if healing.failure:
+            lines.append(
+                f"- **Failure type:** `{healing.failure.type}` · eligible={healing.failure.healing_eligible}"
+            )
+        if healing.proposal:
+            lines.append(
+                f"- **Proposal:** `{healing.proposal.status}` · confidence={healing.proposal.confidence:.2f}"
+            )
+            lines.append(f"- **Locator:** `{healing.proposal.old_locator}` → `{healing.proposal.new_locator}`")
 
     if result.kb_refs:
         lines.extend(["", "## KB refs", ", ".join(result.kb_refs)])

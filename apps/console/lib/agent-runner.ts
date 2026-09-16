@@ -2,6 +2,8 @@ import { spawn } from "child_process";
 import path from "path";
 import type { AgentRun, KnowledgePill, TraceEvent } from "@/lib/types";
 import { repoRoot } from "@/lib/repo-root";
+import { internalAgentHeaders } from "@/lib/internal-agent";
+import { applyOrchestratorResultToRun, enrichWaitingRunFromAgent } from "@/lib/orchestrator-bridge";
 import { uid } from "@/lib/utils";
 
 const REPO_ROOT = repoRoot();
@@ -56,9 +58,7 @@ async function invokeWarmAgent(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(process.env.SCOUT_API_TOKEN
-          ? { Authorization: `Bearer ${process.env.SCOUT_API_TOKEN}` }
-          : {}),
+        ...(internalAgentHeaders()),
       },
       body: JSON.stringify({
         goal,
@@ -241,49 +241,22 @@ export async function executeRun(
   await push("info", `Orchestrator bridge via ${invoked.via || "unknown"}`);
 
   if (invoked.ok && invoked.result) {
-    const r = invoked.result;
-    const local = (r.local as Record<string, unknown> | undefined) || {};
-    const intent = (local.intent as Record<string, unknown>) || {};
-    const discovery = (local.discovery as Record<string, unknown>) || {};
-    run.conclusion = String(r.conclusion || "UNKNOWN");
-    run.reasonCode = String(r.reason_code || "");
-    run.usage.toolCalls = Number(r.tool_calls || 0);
-    run.usage.steps = Number(r.steps || 0);
-    run.usage.llmCalls = Number(r.llm_calls || 0);
-    run.usage.tokensIn = Number(r.tokens_in || 0);
-    run.usage.tokensOut = Number(r.tokens_out || 0);
-
-    await push(
-      "decision",
-      `Intent: ${String(intent.execution_mode || "unknown")} — ${String(intent.reasoning || "classified")}`,
-      JSON.stringify(intent, null, 2)
-    );
-
-    const suggestions = discovery.suggestions as string[] | undefined;
-    if (suggestions?.length) {
+    applyOrchestratorResultToRun(run, invoked.result, run.traces);
+    const pausedForApproval = run.conclusion === "WAITING_FOR_APPROVAL";
+    if (pausedForApproval) {
       await push(
-        "observe",
-        `Discovery insights (${suggestions.length})`,
-        suggestions.join("\n")
+        "decision",
+        "Run paused — operator approval required before Playwright execution",
+        run.reasonCode || "approval.pending"
       );
+      const enriched = await enrichWaitingRunFromAgent(run);
+      Object.assign(run, enriched);
+      if (run.report?.json) {
+        run.report.json.resumeToken = run.resumeToken;
+      }
+    } else {
+      await push("decision", "Complete — no loop-until-success");
     }
-
-    await push(
-      "observe",
-      `Validation phase ${String(local.validation_phase || "A")} → ${run.conclusion}`,
-      JSON.stringify(
-        {
-          reason: run.reasonCode,
-          classifier: local.classifier,
-          execution_mode: local.execution_mode,
-          executor: local.executor,
-          suites: (local.suite_plan as { suite_ids?: unknown[] } | undefined)?.suite_ids,
-        },
-        null,
-        2
-      )
-    );
-    await push("decision", "Complete — no loop-until-success");
   } else {
     run.conclusion = "UNKNOWN";
     run.reasonCode = "console.orchestrator_bridge_fallback";
@@ -301,50 +274,43 @@ export async function executeRun(
     );
   }
 
-  const r = invoked.result || {};
-  const local = (r.local as Record<string, unknown> | undefined) || {};
-  const orchestratorMd = typeof local.report_markdown === "string" ? local.report_markdown : "";
+  if (!invoked.ok || !invoked.result) {
+    const orchestratorMd = "";
+    const md =
+      orchestratorMd ||
+      [
+        `# QA Agent Report`,
+        ``,
+        `- **Run ID:** ${run.id}`,
+        `- **Type:** ${run.type}`,
+        `- **Goal:** ${run.goal}`,
+        `- **Conclusion:** ${run.conclusion}`,
+        `- **Reason:** ${run.reasonCode || "n/a"}`,
+        `- **Model:** ${run.model}`,
+        ``,
+        `## Trace`,
+        ...run.traces.map((t) => `- \`${t.at}\` **${t.kind}** — ${t.message}`),
+      ].join("\n");
 
-  const md =
-    orchestratorMd ||
-    [
-      `# QA Agent Report`,
-      ``,
-      `- **Run ID:** ${run.id}`,
-      `- **Type:** ${run.type}`,
-      `- **Goal:** ${run.goal}`,
-      `- **Conclusion:** ${run.conclusion}`,
-      `- **Reason:** ${run.reasonCode || "n/a"}`,
-      `- **Model:** ${run.model}`,
-      `- **Tool calls:** ${run.usage.toolCalls} · **Steps:** ${run.usage.steps} · **LLM calls:** ${run.usage.llmCalls}`,
-      ``,
-      `## Trace`,
-      ...run.traces.map((t) => `- \`${t.at}\` **${t.kind}** — ${t.message}`),
-    ].join("\n");
-
-  run.report = {
-    summary: `${run.conclusion}: ${run.goal}`,
-    markdown: md,
-    json: {
-      runId: run.id,
-      conclusion: run.conclusion,
-      reasonCode: run.reasonCode,
-      usage: run.usage,
-      traces: run.traces,
-      knowledgePillIds: run.knowledgePillIds,
-      agent: invoked.result || null,
-      bridgeError: invoked.error || null,
-      bridgeVia: invoked.via || null,
-    },
-  };
+    run.report = {
+      summary: `${run.conclusion}: ${run.goal}`,
+      markdown: md,
+      json: {
+        runId: run.id,
+        conclusion: run.conclusion,
+        reasonCode: run.reasonCode,
+        usage: run.usage,
+        traces: run.traces,
+        knowledgePillIds: run.knowledgePillIds,
+        agent: invoked.result || null,
+        bridgeError: invoked.error || null,
+        bridgeVia: invoked.via || null,
+      },
+    };
+    run.status = "failed";
+  }
 
   await push("report", "Report generated");
-  run.status =
-    run.conclusion === "FAIL"
-      ? "failed"
-      : run.conclusion === "BLOCKED"
-        ? "blocked"
-        : "completed";
   run.updatedAt = new Date().toISOString();
   await onUpdate(run);
   return run;

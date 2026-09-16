@@ -1,6 +1,7 @@
 import type { Page, TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { getLastOverlayUsage } from './healing-overlays';
 
 export type EvidenceCapture = {
   runId: string;
@@ -13,6 +14,10 @@ export type EvidenceCapture = {
   metaPath: string;
   url: string;
   capturedAt: string;
+  locator_source?: string;
+  healing_id?: string;
+  overlay_version?: string;
+  overlay_hash?: string;
 };
 
 function sanitizeSegment(value: string, max = 96): string {
@@ -78,6 +83,13 @@ export async function captureStepEvidence(
     url: page.url(),
     capturedAt: new Date().toISOString(),
   };
+  const overlayUsage = getLastOverlayUsage(label);
+  if (overlayUsage && overlayUsage.locator_source !== 'KB_CHAIN') {
+    capture.locator_source = overlayUsage.locator_source;
+    capture.healing_id = overlayUsage.healing_id;
+    capture.overlay_version = overlayUsage.overlay_version;
+    capture.overlay_hash = overlayUsage.overlay_hash;
+  }
   fs.writeFileSync(metaPath, JSON.stringify(capture, null, 2), 'utf8');
 
   await testInfo.attach(`${label}-screenshot`, { path: screenshotPath, contentType: 'image/png' });
