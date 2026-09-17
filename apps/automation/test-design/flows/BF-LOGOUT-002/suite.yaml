@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-LOGOUT-002
 flow_id: BF-LOGOUT-002
 flow_name: User Logout
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-logout-002

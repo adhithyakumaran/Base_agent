@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-RIVAAH-005-03
 flow_id: BF-RIVAAH-005-03
 flow_name: Engagement Rings
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-rivaah-005-03

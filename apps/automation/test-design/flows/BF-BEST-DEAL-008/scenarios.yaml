@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-BEST-DEAL-008
 flow_name: Best Deal
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-BEST-DEAL-008-001
   title: Best Deal — primary business path

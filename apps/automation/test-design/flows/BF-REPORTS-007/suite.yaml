@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-REPORTS-007
 flow_id: BF-REPORTS-007
 flow_name: Reports
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-reports-007
