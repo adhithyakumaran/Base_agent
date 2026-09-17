@@ -26,7 +26,7 @@ test.describe('live browser lifecycle', () => {
   });
 
   test('keeper script exists for QA_KEEP_BROWSER_OPEN close contract', async () => {
-    const keeper = path.resolve(__dirname, '../../../scripts/live-browser-keeper.mjs');
+    const keeper = path.resolve(__dirname, '../../scripts/live-browser-keeper.mjs');
     expect(fs.existsSync(keeper)).toBeTruthy();
   });
 });
