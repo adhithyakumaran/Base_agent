@@ -111,8 +111,8 @@ export function FlowsView({ onRunFlow }: { onRunFlow?: (goal: string) => void })
         <div>
           <h1>Approved QA flows</h1>
           <p className="view-subtitle">
-            {totals?.all ?? "—"} total · {totals?.smeReady ?? "—"} SME-ready · {totals?.approved ?? "—"} approved ·{" "}
-            {totals?.executable ?? "—"} executable · {totals?.pendingApproval ?? "—"} awaiting approval
+            {totals?.executable ?? "—"} executable · {totals?.smeReady ?? "—"} SME-ready ·{" "}
+            {totals?.pendingApproval ?? "—"} awaiting approval
           </p>
         </div>
       </header>
