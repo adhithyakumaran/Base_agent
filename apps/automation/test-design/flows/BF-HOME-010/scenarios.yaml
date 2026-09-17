@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-HOME-010
 flow_name: Home Page / Application Navigation Map
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-HOME-010-002
   title: Home → All Products
