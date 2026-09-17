@@ -1,101 +1,145 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { parseInsights } from "@/lib/parse-run-insights";
 import type { AgentRun } from "@/lib/types";
 
-const TABS = ["Screenshots", "DOM", "Network", "Console", "JSON", "Healing"] as const;
+const FILTERS = ["All", "Screenshots", "Navigation", "Test Start", "Test End", "Failed"] as const;
+
+type EvidenceItem = {
+  path: string;
+  label?: string;
+  dom_path?: string;
+  runId: string;
+  flowId?: string;
+  at: string;
+};
+
+function classifyFilter(item: EvidenceItem, filter: (typeof FILTERS)[number]): boolean {
+  if (filter === "All") return true;
+  const label = (item.label || item.path).toLowerCase();
+  if (filter === "Screenshots") return /\.png|screenshot/i.test(item.path);
+  if (filter === "Navigation") return /nav|route|page/i.test(label);
+  if (filter === "Test Start") return /start|begin|login/i.test(label);
+  if (filter === "Test End") return /end|finish|complete/i.test(label);
+  if (filter === "Failed") return /fail|error/i.test(label);
+  return true;
+}
 
 export function EvidenceView({ run }: { run: AgentRun | null }) {
-  const [tab, setTab] = useState<(typeof TABS)[number]>("Screenshots");
-  const [selectedPath, setSelectedPath] = useState<string | null>(null);
-  const insights = useMemo(() => parseInsights(run), [run]);
-  const evidence = insights.evidence || [];
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
+  const [items, setItems] = useState<EvidenceItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [lightbox, setLightbox] = useState<EvidenceItem | null>(null);
 
-  if (!run) {
-    return (
-      <EmptyState title="No evidence selected" description="Run a QA test to capture screenshots and execution artifacts." />
-    );
-  }
+  useEffect(() => {
+    fetch("/api/runs")
+      .then((r) => r.json())
+      .then((json) => {
+        const runs = (json.runs || []) as AgentRun[];
+        const merged: EvidenceItem[] = [];
+        for (const r of runs.slice(0, 20)) {
+          const insights = parseInsights(r);
+          for (const ev of insights.evidence || []) {
+            merged.push({
+              ...ev,
+              runId: r.id,
+              flowId: insights.flowIds?.[0],
+              at: r.updatedAt || r.createdAt,
+            });
+          }
+        }
+        if (run) {
+          const insights = parseInsights(run);
+          for (const ev of insights.evidence || []) {
+            if (!merged.some((m) => m.path === ev.path)) {
+              merged.unshift({
+                ...ev,
+                runId: run.id,
+                flowId: insights.flowIds?.[0],
+                at: run.updatedAt || run.createdAt,
+              });
+            }
+          }
+        }
+        setItems(merged);
+      })
+      .finally(() => setLoading(false));
+  }, [run]);
+
+  const filtered = useMemo(
+    () => items.filter((item) => classifyFilter(item, filter)),
+    [items, filter]
+  );
 
   return (
     <div className="view-stack evidence-layout">
       <header className="view-header">
         <div>
           <h1>Evidence</h1>
-          <p className="view-subtitle">
-            {evidence.length} capture{evidence.length === 1 ? "" : "s"} · Run{" "}
-            <span className="font-mono">{run.id.slice(0, 8).toUpperCase()}</span>
-            {insights.flowIds?.[0] ? (
-              <>
-                {" "}
-                · <span className="font-mono">{insights.flowIds[0]}</span>
-              </>
-            ) : null}
-          </p>
+          <p className="view-subtitle">Screenshots, execution artifacts and validation evidence.</p>
         </div>
       </header>
 
       <div className="filter-row" role="tablist" aria-label="Evidence filters">
-        {TABS.map((t) => (
+        {FILTERS.map((t) => (
           <button
             key={t}
             type="button"
             role="tab"
-            aria-selected={tab === t}
-            className={tab === t ? "filter-chip filter-chip--active" : "filter-chip"}
-            onClick={() => setTab(t)}
+            aria-selected={filter === t}
+            className={filter === t ? "filter-chip filter-chip--active" : "filter-chip"}
+            onClick={() => setFilter(t)}
           >
             {t}
           </button>
         ))}
       </div>
 
-      {tab === "Screenshots" && evidence.length ? (
-        <>
-          <div className="evidence-grid" role="list">
-            {evidence.map((ev) => {
-              const active = selectedPath === ev.path;
-              return (
-                <button
-                  key={ev.path}
-                  type="button"
-                  role="listitem"
-                  className={active ? "evidence-card evidence-card--active" : "evidence-card"}
-                  onClick={() => setSelectedPath(ev.path)}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`/api/evidence?path=${encodeURIComponent(ev.path)}`} alt={ev.label || "Screenshot"} />
-                  <div className="evidence-card__body">
-                    <span>{ev.label || ev.path.split("/").pop()}</span>
-                    <span className="font-mono">{ev.dom_path || "screenshot"}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+      {loading ? <p className="text-muted">Loading evidence…</p> : null}
 
-          <section className="panel evidence-preview" aria-label="Evidence preview">
-            {selectedPath ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/api/evidence?path=${encodeURIComponent(selectedPath)}`} alt="Evidence preview" />
-                <pre className="font-mono text-muted">{selectedPath}</pre>
-              </>
-            ) : (
-              <EmptyState title="Select a capture" description="Choose a screenshot to inspect it in full size." />
-            )}
-          </section>
-        </>
+      {!loading && !filtered.length ? (
+        <EmptyState title="No evidence captures" description="Run a QA test to capture screenshots and artifacts." />
       ) : (
-        <section className="panel">
-          <EmptyState
-            title={`No ${tab.toLowerCase()} artifacts`}
-            description="Evidence for this category will appear when captured during execution."
-          />
-        </section>
+        <div className="evidence-grid" role="list">
+          {filtered.map((ev) => (
+            <button
+              key={`${ev.runId}-${ev.path}`}
+              type="button"
+              role="listitem"
+              className="evidence-card"
+              onClick={() => setLightbox(ev)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/api/evidence?path=${encodeURIComponent(ev.path)}`} alt={ev.label || "Evidence"} />
+              <div className="evidence-card__body">
+                <span>{ev.label || ev.path.split("/").pop()}</span>
+                <span className="font-mono text-xs">{ev.flowId || "—"}</span>
+                <span className="text-muted text-xs">{new Date(ev.at).toLocaleString()}</span>
+                <span className="font-mono text-xs">run_{ev.runId.slice(4, 12)}</span>
+              </div>
+            </button>
+          ))}
+        </div>
       )}
+
+      {lightbox ? (
+        <div
+          className="evidence-lightbox"
+          role="dialog"
+          aria-label="Evidence viewer"
+          onClick={() => setLightbox(null)}
+          onKeyDown={(e) => e.key === "Escape" && setLightbox(null)}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/evidence?path=${encodeURIComponent(lightbox.path)}`}
+            alt={lightbox.label || "Evidence full size"}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

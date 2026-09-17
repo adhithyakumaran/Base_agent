@@ -27,13 +27,14 @@
   --primitive-error-500: #dc2626;
 
   /* Semantic aliases (design system) */
-  --background: var(--primitive-white);
-  --surface: var(--primitive-white);
-  --surface-muted: var(--primitive-neutral-50);
-  --surface-elevated: var(--primitive-white);
-  --text-primary: var(--primitive-neutral-950);
-  --text-secondary: var(--primitive-neutral-600);
-  --text-muted: var(--primitive-neutral-500);
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-muted: #f4f7fb;
+  --surface-soft: #f4f7fb;
+  --surface-elevated: #ffffff;
+  --text-primary: #0b0f19;
+  --text-secondary: #5b6472;
+  --text-muted: #8a94a6;
   --text-inverse: var(--primitive-white);
   --border: var(--primitive-neutral-200);
   --border-subtle: #ededed;
@@ -53,8 +54,8 @@
   --border-default: var(--border);
   --border-strong: var(--primitive-neutral-300);
 
-  --action-primary: var(--accent);
-  --action-primary-hover: var(--primitive-blue-600);
+  --action-primary: #090b0f;
+  --action-primary-hover: #1a1f2e;
   --action-danger: var(--danger);
   --action-danger-hover: #b91c1c;
 
@@ -63,11 +64,7 @@
   --feedback-error: var(--danger);
   --feedback-info: var(--accent);
 
-  --gradient-accent: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--accent) 8%, white) 0%,
-    color-mix(in srgb, var(--primitive-cyan-100) 90%, white) 100%
-  );
+  --gradient-accent: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
   --gradient-hero: linear-gradient(
     180deg,
     color-mix(in srgb, var(--accent) 6%, white) 0%,

@@ -9,6 +9,58 @@ import { parseInsights } from "@/lib/parse-run-insights";
 import type { OrchestratorStatus } from "@/lib/use-orchestrator";
 import type { AgentRun } from "@/lib/types";
 
+const SUGGESTIONS: { label: string; text: string }[] = [
+  { label: "Search a SKU", text: "Search SKU 552811DUDABA00" },
+  { label: "Check login", text: "Check login on Endless Aisle UAT" },
+  { label: "Verify cart flow", text: "Verify cart flow on UAT" },
+  { label: "Run a sanity suite", text: "morning sanity check — Endless Aisle login and home modules" },
+];
+
+function buildStages(run: AgentRun | null) {
+  const insights = parseInsights(run);
+  const traces = run?.traces || [];
+  const hasPlan = traces.some((t) => /plan|intent|classif/i.test(t.message));
+  const hasExecute = traces.some((t) => /execut|playwright|suite/i.test(t.message));
+  const hasObserve =
+    (insights.evidence?.length || 0) > 0 || traces.some((t) => /evidence|observe|capture/i.test(t.message));
+  const hasVerify =
+    traces.some((t) => /verif|ground truth|validation/i.test(t.message)) || Boolean(run?.conclusion);
+  const running = run?.status === "running" || run?.status === "resuming";
+
+  const stateFor = (done: boolean, active: boolean): "done" | "active" | "waiting" => {
+    if (done) return "done";
+    if (active) return "active";
+    return "waiting";
+  };
+
+  return [
+    {
+      label: "Plan",
+      state: stateFor(hasPlan, running && !hasPlan),
+      detail: insights.reasoning || "Intent classified · flow selected",
+      time: run?.createdAt,
+    },
+    {
+      label: "Execute",
+      state: stateFor(hasExecute, running && hasPlan && !hasExecute),
+      detail: insights.commands?.[0] || "Playwright execution",
+      time: run?.updatedAt,
+    },
+    {
+      label: "Observe",
+      state: stateFor(hasObserve, running && hasExecute && !hasObserve),
+      detail: hasObserve ? `${insights.evidence?.length || 0} evidence captures` : "Capturing evidence",
+      time: run?.updatedAt,
+    },
+    {
+      label: "Verify",
+      state: stateFor(hasVerify, running && hasObserve && !hasVerify),
+      detail: run?.conclusion ? `Result ${run.conclusion}` : "Ground-truth verification",
+      time: run?.updatedAt,
+    },
+  ];
+}
+
 export function AskAgentView({
   orchestrator,
   busy,
@@ -28,15 +80,18 @@ export function AskAgentView({
   activeRun: AgentRun | null;
   onViewRun?: () => void;
 }) {
-  const insights = parseInsights(activeRun);
   const env = orchestrator?.environment || "UAT";
   const connected = orchestrator?.connected;
+  const stages = buildStages(activeRun);
 
   return (
     <div className="view-stack ask-page">
       <header className="ask-hero">
         <h1>Test your application with ScoutAI.</h1>
-        <p className="view-subtitle">Run approved QA flows, inspect evidence, and verify results.</p>
+        <p className="view-subtitle">
+          Describe what you want to verify in plain language. ScoutAI plans, executes, observes and verifies the
+          result.
+        </p>
       </header>
 
       <section className="ask-command-card" aria-labelledby="command-label">
@@ -48,7 +103,7 @@ export function AskAgentView({
             id="scout-command"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Search SKU 552811DUDABA00, verify login, run morning sanity…"
+            placeholder="Search SKU 552811DUDABA00"
             className="command-input"
             disabled={busy}
             onKeyDown={(e) => {
@@ -59,7 +114,7 @@ export function AskAgentView({
             }}
           />
           <Button
-            className="command-submit"
+            className="command-submit btn-black"
             disabled={busy || !prompt.trim()}
             onClick={() => onRun(prompt, "adhoc")}
             aria-label="Submit QA request"
@@ -68,11 +123,31 @@ export function AskAgentView({
           </Button>
         </div>
 
-        <div className="command-actions">
-          <Button disabled={busy || !prompt.trim()} onClick={() => onRun(prompt, "adhoc")}>
+        <div className="suggestion-row">
+          <span className="suggestion-label">Try a test</span>
+          {SUGGESTIONS.map((s) => (
+            <button
+              key={s.label}
+              type="button"
+              className="suggestion-chip"
+              disabled={busy}
+              onClick={() => setPrompt(s.text)}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="command-actions-v2">
+          <Button className="btn-black" disabled={busy || !prompt.trim()} onClick={() => onRun(prompt, "adhoc")}>
             Run controlled test
           </Button>
-          <Button variant="secondary" disabled={busy} onClick={() => onRun(`morning sanity check — ${prompt}`, "sanity")}>
+          <Button
+            variant="secondary"
+            className="btn-outline-dark"
+            disabled={busy}
+            onClick={() => onRun(`morning sanity check — ${prompt}`, "sanity")}
+          >
             Run sanity suites
           </Button>
         </div>
@@ -85,51 +160,49 @@ export function AskAgentView({
         </div>
       ) : null}
 
-      <section className="panel readiness-card" aria-labelledby="readiness-heading">
-        <h2 id="readiness-heading" className="section-label">
-          Run readiness
-        </h2>
-        <div className="readiness-stats">
-          <div className="readiness-stat">
-            <strong>{orchestrator?.flowCounts?.executable ?? "—"}</strong>
-            <span>executable</span>
-          </div>
-          <div className="readiness-stat">
-            <strong>{orchestrator?.flowCounts?.smeReady ?? "—"}</strong>
-            <span>SME-ready</span>
-          </div>
-          <div className="readiness-stat">
-            <strong>{orchestrator?.flowCounts?.awaitingApproval ?? "—"}</strong>
-            <span>awaiting approval</span>
-          </div>
+      <section className="readiness-strip" aria-label="Execution readiness">
+        <div className="readiness-strip__cell">
+          <strong>{orchestrator?.flowCounts?.executable ?? "—"}</strong>
+          <span>Executable</span>
         </div>
-        <p className="readiness-env">
-          {connected ? "Connected" : "Offline"} to {env}
-          {orchestrator?.agentMode ? ` · ${orchestrator.agentMode === "assisted" ? "Assisted" : "Controlled"} mode` : ""}
-        </p>
+        <div className="readiness-strip__cell">
+          <strong>{orchestrator?.flowCounts?.smeReady ?? "—"}</strong>
+          <span>SME-ready</span>
+        </div>
+        <div className="readiness-strip__cell">
+          <strong>{orchestrator?.flowCounts?.awaitingApproval ?? "—"}</strong>
+          <span>Awaiting approval</span>
+        </div>
+        <div className="readiness-strip__cell">
+          <strong>{env}</strong>
+          <span>{connected ? "Connected" : "Offline"}</span>
+        </div>
       </section>
 
       {activeRun ? (
-        <section className="panel latest-run-card" aria-labelledby="latest-run-heading">
+        <section aria-labelledby="latest-run-heading">
           <h2 id="latest-run-heading" className="section-label">
             Latest run
           </h2>
           <p className="latest-run-card__goal">{activeRun.goal}</p>
-          <div className="latest-run-meta">
-            {insights.flowIds?.[0] ? (
-              <span>
-                Flow <span className="font-mono">{insights.flowIds[0]}</span>
-              </span>
-            ) : null}
-            <span>
-              Run <span className="font-mono">{activeRun.id.slice(0, 8).toUpperCase()}</span>
-            </span>
-            <span className="text-muted">{new Date(activeRun.updatedAt || activeRun.createdAt).toLocaleString()}</span>
+          <div className="timeline-horizontal">
+            {stages.map((stage) => (
+              <div key={stage.label} className={`timeline-step timeline-step--${stage.state}`}>
+                <div className="timeline-step__label">{stage.label}</div>
+                <div className="timeline-step__state">
+                  {stage.state === "done" ? "Complete" : stage.state === "active" ? "In progress" : "Pending"}
+                </div>
+                <p className="text-sm text-muted">{stage.detail}</p>
+                {stage.time ? (
+                  <p className="font-mono text-xs text-muted">{new Date(stage.time).toLocaleString()}</p>
+                ) : null}
+              </div>
+            ))}
           </div>
           <div className="latest-run-footer">
             <StatusBadge status={activeRun.conclusion || activeRun.status} />
             {onViewRun ? (
-              <Button variant="secondary" size="sm" onClick={onViewRun}>
+              <Button variant="secondary" className="btn-outline-dark" size="sm" onClick={onViewRun}>
                 View run
               </Button>
             ) : null}

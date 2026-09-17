@@ -140,12 +140,12 @@ export function LiveRunsView({
   }
 
   return (
-    <div className="view-stack">
+    <div className="view-stack run-console">
       <header className="view-header run-detail-header">
         <div>
           <h1>{run.goal}</h1>
           <p className="view-subtitle font-mono">
-            {insights.flowIds?.[0] || "Flow pending"} · RUN_{run.id.slice(0, 4).toUpperCase()}
+            {insights.flowIds?.[0] || "Flow pending"} · {run.executionMode || "LIVE_DEMO"} · UAT
           </p>
         </div>
         <div className="run-detail-header__status">
@@ -156,58 +156,88 @@ export function LiveRunsView({
 
       {error ? <div className="inline-alert">{error}</div> : null}
 
+      <div className="run-summary-metrics" aria-label="Execution summary">
+        <div className="run-metric">
+          <strong>1</strong>
+          <span>Playwright process</span>
+        </div>
+        <div className="run-metric">
+          <strong>1</strong>
+          <span>Browser</span>
+        </div>
+        <div className="run-metric">
+          <strong>1</strong>
+          <span>Context</span>
+        </div>
+        <div className="run-metric">
+          <strong>1</strong>
+          <span>Login</span>
+        </div>
+        <div className="run-metric">
+          <strong>1</strong>
+          <span>Selected test</span>
+        </div>
+        <div className="run-metric">
+          <strong>{insights.evidence?.length || 0}</strong>
+          <span>Evidence captures</span>
+        </div>
+      </div>
+
       <RunApprovalPanel run={run} onRunUpdated={setRun} />
 
-      <section className="panel timeline-panel" aria-labelledby="timeline-heading">
+      <section aria-labelledby="timeline-heading">
         <h2 id="timeline-heading" className="section-label">
           Execution timeline
         </h2>
-        <ol className="run-timeline run-timeline--horizontal">
+        <div className="timeline-horizontal">
           {stages.map((stage) => (
-            <li key={stage.id} className={`run-timeline__item run-timeline__item--${stage.state}`}>
-              <div className="run-timeline__marker" aria-hidden />
-              <div>
-                <strong>{stage.label}</strong>
-                <p>{stage.detail}</p>
+            <div key={stage.id} className={`timeline-step timeline-step--${stage.state}`}>
+              <div className="timeline-step__label">{stage.label}</div>
+              <div className="timeline-step__state">
+                {stage.state === "done" ? "Complete" : stage.state === "active" ? "In progress" : "Pending"}
               </div>
-            </li>
+              <p className="text-sm text-muted">{stage.detail}</p>
+            </div>
           ))}
-        </ol>
+        </div>
       </section>
 
-      {insights.decision ? (
-        <section className="panel panel--muted" aria-labelledby="decision-panel">
-          <div className="panel-head">
-            <h2 id="decision-panel">Decision diagnostics</h2>
-          </div>
-          <dl className="meta-grid">
-            <div>
-              <dt>Action</dt>
-              <dd className="font-mono">{insights.decision.action || "—"}</dd>
-            </div>
-            <div>
-              <dt>Source</dt>
-              <dd className="font-mono">{insights.decision.source || "—"}</dd>
-            </div>
-            <div>
-              <dt>Confidence</dt>
-              <dd>{insights.decision.confidence != null ? insights.decision.confidence.toFixed(2) : "—"}</dd>
-            </div>
-            <div>
-              <dt>Flow</dt>
-              <dd className="font-mono">{insights.flowIds?.[0] || "—"}</dd>
-            </div>
-            <div>
-              <dt>Iteration</dt>
-              <dd>{insights.decision.iteration ?? "—"}</dd>
-            </div>
-            <div>
-              <dt>Recovery count</dt>
-              <dd>{insights.decision.recoveryCount ?? 0}</dd>
-            </div>
-          </dl>
-          {insights.decision.reason ? <p className="decision-reason">{insights.decision.reason}</p> : null}
-        </section>
+      <section className="panel" aria-labelledby="run-sections">
+        <h2 id="run-sections" className="section-label">
+          Execution details
+        </h2>
+        <p className="text-sm text-muted">
+          Evidence · Diagnostics · Validation — use tabs below for deep inspection.
+        </p>
+      </section>
+
+      {(insights.decision || run.decisionDiagnostics) ? (
+        <details className="panel panel--muted">
+          <summary>Diagnostics (collapsible)</summary>
+          {insights.decision ? (
+            <dl className="meta-grid">
+              <div>
+                <dt>Action</dt>
+                <dd className="font-mono">{insights.decision.action || "—"}</dd>
+              </div>
+              <div>
+                <dt>Source</dt>
+                <dd className="font-mono">{insights.decision.source || "—"}</dd>
+              </div>
+              <div>
+                <dt>Confidence</dt>
+                <dd>{insights.decision.confidence != null ? insights.decision.confidence.toFixed(2) : "—"}</dd>
+              </div>
+              <div>
+                <dt>Flow</dt>
+                <dd className="font-mono">{insights.flowIds?.[0] || "—"}</dd>
+              </div>
+            </dl>
+          ) : null}
+          {run.decisionDiagnostics ? (
+            <pre className="font-mono text-sm">{JSON.stringify(run.decisionDiagnostics, null, 2)}</pre>
+          ) : null}
+        </details>
       ) : null}
 
       <details className="activity-log-panel">

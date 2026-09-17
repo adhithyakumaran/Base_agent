@@ -24,6 +24,7 @@ import { HealingView } from "@/components/views/healing-view";
 import { HistoryView } from "@/components/views/history-view";
 import { LiveRunsView } from "@/components/views/live-runs-view";
 import { RecorderView } from "@/components/views/recorder-view";
+import { AgentChatFab } from "@/components/agent-chat-panel";
 import { useOrchestratorStatus } from "@/lib/use-orchestrator";
 import type { AgentRun } from "@/lib/types";
 
@@ -75,6 +76,8 @@ export function ScoutApp() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeRun, setActiveRun] = useState<AgentRun | null>(null);
+  const [chatFlowId, setChatFlowId] = useState<string | null>(null);
+  const [chatRunId, setChatRunId] = useState<string | null>(null);
   const [notifyChannels] = useState(["email", "whatsapp"]);
   const { status: orchestrator } = useOrchestratorStatus();
 
@@ -122,9 +125,14 @@ export function ScoutApp() {
           />
         );
       case "runs":
-        return <LiveRunsView runId={activeRun?.id} initialRun={activeRun} />;
+        return <LiveRunsView runId={chatRunId || activeRun?.id} initialRun={activeRun} />;
       case "flows":
-        return <FlowsView onRunFlow={(goal) => runAgent(goal, "adhoc")} />;
+        return (
+          <FlowsView
+            initialFlowId={chatFlowId}
+            onRunFlow={(goal) => runAgent(goal, "adhoc")}
+          />
+        );
       case "evidence":
         return <EvidenceView run={activeRun} />;
       case "healing":
@@ -255,6 +263,22 @@ export function ScoutApp() {
           {renderView()}
         </main>
       </div>
+
+      <AgentChatFab
+        onNavigate={({ view, flowId, runId }) => {
+          setView(view);
+          if (flowId) setChatFlowId(flowId);
+          if (runId) {
+            setChatRunId(runId);
+            fetch(`/api/runs/${runId}`)
+              .then((r) => r.json())
+              .then((json) => {
+                if (json.run) setActiveRun(json.run as AgentRun);
+              })
+              .catch(() => undefined);
+          }
+        }}
+      />
     </div>
   );
 }

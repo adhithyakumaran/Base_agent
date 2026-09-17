@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../styles/design-tokens.css";
+@import "../styles/scout-v2.css";
 
 @theme inline {
   --font-sans: var(--font-body);
