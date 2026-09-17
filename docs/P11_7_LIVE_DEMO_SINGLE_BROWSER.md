@@ -99,3 +99,9 @@ Record `state.metadata.live_diagnostics` and `reports/live-events/{run_id}.jsonl
 - Live collapse applies when **all** commands are `npm run test:flow:positive|negative -- BF-*`; sanity/regression live runs still use per-command subprocesses.
 - CDP attach requires DevToolsActivePort in the profile directory; if Chrome crashed without updating `session.json`, operator may need Close Browser or manual cleanup.
 - Separate ScoutAI runs use **separate** profile dirs (`reports/browser-profiles/{run_id}`); two visible windows from **two concurrent runs** are expected until each is closed.
+
+## P11.7.1 — liveContext setup timeout (Windows)
+
+**Root cause:** The worker `liveContext` fixture used a **30s setup budget** for both `launchPersistentContext()` **and** full `ensureAuthenticated()` (home + login navigations up to 60s each). Playwright reported `exceeded during setup`; orchestrator mis-labeled any `liveContext` timeout as teardown.
+
+**Fix:** Split fixtures — `liveContext` (launch/attach only, 30s) + `liveSession` (single run-scoped login, test timeout). Fast LIVE login path (`live-run-scoped-auth.ts`), bounded CDP attach (8s), `LIVE_FIXTURE:*` stderr markers, accurate `live_context_fixture_setup_timeout` vs teardown classification.

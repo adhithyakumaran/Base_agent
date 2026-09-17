@@ -1,5 +1,7 @@
 import { test, expect } from '../../src/fixtures/test-base';
 import { appPath } from '../../src/core/app-url';
+import { emitParamTrace } from '../../src/core/param-trace';
+import { getSkuParam } from '../../src/core/run-params';
 
 test.describe('BF-BEST-DEAL-008 Best Deal @BF-BEST-DEAL-008 @regression @product-browse', () => {
   test('TC-BF-BEST-DEAL-008-P01 product discount page loads @sanity', async ({ page }) => {
@@ -33,8 +35,33 @@ test.describe('BF-PRODUCT-003 Search Product @BF-PRODUCT-003 @regression @produc
   test('TC-BF-PRODUCT-003-P01 direct product search page @sanity @positive', async ({
     authenticatedPage,
     productSearchPage,
+    page,
   }) => {
+    const requestSku = getSkuParam();
+    emitParamTrace({
+      request_sku: requestSku,
+      validated_sku: requestSku,
+      suite_parameter: requestSku,
+      test_parameter: requestSku,
+    });
+
     await authenticatedPage.openItemSearch();
     await productSearchPage.expectLoaded();
+
+    if (requestSku) {
+      await productSearchPage.searchItemCode(requestSku);
+      await productSearchPage.expectResultRegion();
+      const input = page.locator('#P6_SKU, input[name="P6_SKU"]').first();
+      await expect(input).toHaveValue(requestSku);
+      emitParamTrace({ result_url: page.url() });
+      return;
+    }
+
+    const fallback = process.env.EA_VALID_ITEM_CODE;
+    if (fallback) {
+      await productSearchPage.searchItemCode(fallback);
+      await productSearchPage.expectResultRegion();
+      return;
+    }
   });
 });

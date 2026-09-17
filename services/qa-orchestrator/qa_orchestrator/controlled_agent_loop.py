@@ -178,6 +178,8 @@ class ControlledAgentLoop:
                     meta = obs.meta or {}
                     if meta.get("live_diagnostics"):
                         state.metadata["live_diagnostics"] = meta["live_diagnostics"]
+                    if meta.get("param_trace"):
+                        state.metadata["param_trace"] = meta["param_trace"]
                     if meta.get("command"):
                         state.metadata.setdefault("executed_commands", []).append(meta.get("command"))
             state.current_flow = state.suite_plan.flow_ids[0] if state.suite_plan.flow_ids else state.current_flow

@@ -73,6 +73,32 @@ def classify_playwright_output(stdout: str, stderr: str, returncode: int) -> tup
     return "UNKNOWN", warnings
 
 
+_PARAM_TRACE_RE = re.compile(r"^PARAM_TRACE:([a-z_]+)=(.*)$", re.MULTILINE)
+
+
+def parse_param_trace_output(stdout: str, stderr: str) -> dict[str, str]:
+    combined = (stdout or "") + (stderr or "")
+    trace: dict[str, str] = {}
+    for match in _PARAM_TRACE_RE.finditer(combined):
+        trace[match.group(1)] = match.group(2).strip()
+    return trace
+
+
+def seed_param_trace_from_params(params: dict[str, Any]) -> dict[str, str]:
+    try:
+        validated = validate_run_params(params)
+    except ValueError:
+        return {}
+    sku = validated.get("sku")
+    if not sku:
+        return {}
+    return {
+        "request_sku": sku,
+        "validated_sku": sku,
+        "suite_parameter": sku,
+    }
+
+
 @dataclass
 class PlaywrightRunnerConfig:
     automation_dir: Path = field(default_factory=lambda: Path("automation"))
@@ -415,6 +441,10 @@ class PlaywrightRunner:
             )
             meta["execution_status"] = exec_status
             meta["infrastructure_warnings"] = infra_warnings
+            param_trace = seed_param_trace_from_params(params)
+            param_trace.update(parse_param_trace_output(proc.stdout or "", proc.stderr or ""))
+            if param_trace:
+                meta["param_trace"] = param_trace
             if exec_status == "PASS_WITH_WARNING":
                 ok = True
             if live_cfg and live_cfg.is_live and self._run_id:
