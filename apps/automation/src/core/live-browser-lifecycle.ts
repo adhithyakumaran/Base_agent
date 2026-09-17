@@ -37,6 +37,16 @@ function atomicWriteJson(filePath: string, payload: Record<string, unknown>): vo
   fs.renameSync(tmp, filePath);
 }
 
+export function readSessionMetaFromDisk(dir: string): Record<string, unknown> {
+  const metaPath = sessionMetaPath(dir);
+  if (!fs.existsSync(metaPath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(metaPath, 'utf8')) as Record<string, unknown>;
+  } catch {
+    return {};
+  }
+}
+
 export function writeSessionMeta(partial: Record<string, unknown>): void {
   const dir = profileDir();
   if (!dir) return;

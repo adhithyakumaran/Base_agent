@@ -29,4 +29,9 @@ test.describe('live browser lifecycle', () => {
     const keeper = path.resolve(__dirname, '../../scripts/live-browser-keeper.mjs');
     expect(fs.existsSync(keeper)).toBeTruthy();
   });
+
+  test('live batch runner script exists for collapsed LIVE_DEMO commands', async () => {
+    const batch = path.resolve(__dirname, '../../scripts/run-live-playwright.mjs');
+    expect(fs.existsSync(batch)).toBeTruthy();
+  });
 });

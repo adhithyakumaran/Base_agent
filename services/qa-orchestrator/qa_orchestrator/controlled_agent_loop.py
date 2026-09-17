@@ -170,6 +170,16 @@ class ControlledAgentLoop:
                 run_id=state.run_id,
                 skip_execution=req.skip_execution,
             )
+            if state.suite_plan:
+                state.metadata["suite_plan_commands"] = list(state.suite_plan.commands or [])
+                state.metadata["selected_flow_ids"] = list(state.suite_plan.flow_ids or [])
+            if state.execution and state.execution.observations:
+                for obs in state.execution.observations:
+                    meta = obs.meta or {}
+                    if meta.get("live_diagnostics"):
+                        state.metadata["live_diagnostics"] = meta["live_diagnostics"]
+                    if meta.get("command"):
+                        state.metadata.setdefault("executed_commands", []).append(meta.get("command"))
             state.current_flow = state.suite_plan.flow_ids[0] if state.suite_plan.flow_ids else state.current_flow
             state.step_count += max(1, len(state.suite_plan.commands))
             return self._observe_verify(state, req)
