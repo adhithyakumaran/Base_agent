@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-HOME-010-C01
 flow_name: Home Page Utility Components
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-HOME-010-C01-001
   title: Home Page Utility Components — primary business path

@@ -24,6 +24,7 @@ from qa_orchestrator.qa_report.summary import (
     build_final_result,
     needs_review_detail_from_diagnostics,
 )
+from qa_orchestrator.playwright_runner import classify_playwright_output
 
 
 def _utc_now() -> str:
@@ -202,6 +203,23 @@ def build_qa_report(
 
     exit_code = 0 if execution.get("ok") else 1
 
+    playwright_meta: dict[str, Any] = {}
+    for obs in execution.get("observations") or []:
+        if isinstance(obs.get("meta"), dict):
+            playwright_meta = obs["meta"]
+    exec_status = playwright_meta.get("execution_status")
+    infra_warnings = list(playwright_meta.get("infrastructure_warnings") or [])
+    combined_tail = (playwright_meta.get("stdout_tail") or "") + (playwright_meta.get("stderr_tail") or "")
+    if not exec_status and combined_tail:
+        exec_status, inferred = classify_playwright_output(
+            playwright_meta.get("stdout_tail") or "",
+            playwright_meta.get("stderr_tail") or "",
+            exit_code,
+        )
+        for w in inferred:
+            if w not in infra_warnings:
+                infra_warnings.append(w)
+
     validation_block = ReportValidation(
         phase=validation.get("phase"),
         execution_gate_summary=gate_lines,
@@ -232,6 +250,7 @@ def build_qa_report(
         start_time=str(console_run.get("createdAt") or snapshot_state.get("started_at") or ""),
         end_time=str(console_run.get("updatedAt") or snapshot_state.get("updated_at") or ""),
         overall_result=conclusion,
+        business_validation_status=conclusion,
         planning=ReportPlanning(
             intent_execution_mode=intent.get("execution_mode"),
             intent_capability=intent.get("capability"),
@@ -250,6 +269,8 @@ def build_qa_report(
             exit_code=exit_code,
             errors=[e for e in errors if e],
             elapsed_ms=execution.get("elapsed_ms"),
+            execution_status=str(exec_status) if exec_status else None,
+            infrastructure_warnings=infra_warnings,
         ),
         evidence=ReportEvidence(screenshots=_collect_evidence_from_local(local, run_id, repo_root)),
         validation=validation_block,

@@ -39,11 +39,17 @@ def main() -> None:
     )
     html = render_html_report(report, repo_root=repo_root)
 
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
     if args.format == "json":
-        sys.stdout.write(json.dumps(report.model_dump(), indent=2))
+        sys.stdout.buffer.write(json.dumps(report.model_dump(), indent=2, ensure_ascii=False).encode("utf-8"))
         return
     if args.format == "html":
-        sys.stdout.write(html)
+        sys.stdout.buffer.write(html.encode("utf-8"))
         return
     if args.format == "pdf":
         pdf = render_pdf_bytes(html, base_url=repo_root)

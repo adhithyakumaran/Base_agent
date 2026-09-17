@@ -15,7 +15,7 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 2 : 1,
+  workers: process.env.QA_LIVE_BROWSER === 'true' ? 1 : process.env.CI ? 2 : 1,
   timeout: 120_000,
   expect: { timeout: 15_000 },
   reporter: [
@@ -25,7 +25,8 @@ export default defineConfig({
     ['junit', { outputFile: 'reports/junit.xml' }],
   ],
   outputDir: 'reports/test-results',
-  globalSetup: require.resolve('./global-setup'),
+  globalSetup:
+    process.env.EA_SKIP_GLOBAL_SETUP === 'true' ? undefined : require.resolve('./global-setup'),
   use: {
     baseURL,
     storageState: process.env.EA_USER_USERNAME ? '.auth/user.json' : undefined,

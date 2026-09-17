@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-RIVAAH-005-04
 flow_name: Wedding Experts
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-RIVAAH-005-04-001
   title: Wedding Experts — primary business path

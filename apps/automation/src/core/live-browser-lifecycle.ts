@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { spawn } from 'child_process';
 import type { BrowserContext } from '@playwright/test';
 import { appendSequencedEvent } from './live-event-sequence';
 
@@ -150,4 +151,32 @@ export async function watchCloseSignalWhileOpen(context: BrowserContext): Promis
     }
     await new Promise((r) => setTimeout(r, pollMs));
   }
+}
+
+/** Start detached process to honor close.signal after Playwright worker exits (QA_KEEP_BROWSER_OPEN). */
+export function spawnKeepOpenKeeper(): void {
+  const dir = profileDir();
+  if (!dir) return;
+  const keeper = path.resolve(__dirname, '../../scripts/live-browser-keeper.mjs');
+  if (!fs.existsSync(keeper)) return;
+  try {
+    const child = spawn(process.execPath, [keeper], {
+      detached: true,
+      stdio: 'ignore',
+      env: { ...process.env },
+    });
+    child.unref();
+    writeSessionMeta({ keeper_spawned: true, keeper_pid: child.pid });
+  } catch {
+    /* keeper is best-effort */
+  }
+}
+
+export function noteKeepOpenBrowserLeftRunning(): void {
+  writeSessionMeta({
+    status: 'ACTIVE',
+    keep_open: true,
+    playwright_worker_exited: new Date().toISOString(),
+  });
+  emitBrowserEvent('KEEP_OPEN', 'OK', 'Browser remains open for inspection.');
 }

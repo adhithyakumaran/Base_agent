@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-PRODUCT-003
 flow_id: BF-PRODUCT-003
 flow_name: Search Product
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-product-003
