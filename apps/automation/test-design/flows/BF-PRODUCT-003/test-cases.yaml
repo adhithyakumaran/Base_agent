@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-PRODUCT-003
 flow_name: Search Product
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-PRODUCT-003-P01
   title: Search Product — primary path succeeds

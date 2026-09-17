@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-BEST-DEAL-008
 flow_name: Best Deal
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-BEST-DEAL-008-P01
   title: Best Deal — primary path succeeds

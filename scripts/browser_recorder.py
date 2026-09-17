@@ -216,11 +216,55 @@ def cmd_record(session_id: str, *, url: str | None = None, max_seconds: int = 12
     return {"ok": True, "session_id": session_id, "events": len(events), "dir": str(sdir.relative_to(ROOT))}
 
 
+def cmd_explore(
+    session_id: str,
+    *,
+    goal: str,
+    url: str | None = None,
+    page: str | None = None,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    from qa_orchestrator.exploration_service import ExplorationService
+    from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
+    from qa_orchestrator.models import ExplorationRequest
+
+    graph = FlowKnowledgeGraph(discovery_root=discovery_root())
+    base = os.environ.get("EA_BASE_URL", "https://dev-ea.titanrts.com/ords/r/tjdcom/ea")
+    target = url or f"{base.rstrip('/')}/home"
+    request = ExplorationRequest(
+        target_url=target,
+        target_page=page or "explore",
+        goal=goal,
+        read_only=True,
+    )
+    service = ExplorationService(graph, dry_run=dry_run)
+    result = service.run(request, exploration_id=session_id)
+    out_path = _session_dir(session_id) / "exploration_result.json"
+    out_path.write_text(json.dumps(result.model_dump(), indent=2), encoding="utf-8")
+    try:
+        rel = str(out_path.relative_to(ROOT))
+    except ValueError:
+        rel = str(out_path)
+    status = {
+        "session_id": session_id,
+        "status": result.status.lower(),
+        "exploration_id": result.exploration_id,
+        "elements": len(result.elements),
+        "evidence": len(result.evidence),
+        "result_file": rel,
+    }
+    (_session_dir(session_id) / "status.json").write_text(json.dumps(status, indent=2), encoding="utf-8")
+    return {"ok": True, "exploration": result.model_dump(), "session": status}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="ScoutAI Browser Recorder")
-    parser.add_argument("command", choices=["status", "configure", "record", "events"])
+    parser.add_argument("command", choices=["status", "configure", "record", "events", "explore"])
     parser.add_argument("--session-id", default="scout-default")
     parser.add_argument("--url", default=None)
+    parser.add_argument("--goal", default="Explore page and capture interactions")
+    parser.add_argument("--page", default=None)
+    parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--max-seconds", type=int, default=30)
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--config-json", default="{}")
@@ -233,6 +277,14 @@ def main() -> None:
         result = cmd_configure(args.session_id, cfg)
     elif args.command == "events":
         result = cmd_events(args.session_id, offset=args.offset)
+    elif args.command == "explore":
+        result = cmd_explore(
+            args.session_id,
+            goal=args.goal,
+            url=args.url,
+            page=args.page,
+            dry_run=args.dry_run,
+        )
     else:
         result = cmd_record(args.session_id, url=args.url, max_seconds=args.max_seconds)
 

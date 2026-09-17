@@ -11,6 +11,7 @@ from qa_orchestrator.models import (
     ExecutionPlan,
     ExecutionResult,
     IntentClassification,
+    PlanningResult,
     SuiteSelectionPlan,
     ValidationFinding,
     ValidationResult,
@@ -36,8 +37,10 @@ class Validator:
         intent: IntentClassification | None = None,
         suite_plan: SuiteSelectionPlan | None = None,
         discovery: DiscoveryResult | None = None,
+        diagnostic_context: dict[str, Any] | None = None,
     ) -> ValidationResult:
         matched_gt = self._matching_gt(goal)
+        ctx = dict(diagnostic_context or {})
         if matched_gt:
             return self._validate_phase_b(goal, plan, execution, matched_gt)
         return self._validate_phase_a(
@@ -49,6 +52,7 @@ class Validator:
             intent=intent,
             suite_plan=suite_plan,
             discovery=discovery,
+            diagnostic_context=ctx,
         )
 
     def _validate_phase_a(
@@ -62,7 +66,10 @@ class Validator:
         intent: IntentClassification | None = None,
         suite_plan: SuiteSelectionPlan | None = None,
         discovery: DiscoveryResult | None = None,
+        diagnostic_context: dict[str, Any] | None = None,
     ) -> ValidationResult:
+        from qa_orchestrator.decision_diagnostics import build_validation_phase_a_diagnostic
+
         findings: list[ValidationFinding] = []
 
         if execution.mode != "skipped" and not execution.ok:
@@ -163,13 +170,27 @@ class Validator:
 
         errors = [f for f in findings if f.severity == "error"]
         if errors:
-            return ValidationResult(
+            result = ValidationResult(
                 phase="A",
                 conclusion="FAIL",
                 reason_code="validator.technical_failure",
                 summary="Technical execution failure before business validation",
                 findings=findings,
             )
+            result.decision_diagnostics = build_validation_phase_a_diagnostic(
+                run_id=diagnostic_context.get("run_id") if diagnostic_context else None,
+                validation=result,
+                goal=goal,
+                execution=execution,
+                intent=intent,
+                suite_plan=suite_plan,
+                planning=diagnostic_context.get("planning") if diagnostic_context else None,
+                state=diagnostic_context.get("state") if diagnostic_context else None,
+                gate=diagnostic_context.get("gate") if diagnostic_context else None,
+                approved_gt_available=False,
+                skip_execution=diagnostic_context.get("skip_execution") if diagnostic_context else None,
+            )
+            return result
 
         mode_label = intent.execution_mode if intent else run_type
         narrative = llm_summary or plan.summary
@@ -177,13 +198,27 @@ class Validator:
             f"Phase A ({mode_label}): {narrative}. "
             "Business outcome requires SME Ground Truth approval for PASS."
         )
-        return ValidationResult(
+        result = ValidationResult(
             phase="A",
             conclusion="NEEDS_REVIEW",
             reason_code="validator.pre_gt_honest",
             summary=summary,
             findings=findings,
         )
+        result.decision_diagnostics = build_validation_phase_a_diagnostic(
+            run_id=diagnostic_context.get("run_id") if diagnostic_context else None,
+            validation=result,
+            goal=goal,
+            execution=execution,
+            intent=intent,
+            suite_plan=suite_plan,
+            planning=diagnostic_context.get("planning") if diagnostic_context else None,
+            state=diagnostic_context.get("state") if diagnostic_context else None,
+            gate=diagnostic_context.get("gate") if diagnostic_context else None,
+            approved_gt_available=False,
+            skip_execution=diagnostic_context.get("skip_execution") if diagnostic_context else None,
+        )
+        return result
 
     def _validate_phase_b(
         self,

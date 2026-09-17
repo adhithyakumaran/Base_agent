@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import { captureStepEvidence, wrapPageWithEvidence } from '../core/evidence';
+import { captureStepEvidence, resolveTestId, wrapPageWithEvidence } from '../core/evidence';
 import { ensureAuthenticated } from './auth';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
@@ -17,6 +17,7 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   page: async ({ page }, use, testInfo) => {
+    process.env.QA_TEST_ID = resolveTestId(testInfo);
     wrapPageWithEvidence(page, testInfo);
     await captureStepEvidence(page, testInfo, 'test-start');
     await use(page);

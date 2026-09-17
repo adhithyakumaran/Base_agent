@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { captureStepEvidence, wrapPageWithEvidence } from '../core/evidence';
 import { emitLiveEvent } from '../core/live-events';
+import { watchCloseSignalWhileOpen, writeSessionMeta } from '../core/live-browser-lifecycle';
 import { loginUrl, normalizeBaseUrl } from '../core/app-url';
 import { performLogin } from '../core/login-setup';
 import { ensureAuthenticated } from './auth';
@@ -34,6 +35,7 @@ async function launchLiveContext(): Promise<BrowserContext> {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    writeSessionMeta({ status: 'BROWSER_UNAVAILABLE', error: message });
     throw new Error(`BROWSER_UNAVAILABLE: ${message}`);
   }
 }
@@ -53,6 +55,7 @@ export const test = base.extend<Fixtures>({
     async ({}, use) => {
       const context = await launchLiveContext();
       await emitLiveEvent({ phase: 'BROWSER', action: 'LAUNCH', status: 'OK' });
+      writeSessionMeta({ status: 'ACTIVE' });
       await use(context);
       if (!keepOpen()) {
         await context.close();
@@ -63,6 +66,7 @@ export const test = base.extend<Fixtures>({
           status: 'OK',
           value_summary: 'Browser remains open for inspection.',
         });
+        await watchCloseSignalWhileOpen(context);
       }
     },
     { scope: 'worker' },

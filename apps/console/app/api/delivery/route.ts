@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { requireApiAuth } from "@/lib/api-auth";
 
 const LOG = path.join(process.cwd(), "data", "delivery.log.jsonl");
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   try {
     const raw = await fs.readFile(LOG, "utf8");
     const entries = raw
