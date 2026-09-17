@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -31,6 +32,32 @@ try:
     from qa_orchestrator.live_browser_registry import LiveBrowserSession, LiveBrowserSessionMeta, register_session
 except ImportError:  # pragma: no cover
     load_live_browser_config = None  # type: ignore
+
+
+def classify_playwright_output(stdout: str, stderr: str, returncode: int) -> tuple[str, list[str]]:
+    """Separate Playwright test outcome from infrastructure warnings (e.g. LIVE_DEMO teardown)."""
+    combined = (stdout or "") + (stderr or "")
+    warnings: list[str] = []
+    passed_m = re.search(r"(\d+)\s+passed", combined)
+    failed_m = re.search(r"(\d+)\s+failed", combined)
+    passed = int(passed_m.group(1)) if passed_m else 0
+    failed = int(failed_m.group(1)) if failed_m else 0
+    teardown_timeout = (
+        "exceeded during teardown" in combined or 'Fixture "liveContext" timeout' in combined
+    )
+    if teardown_timeout:
+        warnings.append("live_context_fixture_teardown_timeout")
+    if "error was not a part of any test" in combined:
+        warnings.append("playwright_out_of_test_error")
+    if passed > 0 and failed == 0 and (teardown_timeout or returncode != 0):
+        return "PASS_WITH_WARNING", warnings
+    if passed > 0 and failed == 0:
+        return "PASS", warnings
+    if failed > 0:
+        return "FAIL", warnings
+    if returncode == 0:
+        return "PASS", warnings
+    return "UNKNOWN", warnings
 
 
 @dataclass
@@ -271,6 +298,13 @@ class PlaywrightRunner:
                 "stderr_tail": proc.stderr[-4000:],
                 "params": params,
             }
+            exec_status, infra_warnings = classify_playwright_output(
+                proc.stdout or "", proc.stderr or "", proc.returncode
+            )
+            meta["execution_status"] = exec_status
+            meta["infrastructure_warnings"] = infra_warnings
+            if exec_status == "PASS_WITH_WARNING":
+                ok = True
             if live_cfg and live_cfg.is_live and self._run_id:
                 stderr = proc.stderr or ""
                 stdout = proc.stdout or ""

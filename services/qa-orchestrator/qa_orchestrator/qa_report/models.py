@@ -31,6 +31,8 @@ class ReportExecution(BaseModel):
     exit_code: int | None = None
     errors: list[str] = Field(default_factory=list)
     elapsed_ms: int | None = None
+    execution_status: str | None = None
+    infrastructure_warnings: list[str] = Field(default_factory=list)
 
 
 class EvidenceItem(BaseModel):
@@ -117,6 +119,7 @@ class QAReport(BaseModel):
     end_time: str | None = None
     duration_ms: int | None = None
     overall_result: OverallResult = "UNKNOWN"
+    business_validation_status: OverallResult = "UNKNOWN"
     planning: ReportPlanning = Field(default_factory=ReportPlanning)
     execution: ReportExecution = Field(default_factory=ReportExecution)
     evidence: ReportEvidence = Field(default_factory=ReportEvidence)
