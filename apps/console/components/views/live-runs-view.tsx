@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { RunApprovalPanel } from "@/components/run-approval-panel";
+import { RunReportExport } from "@/components/run-report-export";
 import { parseInsights } from "@/lib/parse-run-insights";
 import type { AgentRun } from "@/lib/types";
 
@@ -148,6 +149,7 @@ export function LiveRunsView({
             {insights.flowIds?.[0] || "Flow pending"} · Run {run.id.slice(0, 8).toUpperCase()}
           </p>
         </div>
+        <RunReportExport run={run} />
       </header>
 
       {error ? <div className="inline-alert">{error}</div> : null}

@@ -23,6 +23,7 @@ dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
 browser = ["playwright>=1.40"]
 llm = ["litellm>=1.40,<1.57"]
 retrieval = ["qdrant-client>=1.12"]
+reporting = ["weasyprint>=62.0", "python-docx>=1.1.2"]
 
 [project.scripts]
 base-agent = "base_agent.api:main"
