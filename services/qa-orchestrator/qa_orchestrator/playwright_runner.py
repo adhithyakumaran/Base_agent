@@ -52,14 +52,17 @@ def classify_playwright_output(stdout: str, stderr: str, returncode: int) -> tup
     failed_m = re.search(r"(\d+)\s+failed", combined)
     passed = int(passed_m.group(1)) if passed_m else 0
     failed = int(failed_m.group(1)) if failed_m else 0
-    teardown_timeout = (
-        "exceeded during teardown" in combined or 'Fixture "liveContext" timeout' in combined
-    )
-    if teardown_timeout:
+    teardown_timeout = "exceeded during teardown" in combined and 'Fixture "liveContext" timeout' in combined
+    setup_timeout = "exceeded during setup" in combined and 'Fixture "liveContext" timeout' in combined
+    if setup_timeout:
+        warnings.append("live_context_fixture_setup_timeout")
+    elif teardown_timeout:
         warnings.append("live_context_fixture_teardown_timeout")
+    elif 'Fixture "liveContext" timeout' in combined:
+        warnings.append("live_context_fixture_timeout")
     if "error was not a part of any test" in combined:
         warnings.append("playwright_out_of_test_error")
-    if passed > 0 and failed == 0 and (teardown_timeout or returncode != 0):
+    if passed > 0 and failed == 0 and (teardown_timeout or setup_timeout or returncode != 0):
         return "PASS_WITH_WARNING", warnings
     if passed > 0 and failed == 0:
         return "PASS", warnings

@@ -93,6 +93,19 @@ def test_same_run_profile_allows_cdp_reuse_hint(tmp_path: Path):
     assert hints.get("reuse_strategy") == "cdp_attach"
 
 
+def test_classify_setup_timeout_vs_teardown():
+    setup_out = 'Fixture "liveContext" timeout of 30000ms exceeded during setup.\n'
+    status, warnings = classify_playwright_output("", setup_out, 1)
+    assert status in {"FAIL", "UNKNOWN"}
+    assert "live_context_fixture_setup_timeout" in warnings
+    assert "live_context_fixture_teardown_timeout" not in warnings
+
+    teardown_out = 'Fixture "liveContext" timeout of 120000ms exceeded during teardown.\n'
+    status2, warnings2 = classify_playwright_output("1 passed\n", teardown_out, 1)
+    assert "live_context_fixture_teardown_timeout" in warnings2
+    assert "live_context_fixture_setup_timeout" not in warnings2
+
+
 def test_classify_pass_without_teardown_timeout():
     stdout = "Running 1 test using 1 worker\n  1 passed (10s)\n"
     status, warnings = classify_playwright_output(stdout, "", 0)
