@@ -5,15 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { greetingForHour, parseInsights } from "@/lib/parse-run-insights";
+import { parseInsights } from "@/lib/parse-run-insights";
 import type { OrchestratorStatus } from "@/lib/use-orchestrator";
 import type { AgentRun } from "@/lib/types";
-
-const SUGGESTIONS = [
-  "Check login",
-  "Search SKU ABC123",
-  "Run morning sanity",
-];
 
 export function AskAgentView({
   orchestrator,
@@ -23,6 +17,7 @@ export function AskAgentView({
   setPrompt,
   onRun,
   activeRun,
+  onViewRun,
 }: {
   orchestrator: OrchestratorStatus | null;
   busy: boolean;
@@ -31,34 +26,20 @@ export function AskAgentView({
   setPrompt: (value: string) => void;
   onRun: (goal: string, type: "adhoc" | "sanity") => void;
   activeRun: AgentRun | null;
+  onViewRun?: () => void;
 }) {
   const insights = parseInsights(activeRun);
+  const env = orchestrator?.environment || "UAT";
+  const connected = orchestrator?.connected;
 
   return (
-    <div className="view-stack">
-      <header className="view-header">
-        <div>
-          <p className="view-kicker">{greetingForHour()}</p>
-          <h1>What should ScoutAI test?</h1>
-          <p className="view-subtitle">
-            Controlled QA execution with approved business flows, evidence-backed validation, and human
-            approval when required.
-          </p>
-        </div>
+    <div className="view-stack ask-page">
+      <header className="ask-hero">
+        <h1>Test your application with ScoutAI.</h1>
+        <p className="view-subtitle">Run approved QA flows, inspect evidence, and verify results.</p>
       </header>
 
-      <section className="panel panel--raised command-panel" aria-labelledby="command-label">
-        <div className="system-strip" role="status" aria-live="polite">
-          <span>{orchestrator?.environment || "UAT"}</span>
-          <span>{orchestrator?.connected ? "Orchestrator connected" : "Orchestrator offline"}</span>
-          <span>{orchestrator?.flowCounts?.total ?? "—"} total flows</span>
-          <span>{orchestrator?.flowCounts?.smeReady ?? "—"} SME-ready</span>
-          <span>{orchestrator?.flowCounts?.executable ?? "—"} executable</span>
-          <span>{orchestrator?.flowCounts?.awaitingApproval ?? "—"} awaiting approval</span>
-          <span>{orchestrator?.executor || "playwright"} executor</span>
-          <span>{orchestrator?.safetyGate || "deterministic"} safety gate</span>
-        </div>
-
+      <section className="ask-command-card" aria-labelledby="command-label">
         <label id="command-label" className="sr-only" htmlFor="scout-command">
           QA request
         </label>
@@ -67,7 +48,7 @@ export function AskAgentView({
             id="scout-command"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Search SKU ABC123, verify login, run morning sanity…"
+            placeholder="Search SKU 552811DUDABA00, verify login, run morning sanity…"
             className="command-input"
             disabled={busy}
             onKeyDown={(e) => {
@@ -87,31 +68,6 @@ export function AskAgentView({
           </Button>
         </div>
 
-        <div className="command-meta">
-          <div>
-            <span className="meta-label">Agent mode</span>
-            <strong>{orchestrator?.agentMode === "assisted" ? "Assisted" : "Controlled"}</strong>
-          </div>
-          <div>
-            <span className="meta-label">Knowledge</span>
-            <strong>
-              {orchestrator?.flowCounts?.smeReady ?? "—"} SME-ready · {orchestrator?.flowCounts?.executable ?? "—"} executable
-            </strong>
-          </div>
-          <div>
-            <span className="meta-label">Execution</span>
-            <strong>{orchestrator?.executor || "Playwright"}</strong>
-          </div>
-        </div>
-
-        <div className="suggestion-row" aria-label="Suggested requests">
-          {SUGGESTIONS.map((s) => (
-            <button key={s} type="button" className="chip" onClick={() => setPrompt(s)} disabled={busy}>
-              {s}
-            </button>
-          ))}
-        </div>
-
         <div className="command-actions">
           <Button disabled={busy || !prompt.trim()} onClick={() => onRun(prompt, "adhoc")}>
             Run controlled test
@@ -120,7 +76,7 @@ export function AskAgentView({
             Run sanity suites
           </Button>
         </div>
-        <p className="hint">Press Ctrl+Enter to submit. Reports route to configured delivery channels.</p>
+        <p className="hint">Ctrl+Enter to submit</p>
       </section>
 
       {error ? (
@@ -129,34 +85,58 @@ export function AskAgentView({
         </div>
       ) : null}
 
-      {activeRun ? (
-        <section className="panel">
-          <div className="panel-head">
-            <h2>Latest run</h2>
-            <StatusBadge status={activeRun.conclusion || activeRun.status} />
+      <section className="panel readiness-card" aria-labelledby="readiness-heading">
+        <h2 id="readiness-heading" className="section-label">
+          Run readiness
+        </h2>
+        <div className="readiness-stats">
+          <div className="readiness-stat">
+            <strong>{orchestrator?.flowCounts?.executable ?? "—"}</strong>
+            <span>executable</span>
           </div>
-          <dl className="meta-grid">
-            <div>
-              <dt>Run ID</dt>
-              <dd className="font-mono">{activeRun.id.slice(0, 8).toUpperCase()}</dd>
-            </div>
-            <div>
-              <dt>Goal</dt>
-              <dd>{activeRun.goal}</dd>
-            </div>
+          <div className="readiness-stat">
+            <strong>{orchestrator?.flowCounts?.smeReady ?? "—"}</strong>
+            <span>SME-ready</span>
+          </div>
+          <div className="readiness-stat">
+            <strong>{orchestrator?.flowCounts?.awaitingApproval ?? "—"}</strong>
+            <span>awaiting approval</span>
+          </div>
+        </div>
+        <p className="readiness-env">
+          {connected ? "Connected" : "Offline"} to {env}
+          {orchestrator?.agentMode ? ` · ${orchestrator.agentMode === "assisted" ? "Assisted" : "Controlled"} mode` : ""}
+        </p>
+      </section>
+
+      {activeRun ? (
+        <section className="panel latest-run-card" aria-labelledby="latest-run-heading">
+          <h2 id="latest-run-heading" className="section-label">
+            Latest run
+          </h2>
+          <p className="latest-run-card__goal">{activeRun.goal}</p>
+          <div className="latest-run-meta">
             {insights.flowIds?.[0] ? (
-              <div>
-                <dt>Flow</dt>
-                <dd className="font-mono">{insights.flowIds[0]}</dd>
-              </div>
+              <span>
+                Flow <span className="font-mono">{insights.flowIds[0]}</span>
+              </span>
             ) : null}
-          </dl>
+            <span>
+              Run <span className="font-mono">{activeRun.id.slice(0, 8).toUpperCase()}</span>
+            </span>
+            <span className="text-muted">{new Date(activeRun.updatedAt || activeRun.createdAt).toLocaleString()}</span>
+          </div>
+          <div className="latest-run-footer">
+            <StatusBadge status={activeRun.conclusion || activeRun.status} />
+            {onViewRun ? (
+              <Button variant="secondary" size="sm" onClick={onViewRun}>
+                View run
+              </Button>
+            ) : null}
+          </div>
         </section>
       ) : (
-        <EmptyState
-          title="No active run"
-          description="Start your first QA run using the command workspace above."
-        />
+        <EmptyState title="No active run" description="Start a QA run from above." />
       )}
     </div>
   );

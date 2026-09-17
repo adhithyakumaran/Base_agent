@@ -134,30 +134,35 @@ export function LiveRunsView({
     return (
       <EmptyState
         title="No runs yet"
-        description="Start your first QA run from Ask Agent to monitor execution here."
+        description="Start a QA run from Ask Agent to monitor execution here."
       />
     );
   }
 
   return (
     <div className="view-stack">
-      <header className="view-header">
+      <header className="view-header run-detail-header">
         <div>
-          <StatusBadge status={runStatusBadge(run)} />
           <h1>{run.goal}</h1>
           <p className="view-subtitle font-mono">
-            {insights.flowIds?.[0] || "Flow pending"} · Run {run.id.slice(0, 8).toUpperCase()}
+            {insights.flowIds?.[0] || "Flow pending"} · RUN_{run.id.slice(0, 4).toUpperCase()}
           </p>
         </div>
-        <RunReportExport run={run} />
+        <div className="run-detail-header__status">
+          <StatusBadge status={runStatusBadge(run)} />
+          <RunReportExport run={run} />
+        </div>
       </header>
 
       {error ? <div className="inline-alert">{error}</div> : null}
 
       <RunApprovalPanel run={run} onRunUpdated={setRun} />
 
-      <section className="panel timeline-panel" aria-label="Execution timeline">
-        <ol className="run-timeline">
+      <section className="panel timeline-panel" aria-labelledby="timeline-heading">
+        <h2 id="timeline-heading" className="section-label">
+          Execution timeline
+        </h2>
+        <ol className="run-timeline run-timeline--horizontal">
           {stages.map((stage) => (
             <li key={stage.id} className={`run-timeline__item run-timeline__item--${stage.state}`}>
               <div className="run-timeline__marker" aria-hidden />
@@ -171,9 +176,9 @@ export function LiveRunsView({
       </section>
 
       {insights.decision ? (
-        <section className="panel" aria-labelledby="decision-panel">
+        <section className="panel panel--muted" aria-labelledby="decision-panel">
           <div className="panel-head">
-            <h2 id="decision-panel">Decision</h2>
+            <h2 id="decision-panel">Decision diagnostics</h2>
           </div>
           <dl className="meta-grid">
             <div>
@@ -205,10 +210,8 @@ export function LiveRunsView({
         </section>
       ) : null}
 
-      <section className="panel">
-        <div className="panel-head">
-          <h2>Activity log</h2>
-        </div>
+      <details className="activity-log-panel">
+        <summary>Activity log ({run.traces.length} events)</summary>
         <ul className="activity-log">
           {run.traces.slice(-12).map((trace) => (
             <li key={trace.id}>
@@ -218,7 +221,7 @@ export function LiveRunsView({
             </li>
           ))}
         </ul>
-      </section>
+      </details>
     </div>
   );
 }

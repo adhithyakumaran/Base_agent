@@ -15,10 +15,7 @@ export function EvidenceView({ run }: { run: AgentRun | null }) {
 
   if (!run) {
     return (
-      <EmptyState
-        title="No evidence selected"
-        description="Run a QA test to capture screenshots, DOM snapshots, and execution artifacts."
-      />
+      <EmptyState title="No evidence selected" description="Run a QA test to capture screenshots and execution artifacts." />
     );
   }
 
@@ -26,9 +23,16 @@ export function EvidenceView({ run }: { run: AgentRun | null }) {
     <div className="view-stack evidence-layout">
       <header className="view-header">
         <div>
-          <h1>Evidence workspace</h1>
+          <h1>Evidence</h1>
           <p className="view-subtitle">
-            Run {run.id.slice(0, 8).toUpperCase()} → {insights.flowIds?.[0] || "Flow"} → Evidence
+            {evidence.length} capture{evidence.length === 1 ? "" : "s"} · Run{" "}
+            <span className="font-mono">{run.id.slice(0, 8).toUpperCase()}</span>
+            {insights.flowIds?.[0] ? (
+              <>
+                {" "}
+                · <span className="font-mono">{insights.flowIds[0]}</span>
+              </>
+            ) : null}
           </p>
         </div>
       </header>
@@ -48,43 +52,50 @@ export function EvidenceView({ run }: { run: AgentRun | null }) {
         ))}
       </div>
 
-      <div className="evidence-split">
-        <section className="panel evidence-list" aria-label="Evidence items">
-          {tab === "Screenshots" && evidence.length ? (
-            <ul className="evidence-items">
-              {evidence.map((ev) => (
-                <li key={ev.path}>
-                  <button
-                    type="button"
-                    className={selectedPath === ev.path ? "evidence-item evidence-item--active" : "evidence-item"}
-                    onClick={() => setSelectedPath(ev.path)}
-                  >
-                    <span className="font-mono">{ev.label || ev.path.split("/").pop()}</span>
-                    <span className="text-muted">{ev.dom_path || "screenshot"}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <EmptyState
-              title={`No ${tab.toLowerCase()} artifacts`}
-              description="Evidence for this category will appear when captured during execution."
-            />
-          )}
-        </section>
+      {tab === "Screenshots" && evidence.length ? (
+        <>
+          <div className="evidence-grid" role="list">
+            {evidence.map((ev) => {
+              const active = selectedPath === ev.path;
+              return (
+                <button
+                  key={ev.path}
+                  type="button"
+                  role="listitem"
+                  className={active ? "evidence-card evidence-card--active" : "evidence-card"}
+                  onClick={() => setSelectedPath(ev.path)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/api/evidence?path=${encodeURIComponent(ev.path)}`} alt={ev.label || "Screenshot"} />
+                  <div className="evidence-card__body">
+                    <span>{ev.label || ev.path.split("/").pop()}</span>
+                    <span className="font-mono">{ev.dom_path || "screenshot"}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-        <section className="panel evidence-preview" aria-label="Evidence preview">
-          {selectedPath ? (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/evidence?path=${encodeURIComponent(selectedPath)}`} alt="Evidence preview" />
-              <pre className="font-mono">{selectedPath}</pre>
-            </>
-          ) : (
-            <EmptyState title="Select evidence" description="Choose an artifact from the list to preview it." />
-          )}
+          <section className="panel evidence-preview" aria-label="Evidence preview">
+            {selectedPath ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/api/evidence?path=${encodeURIComponent(selectedPath)}`} alt="Evidence preview" />
+                <pre className="font-mono text-muted">{selectedPath}</pre>
+              </>
+            ) : (
+              <EmptyState title="Select a capture" description="Choose a screenshot to inspect it in full size." />
+            )}
+          </section>
+        </>
+      ) : (
+        <section className="panel">
+          <EmptyState
+            title={`No ${tab.toLowerCase()} artifacts`}
+            description="Evidence for this category will appear when captured during execution."
+          />
         </section>
-      </div>
+      )}
     </div>
   );
 }

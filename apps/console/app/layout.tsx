@@ -1,28 +1,34 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const body = Plus_Jakarta_Sans({
+const body = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-body-fallback",
+});
+
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display-fallback",
 });
 
 const mono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-mono",
+  variable: "--font-mono-fallback",
 });
 
 export const metadata: Metadata = {
   title: "ScoutAI · Enterprise QA Console",
-  description:
-    "Enterprise QA control center — controlled execution, approved business flows, evidence-backed validation.",
+  description: "Run approved QA flows, inspect evidence, and verify results.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${body.variable} ${mono.variable} antialiased`}>{children}</body>
+      <body className={`${body.variable} ${display.variable} ${mono.variable} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

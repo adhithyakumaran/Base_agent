@@ -10,7 +10,6 @@ import {
   Menu,
   Radio,
   Settings2,
-  Shield,
   Stethoscope,
   Video,
   Workflow,
@@ -25,7 +24,6 @@ import { HealingView } from "@/components/views/healing-view";
 import { HistoryView } from "@/components/views/history-view";
 import { LiveRunsView } from "@/components/views/live-runs-view";
 import { RecorderView } from "@/components/views/recorder-view";
-import { StatusBadge } from "@/components/ui/status-badge";
 import { useOrchestratorStatus } from "@/lib/use-orchestrator";
 import type { AgentRun } from "@/lib/types";
 
@@ -120,6 +118,7 @@ export function ScoutApp() {
             setPrompt={setPrompt}
             onRun={runAgent}
             activeRun={activeRun}
+            onViewRun={() => setView("runs")}
           />
         );
       case "runs":
@@ -196,6 +195,11 @@ export function ScoutApp() {
             </div>
           ))}
         </nav>
+
+        <div className="app-sidebar__foot">
+          <span className="app-sidebar__foot-label">Environment</span>
+          <span className="app-sidebar__foot-value">{orchestrator?.environment || "UAT"}</span>
+        </div>
       </aside>
 
       <div className="app-main">
@@ -210,25 +214,40 @@ export function ScoutApp() {
           </button>
 
           <div className="topbar-title">
-            <Shield size={16} aria-hidden />
             <span>ScoutAI</span>
             <span className="topbar-env">{orchestrator?.environment || "UAT"}</span>
           </div>
 
           <div className="topbar-status" role="status" aria-live="polite">
             <span className={orchestrator?.connected ? "dot dot--ok" : "dot dot--bad"} aria-hidden />
-            <span>{orchestrator?.connected ? "Orchestrator connected" : "Orchestrator offline"}</span>
+            <span>{orchestrator?.connected ? "Connected" : "Offline"}</span>
+            <span className="topbar-status__sep" aria-hidden>
+              ·
+            </span>
             <span>{orchestrator?.flowCounts?.executable ?? "—"} executable</span>
+            <span className="topbar-status__sep" aria-hidden>
+              ·
+            </span>
             <span>{orchestrator?.flowCounts?.smeReady ?? "—"} SME-ready</span>
-          </div>
-
-          <div className="topbar-actions">
             {orchestrator?.pendingApprovals ? (
-              <button type="button" className="topbar-chip" onClick={() => setView("approvals")}>
-                Approvals {orchestrator.pendingApprovals}
-              </button>
-            ) : null}
-            <StatusBadge status={orchestrator?.connected ? "APPROVED" : "BLOCKED"} compact />
+              <>
+                <span className="topbar-status__sep" aria-hidden>
+                  ·
+                </span>
+                <button type="button" className="topbar-link" onClick={() => setView("approvals")}>
+                  {orchestrator.pendingApprovals} pending approval
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="topbar-status__sep" aria-hidden>
+                  ·
+                </span>
+                <span className="topbar-status__approved">
+                  {orchestrator?.connected ? "Approved" : "Unavailable"}
+                </span>
+              </>
+            )}
           </div>
         </header>
 

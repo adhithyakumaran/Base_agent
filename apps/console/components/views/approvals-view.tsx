@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable, StatusCell } from "@/components/ui/data-table";
 import { ErrorState } from "@/components/ui/empty-state";
-import { StatusBadge } from "@/components/ui/status-badge";
 
 type ApprovalArtifact = {
   flowId: string;
@@ -104,7 +103,6 @@ export function ApprovalsView() {
           <h1>Approvals</h1>
           <p className="view-subtitle">{pendingCount} pending SME decisions</p>
         </div>
-        <StatusBadge status="PENDING" />
       </header>
 
       <section className="panel">
