@@ -1,0 +1,24 @@
+{
+  "schema": "healing_locator_overlay_v1",
+  "overlay_version": "20260916T203830",
+  "overlay_hash": "58c8551a5d6a25dfb1dbf89f8d5b1aa3966a72180e9d77372246a768fe4fc60c",
+  "entries": [
+    {
+      "healing_id": "heal-resume-test",
+      "flow_id": "BF-LOGIN-001",
+      "test_id": "TC-BF-LOGIN-001-P01",
+      "step_id": "",
+      "locator_label": "login button",
+      "status": "APPROVED",
+      "revoked": false,
+      "selectors": [
+        "button[aria-label=\"Login\"]",
+        "button[name=\"login\"]"
+      ],
+      "old_locator": "page.getByTestId('login')",
+      "new_locator": "page.getByRole('button', { name: 'Login' })",
+      "approved_at": "2026-09-16T20:38:30.731404+00:00",
+      "entry_version": 1
+    }
+  ]
+}

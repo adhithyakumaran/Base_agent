@@ -1,0 +1,125 @@
+/* ScoutAI design tokens — P11.5 light enterprise SaaS */
+
+:root {
+  color-scheme: light;
+
+  /* Primitives */
+  --primitive-white: #ffffff;
+  --primitive-neutral-50: #fafafa;
+  --primitive-neutral-100: #f4f4f5;
+  --primitive-neutral-200: #e4e4e7;
+  --primitive-neutral-300: #d4d4d8;
+  --primitive-neutral-400: #a1a1aa;
+  --primitive-neutral-500: #71717a;
+  --primitive-neutral-600: #52525b;
+  --primitive-neutral-700: #3f3f46;
+  --primitive-neutral-800: #27272a;
+  --primitive-neutral-900: #18181b;
+  --primitive-neutral-950: #09090b;
+
+  --primitive-blue-500: #2563eb;
+  --primitive-blue-600: #1d4ed8;
+  --primitive-blue-50: #eff6ff;
+  --primitive-cyan-100: #ecfeff;
+
+  --primitive-success-500: #16a34a;
+  --primitive-warning-500: #d97706;
+  --primitive-error-500: #dc2626;
+
+  /* Semantic aliases (design system) */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-muted: #f4f7fb;
+  --surface-soft: #f4f7fb;
+  --surface-elevated: #ffffff;
+  --text-primary: #0b0f19;
+  --text-secondary: #5b6472;
+  --text-muted: #8a94a6;
+  --text-inverse: var(--primitive-white);
+  --border: var(--primitive-neutral-200);
+  --border-subtle: #ededed;
+  --accent: var(--primitive-blue-500);
+  --accent-soft: var(--primitive-blue-50);
+  --success: var(--primitive-success-500);
+  --warning: var(--primitive-warning-500);
+  --danger: var(--primitive-error-500);
+
+  /* Mapped legacy semantic names */
+  --surface-page: var(--background);
+  --surface-card: var(--surface);
+  --surface-raised: var(--surface-muted);
+  --surface-sidebar: var(--surface);
+  --surface-topbar: var(--surface);
+
+  --border-default: var(--border);
+  --border-strong: var(--primitive-neutral-300);
+
+  --action-primary: #090b0f;
+  --action-primary-hover: #1a1f2e;
+  --action-danger: var(--danger);
+  --action-danger-hover: #b91c1c;
+
+  --feedback-success: var(--success);
+  --feedback-warning: var(--warning);
+  --feedback-error: var(--danger);
+  --feedback-info: var(--accent);
+
+  --gradient-accent: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  --gradient-hero: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 6%, white) 0%,
+    var(--surface) 55%
+  );
+
+  --status-pass: #16a34a;
+  --status-pass-bg: #f0fdf4;
+  --status-fail: #dc2626;
+  --status-fail-bg: #fef2f2;
+  --status-blocked: #71717a;
+  --status-blocked-bg: #f4f4f5;
+  --status-pending: #d97706;
+  --status-pending-bg: #fffbeb;
+  --status-running: #2563eb;
+  --status-running-bg: #eff6ff;
+  --status-recovering: #7c3aed;
+  --status-recovering-bg: #f5f3ff;
+  --status-needs-review: #d97706;
+  --status-needs-review-bg: #fffbeb;
+  --status-approved: #16a34a;
+  --status-approved-bg: #f0fdf4;
+  --status-rejected: #dc2626;
+  --status-rejected-bg: #fef2f2;
+  --status-stale: #71717a;
+  --status-stale-bg: #f4f4f5;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.04);
+  --shadow-md: 0 8px 24px rgba(9, 9, 11, 0.06);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  --font-body: var(--font-body-fallback, "Inter"), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-fallback, "Space Grotesk"), var(--font-body);
+  --font-mono: var(--font-mono-fallback, "IBM Plex Mono"), ui-monospace, monospace;
+
+  --motion-fast: 120ms ease;
+  --motion-base: 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+  }
+}

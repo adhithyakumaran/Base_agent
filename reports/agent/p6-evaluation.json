@@ -1,0 +1,311 @@
+{
+  "scenarios": [
+    {
+      "id": "check_login",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "invalid_login",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "search_sku",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "approved_flow_execution",
+      "passed": true,
+      "expected_terminal_states": [
+        "FAILED",
+        "COMPLETED",
+        "NEEDS_REVIEW"
+      ],
+      "actual_status": "FAILED",
+      "expected_outcome": "FAIL",
+      "actual_outcome": "FAIL",
+      "decisions": [
+        "PLAN",
+        "RUN_EXISTING_TEST"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 2
+    },
+    {
+      "id": "pending_approval",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "blocked_flow",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "exploration_required",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "READY",
+        "NEEDS_REVIEW"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "generation_requires_approval",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "NEEDS_REVIEW"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "locator_healing",
+      "passed": true,
+      "expected_terminal_states": [
+        "FAILED",
+        "NEEDS_REVIEW",
+        "COMPLETED"
+      ],
+      "actual_status": "FAILED",
+      "expected_outcome": "FAIL",
+      "actual_outcome": "FAIL",
+      "decisions": [
+        "PLAN",
+        "RUN_EXISTING_TEST"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 2
+    },
+    {
+      "id": "application_no_healing",
+      "passed": true,
+      "expected_terminal_states": [
+        "FAILED",
+        "NEEDS_REVIEW",
+        "COMPLETED"
+      ],
+      "actual_status": "FAILED",
+      "expected_outcome": "FAIL",
+      "actual_outcome": "FAIL",
+      "decisions": [
+        "PLAN",
+        "RUN_EXISTING_TEST"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 2
+    },
+    {
+      "id": "ambiguous_verification",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "NEEDS_REVIEW"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "max_recovery_limit",
+      "passed": true,
+      "expected_terminal_states": [
+        "FAILED",
+        "NEEDS_REVIEW",
+        "COMPLETED"
+      ],
+      "actual_status": "FAILED",
+      "expected_outcome": "FAIL",
+      "actual_outcome": "FAIL",
+      "decisions": [
+        "PLAN",
+        "RUN_EXISTING_TEST"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 2
+    },
+    {
+      "id": "max_iteration_limit",
+      "passed": true,
+      "expected_terminal_states": [
+        "FAILED",
+        "NEEDS_REVIEW",
+        "COMPLETED"
+      ],
+      "actual_status": "FAILED",
+      "expected_outcome": "FAIL",
+      "actual_outcome": "FAIL",
+      "decisions": [
+        "PLAN",
+        "RUN_EXISTING_TEST"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 2
+    },
+    {
+      "id": "qdrant_unavailable",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "embedding_unavailable",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "exact_flow_id",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    },
+    {
+      "id": "unknown_request",
+      "passed": true,
+      "expected_terminal_states": [
+        "WAITING_FOR_APPROVAL",
+        "NEEDS_REVIEW"
+      ],
+      "actual_status": "WAITING_FOR_APPROVAL",
+      "expected_outcome": "WAITING_FOR_APPROVAL",
+      "actual_outcome": "WAITING_FOR_APPROVAL",
+      "decisions": [
+        "PLAN"
+      ],
+      "flow_ok": true,
+      "action_ok": true,
+      "journal_entries": 1
+    }
+  ],
+  "metrics": {
+    "planning_success_rate": 1.0,
+    "execution_success_rate": 1.0,
+    "recovery_success_rate": 0.0,
+    "false_recovery_rate": 0.0,
+    "approval_escalation_rate": 0.7059,
+    "average_iterations": 0.0,
+    "average_recoveries": 0.0,
+    "blocked_rate": 0.0,
+    "needs_review_rate": 0.0,
+    "evidence_completeness": 0.0,
+    "decision_trace_completeness": 1.0
+  },
+  "passed": 17,
+  "total": 17
+}

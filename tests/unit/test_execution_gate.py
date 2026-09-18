@@ -176,12 +176,13 @@ def test_gate_approved_missing_log_is_stale(gate_workspace: tuple[Path, Path]) -
     assert decision.reason_code == "approval.stale"
 
 
-def test_suite_selector_reports_blocked_login_flow() -> None:
+def test_suite_selector_reports_blocked_login_flow(gate_workspace: tuple[Path, Path]) -> None:
     from qa_orchestrator.intent_classifier import IntentClassifier
     from qa_orchestrator.llm_client import PlannerLlmClient
     from qa_orchestrator.suite_selector import SuiteSelector
 
-    graph = FlowKnowledgeGraph(discovery_root="data/discovery-kb")
+    discovery, automation = gate_workspace
+    graph = FlowKnowledgeGraph(discovery_root=str(discovery), automation_dir=str(automation))
     classifier = IntentClassifier(graph, PlannerLlmClient(enabled=False))
     intent = classifier.classify("run positive login")
     plan = SuiteSelector(graph).select(intent)

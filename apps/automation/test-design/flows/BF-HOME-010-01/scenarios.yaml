@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-HOME-010-01
 flow_name: Item Search
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-HOME-010-01-001
   title: Item Search — primary business path

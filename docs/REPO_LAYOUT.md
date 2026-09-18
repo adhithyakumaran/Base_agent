@@ -12,7 +12,7 @@ Base_agent/
 │   ├── console/              ← ScoutAI Next.js UI (was qa-console/)
 │   └── automation/           ← Playwright suites + test-design (was automation/)
 ├── services/
-│   ├── agent-runtime/        ← Base Agent kernel (was src/base_agent/)
+│   ├── agent-runtime/        ← Shared LLM gateway + legacy skill library (not product runtime)
 │   └── qa-orchestrator/      ← Intent → suite → run → report (was src/qa_orchestrator/)
 ├── plugins/
 │   ├── qa_apex/              ← Crawler, APEX skills, rules

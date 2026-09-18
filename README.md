@@ -15,6 +15,13 @@ Deterministic-first agent runtime + **ScoutAI** orchestrator for Oracle APEX End
 
 Open **http://127.0.0.1:43123**
 
+If the console shows **SME-ready flows but 0 executable** (approval audit missing or stale vs `test-cases.yaml`), restore controlled-dev sign-off records:
+
+```bash
+PYTHONPATH=services/qa-orchestrator:services/agent-runtime:. \
+  python3 scripts/approve-sme-ready-flows.py --enable
+```
+
 ### Two terminals (Windows Git Bash)
 
 **Terminal 1 — backend** (repo root `baseagentmain/`):
@@ -49,13 +56,28 @@ npm run test:negative      # negative / edge cases
 
 Credentials: `apps/automation/config/.env`
 
+### P10.1 local security (recommended)
+
+For development, defaults allow loopback-only access without tokens (`SCOUT_ALLOW_INSECURE_LOCAL=true`).
+
+To exercise authenticated mode locally:
+
+```bash
+# .env
+SCOUT_API_TOKEN=dev-console-token
+SCOUT_INTERNAL_API_TOKEN=dev-warm-token
+SCOUT_AUTO_BROWSER_SESSION=true   # sets httpOnly cookie for same-origin console
+```
+
+Warm server refuses public bind unless `SCOUT_ALLOW_EXTERNAL_BIND=true`. Production requires both tokens (`SCOUT_ENV=production`).
+
 ## Enterprise repo map
 
 | Path | Purpose |
 |---|---|
 | `apps/console/` | ScoutAI Next.js UI |
 | `apps/automation/` | Playwright tests + scenarios/cases/suites |
-| `services/agent-runtime/` | Base Agent kernel |
+| `services/agent-runtime/` | Shared LLM gateway + legacy skill library (not product runtime) |
 | `services/qa-orchestrator/` | LLM classify → suite select → run → report |
 | `data/discovery-kb/` | Flow KB YAML, recordings, crawl snapshots |
 | `plugins/qa_apex/` | Crawler + APEX skills |

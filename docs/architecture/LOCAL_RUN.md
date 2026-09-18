@@ -1,51 +1,48 @@
-# Local-first run (priority over Azure/OCI for now)
+# Local-first run (canonical ScoutAI)
 
-## Why QA skills are not “deep” yet
+## Canonical stack
 
-Deep browser QA (click Customer Order, fill LOVs, edit Interactive Grids, assert business totals) is blocked by **inputs**, not by the Base Agent kernel:
+```text
+Console (apps/console) → BFF → scripts/local_agent_server.py → QaOrchestrator → ControlledAgentLoop → Playwright
+```
 
-| Blocker | Effect |
-|---|---|
-| No always-on live UAT session in this env | Skills stay KB/rules depth unless `APEX_*` creds + Playwright crawl are used |
-| SME Ground Truth not approved yet (~1 week) | Agent can map/probe/replay candidates but cannot assert business **PASS/FAIL** |
-| Some Endless Aisle paths still thin in KB (e.g. Customer Order) | Flow replay cannot invent steps it never observed |
+Legacy `python -m base_agent.api` remains for **CI skill smoke only**, not console or production Docker.
 
-What **is** deep locally today: health pack, login readiness, component probes (`P6_SKU`…), flow replay from KB, **mission pack** (runs those together in one tool call).
+## LLM
 
-## LLM model — what we actually use
-
-**Default: no LLM.**  
-`LLM_ENABLED=false`, console model gateway default = `disabled`.
-
-Catalog placeholders (only if you enable the gateway later):
-
-- fast: `gpt-4o-mini`
-- reasoning: `gpt-4o`
-- fallback: `gpt-4o-mini`
-
-Those are **API gateway options**, not an active model. Local demo runs with **0 LLM calls**.
+**Default in docs:** set `LLM_ENABLED=false` for deterministic runs. Enable Groq via `.env` when classifying NL intents.
 
 ## Efficient local run
 
-Terminal 1 — warm agent (keeps runtime in memory):
+**Option A — one script (Git Bash / Linux):**
 
 ```bash
-cd /workspace
-PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+./scripts/start_local_stack.sh
 ```
 
-Terminal 2 — console:
+**Option B — two terminals** (see [WINDOWS_LOCAL_STARTUP.md](../WINDOWS_LOCAL_STARTUP.md)):
+
+Terminal 1:
 
 ```bash
-cd qa-console
+cd /path/to/repo
+set -a && source .env && set +a
+export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+python scripts/local_agent_server.py --host 127.0.0.1 --port 43124
+```
+
+Terminal 2:
+
+```bash
+cd apps/console
 LOCAL_AGENT_URL=http://127.0.0.1:43124 npm run dev
 ```
 
-CLI (no console):
+## CLI (canonical agent)
 
 ```bash
-PYTHONPATH=src:. python3 -m base_agent.api "mission pack" --kb-dir discovery/uat_ea/kb
-PYTHONPATH=src:. python3 -m base_agent.api "health check endless aisle" --kb-dir discovery/uat_ea/kb
+export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+QA_RUNNER=dry_run LLM_ENABLED=false python -m qa_orchestrator.agent_cli --json run "Check login"
 ```
 
-Warm server avoids cold Python process spawn on every console click.
+Warm server avoids cold Python spawn on every console action.

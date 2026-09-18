@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-MANUAL-INVOICE-009
 flow_id: BF-MANUAL-INVOICE-009
 flow_name: Manual Invoice
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-manual-invoice-009

@@ -1,6 +1,7 @@
 import { test, expect } from '../../src/fixtures/test-base';
 import { ProductSearchPage } from '../../src/pages/product-search.page';
 
+/** CI param-injection harness — excluded from flow positive grep via @param-test (P11.7). */
 test.describe('QA_PARAM_SKU parameterized execution @BF-PRODUCT-003 @positive @param-test', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 

@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-PRODUCT-STOCK-VISIBILITY-009
 flow_id: BF-PRODUCT-STOCK-VISIBILITY-009
 flow_name: Product Stock Visibility
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-product-stock-visibility-009

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -29,8 +30,78 @@ try:
     )
     from qa_orchestrator.live_browser_events import get_event_store
     from qa_orchestrator.live_browser_registry import LiveBrowserSession, LiveBrowserSessionMeta, register_session
+    from qa_orchestrator.live_playwright_invoke import (
+        assess_live_profile_before_launch,
+        build_live_selection_payload,
+        empty_live_diagnostics,
+        live_playwright_script_argv,
+        merge_session_diagnostics,
+        parse_running_test_count,
+        should_collapse_live_commands,
+        write_live_selection_file,
+    )
 except ImportError:  # pragma: no cover
     load_live_browser_config = None  # type: ignore
+
+
+def classify_playwright_output(stdout: str, stderr: str, returncode: int) -> tuple[str, list[str]]:
+    """Separate Playwright test outcome from infrastructure warnings (e.g. LIVE_DEMO teardown)."""
+    combined = (stdout or "") + (stderr or "")
+    warnings: list[str] = []
+    passed_m = re.search(r"(\d+)\s+passed", combined)
+    failed_m = re.search(r"(\d+)\s+failed", combined)
+    passed = int(passed_m.group(1)) if passed_m else 0
+    failed = int(failed_m.group(1)) if failed_m else 0
+    teardown_timeout = "exceeded during teardown" in combined and 'Fixture "liveContext" timeout' in combined
+    setup_timeout = "exceeded during setup" in combined and 'Fixture "liveContext" timeout' in combined
+    if setup_timeout:
+        warnings.append("live_context_fixture_setup_timeout")
+    elif teardown_timeout:
+        warnings.append("live_context_fixture_teardown_timeout")
+    elif 'Fixture "liveContext" timeout' in combined:
+        warnings.append("live_context_fixture_timeout")
+    if "error was not a part of any test" in combined:
+        warnings.append("playwright_out_of_test_error")
+    if passed > 0 and failed == 0 and (teardown_timeout or setup_timeout or returncode != 0):
+        return "PASS_WITH_WARNING", warnings
+    if passed > 0 and failed == 0:
+        return "PASS", warnings
+    if failed > 0:
+        return "FAIL", warnings
+    if returncode == 0:
+        return "PASS", warnings
+    return "UNKNOWN", warnings
+
+
+_PARAM_TRACE_RE = re.compile(r"^PARAM_TRACE:([a-z_]+)=(.*)$", re.MULTILINE)
+_PRODUCT_SEARCH_TRACE_RE = re.compile(r"^PRODUCT_SEARCH_TRACE:([^=\n]+)(?:=(.*))?$", re.MULTILINE)
+
+
+def parse_param_trace_output(stdout: str, stderr: str) -> dict[str, str]:
+    combined = (stdout or "") + (stderr or "")
+    trace: dict[str, str] = {}
+    for match in _PARAM_TRACE_RE.finditer(combined):
+        trace[match.group(1)] = match.group(2).strip()
+    for match in _PRODUCT_SEARCH_TRACE_RE.finditer(combined):
+        key = match.group(1).strip()
+        val = (match.group(2) or "true").strip()
+        trace[f"product_search_{key}"] = val
+    return trace
+
+
+def seed_param_trace_from_params(params: dict[str, Any]) -> dict[str, str]:
+    try:
+        validated = validate_run_params(params)
+    except ValueError:
+        return {}
+    sku = validated.get("sku")
+    if not sku:
+        return {}
+    return {
+        "request_sku": sku,
+        "validated_sku": sku,
+        "suite_parameter": sku,
+    }
 
 
 @dataclass
@@ -114,18 +185,56 @@ class PlaywrightRunner:
         observations: list[StepObservation] = []
         overall_ok = True
         error_parts: list[str] = []
+        commands = list(selection.commands or ["npm run test:sanity"])
+        live_diagnostics: dict[str, Any] | None = None
 
-        for i, cmd in enumerate(selection.commands or ["npm run test:sanity"]):
-            obs = self._run_command(
-                cmd,
-                step_index=i,
-                params=selection.params,
-                flow_ids=selection.flow_ids,
+        collapse = (
+            live_cfg
+            and live_cfg.is_live
+            and live_cfg.keep_browser_open
+            and should_collapse_live_commands(
+                is_live=True,
+                keep_open=True,
+                commands=commands,
+            )
+        )
+        if collapse and self._run_id:
+            obs, live_diagnostics = self._run_live_collapsed(
+                selection,
+                commands=commands,
+                live_cfg=live_cfg,
+                step_index=0,
             )
             observations.append(obs)
             if not obs.ok:
                 overall_ok = False
-                error_parts.append(obs.message or f"command failed: {cmd}")
+                error_parts.append(obs.message or "live collapsed run failed")
+        else:
+            process_count = 0
+            for i, cmd in enumerate(commands):
+                obs = self._run_command(
+                    cmd,
+                    step_index=i,
+                    params=selection.params,
+                    flow_ids=selection.flow_ids,
+                    live_cfg=live_cfg,
+                )
+                observations.append(obs)
+                if obs.meta and obs.meta.get("playwright_subprocess"):
+                    process_count += 1
+                if not obs.ok:
+                    overall_ok = False
+                    error_parts.append(obs.message or f"command failed: {cmd}")
+            if live_cfg and live_cfg.is_live and self._run_id:
+                live_diagnostics = empty_live_diagnostics(
+                    run_id=self._run_id,
+                    commands_count=len(commands),
+                )
+                live_diagnostics["playwright_process_count"] = max(process_count, len(commands) if process_count else 0)
+                if observations:
+                    last_meta = observations[-1].meta or {}
+                    if last_meta.get("live_diagnostics"):
+                        live_diagnostics.update(last_meta["live_diagnostics"])
 
         result = ExecutionResult(
             ok=overall_ok,
@@ -134,7 +243,298 @@ class PlaywrightRunner:
             error="; ".join(error_parts) if error_parts else None,
             elapsed_ms=int((time.perf_counter() - t0) * 1000),
         )
+        if live_diagnostics and observations:
+            first_meta = dict(observations[0].meta or {})
+            first_meta["live_diagnostics"] = live_diagnostics
+            o0 = observations[0]
+            observations[0] = StepObservation(
+                step_index=o0.step_index,
+                action=o0.action,
+                ok=o0.ok,
+                message=o0.message,
+                screenshot_path=o0.screenshot_path,
+                url=o0.url,
+                meta=first_meta,
+            )
         return result
+
+    def _run_live_collapsed(
+        self,
+        selection: SuiteSelectionPlan,
+        *,
+        commands: list[str],
+        live_cfg: Any,
+        step_index: int,
+    ) -> tuple[StepObservation, dict[str, Any]]:
+        assert self._run_id
+        diagnostics = empty_live_diagnostics(run_id=self._run_id, commands_count=len(commands))
+        diagnostics["playwright_process_count"] = 1
+        diagnostics["commands_collapsed"] = True
+        diagnostics["collapsed_commands"] = list(commands)
+
+        prep = self._prepare_live_subprocess_env(selection.params, flow_ids=selection.flow_ids, live_cfg=live_cfg)
+        if isinstance(prep, StepObservation):
+            diagnostics["playwright_process_count"] = 0
+            return prep, diagnostics
+
+        env, profile_path = prep
+        stale_err, _hints = assess_live_profile_before_launch(profile_path, self._run_id)
+        if stale_err:
+            return (
+                StepObservation(
+                    step_index=step_index,
+                    action="live_browser",
+                    ok=False,
+                    message=stale_err,
+                    meta={"live_diagnostics": diagnostics},
+                ),
+                diagnostics,
+            )
+
+        cwd = self.config.automation_dir.resolve()
+        payload = build_live_selection_payload(
+            run_id=self._run_id,
+            commands=commands,
+            execution_mode=selection.execution_mode or "",
+            flow_ids=selection.flow_ids,
+            params=selection.params,
+        )
+        selection_path = write_live_selection_file(cwd, self._run_id, payload)
+        env["QA_LIVE_SELECTION_PATH"] = str(selection_path)
+        argv = live_playwright_script_argv(cwd, selection_path)
+        resolved = _resolve_command_argv(argv, env)
+        obs = self._execute_playwright_subprocess(
+            resolved,
+            cwd=cwd,
+            env=env,
+            step_index=step_index,
+            cmd_label=f"live:collapsed:{len(commands)}",
+            params=selection.params,
+            live_cfg=live_cfg,
+        )
+        test_count = parse_running_test_count(str((obs.meta or {}).get("stdout_tail", "")))
+        if test_count is not None:
+            diagnostics["selected_test_count"] = test_count
+        diagnostics = merge_session_diagnostics(profile_path, diagnostics)
+        diagnostics["playwright_process_count"] = 1
+        meta = {**(obs.meta or {}), "live_diagnostics": diagnostics, "playwright_subprocess": True}
+        return (
+            StepObservation(
+                step_index=obs.step_index,
+                action=obs.action,
+                ok=obs.ok,
+                message=obs.message,
+                screenshot_path=obs.screenshot_path,
+                url=obs.url,
+                meta=meta,
+            ),
+            diagnostics,
+        )
+
+    def _prepare_live_subprocess_env(
+        self,
+        params: dict[str, Any],
+        *,
+        flow_ids: list[str] | None,
+        live_cfg: Any,
+    ) -> tuple[dict[str, str], Path] | StepObservation:
+        assert self._run_id
+        cwd = self.config.automation_dir.resolve()
+        if not cwd.exists():
+            return StepObservation(
+                step_index=0,
+                action="playwright_suite",
+                ok=False,
+                message=f"missing automation dir: {cwd}",
+            )
+        env = _enrich_path(os.environ.copy())
+        env["QA_RUN_ID"] = self._run_id
+        active_flows = flow_ids or self._flow_ids
+        if active_flows:
+            env["QA_FLOW_ID"] = active_flows[0]
+        try:
+            validated = validate_run_params(params)
+        except ValueError as exc:
+            return StepObservation(
+                step_index=0,
+                action="playwright_suite",
+                ok=False,
+                message=f"invalid params: {exc}",
+            )
+        env.update(params_to_env(validated))
+        env = apply_live_browser_env(live_cfg, env, run_id=self._run_id)
+        env["EA_SKIP_GLOBAL_SETUP"] = "true"
+        profile_path = Path(env["QA_LIVE_PROFILE_DIR"])
+        register_session(
+            LiveBrowserSession(
+                meta=LiveBrowserSessionMeta(
+                    run_id=self._run_id,
+                    browser_session_id=f"live-{self._run_id}",
+                    profile_dir=str(profile_path),
+                    channel=live_cfg.browser_channel,
+                    headless=live_cfg.headless,
+                    keep_open=live_cfg.keep_browser_open,
+                    status="STARTING",
+                )
+            )
+        )
+        from qa_orchestrator.fs_atomic import atomic_write_json
+
+        atomic_write_json(
+            profile_path / "session.json",
+            {
+                "run_id": self._run_id,
+                "browser_session_id": f"live-{self._run_id}",
+                "profile_dir": str(profile_path),
+                "status": "STARTING",
+                "channel": live_cfg.browser_channel,
+                "headless": live_cfg.headless,
+                "keep_open": live_cfg.keep_browser_open,
+            },
+        )
+        get_event_store(self._run_id).emit(
+            phase="EXECUTE",
+            action="START",
+            flow_id=env.get("QA_FLOW_ID", ""),
+            value_summary=f"channel={live_cfg.browser_channel} headless={live_cfg.headless}",
+        )
+        return env, profile_path
+
+    def _execute_playwright_subprocess(
+        self,
+        resolved: list[str] | str,
+        *,
+        cwd: Path,
+        env: dict[str, str],
+        step_index: int,
+        cmd_label: str,
+        params: dict[str, Any],
+        live_cfg: Any | None,
+    ) -> StepObservation:
+        if isinstance(resolved, str) and resolved.startswith("ERROR:"):
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=False,
+                message=resolved,
+            )
+        use_shell = isinstance(resolved, str)
+        try:
+            proc = subprocess.run(
+                resolved,
+                cwd=str(cwd),
+                capture_output=True,
+                text=True,
+                timeout=self.config.timeout_s,
+                check=False,
+                env=env,
+                shell=use_shell,
+            )
+            ok = proc.returncode == 0
+            meta: dict[str, Any] = {
+                "command": cmd_label,
+                "resolved": resolved if isinstance(resolved, str) else " ".join(resolved),
+                "cwd": str(cwd),
+                "automation_dir": str(self.config.automation_dir),
+                "stdout_tail": proc.stdout[-8000:],
+                "stderr_tail": proc.stderr[-4000:],
+                "params": params,
+                "playwright_subprocess": True,
+            }
+            exec_status, infra_warnings = classify_playwright_output(
+                proc.stdout or "", proc.stderr or "", proc.returncode
+            )
+            meta["execution_status"] = exec_status
+            meta["infrastructure_warnings"] = infra_warnings
+            param_trace = seed_param_trace_from_params(params)
+            param_trace.update(parse_param_trace_output(proc.stdout or "", proc.stderr or ""))
+            if param_trace:
+                meta["param_trace"] = param_trace
+            if exec_status == "PASS_WITH_WARNING":
+                ok = True
+            if live_cfg and live_cfg.is_live and self._run_id:
+                combined = (proc.stderr or "") + (proc.stdout or "")
+                if "LIVE_BROWSER_STALE" in combined:
+                    ok = False
+                    meta["browser_status"] = "LIVE_BROWSER_STALE"
+                elif "BROWSER_UNAVAILABLE" in combined:
+                    ok = False
+                    meta["browser_status"] = "BROWSER_UNAVAILABLE"
+                elif "BROWSER_DISCONNECTED" in combined:
+                    ok = False
+                    meta["browser_status"] = "BROWSER_DISCONNECTED"
+                else:
+                    meta["browser_status"] = "LIVE"
+                if live_cfg.keep_browser_open:
+                    meta["browser_keep_open"] = True
+                    get_event_store(self._run_id).emit(
+                        phase="COMPLETE",
+                        action="KEEP_OPEN",
+                        status="OK" if ok else "FAIL",
+                        value_summary="Browser remains open for inspection.",
+                    )
+                profile_path = Path(env.get("QA_LIVE_PROFILE_DIR", ""))
+                if profile_path.is_dir() and self._run_id:
+                    diag = empty_live_diagnostics(run_id=self._run_id, commands_count=1)
+                    diag["playwright_process_count"] = 1
+                    test_count = parse_running_test_count(proc.stdout or "")
+                    if test_count is not None:
+                        diag["selected_test_count"] = test_count
+                    diag = merge_session_diagnostics(profile_path, diag)
+                    meta["live_diagnostics"] = diag
+            report_path = cwd / "reports" / "results.json"
+            if report_path.exists():
+                try:
+                    data = json.loads(report_path.read_text(encoding="utf-8"))
+                    meta["playwright_report"] = {
+                        "stats": data.get("stats"),
+                        "suites": len(data.get("suites", [])),
+                    }
+                    from qa_orchestrator.gt_eval import infer_test_case_ids_for_flow, parse_executed_test_case_ids
+
+                    tc_ids = parse_executed_test_case_ids(data)
+                    if not tc_ids and params.get("flow_id"):
+                        tc_ids = infer_test_case_ids_for_flow(str(params.get("flow_id")))
+                    if not tc_ids:
+                        flow_from_cmd = None
+                        if isinstance(resolved, str) and "BF-" in resolved:
+                            import re
+
+                            m = re.search(r"(BF-[A-Z0-9-]+)", resolved)
+                            if m:
+                                flow_from_cmd = m.group(1)
+                        if flow_from_cmd:
+                            tc_ids = infer_test_case_ids_for_flow(flow_from_cmd)
+                    if tc_ids:
+                        meta["executed_test_case_ids"] = tc_ids
+                except json.JSONDecodeError:
+                    pass
+            evidence = collect_evidence(cwd, run_id=self._run_id)
+            if evidence:
+                meta["evidence"] = evidence
+            screenshot = evidence[0]["path"] if evidence else None
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=ok,
+                message=cmd_label if ok else (proc.stderr.strip() or f"exit {proc.returncode}"),
+                screenshot_path=screenshot,
+                meta=meta,
+            )
+        except subprocess.TimeoutExpired:
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=False,
+                message="playwright.timeout",
+            )
+        except Exception as exc:  # noqa: BLE001
+            return StepObservation(
+                step_index=step_index,
+                action="playwright_suite",
+                ok=False,
+                message=f"playwright:{type(exc).__name__}:{exc}",
+            )
 
     def run_suite(self, *, suite: str | None = None, flow_id: str | None = None) -> ExecutionResult:
         suite = suite or self.config.suite
@@ -157,6 +557,7 @@ class PlaywrightRunner:
         step_index: int,
         params: dict[str, Any],
         flow_ids: list[str] | None = None,
+        live_cfg: Any | None = None,
     ) -> StepObservation:
         cwd = self.config.automation_dir.resolve()
         if not cwd.exists():
@@ -194,7 +595,8 @@ class PlaywrightRunner:
             )
         env.update(params_to_env(validated))
 
-        live_cfg = load_live_browser_config() if load_live_browser_config else None
+        if live_cfg is None:
+            live_cfg = load_live_browser_config() if load_live_browser_config else None
         if live_cfg and live_cfg.is_live:
             if not self._run_id:
                 return StepObservation(
@@ -203,133 +605,35 @@ class PlaywrightRunner:
                     ok=False,
                     message="live mode requires QA_RUN_ID",
                 )
-            env = apply_live_browser_env(live_cfg, env, run_id=self._run_id)
-            env["EA_SKIP_GLOBAL_SETUP"] = "true"
-            register_session(
-                LiveBrowserSession(
-                    meta=LiveBrowserSessionMeta(
-                        run_id=self._run_id,
-                        browser_session_id=f"live-{self._run_id}",
-                        profile_dir=env["QA_LIVE_PROFILE_DIR"],
-                        channel=live_cfg.browser_channel,
-                        headless=live_cfg.headless,
-                        keep_open=live_cfg.keep_browser_open,
-                        status="STARTING",
-                    )
+            prep = self._prepare_live_subprocess_env(params, flow_ids=flow_ids, live_cfg=live_cfg)
+            if isinstance(prep, StepObservation):
+                return StepObservation(
+                    step_index=prep.step_index,
+                    action=prep.action,
+                    ok=prep.ok,
+                    message=prep.message,
+                    meta=prep.meta,
                 )
-            )
-            from pathlib import Path
-            import json as _json
-
-            meta_path = Path(env["QA_LIVE_PROFILE_DIR"]) / "session.json"
-            meta_path.write_text(
-                _json.dumps(
-                    {
-                        "run_id": self._run_id,
-                        "browser_session_id": f"live-{self._run_id}",
-                        "profile_dir": env["QA_LIVE_PROFILE_DIR"],
-                        "status": "ACTIVE",
-                        "channel": live_cfg.browser_channel,
-                        "headless": live_cfg.headless,
-                        "keep_open": live_cfg.keep_browser_open,
-                    },
-                    indent=2,
-                ),
-                encoding="utf-8",
-            )
-            get_event_store(self._run_id).emit(
-                phase="EXECUTE",
-                action="START",
-                flow_id=env.get("QA_FLOW_ID", ""),
-                value_summary=f"channel={live_cfg.browser_channel} headless={live_cfg.headless}",
-            )
+            env, profile_path = prep
+            stale_err, _hints = assess_live_profile_before_launch(profile_path, self._run_id)
+            if stale_err:
+                return StepObservation(
+                    step_index=step_index,
+                    action="live_browser",
+                    ok=False,
+                    message=stale_err,
+                )
 
         resolved = _resolve_command(cmd, env)
-        if isinstance(resolved, str) and resolved.startswith("ERROR:"):
-            return StepObservation(
-                step_index=step_index,
-                action="playwright_suite",
-                ok=False,
-                message=resolved,
-            )
-        use_shell = isinstance(resolved, str)
-        try:
-            proc = subprocess.run(
-                resolved,
-                cwd=str(cwd),
-                capture_output=True,
-                text=True,
-                timeout=self.config.timeout_s,
-                check=False,
-                env=env,
-                shell=use_shell,
-            )
-            ok = proc.returncode == 0
-            meta: dict[str, Any] = {
-                "command": cmd,
-                "resolved": resolved if isinstance(resolved, str) else " ".join(resolved),
-                "cwd": str(cwd),
-                "automation_dir": str(self.config.automation_dir),
-                "stdout_tail": proc.stdout[-8000:],
-                "stderr_tail": proc.stderr[-4000:],
-                "params": params,
-            }
-            if live_cfg and live_cfg.is_live and self._run_id:
-                stderr = proc.stderr or ""
-                stdout = proc.stdout or ""
-                combined = stderr + stdout
-                if "BROWSER_UNAVAILABLE" in combined:
-                    ok = False
-                    meta["browser_status"] = "BROWSER_UNAVAILABLE"
-                elif "BROWSER_DISCONNECTED" in combined:
-                    ok = False
-                    meta["browser_status"] = "BROWSER_DISCONNECTED"
-                else:
-                    meta["browser_status"] = "LIVE"
-                if live_cfg.keep_browser_open:
-                    meta["browser_keep_open"] = True
-                    get_event_store(self._run_id).emit(
-                        phase="COMPLETE",
-                        action="KEEP_OPEN",
-                        status="OK" if ok else "FAIL",
-                        value_summary="Browser remains open for inspection.",
-                    )
-            report_path = cwd / "reports" / "results.json"
-            if report_path.exists():
-                try:
-                    data = json.loads(report_path.read_text(encoding="utf-8"))
-                    meta["playwright_report"] = {
-                        "stats": data.get("stats"),
-                        "suites": len(data.get("suites", [])),
-                    }
-                except json.JSONDecodeError:
-                    pass
-            evidence = collect_evidence(cwd, run_id=self._run_id)
-            if evidence:
-                meta["evidence"] = evidence
-            screenshot = evidence[0]["path"] if evidence else None
-            return StepObservation(
-                step_index=step_index,
-                action="playwright_suite",
-                ok=ok,
-                message=cmd if ok else (proc.stderr.strip() or f"exit {proc.returncode}"),
-                screenshot_path=screenshot,
-                meta=meta,
-            )
-        except subprocess.TimeoutExpired:
-            return StepObservation(
-                step_index=step_index,
-                action="playwright_suite",
-                ok=False,
-                message="playwright.timeout",
-            )
-        except Exception as exc:  # noqa: BLE001
-            return StepObservation(
-                step_index=step_index,
-                action="playwright_suite",
-                ok=False,
-                message=f"playwright:{type(exc).__name__}:{exc}",
-            )
+        return self._execute_playwright_subprocess(
+            resolved,
+            cwd=cwd,
+            env=env,
+            step_index=step_index,
+            cmd_label=cmd,
+            params=params,
+            live_cfg=live_cfg,
+        )
 
     def _dry_run(self, selection: SuiteSelectionPlan) -> ExecutionResult:
         observations = [
@@ -377,6 +681,25 @@ def _resolve_command(cmd: str, env: dict[str, str] | None = None) -> list[str] |
         return subprocess.list2cmdline([npm, *parts[1:]])
     parts[0] = npm
     return parts
+
+
+def _resolve_command_argv(argv: list[str], env: dict[str, str] | None = None) -> list[str] | str:
+    """Resolve node/npm argv for subprocess (Windows-safe)."""
+    if not argv:
+        return argv
+    search_env = _enrich_path(env or os.environ.copy())
+    exe = argv[0]
+    if exe == "node":
+        node = shutil.which("node", path=search_env.get("PATH")) or shutil.which("node.exe", path=search_env.get("PATH"))
+        if not node:
+            return "ERROR: node not found on PATH"
+        rest = argv[1:]
+        if sys.platform == "win32":
+            return subprocess.list2cmdline([node, *rest])
+        return [node, *rest]
+    if exe == "npm" or exe.startswith("npm"):
+        return _resolve_command(" ".join(argv), env)
+    return argv
 
 
 def _enrich_path(env: dict[str, str]) -> dict[str, str]:

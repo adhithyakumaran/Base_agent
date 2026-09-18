@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   if (!goal) return NextResponse.json({ error: "Command required" }, { status: 400 });
 
   const type = (body.type || "adhoc") as AgentRun["type"];
-  const executionMode = resolveExecutionMode(body.executionMode);
+  const executionMode = resolveExecutionMode(body.executionMode ?? process.env.NEXT_PUBLIC_QA_EXECUTION_MODE ?? "LIVE_DEMO");
   const knowledgeIds: string[] = Array.isArray(body.knowledgeIds) ? body.knowledgeIds : [];
   const notify: string[] =
     Array.isArray(body.channels) && body.channels.length > 0

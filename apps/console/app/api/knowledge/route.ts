@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
+import { requireApiAuth, requireMutationAuth } from "@/lib/api-auth";
 import { mutateState, pushHistory, readState } from "@/lib/store";
 import type { KnowledgePill } from "@/lib/types";
 import { uid } from "@/lib/utils";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = requireApiAuth(req);
+  if (denied) return denied;
   const state = await readState();
   return NextResponse.json({ knowledge: state.knowledge });
 }
 
 export async function POST(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
   const body = await req.json();
   const title = String(body.title || "Untitled dump").trim();
   const format = (body.format || "text") as KnowledgePill["format"];
@@ -45,6 +50,8 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const denied = requireMutationAuth(req);
+  if (denied) return denied;
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });

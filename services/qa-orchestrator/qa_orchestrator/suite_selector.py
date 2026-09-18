@@ -78,10 +78,11 @@ class SuiteSelector:
 
         elif mode == "adhoc_parameterized":
             candidate_flow_ids = _unique_candidates(intent.flow_ids) or ["BF-PRODUCT-003"]
-            fid = candidate_flow_ids[0]
-            commands = [build_flow_command(fid, polarity="positive")]
-            suite_ids = [f"FLOW-{fid}"]
-            notes.append(f"Parameterized run — pass params via env: {params}")
+            primary = candidate_flow_ids[0]
+            candidate_flow_ids = [primary]
+            commands = [build_flow_command(primary, polarity="positive")]
+            suite_ids = [f"FLOW-{primary}"]
+            notes.append(f"Parameterized run — primary executable {primary}; params via env: {params}")
 
         else:
             candidate_flow_ids = _unique_candidates(intent.flow_ids)
@@ -92,6 +93,13 @@ class SuiteSelector:
                 for k in ("negative", "invalid", "wrong password", "error case", "bad login")
             )
             polarity = "negative" if negative_goal else "positive"
+            if len(candidate_flow_ids) > 1:
+                primary = candidate_flow_ids[0]
+                notes.append(
+                    f"Primary executable flow {primary}; "
+                    f"{len(candidate_flow_ids) - 1} additional mapped flow(s) treated as supporting context"
+                )
+                candidate_flow_ids = [primary]
             if len(candidate_flow_ids) == 1:
                 fid = candidate_flow_ids[0]
                 commands = [build_flow_command(fid, polarity=polarity)]
@@ -141,6 +149,17 @@ class SuiteSelector:
         if unsupported:
             notes.append(f"Non-READY flows referenced but skipped for execution: {', '.join(unsupported)}")
 
+        primary_executable = flow_ids[0] if flow_ids else (candidate_flow_ids[0] if candidate_flow_ids else None)
+        supporting_context = list(
+            dict.fromkeys(
+                [
+                    *intent.supporting_flow_ids,
+                    *[f for f in intent.flow_ids if f != primary_executable],
+                    *[f for f in candidate_flow_ids if f != primary_executable and f not in flow_ids],
+                ]
+            )
+        )
+
         return SuiteSelectionPlan(
             execution_mode=mode,
             suite_ids=suite_ids,
@@ -151,6 +170,8 @@ class SuiteSelector:
             params=params,
             runner="playwright",
             primary_only=True,
+            primary_executable_flow_id=primary_executable,
+            supporting_flow_ids=supporting_context,
             notes=notes,
         )
 
