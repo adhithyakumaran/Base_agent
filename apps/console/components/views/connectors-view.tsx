@@ -83,7 +83,7 @@ export function ConnectorsView() {
         <div>
           <h1>Connectors & Policy</h1>
           <p className="view-subtitle">
-            Environment, credentials, notifications, agent policy and integrations
+            Environment, execution, reporting, agent policy and integrations.
           </p>
         </div>
       </header>
@@ -93,24 +93,34 @@ export function ConnectorsView() {
           <h2>Environment</h2>
           <div className="connector-grid-2">
             <div className="policy-card">
-              <h3>Environment</h3>
-              <p className="text-muted">UAT</p>
+              <h3>UAT Environment</h3>
               <dl className="connector-dl">
+                <dt>Status</dt>
+                <dd>{orchestrator?.connected ? "CONNECTED" : "OFFLINE"}</dd>
                 <dt>Base URL</dt>
                 <dd className="font-mono">{baseUrl}</dd>
-                <dt>Status</dt>
-                <dd>{orchestrator?.connected ? "Connected" : "Offline"}</dd>
+                <dt>Environment</dt>
+                <dd>{orchestrator?.environment || "UAT"}</dd>
               </dl>
+              <Button variant="secondary" className="btn-outline-dark" size="sm">
+                Manage
+              </Button>
             </div>
             <div className="policy-card">
               <h3>Execution</h3>
-              <p className="text-muted">Playwright</p>
               <dl className="connector-dl">
                 <dt>Runner</dt>
-                <dd>Local / CI</dd>
+                <dd>Playwright</dd>
+                <dt>Mode</dt>
+                <dd>LIVE_DEMO</dd>
+                <dt>Browser</dt>
+                <dd>Chromium</dd>
                 <dt>Status</dt>
-                <dd>Ready</dd>
+                <dd>READY</dd>
               </dl>
+              <Button variant="secondary" className="btn-outline-dark" size="sm">
+                Configure
+              </Button>
             </div>
           </div>
         </section>
@@ -120,7 +130,7 @@ export function ConnectorsView() {
           <div className="connector-grid-3">
             <div className="policy-card">
               <Mail size={18} aria-hidden />
-              <h3>Email Reports</h3>
+              <h3>Email</h3>
               <p>
                 Status: <strong>Configured</strong>
               </p>
@@ -131,10 +141,11 @@ export function ConnectorsView() {
             </div>
             <div className="policy-card">
               <MessageCircle size={18} aria-hidden />
-              <h3>WhatsApp Reports</h3>
+              <h3>WhatsApp</h3>
               <p>
-                Status: <strong>Test configuration</strong>
+                Status: <strong>Configured / Test</strong>
               </p>
+              <p className="text-sm">Destination: +91 ••••••••••</p>
               <Button
                 variant="secondary"
                 className="btn-outline-dark"
@@ -148,16 +159,16 @@ export function ConnectorsView() {
               <Clock size={18} aria-hidden />
               <h3>Scheduling</h3>
               <p>
-                Time: <strong>{scheduleTime} IST</strong>
+                <strong>{scheduleTime} IST</strong>
               </p>
-              <p className="text-sm text-muted">{scheduleGoal.slice(0, 72)}…</p>
+              <p className="text-sm text-muted">{scheduleGoal}</p>
               <Button
                 variant="secondary"
                 className="btn-outline-dark"
                 size="sm"
                 onClick={() => setEditChannel("schedule")}
               >
-                Configure schedule
+                Edit schedule
               </Button>
             </div>
           </div>
@@ -180,7 +191,7 @@ export function ConnectorsView() {
                   Status: <strong>Active</strong>
                 </p>
                 <Button variant="secondary" className="btn-outline-dark" size="sm">
-                  View
+                  View policy
                 </Button>
               </div>
             ))}

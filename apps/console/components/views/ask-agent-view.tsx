@@ -5,14 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { buildRunTimelineStages, runDisplayBadge, runSummaryMetrics } from "@/lib/run-display";
+import { buildRunTimelineStages, runDisplayBadge } from "@/lib/run-display";
 import type { OrchestratorStatus } from "@/lib/use-orchestrator";
 import type { AgentRun } from "@/lib/types";
 
 const SUGGESTIONS: { label: string; text: string }[] = [
   { label: "Search a SKU", text: "Search SKU 552811DUDABA00" },
+  { label: "View a product", text: "View product using SKU 552811DUDABA00" },
   { label: "Check login", text: "Check login on Endless Aisle UAT" },
-  { label: "Verify cart flow", text: "Verify cart flow on UAT" },
+  { label: "Verify cart", text: "Verify cart flow on UAT" },
   { label: "Run a sanity suite", text: "morning sanity check — Endless Aisle login and home modules" },
 ];
 
@@ -38,7 +39,7 @@ export function AskAgentView({
   const env = orchestrator?.environment || "UAT";
   const connected = orchestrator?.connected;
   const stages = buildRunTimelineStages(activeRun);
-  const metrics = runSummaryMetrics(activeRun);
+  const verifyBadge = activeRun ? runDisplayBadge(activeRun) : null;
 
   return (
     <div className="view-stack ask-page">
@@ -50,17 +51,22 @@ export function AskAgentView({
         </p>
       </header>
 
-      <section className="ask-command-card" aria-labelledby="command-label">
-        <label id="command-label" className="sr-only" htmlFor="scout-command">
-          QA request
+      <section className="command-workspace" aria-labelledby="command-workspace-title">
+        <div className="command-workspace__accent" aria-hidden />
+        <p id="command-workspace-title" className="command-workspace__eyebrow">
+          Command
+        </p>
+        <label className="command-workspace__label" htmlFor="scout-command">
+          What do you want ScoutAI to verify?
         </label>
-        <div className="command-input-row">
+
+        <div className="command-workspace__input-row">
           <Textarea
             id="scout-command"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Search SKU 552811DUDABA00"
-            className="command-input"
+            className="command-workspace__input"
             disabled={busy}
             onKeyDown={(e) => {
               if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && prompt.trim()) {
@@ -70,31 +76,33 @@ export function AskAgentView({
             }}
           />
           <Button
-            className="command-submit btn-black"
+            className="command-workspace__send btn-black"
             disabled={busy || !prompt.trim()}
             onClick={() => onRun(prompt, "adhoc")}
             aria-label="Submit QA request"
           >
-            {busy ? <Loader2 size={18} className="status-badge-spin" /> : <SendHorizontal size={18} />}
+            {busy ? <Loader2 size={20} className="status-badge-spin" /> : <SendHorizontal size={20} />}
           </Button>
         </div>
 
-        <div className="suggestion-row">
-          <span className="suggestion-label">Try a test</span>
-          {SUGGESTIONS.map((s) => (
-            <button
-              key={s.label}
-              type="button"
-              className="suggestion-chip"
-              disabled={busy}
-              onClick={() => setPrompt(s.text)}
-            >
-              {s.label}
-            </button>
-          ))}
+        <div className="command-workspace__suggestions">
+          <span className="command-workspace__suggestions-label">Try a test</span>
+          <div className="command-workspace__chips">
+            {SUGGESTIONS.map((s) => (
+              <button
+                key={s.label}
+                type="button"
+                className="suggestion-chip"
+                disabled={busy}
+                onClick={() => setPrompt(s.text)}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="command-actions-v2">
+        <div className="command-workspace__actions">
           <Button className="btn-black" disabled={busy || !prompt.trim()} onClick={() => onRun(prompt, "adhoc")}>
             Run controlled test
           </Button>
@@ -106,8 +114,8 @@ export function AskAgentView({
           >
             Run sanity suites
           </Button>
+          <span className="command-workspace__hint">Ctrl+Enter to submit</span>
         </div>
-        <p className="hint">Ctrl+Enter to submit</p>
       </section>
 
       {error ? (
@@ -123,7 +131,7 @@ export function AskAgentView({
         </div>
         <div className="readiness-strip__cell">
           <strong>{orchestrator?.flowCounts?.smeReady ?? "—"}</strong>
-          <span>SME-ready</span>
+          <span>SME ready</span>
         </div>
         <div className="readiness-strip__cell">
           <strong>{orchestrator?.flowCounts?.awaitingApproval ?? "—"}</strong>
@@ -135,62 +143,38 @@ export function AskAgentView({
         </div>
       </section>
 
-      {activeRun ? (
-        <section aria-labelledby="latest-run-heading">
-          <h2 id="latest-run-heading" className="section-label">
-            Latest run
-          </h2>
-          <p className="latest-run-card__goal">{activeRun.goal}</p>
-          <div className="run-summary-metrics run-summary-metrics--compact" aria-label="Execution summary">
-            <div className="run-metric">
-              <strong>{metrics.playwrightProcesses}</strong>
-              <span>Playwright process</span>
+      <section className="latest-run-panel" aria-labelledby="latest-run-heading">
+        <h2 id="latest-run-heading" className="section-label">
+          Latest run
+        </h2>
+        {activeRun ? (
+          <>
+            <p className="latest-run-panel__goal">{activeRun.goal}</p>
+            <div className="latest-run-timeline" role="list" aria-label="Run pipeline">
+              {stages.map((stage) => (
+                <div
+                  key={stage.id}
+                  role="listitem"
+                  className={`latest-run-timeline__step latest-run-timeline__step--${stage.state}`}
+                >
+                  <span className="latest-run-timeline__name">{stage.label}</span>
+                  <span className="latest-run-timeline__status">{stage.statusLabel}</span>
+                </div>
+              ))}
             </div>
-            <div className="run-metric">
-              <strong>{metrics.browsers}</strong>
-              <span>Browser</span>
+            <div className="latest-run-panel__footer">
+              <StatusBadge status={verifyBadge || "PENDING"} />
+              {onViewRun ? (
+                <Button variant="secondary" className="btn-outline-dark" size="sm" onClick={onViewRun}>
+                  View run details
+                </Button>
+              ) : null}
             </div>
-            <div className="run-metric">
-              <strong>{metrics.contexts}</strong>
-              <span>Context</span>
-            </div>
-            <div className="run-metric">
-              <strong>{metrics.logins}</strong>
-              <span>Login</span>
-            </div>
-            <div className="run-metric">
-              <strong>{metrics.selectedTests}</strong>
-              <span>Selected test</span>
-            </div>
-            <div className="run-metric">
-              <strong>{metrics.evidenceCaptures}</strong>
-              <span>Evidence captures</span>
-            </div>
-          </div>
-          <div className="timeline-horizontal">
-            {stages.map((stage) => (
-              <div key={stage.id} className={`timeline-step timeline-step--${stage.state}`}>
-                <div className="timeline-step__label">{stage.label}</div>
-                <div className="timeline-step__state">{stage.statusLabel}</div>
-                <p className="text-sm text-muted">{stage.detail}</p>
-                {stage.time ? (
-                  <p className="font-mono text-xs text-muted">{new Date(stage.time).toLocaleString()}</p>
-                ) : null}
-              </div>
-            ))}
-          </div>
-          <div className="latest-run-footer">
-            <StatusBadge status={runDisplayBadge(activeRun)} />
-            {onViewRun ? (
-              <Button variant="secondary" className="btn-outline-dark" size="sm" onClick={onViewRun}>
-                View run
-              </Button>
-            ) : null}
-          </div>
-        </section>
-      ) : (
-        <EmptyState title="No active run" description="Start a QA run from above." />
-      )}
+          </>
+        ) : (
+          <EmptyState title="No active run" description="Submit a command above to start a controlled test." />
+        )}
+      </section>
     </div>
   );
 }
