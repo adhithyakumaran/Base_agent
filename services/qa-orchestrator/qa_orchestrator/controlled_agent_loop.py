@@ -180,6 +180,9 @@ class ControlledAgentLoop:
                         state.metadata["live_diagnostics"] = meta["live_diagnostics"]
                     if meta.get("param_trace"):
                         state.metadata["param_trace"] = meta["param_trace"]
+                    if meta.get("executed_test_case_ids"):
+                        state.metadata["executed_test_case_ids"] = list(meta["executed_test_case_ids"])
+                        state.current_test = state.metadata["executed_test_case_ids"][0]
                     if meta.get("command"):
                         state.metadata.setdefault("executed_commands", []).append(meta.get("command"))
             state.current_flow = state.suite_plan.flow_ids[0] if state.suite_plan.flow_ids else state.current_flow

@@ -490,6 +490,23 @@ class PlaywrightRunner:
                         "stats": data.get("stats"),
                         "suites": len(data.get("suites", [])),
                     }
+                    from qa_orchestrator.gt_eval import infer_test_case_ids_for_flow, parse_executed_test_case_ids
+
+                    tc_ids = parse_executed_test_case_ids(data)
+                    if not tc_ids and params.get("flow_id"):
+                        tc_ids = infer_test_case_ids_for_flow(str(params.get("flow_id")))
+                    if not tc_ids:
+                        flow_from_cmd = None
+                        if isinstance(resolved, str) and "BF-" in resolved:
+                            import re
+
+                            m = re.search(r"(BF-[A-Z0-9-]+)", resolved)
+                            if m:
+                                flow_from_cmd = m.group(1)
+                        if flow_from_cmd:
+                            tc_ids = infer_test_case_ids_for_flow(flow_from_cmd)
+                    if tc_ids:
+                        meta["executed_test_case_ids"] = tc_ids
                 except json.JSONDecodeError:
                     pass
             evidence = collect_evidence(cwd, run_id=self._run_id)

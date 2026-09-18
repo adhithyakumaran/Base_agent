@@ -42,7 +42,8 @@ class Validator:
         matched_gt = self._matching_gt(goal)
         ctx = dict(diagnostic_context or {})
         if matched_gt:
-            return self._validate_phase_b(goal, plan, execution, matched_gt)
+            result = self._validate_phase_b(goal, plan, execution, matched_gt, diagnostic_context=ctx)
+            return result
         return self._validate_phase_a(
             goal,
             run_type,
@@ -205,6 +206,7 @@ class Validator:
             summary=summary,
             findings=findings,
         )
+        approved_match = self._matching_gt(goal)
         result.decision_diagnostics = build_validation_phase_a_diagnostic(
             run_id=diagnostic_context.get("run_id") if diagnostic_context else None,
             validation=result,
@@ -215,7 +217,8 @@ class Validator:
             planning=diagnostic_context.get("planning") if diagnostic_context else None,
             state=diagnostic_context.get("state") if diagnostic_context else None,
             gate=diagnostic_context.get("gate") if diagnostic_context else None,
-            approved_gt_available=False,
+            approved_gt_available=approved_match is not None,
+            matched_for_goal=approved_match is not None,
             skip_execution=diagnostic_context.get("skip_execution") if diagnostic_context else None,
         )
         return result
@@ -226,14 +229,18 @@ class Validator:
         plan: ExecutionPlan,
         execution: ExecutionResult,
         matched_gt: tuple[str, dict[str, Any]],
+        *,
+        diagnostic_context: dict[str, Any] | None = None,
     ) -> ValidationResult:
+        from qa_orchestrator.decision_diagnostics import build_validation_phase_b_diagnostic
+
         gt_id, fact = matched_gt
         findings: list[ValidationFinding] = []
         meta_list = [o.meta or {} for o in execution.observations if o.meta]
 
         passed, failures = evaluate_gt_expectations(fact, execution.ok, meta_list)
         if not passed:
-            return ValidationResult(
+            result = ValidationResult(
                 phase="B",
                 conclusion="FAIL",
                 reason_code="validator.gt_expectation_failed",
@@ -244,8 +251,16 @@ class Validator:
                 ],
                 gt_refs=[gt_id],
             )
+            result.decision_diagnostics = build_validation_phase_b_diagnostic(
+                run_id=diagnostic_context.get("run_id") if diagnostic_context else None,
+                validation=result,
+                gt_id=gt_id,
+                state=diagnostic_context.get("state") if diagnostic_context else None,
+                execution=execution,
+            )
+            return result
 
-        return ValidationResult(
+        result = ValidationResult(
             phase="B",
             conclusion="PASS",
             reason_code="validator.gt_match",
@@ -253,6 +268,14 @@ class Validator:
             findings=findings,
             gt_refs=[gt_id],
         )
+        result.decision_diagnostics = build_validation_phase_b_diagnostic(
+            run_id=diagnostic_context.get("run_id") if diagnostic_context else None,
+            validation=result,
+            gt_id=gt_id,
+            state=diagnostic_context.get("state") if diagnostic_context else None,
+            execution=execution,
+        )
+        return result
 
     def _load_approved_gt(self) -> dict[str, dict[str, Any]]:
         if not self.gt_dir or not self.gt_dir.exists():

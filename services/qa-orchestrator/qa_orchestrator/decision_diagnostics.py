@@ -24,6 +24,47 @@ def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _selected_test_case_ids(state: "AgentRunState | None") -> list[str]:
+    if not state:
+        return []
+    meta_ids = state.metadata.get("executed_test_case_ids")
+    if isinstance(meta_ids, list) and meta_ids:
+        return [str(x) for x in meta_ids]
+    if state.current_test:
+        return [state.current_test]
+    return []
+
+
+def build_validation_phase_b_diagnostic(
+    *,
+    run_id: str | None,
+    validation: "ValidationResult",
+    gt_id: str,
+    state: "AgentRunState | None" = None,
+    execution: "ExecutionResult | None" = None,
+) -> dict[str, Any]:
+    return {
+        "decision": validation.conclusion,
+        "run_id": run_id,
+        "stage": "validation_phase_b",
+        "timestamp": utc_now_iso(),
+        "reason_code": validation.reason_code,
+        "message": validation.summary,
+        "gt_id": gt_id,
+        "selected_test_case_ids": _selected_test_case_ids(state),
+        "ground_truth": {
+            "approved_available": True,
+            "matched_for_goal": True,
+            "phase": "B",
+            "gt_id": gt_id,
+        },
+        "evidence": {
+            "execution_ok": execution.ok if execution else None,
+            "execution_mode": execution.mode if execution else None,
+        },
+    }
+
+
 def _failed_checks_from_gate(decision: ExecutionGateDecision) -> list[str]:
     code = decision.reason_code
     checks: list[str] = []
@@ -107,6 +148,7 @@ def build_validation_phase_a_diagnostic(
     state: AgentRunState | None = None,
     gate: ExecutionGate | None = None,
     approved_gt_available: bool = False,
+    matched_for_goal: bool | None = None,
     skip_execution: bool | None = None,
 ) -> dict[str, Any]:
     selected_flows = list(state.selected_flows if state else planning.selected_flows if planning else [])
@@ -182,7 +224,7 @@ def build_validation_phase_a_diagnostic(
         "failed_checks": list(dict.fromkeys(failed_checks)),
         "run_status": state.status if state else None,
         "selected_flow_ids": selected_flows,
-        "selected_test_case_ids": [state.current_test] if state and state.current_test else [],
+        "selected_test_case_ids": _selected_test_case_ids(state),
         "current_action": current_action,
         "gate_decisions": gate_rows,
         "approval_state": {
@@ -200,7 +242,7 @@ def build_validation_phase_a_diagnostic(
         },
         "ground_truth": {
             "approved_available": approved_gt_available,
-            "matched_for_goal": approved_gt_available,
+            "matched_for_goal": approved_gt_available if matched_for_goal is None else matched_for_goal,
             "phase": validation.phase,
         },
         "evidence": {
