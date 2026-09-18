@@ -3,10 +3,12 @@ import path from "path";
 import type { AppState, HistoryItem } from "@/lib/types";
 import { MODEL_OPTIONS } from "@/lib/types";
 import { TEST_REPORT_EMAIL, TEST_REPORT_WHATSAPP } from "@/lib/channel-defaults";
+import { atomicWriteJson, readTextWithRetry, withFileLock } from "@/lib/fs-atomic";
 import { uid } from "@/lib/utils";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const STATE_FILE = path.join(DATA_DIR, "state.json");
+const STATE_LOCK = path.join(DATA_DIR, ".locks", "console-state.lock");
 
 const defaultState = (): AppState => ({
   runs: [],
@@ -51,7 +53,6 @@ function migrate(state: AppState): AppState {
       ? { whatsapp: state.channels.whatsapp }
       : {}),
   };
-  // Force demo test targets unless explicitly customized away from empty
   if (!state.channels.email?.length || state.channels.email.includes(placeholder)) {
     state.channels.email = [TEST_REPORT_EMAIL];
   }
@@ -67,7 +68,7 @@ function migrate(state: AppState): AppState {
 export async function readState(): Promise<AppState> {
   await fs.mkdir(DATA_DIR, { recursive: true });
   try {
-    const raw = JSON.parse(await fs.readFile(STATE_FILE, "utf8")) as Partial<AppState>;
+    const raw = JSON.parse(await readTextWithRetry(STATE_FILE)) as Partial<AppState>;
     const base = defaultState();
     const merged: AppState = {
       ...base,
@@ -82,21 +83,33 @@ export async function readState(): Promise<AppState> {
     return migrate(merged);
   } catch {
     const s = defaultState();
-    await fs.writeFile(STATE_FILE, JSON.stringify(s, null, 2));
+    await atomicWriteJson(STATE_FILE, s);
     return s;
   }
 }
 
 export async function writeState(state: AppState): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(STATE_FILE, JSON.stringify(state, null, 2));
+  const backoffMs = [0, 25, 75, 150, 300];
+  let lastErr: unknown;
+  for (const wait of backoffMs) {
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    try {
+      await atomicWriteJson(STATE_FILE, state);
+      return;
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
 }
 
 export async function mutateState(fn: (s: AppState) => void | Promise<void>): Promise<AppState> {
-  const state = await readState();
-  await fn(state);
-  await writeState(state);
-  return state;
+  return withFileLock(STATE_LOCK, async () => {
+    const state = await readState();
+    await fn(state);
+    await writeState(state);
+    return state;
+  });
 }
 
 export function pushHistory(
@@ -117,5 +130,7 @@ export function pushHistory(
 }
 
 export function hasActiveRun(state: AppState): boolean {
-  return state.runs.some((r) => r.status === "running" || r.status === "queued");
+  return state.runs.some(
+    (r) => r.status === "running" || r.status === "queued" || r.status === "resuming"
+  );
 }

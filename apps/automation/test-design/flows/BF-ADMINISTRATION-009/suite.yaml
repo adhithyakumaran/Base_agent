@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-ADMINISTRATION-009
 flow_id: BF-ADMINISTRATION-009
 flow_name: Administration
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-administration-009

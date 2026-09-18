@@ -24,12 +24,33 @@ type Props = {
   liveMode?: boolean;
 };
 
+function mergeEvents(prev: LiveEvent[], row: LiveEvent): LiveEvent[] {
+  const seq = row.sequence;
+  if (seq == null || seq <= 0) return prev;
+  if (prev.some((p) => p.sequence === seq)) return prev;
+  return [...prev, row];
+}
+
+function sortBySequence(events: LiveEvent[]): LiveEvent[] {
+  const bySeq = new Map<number, LiveEvent>();
+  for (const ev of events) {
+    if (ev.sequence != null && ev.sequence > 0) {
+      bySeq.set(ev.sequence, ev);
+    }
+  }
+  return [...bySeq.values()].sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
+}
+
 export function LiveRunPanel({ runId, goal, flowId, runStatus, conclusion, liveMode }: Props) {
   const [events, setEvents] = useState<LiveEvent[]>([]);
   const [session, setSession] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const active = runStatus === "running" || runStatus === "queued";
+  const sessionStatus = String(session?.status || "UNKNOWN");
+  const sessionClosed = sessionStatus === "CLOSED";
+
+  const orderedEvents = useMemo(() => sortBySequence(events), [events]);
 
   useEffect(() => {
     if (!runId || !liveMode) return;
@@ -39,11 +60,7 @@ export function LiveRunPanel({ runId, goal, flowId, runStatus, conclusion, liveM
       if (cancelled) return;
       try {
         const row = JSON.parse(msg.data) as LiveEvent;
-        setEvents((prev) => {
-          const key = row.sequence ?? prev.length;
-          if (prev.some((p) => p.sequence === key)) return prev;
-          return [...prev, row].slice(-200);
-        });
+        setEvents((prev) => mergeEvents(prev, row));
       } catch {
         /* ignore */
       }
@@ -70,22 +87,35 @@ export function LiveRunPanel({ runId, goal, flowId, runStatus, conclusion, liveM
   useEffect(() => {
     if (!runId || !liveMode) return;
     refreshSession();
-    const t = setInterval(refreshSession, 3000);
+    const intervalMs = sessionClosed ? 10_000 : 1500;
+    const t = setInterval(refreshSession, intervalMs);
     return () => clearInterval(t);
-  }, [runId, liveMode, refreshSession]);
+  }, [runId, liveMode, refreshSession, sessionClosed]);
 
   async function closeBrowser() {
-    if (!runId) return;
+    if (!runId || sessionClosed) return;
     await fetch(`/api/runs/${runId}/browser/close`, { method: "POST" });
-    await refreshSession();
+    for (let i = 0; i < 12; i += 1) {
+      await new Promise((r) => setTimeout(r, 400));
+      try {
+        const res = await fetch(`/api/runs/${runId}/browser`, { cache: "no-store" });
+        if (!res.ok) continue;
+        const body = (await res.json()) as Record<string, unknown>;
+        setSession(body);
+        if (body.status === "CLOSED") break;
+      } catch {
+        /* retry */
+      }
+    }
   }
 
   const keepOpenMessage = useMemo(() => {
+    if (sessionClosed) return null;
     if (conclusion === "PASS" && session?.keep_open) {
       return "Browser remains open for inspection.";
     }
     return null;
-  }, [conclusion, session]);
+  }, [conclusion, session, sessionClosed]);
 
   if (!liveMode || !runId) return null;
 
@@ -106,18 +136,28 @@ export function LiveRunPanel({ runId, goal, flowId, runStatus, conclusion, liveM
       </header>
 
       <ul className="live-event-list">
-        {events.map((ev, idx) => (
-          <li key={`${ev.sequence ?? idx}-${ev.action}`}>
-            <span className={`live-event-status live-event-${(ev.status || "OK").toLowerCase()}`}>
-              {ev.status === "OK" || !ev.status ? "✓" : "●"}
+        {orderedEvents.map((ev) => (
+          <li key={ev.sequence}>
+            <span
+              className={`live-event-status live-event-${(ev.status || "OK").toLowerCase()}`}
+              title={ev.status || "OK"}
+            >
+              {ev.status === "FAIL"
+                ? "✗"
+                : ev.status === "STARTED"
+                  ? "…"
+                  : ev.status === "OK" || !ev.status
+                    ? "✓"
+                    : "●"}
             </span>
             <span className="live-event-phase">{ev.phase}</span>
             <span className="live-event-action">{ev.action}</span>
+            {ev.target ? <span className="live-event-target">{ev.target}</span> : null}
             {ev.value_summary ? <span className="live-event-value">{ev.value_summary}</span> : null}
             {ev.duration_ms ? <span className="live-event-duration">{ev.duration_ms}ms</span> : null}
           </li>
         ))}
-        {active && events.length === 0 ? (
+        {active && orderedEvents.length === 0 ? (
           <li className="live-event-wait">
             <Loader2 className="spin" size={16} aria-hidden /> Waiting for live browser actions…
           </li>
@@ -126,14 +166,15 @@ export function LiveRunPanel({ runId, goal, flowId, runStatus, conclusion, liveM
 
       <footer className="live-run-footer">
         <div>
-          <strong>Browser session:</strong> {String(session?.status || "UNKNOWN")}
+          <strong>Browser session:</strong> {sessionStatus}
           {session?.current_url ? (
             <div className="live-run-url">Current URL: {String(session.current_url)}</div>
           ) : null}
         </div>
         {keepOpenMessage ? <p className="live-run-complete">{keepOpenMessage}</p> : null}
+        {sessionClosed ? <p className="live-run-complete">Browser session closed.</p> : null}
         {error ? <p className="live-run-error">{error}</p> : null}
-        <Button type="button" variant="secondary" onClick={closeBrowser}>
+        <Button type="button" variant="secondary" onClick={closeBrowser} disabled={sessionClosed}>
           <XCircle size={16} aria-hidden /> Close Browser
         </Button>
       </footer>

@@ -1,0 +1,175 @@
+{
+  "records": [
+    {
+      "flowId": "BF-PRODUCT-003",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:48.125307+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-LOGIN-001",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:48.074249+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-RIVAAH-005-05",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.700769+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-RIVAAH-005-04",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.699936+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-RIVAAH-005-03",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.699548+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-RIVAAH-005-02",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.699143+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-RIVAAH-005-01",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.698712+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-RIVAAH-005",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.698329+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-REPORTS-007",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.697964+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-PRODUCT-STOCK-VISIBILITY-009",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.697582+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-PRODUCT-CATALOGUE-006",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.697140+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-PRODUCT-004",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.696403+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-MANUAL-INVOICE-009",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.695668+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-LOGOUT-002",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.695246+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-HOME-010-C01",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.643771+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-HOME-010-01",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.643432+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-HOME-010",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.642969+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-BEST-DEAL-008",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.642635+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    },
+    {
+      "flowId": "BF-ADMINISTRATION-009",
+      "artifact": "test-cases.yaml",
+      "status": "APPROVED",
+      "approver": "bootstrap-system",
+      "decidedAt": "2026-09-16T20:38:40.642248+00:00",
+      "source": "BOOTSTRAP",
+      "reason": "Initial approved baseline for controlled QA environment"
+    }
+  ]
+}

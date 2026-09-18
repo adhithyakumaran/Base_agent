@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   if (!goal) return NextResponse.json({ error: "Command required" }, { status: 400 });
 
   const type = (body.type || "adhoc") as AgentRun["type"];
-  const executionMode = resolveExecutionMode(body.executionMode);
+  const executionMode = resolveExecutionMode(body.executionMode ?? process.env.NEXT_PUBLIC_QA_EXECUTION_MODE ?? "LIVE_DEMO");
   const knowledgeIds: string[] = Array.isArray(body.knowledgeIds) ? body.knowledgeIds : [];
   const notify: string[] =
     Array.isArray(body.channels) && body.channels.length > 0
@@ -79,40 +79,70 @@ export async function POST(req: Request) {
   }
 
   const finishRun = async () => {
-    await mutateState(async (state) => {
+    const backoffMs = [0, 500, 1500, 3000, 5000];
+    let lastErr: unknown;
+    for (const wait of backoffMs) {
+      if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+      try {
+        await mutateState(async (state) => {
+          const idx = state.runs.findIndex((r) => r.id === runId);
+          if (idx < 0) return;
+          let run = state.runs[idx];
+          const ids = [...new Set([...(knowledgeIds || []), ...(run.knowledgePillIds || [])])];
+          const pills = state.knowledge.filter((k) => ids.includes(k.id));
+          run.knowledgePillIds = ids;
+          run = await executeRun(run, pills, async (updated) => {
+            const i = state.runs.findIndex((r) => r.id === updated.id);
+            if (i >= 0) state.runs[i] = updated;
+          });
+
+          if (notify.length && run.report) {
+            const deliveries = await deliverReport(run, state.channels, notify);
+            run.channelsNotified = deliveries.map((d) => `${d.channel}:${d.mode}`);
+            run.traces.push({
+              id: uid("tr"),
+              at: new Date().toISOString(),
+              kind: "report",
+              message: `Report delivery: ${deliveries.map((d) => `${d.channel}=${d.mode}`).join(", ")}`,
+              detail: JSON.stringify(deliveries, null, 2),
+            });
+            pushHistory(state, `Report routed (${run.channelsNotified.join(", ")})`, "system", { runId });
+          }
+
+          state.runs[idx] = run;
+          state.usageTotal.tokensIn += run.usage.tokensIn;
+          state.usageTotal.tokensOut += run.usage.tokensOut;
+          state.usageTotal.runs += 1;
+          pushHistory(state, `Finished ${run.status}: ${run.conclusion}`, "agent", {
+            runId,
+            conclusion: run.conclusion,
+          });
+        });
+        return;
+      } catch (err) {
+        lastErr = err;
+        console.error("[runs] finishRun persist failed, retrying", err);
+      }
+    }
+    await mutateState((state) => {
       const idx = state.runs.findIndex((r) => r.id === runId);
       if (idx < 0) return;
-      let run = state.runs[idx];
-      const ids = [...new Set([...(knowledgeIds || []), ...(run.knowledgePillIds || [])])];
-      const pills = state.knowledge.filter((k) => ids.includes(k.id));
-      run.knowledgePillIds = ids;
-      run = await executeRun(run, pills, async (updated) => {
-        const i = state.runs.findIndex((r) => r.id === updated.id);
-        if (i >= 0) state.runs[i] = updated;
-      });
-
-      if (notify.length && run.report) {
-        const deliveries = await deliverReport(run, state.channels, notify);
-        run.channelsNotified = deliveries.map((d) => `${d.channel}:${d.mode}`);
+      const run = state.runs[idx];
+      if (run.status === "running" || run.status === "queued") {
+        run.status = "failed";
+        run.conclusion =
+          "Run finished but state persistence failed — refresh or check server logs.";
+        run.updatedAt = new Date().toISOString();
         run.traces.push({
           id: uid("tr"),
           at: new Date().toISOString(),
-          kind: "report",
-          message: `Report delivery: ${deliveries.map((d) => `${d.channel}=${d.mode}`).join(", ")}`,
-          detail: JSON.stringify(deliveries, null, 2),
+          kind: "error",
+          message: `finishRun persist error: ${String(lastErr)}`,
         });
-        pushHistory(state, `Report routed (${run.channelsNotified.join(", ")})`, "system", { runId });
+        state.runs[idx] = run;
+        pushHistory(state, "Run state write failed after retries", "system", { runId });
       }
-
-      state.runs[idx] = run;
-      state.usageTotal.tokensIn += run.usage.tokensIn;
-      state.usageTotal.tokensOut += run.usage.tokensOut;
-      state.usageTotal.runs += 1;
-      pushHistory(state, `Finished ${run.status}: ${run.conclusion}`, "agent", {
-        runId,
-        conclusion: run.conclusion,
-      });
-    });
+    }).catch(() => undefined);
   };
 
   if (asyncRun) {

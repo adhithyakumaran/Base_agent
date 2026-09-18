@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { repoRoot } from "@/lib/repo-root";
+import { atomicWriteJson, withFileLock } from "@/lib/fs-atomic";
 
 export type ApprovalStatus = "PENDING_SME_APPROVAL" | "APPROVED" | "REJECTED";
 
@@ -38,6 +39,7 @@ export type ApprovalRecord = {
 const REPO = repoRoot();
 const DESIGN_ROOT = path.join(REPO, "apps", "automation", "test-design", "flows");
 const LOG_PATH = path.join(REPO, "apps", "automation", "approval", "approval-log.json");
+const LOG_LOCK = path.join(REPO, "apps", "automation", "approval", ".locks", "approval-log.lock");
 const KB_INDEX_PATH = path.join(REPO, "data", "discovery-kb", "flows", "index.yaml");
 const CATALOG_PATH = path.join(REPO, "apps", "automation", "catalog", "index.yaml");
 const CANONICAL_ARTIFACT = "test-cases.yaml";
@@ -71,15 +73,15 @@ async function readYamlStatus(filePath: string): Promise<ApprovalStatus | null> 
 
 async function writeYamlStatus(filePath: string, status: ApprovalStatus): Promise<void> {
   const raw = await fs.readFile(filePath, "utf8");
-  if (/^status:\s*(PENDING_SME_APPROVAL|APPROVED|REJECTED)\s*$/m.test(raw)) {
-    const updated = raw.replace(
-      /^status:\s*(PENDING_SME_APPROVAL|APPROVED|REJECTED)\s*$/m,
-      `status: ${status}`
-    );
-    await fs.writeFile(filePath, updated, "utf8");
-    return;
-  }
-  await fs.writeFile(filePath, `status: ${status}\n${raw}`, "utf8");
+  const updated = /^status:\s*(PENDING_SME_APPROVAL|APPROVED|REJECTED)\s*$/m.test(raw)
+    ? raw.replace(
+        /^status:\s*(PENDING_SME_APPROVAL|APPROVED|REJECTED)\s*$/m,
+        `status: ${status}`
+      )
+    : `status: ${status}\n${raw}`;
+  const tmp = `${filePath}.tmp.${process.pid}`;
+  await fs.writeFile(tmp, updated, "utf8");
+  await fs.rename(tmp, filePath);
 }
 
 async function readLog(): Promise<ApprovalRecord[]> {
@@ -93,10 +95,12 @@ async function readLog(): Promise<ApprovalRecord[]> {
 }
 
 async function appendLog(record: ApprovalRecord): Promise<void> {
-  const records = await readLog();
-  records.unshift(record);
-  await fs.mkdir(path.dirname(LOG_PATH), { recursive: true });
-  await fs.writeFile(LOG_PATH, JSON.stringify({ records: records.slice(0, 500) }, null, 2), "utf8");
+  await withFileLock(LOG_LOCK, async () => {
+    const records = await readLog();
+    records.unshift(record);
+    await fs.mkdir(path.dirname(LOG_PATH), { recursive: true });
+    await atomicWriteJson(LOG_PATH, { records: records.slice(0, 500) });
+  });
 }
 
 async function readSmeReady(): Promise<Set<string>> {
@@ -312,27 +316,39 @@ export async function transitionArtifact(input: {
     throw new Error(`artifact not found: ${input.artifact} for ${input.flowId}`);
   }
 
-  const current = await readYamlStatus(filePath);
-  if (!current) {
-    throw new Error(`artifact missing status field: ${input.artifact}`);
-  }
+  const artifactLock = path.join(
+    REPO,
+    "apps",
+    "automation",
+    "test-design",
+    "flows",
+    ".locks",
+    `${input.flowId}-${input.artifact}.lock`
+  );
 
-  const next: ApprovalStatus = input.action === "approve" ? "APPROVED" : "REJECTED";
-  if (!isValidTransition(current, next)) {
-    throw new Error(`invalid transition ${current} -> ${next}`);
-  }
+  return withFileLock(artifactLock, async () => {
+    const current = await readYamlStatus(filePath);
+    if (!current) {
+      throw new Error(`artifact missing status field: ${input.artifact}`);
+    }
 
-  await writeYamlStatus(filePath, next);
-  const record: ApprovalRecord = {
-    flowId: input.flowId,
-    artifact: input.artifact,
-    status: next,
-    approver: input.approver.trim(),
-    decidedAt: new Date().toISOString(),
-    note: input.note?.trim() || undefined,
-  };
-  await appendLog(record);
-  return record;
+    const next: ApprovalStatus = input.action === "approve" ? "APPROVED" : "REJECTED";
+    if (!isValidTransition(current, next)) {
+      throw new Error(`invalid transition ${current} -> ${next}`);
+    }
+
+    await writeYamlStatus(filePath, next);
+    const record: ApprovalRecord = {
+      flowId: input.flowId,
+      artifact: input.artifact,
+      status: next,
+      approver: input.approver.trim(),
+      decidedAt: new Date().toISOString(),
+      note: input.note?.trim() || undefined,
+    };
+    await appendLog(record);
+    return record;
+  });
 }
 
 export async function isFlowApproved(flowId: string): Promise<boolean> {

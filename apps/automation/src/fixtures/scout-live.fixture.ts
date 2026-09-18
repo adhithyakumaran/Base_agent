@@ -1,13 +1,23 @@
 /**
  * Live demo fixtures — persistent Chrome profile + page objects for real headed runs.
  */
-import { test as base, expect, chromium, type BrowserContext, type Page } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
+import { test as base, expect, type BrowserContext } from '@playwright/test';
 import { captureStepEvidence, wrapPageWithEvidence } from '../core/evidence';
 import { emitLiveEvent } from '../core/live-events';
-import { loginUrl, normalizeBaseUrl } from '../core/app-url';
-import { performLogin } from '../core/login-setup';
+import { emitLiveFixtureStage } from '../core/live-fixture-diagnostics';
+import { launchLiveContext } from '../core/live-launch-context';
+import {
+  noteKeepOpenBrowserLeftRunning,
+  spawnKeepOpenKeeper,
+  writeSessionMeta,
+} from '../core/live-browser-lifecycle';
+import { ensureRunScopedLogin } from '../core/live-run-scoped-auth';
+import {
+  getLiveRunDiagnostics,
+  isLiveSessionAuthenticated,
+  markLiveSessionAuthenticated,
+  setSharedLiveContext,
+} from '../core/live-browser-shared';
 import { ensureAuthenticated } from './auth';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
@@ -16,30 +26,9 @@ import { StockVisibilityPage } from '../pages/stock-visibility.page';
 
 const keepOpen = () => process.env.QA_KEEP_BROWSER_OPEN === 'true';
 
-async function launchLiveContext(): Promise<BrowserContext> {
-  const profileDir =
-    process.env.QA_LIVE_PROFILE_DIR || path.resolve('reports/browser-profiles/default-live');
-  fs.mkdirSync(profileDir, { recursive: true });
-  const channel = process.env.QA_BROWSER_CHANNEL || process.env.EA_BROWSER_CHANNEL || 'chrome';
-  const headless = process.env.QA_BROWSER_HEADLESS === 'true';
-  const slowMo = Number(process.env.QA_LIVE_ACTION_DELAY_MS || 0);
-  try {
-    return await chromium.launchPersistentContext(profileDir, {
-      channel,
-      headless,
-      slowMo,
-      args: ['--disable-blink-features=AutomationControlled'],
-      viewport: { width: 1366, height: 768 },
-      ignoreHTTPSErrors: process.env.EA_IGNORE_HTTPS_ERRORS === 'true',
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`BROWSER_UNAVAILABLE: ${message}`);
-  }
-}
-
 type Fixtures = {
   liveContext: BrowserContext;
+  liveSession: boolean;
   loginPage: LoginPage;
   homePage: HomePage;
   productSearchPage: ProductSearchPage;
@@ -53,21 +42,38 @@ export const test = base.extend<Fixtures>({
     async ({}, use) => {
       const context = await launchLiveContext();
       await emitLiveEvent({ phase: 'BROWSER', action: 'LAUNCH', status: 'OK' });
+      writeSessionMeta({
+        status: 'ACTIVE',
+        keep_open: keepOpen(),
+        run_id: process.env.QA_RUN_ID || '',
+        diagnostics: getLiveRunDiagnostics(),
+      });
+      emitLiveFixtureStage('ready_to_return');
       await use(context);
+      emitLiveFixtureStage('teardown_returning');
+      writeSessionMeta({ diagnostics: getLiveRunDiagnostics() });
       if (!keepOpen()) {
         await context.close();
+        setSharedLiveContext(null);
       } else {
-        await emitLiveEvent({
-          phase: 'BROWSER',
-          action: 'KEEP_OPEN',
-          status: 'OK',
-          value_summary: 'Browser remains open for inspection.',
-        });
+        noteKeepOpenBrowserLeftRunning();
+        spawnKeepOpenKeeper();
+        emitLiveFixtureStage('keeper_started');
       }
+    },
+    { scope: 'worker', timeout: 30_000 },
+  ],
+  liveSession: [
+    async ({ liveContext }, use) => {
+      emitLiveFixtureStage('login_started');
+      await ensureRunScopedLogin(liveContext);
+      emitLiveFixtureStage('login_completed');
+      await use(true);
     },
     { scope: 'worker' },
   ],
-  page: async ({ liveContext }, use, testInfo) => {
+  page: async ({ liveContext, liveSession }, use, testInfo) => {
+    void liveSession;
     const flowId = process.env.QA_FLOW_ID || '';
     const title = flowId ? `ScoutAI Live QA — ${flowId}` : 'ScoutAI Live QA';
     let page = liveContext.pages()[0];
@@ -81,17 +87,6 @@ export const test = base.extend<Fixtures>({
       /* ignore */
     }
     wrapPageWithEvidence(page, testInfo, { liveEvents: true });
-    const baseURL = normalizeBaseUrl(process.env.EA_BASE_URL || '');
-    const user = process.env.EA_USER_USERNAME;
-    const pass = process.env.EA_USER_PASSWORD;
-    if (baseURL && user && pass && process.env.EA_SKIP_GLOBAL_SETUP === 'true') {
-      const target = loginUrl();
-      await emitLiveEvent({ phase: 'NAVIGATE', action: 'OPEN', target });
-      await page.goto(target, { waitUntil: 'load', timeout: 90_000 });
-      await emitLiveEvent({ phase: 'LOGIN', action: 'AUTHENTICATE', value_summary: '[redacted]' });
-      await performLogin(page, user, pass);
-      await page.bringToFront();
-    }
     await captureStepEvidence(page, testInfo, 'test-start');
     await use(page);
     await captureStepEvidence(page, testInfo, 'test-end');
@@ -124,7 +119,13 @@ export const test = base.extend<Fixtures>({
     if (!user || !pass) {
       test.skip(true, 'EA_USER_USERNAME / EA_USER_PASSWORD not configured');
     }
+    if (isLiveSessionAuthenticated()) {
+      await expect(page).toHaveURL(/\/home/i, { timeout: 10_000 });
+      await use(homePage);
+      return;
+    }
     await ensureAuthenticated(page);
+    markLiveSessionAuthenticated();
     await expect(page).toHaveURL(/\/home/i, { timeout: 30_000 });
     await use(homePage);
   },

@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-BEST-DEAL-008
 flow_id: BF-BEST-DEAL-008
 flow_name: Best Deal
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-best-deal-008

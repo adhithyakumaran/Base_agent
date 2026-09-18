@@ -1,11 +1,23 @@
 import type { Locator, Page } from '@playwright/test';
+import { resolveLocatorChain, type OverlayUsageMeta } from './healing-overlays';
 
 export type LocatorChain = string[];
 
+export type { OverlayUsageMeta };
+
 export class LocatorResolver {
+  private lastUsage: OverlayUsageMeta | undefined;
+
   constructor(private readonly page: Page) {}
 
+  getLastOverlayUsage(): OverlayUsageMeta | undefined {
+    return this.lastUsage;
+  }
+
   async resolve(chain: LocatorChain, label: string): Promise<Locator> {
+    const resolved = resolveLocatorChain(chain, label);
+    this.lastUsage = resolved.meta;
+    chain = resolved.chain;
     for (const selector of chain) {
       const locator = this.page.locator(selector);
       const count = await locator.count();
@@ -18,7 +30,11 @@ export class LocatorResolver {
   }
 
   async firstVisible(chain: LocatorChain, label: string, timeoutMs = 5000): Promise<Locator> {
-    const deadline = Date.now() + timeoutMs;
+    const resolved = resolveLocatorChain(chain, label);
+    this.lastUsage = resolved.meta;
+    chain = resolved.chain;
+    const timingBoost = Number(process.env.QA_HEALING_TIMING_MS || 0);
+    const deadline = Date.now() + timeoutMs + timingBoost;
     while (Date.now() < deadline) {
       for (const selector of chain) {
         const locator = this.page.locator(selector);
@@ -68,6 +84,49 @@ export const LOCATORS = {
     sku: ['#P6_SKU', "input[name='P6_SKU']", "input[placeholder='Enter item code or scan the QR']"],
     search: ['#btn_search', 'button[title="Search"]', 'button[aria-label="Search"]'],
     scan: ['#B24029796092184015', 'button[aria-label="Scan"]'],
+    itemIdentity: ['#P6_ITEM', "input[name='P6_ITEM']", "input[id='P6_ITEM']"],
+    resultRegion: [
+      '.t-Body-content .t-Region-body',
+      '.t-Body-content .a-Report-report',
+      '.t-Body-content .t-Form-fieldContainer',
+      '.t-Body-content',
+    ],
+    stockStatus: [
+      'text=/Sold Out/i',
+      'text=/Not in Stock/i',
+      'text=/No Stock/i',
+      'text=/STORE STOCK/i',
+      'text=/Factory/i',
+    ],
+    openDetail: [
+      "a[href*='/ea/product-detail']:not([href*='product-detail-item-search'])",
+      "button:has-text('View Product')",
+      "button:has-text('View Details')",
+      "a:has-text('View Product')",
+      "a:has-text('View Details')",
+      '.t-Body-content a[href*="product-detail"] img',
+      '.t-Body-content .t-Region-body a',
+      '.t-Body-content img[alt*="product" i]',
+    ],
+  },
+  productDetail: {
+    detailPagePath: /\/ea\/product-detail(?:[/?#]|$)/i,
+    identifier: [
+      'text=/Item\\s*Code/i',
+      'text=/SKU/i',
+      '[class*="item" i][class*="code" i]',
+      '.t-Body-content',
+    ],
+    imagery: ['.t-Body-content img', 'section.fs.gallery img', 'img.pimg', 'img[src*="product" i]'],
+    price: ['text=/Price/i', 'text=/MRP/i', 'text=/₹/', 'text=/INR/i'],
+    availability: [
+      'text=/Sold Out/i',
+      'text=/Not in Stock/i',
+      'text=/No Stock/i',
+      'text=/In Stock/i',
+      'text=/STORE STOCK/i',
+    ],
+    backToProducts: ['text=/Back to Products/i', 'button:has-text("Back to Products")', 'a:has-text("Back to Products")'],
   },
   stockVisibility: {
     sku: [

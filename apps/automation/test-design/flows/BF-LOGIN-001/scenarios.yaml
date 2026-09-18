@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-LOGIN-001
 flow_name: User Login
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-LOGIN-001-001
   title: User Login — primary business path

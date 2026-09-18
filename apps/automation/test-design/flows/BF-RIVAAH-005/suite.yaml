@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-RIVAAH-005
 flow_id: BF-RIVAAH-005
 flow_name: Rivaah Main Menu
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-rivaah-005

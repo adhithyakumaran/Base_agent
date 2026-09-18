@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-LOGOUT-002
 flow_name: User Logout
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-LOGOUT-002-P01
   title: User Logout — primary path succeeds

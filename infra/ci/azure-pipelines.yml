@@ -52,12 +52,17 @@ stages:
             displayName: Unit tests (LLM off)
           - script: |
               export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+              echo "legacy-runtime-smoke: base_agent CLI skills (not product runtime)"
               python -m base_agent.api "health check endless aisle" --kb-dir data/discovery-kb/kb
               python -m base_agent.api "login probe" --kb-dir data/discovery-kb/kb
               python -m base_agent.api "component probe P6_SKU" --kb-dir data/discovery-kb/kb
               python -m base_agent.api "replay flow find_price" --kb-dir data/discovery-kb/kb
               python -m base_agent.api "assemble report bundle" --kb-dir data/discovery-kb/kb
-            displayName: Enterprise QA skill smoke
+            displayName: legacy-runtime-smoke (base_agent skills)
+          - script: |
+              export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+              python -c "from pathlib import Path; from qa_orchestrator.production_entrypoint import assert_production_entrypoint; assert_production_entrypoint(Path('.'), Path('infra/deploy/Dockerfile').read_text())"
+            displayName: Canonical production entrypoint (qa_orchestrator warm server)
 
   - stage: MorningPatrol
     displayName: Scheduled morning patrol + report queue

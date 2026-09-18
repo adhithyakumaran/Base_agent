@@ -11,10 +11,9 @@ test.describe('BF-HOME-010-01 Item Search @BF-HOME-010-01 @BF-PRODUCT-003 @regre
     test.skip(!item, 'EA_VALID_ITEM_CODE not configured');
 
     await authenticatedPage.openItemSearch();
-    await productSearchPage.expectLoaded();
-    await productSearchPage.searchItemCode(item!);
-    await productSearchPage.expectResultRegion();
-    await attachEvidence(page, testInfo, 'item-search-result');
+    await productSearchPage.expectPageReady();
+    await productSearchPage.searchAndVerifyProduct(item!);
+    await attachEvidence(page, testInfo, 'product-search-result-visible');
   });
 
   test('TC-BF-HOME-010-01-N01 invalid item code handled @regression', async ({
