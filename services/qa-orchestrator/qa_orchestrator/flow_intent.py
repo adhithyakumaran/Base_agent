@@ -53,6 +53,8 @@ def extract_sku(goal: str) -> str | None:
 
 def resolve_product_intent_kind(goal: str) -> ProductIntentKind | None:
     g = goal.lower()
+    if "best deal" in g:
+        return None
     if any(p in g for p in _VIEW_PHRASES):
         return "view_product"
     if any(p in g for p in _SEARCH_PHRASES):

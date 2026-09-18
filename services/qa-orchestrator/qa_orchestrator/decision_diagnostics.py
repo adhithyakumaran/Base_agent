@@ -228,6 +228,7 @@ def build_validation_phase_a_diagnostic(
             suite_plan.primary_executable_flow_id if suite_plan else (selected_flows[0] if selected_flows else None)
         ),
         "supporting_flow_ids": list(suite_plan.supporting_flow_ids) if suite_plan else [],
+        "flow_selection": dict(planning.flow_resolution) if planning and planning.flow_resolution else None,
         "selected_test_case_ids": _selected_test_case_ids(state),
         "current_action": current_action,
         "gate_decisions": gate_rows,

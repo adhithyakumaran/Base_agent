@@ -6,6 +6,7 @@ import re
 from typing import Any
 
 from qa_orchestrator.coverage_assessment import CoverageAssessor
+from qa_orchestrator.flow_resolver import FlowResolver
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.knowledge_retriever import KnowledgeRetriever
 from qa_orchestrator.llm_client import PlannerLlmClient
@@ -61,6 +62,98 @@ class QaPlanner:
         context_packets: list[dict[str, Any]] | None = None,
     ) -> PlanningResult:
         policy = self.policy.evaluate_request(intent.goal)
+        resolution = None
+        if intent.execution_mode not in {"morning_sanity", "regression_suite"}:
+            resolution = FlowResolver(self.graph, self.llm).resolve(
+                intent.goal, intent_flow_ids=list(intent.flow_ids)
+            )
+
+        if resolution and resolution.decision == "FLOW_MISMATCH":
+            blocked_intent = intent.model_copy(
+                update={
+                    "flow_ids": [],
+                    "reasoning": "; ".join(resolution.match_reasons) or "Flow path mismatch",
+                }
+            )
+            return PlanningResult(
+                request=intent.goal,
+                intent=blocked_intent,
+                strategy="BLOCK",
+                confidence=resolution.confidence,
+                candidate_flows=[c.flow_id for c in resolution.candidate_flows],
+                selected_flows=[],
+                blocked_flows=[c.flow_id for c in resolution.candidate_flows if not c.executable],
+                reasoning_summary="FLOW_MISMATCH — documented path conflicts with request; automatic execution blocked.",
+                next_actions=["Review flow audit", "Update KB navigation or select correct capability"],
+                planner="flow_resolver",
+                flow_resolution=resolution.model_dump(),
+                execution_allowed=False,
+                requires_human_approval=True,
+            )
+
+        if resolution and resolution.decision == "DISCOVERY_REQUIRED" and not intent.flow_ids:
+            explore_intent = intent.model_copy(
+                update={
+                    "flow_ids": [],
+                    "execution_mode": "discover"
+                    if intent.execution_mode == "adhoc_existing"
+                    else intent.execution_mode,
+                    "reasoning": "; ".join(resolution.match_reasons) or "No trusted executable flow",
+                }
+            )
+            exploration, generation = self._build_contracts(
+                intent=explore_intent,
+                strategy="EXPLORE",
+                secondary=["GENERATE"],
+                candidate_flows=[c.flow_id for c in resolution.candidate_flows[:6]],
+                capabilities=[resolution.capability] if resolution.capability else [],
+                validated_params={},
+            )
+            return PlanningResult(
+                request=intent.goal,
+                intent=explore_intent,
+                strategy="EXPLORE",
+                secondary_strategies=["GENERATE"],
+                confidence=resolution.confidence,
+                candidate_flows=[c.flow_id for c in resolution.candidate_flows],
+                selected_flows=[],
+                exploration_required=True,
+                generation_required=True,
+                exploration=exploration,
+                generation=generation,
+                reasoning_summary=(
+                    "DISCOVERY_REQUIRED — explore app, draft scenario/automation, "
+                    "SME approval before execution."
+                ),
+                next_actions=[
+                    "Run read-only exploration",
+                    "Draft scenario/test case",
+                    "Capture evidence",
+                    "SME approval before marking executable",
+                ],
+                planner="flow_resolver",
+                flow_resolution=resolution.model_dump(),
+                execution_allowed=False,
+                requires_human_approval=True,
+            )
+
+        if resolution and resolution.primary_flow_id:
+            primary_id = resolution.primary_flow_id
+            meta = self.graph.flow_meta(primary_id) or {}
+            if meta.get("status") == "SUPERSEDED" and meta.get("superseded_by"):
+                primary_id = str(meta["superseded_by"])
+            intent = intent.model_copy(
+                update={
+                    "flow_ids": [primary_id],
+                    "supporting_flow_ids": list(
+                        dict.fromkeys([*resolution.supporting_flow_ids, *intent.supporting_flow_ids])
+                    ),
+                    "capability": resolution.capability or intent.capability,
+                    "confidence": max(float(intent.confidence or 0), resolution.confidence),
+                    "reasoning": "; ".join(resolution.match_reasons) or intent.reasoning,
+                }
+            )
+
         llm_proposal = self._propose_llm(intent, context_packets=context_packets)
 
         candidate_flows, retrieval_diag = self._resolve_candidates(intent, llm_proposal)
@@ -157,6 +250,7 @@ class QaPlanner:
             next_actions=next_actions,
             planner=planner_tag,
             retrieval_diagnostics=retrieval_diag,
+            flow_resolution=resolution.model_dump() if resolution else None,
         )
 
     def _propose_llm(
@@ -201,7 +295,8 @@ class QaPlanner:
                     out.append(fid)
 
         if llm_proposal:
-            add([str(x) for x in llm_proposal.get("candidate_flows") or []])
+            bounded = [str(x) for x in llm_proposal.get("candidate_flows") or []]
+            add([x for x in bounded if self.graph.flow_meta(x)])
         add(list(intent.flow_ids))
 
         if intent.execution_mode in {"morning_sanity", "regression_suite"}:

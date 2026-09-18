@@ -1,0 +1,173 @@
+schema: p12_flow_audit_v1
+updated_at: "2026-09-18"
+notes: >
+  Canonical audit for READY flows referenced by the P12 Flow Resolver.
+  path_verified reflects repository automation + recordings unless noted.
+flows:
+  BF-PRODUCT-003:
+    flow_name: Search Product
+    kb_status: READY
+    business_capability: Product Search
+    intent_kinds: [search_product]
+    forbidden_primary_intents: [view_product]
+    scenarios:
+      - id: SC-BF-PRODUCT-003-001
+        title: Search Product — primary business path
+    entry_point:
+      navigation: Login → Home → Item Search (card) → Product Search
+      verified_page_alias: product-detail-item-search
+      verified_route: /ords/r/tjdcom/ea/product-detail-item-search
+      kb_route_note: >
+        KB YAML lists product-search alias; verified UAT/automation uses
+        product-detail-item-search (page 6, P6_SKU).
+    navigation_path_verified:
+      - Login
+      - Open Item Search from Home
+      - Fill P6_SKU / scan QR
+      - Click Search (btn_search)
+      - Assert populated search result region (SKU identity, stock region)
+    required_parameters:
+      - name: sku
+        aliases: [item_code, QA_PARAM_SKU]
+        required_for: parameterized_runs
+    expected_end_state:
+      summary: Product Search result populated for requested SKU in store context
+      must_not_be_primary_verdict_for: view_product
+    test_cases:
+      primary_positive: TC-BF-PRODUCT-003-P01
+    automation:
+      command: npm run test:flow:positive -- BF-PRODUCT-003
+      spec: apps/automation/tests/product/BF-PRODUCT-FLOWS.spec.ts
+      path_verified: true
+      automation_verified: true
+      verification_source: Playwright TC-BF-PRODUCT-003-P01 + LIVE_DEMO SKU runs
+      verification_date: "2026-09-18"
+    prerequisites:
+      - Authenticated session
+      - EA_VALID_ITEM_CODE or QA_PARAM_SKU
+
+  BF-PRODUCT-004:
+    flow_name: View Product
+    kb_status: READY
+    business_capability: Product Management
+    intent_kinds: [view_product]
+    forbidden_primary_intents: [search_product]
+    scenarios:
+      - id: SC-BF-PRODUCT-004-001
+        title: View Product — primary business path
+    entry_point:
+      navigation: Login → Home → Item Search → Product Search
+      verified_page_alias: product-detail-item-search
+    navigation_path_verified:
+      - Login
+      - Open Item Search
+      - Search SKU (P6_SKU + btn_search)
+      - Open/select product to Product Detail page
+      - Assert detail page shows same SKU, imagery, price/stock signals
+    required_parameters:
+      - name: sku
+        required_for: parameterized_runs
+    expected_end_state:
+      summary: Product Detail page for the searched/selected product
+      url_pattern: /ea/product-detail
+      excludes: product-detail-item-search-only
+    test_cases:
+      primary_positive: TC-BF-PRODUCT-004-P01
+    automation:
+      command: npm run test:flow:positive -- BF-PRODUCT-004
+      spec: apps/automation/tests/product/BF-PRODUCT-FLOWS.spec.ts
+      path_verified: true
+      automation_verified: true
+      verification_source: >
+        Manual UAT view-SKU path reconciled with automation (search → open detail → assert detail);
+        browser recordings report_58aa.md (product-detail navigation)
+      verification_date: "2026-09-18"
+    uat_reconciliation:
+      documented_gap: Primary locators in KB marked pending DOM inspection
+      verified_behavior: >
+        View intent requires navigation beyond search-result verification to Product Detail.
+        Search-only assertion is BF-PRODUCT-003 scope, not a PASS for view intent.
+    prerequisites:
+      - Authenticated session
+      - Valid SKU in DEV/UAT catalog
+
+  BF-PRODUCT-CATALOGUE-006:
+    flow_name: Product Catalogue
+    kb_status: READY
+    business_capability: Product Management
+    intent_kinds: [browse_catalogue]
+    scenarios:
+      - id: SC-BF-PRODUCT-CATALOGUE-006-001
+    entry_point:
+      navigation: Login → Home → Product Catalogue
+    navigation_path_verified:
+      - Login
+      - Open Product Catalogue card
+      - Catalogue list / PDF or collection page visible
+    required_parameters: []
+    expected_end_state:
+      summary: Product Catalogue page or catalogue document accessible
+    test_cases:
+      primary_positive: TC-BF-PRODUCT-CATALOGUE-006-P01
+    automation:
+      spec: apps/automation/tests/product/BF-PRODUCT-FLOWS.spec.ts
+      path_verified: true
+      automation_verified: true
+      verification_source: Sanity page-load automation
+      verification_date: "2026-09-01"
+    prerequisites:
+      - Authenticated session
+
+  BF-HOME-010:
+    flow_name: Home / Navigation Map
+    kb_status: READY
+    business_capability: Application Navigation
+    intent_kinds: [home_navigation]
+    scenarios:
+      - id: SC-BF-HOME-010-001
+    entry_point:
+      navigation: Login → Home
+    navigation_path_verified:
+      - Login
+      - Home modules/cards visible
+    required_parameters: []
+    expected_end_state:
+      summary: Home dashboard reachable with expected navigation cards
+    test_cases:
+      primary_positive: TC-BF-HOME-010-P01
+    automation:
+      path_verified: true
+      automation_verified: true
+      verification_source: Approved sanity/regression suites
+      verification_date: "2026-09-01"
+    prerequisites:
+      - Authenticated session
+
+  BF-HOME-010-01:
+    flow_name: Item Search (Home entry)
+    kb_status: READY
+    business_capability: Product Search
+    intent_kinds: [search_product, item_search_entry]
+    supporting_only_for: [view_product]
+    scenarios:
+      - id: SC-BF-HOME-010-01-001
+    entry_point:
+      navigation: Login → Home → Item Search card
+    navigation_path_verified:
+      - Login
+      - Home → Item Search → Product Search (P6)
+    required_parameters:
+      - name: sku
+        required_for: parameterized_runs
+    expected_end_state:
+      summary: Item Search entry opens Product Search; may show search result
+      must_not_be_primary_verdict_for: view_product
+    test_cases:
+      primary_positive: TC-BF-HOME-010-01-P01
+    automation:
+      path_verified: true
+      automation_verified: true
+      verification_source: Recordings + item search scenarios
+      verification_date: "2026-09-01"
+    prerequisites:
+      - Authenticated session

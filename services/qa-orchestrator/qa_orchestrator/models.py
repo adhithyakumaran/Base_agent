@@ -448,6 +448,7 @@ class PlanningResult(BaseModel):
     next_actions: list[str] = Field(default_factory=list)
     planner: str = "deterministic"
     retrieval_diagnostics: dict[str, Any] | None = None
+    flow_resolution: dict[str, Any] | None = None
 
 
 FailureType = Literal[
