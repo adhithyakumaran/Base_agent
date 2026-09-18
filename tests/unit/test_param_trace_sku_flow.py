@@ -38,6 +38,23 @@ PARAM_TRACE:search_action=click_search_button
 
 def test_bf_product_003_positive_test_executes_sku_search():
     text = FLOWS_SPEC.read_text(encoding="utf-8")
-    assert "searchItemCode" in text
+    assert "searchAndVerifyProduct" in text
     assert "getSkuParam" in text
     assert "toHaveValue" in text
+    assert "product-search-result-visible" in text
+
+
+def test_parse_product_search_trace_markers():
+    stderr = """
+PRODUCT_SEARCH_TRACE:page_ready
+PRODUCT_SEARCH_TRACE:sku_filled=552811DUDABA00
+PRODUCT_SEARCH_TRACE:search_clicked
+PRODUCT_SEARCH_TRACE:result_wait_started
+PRODUCT_SEARCH_TRACE:result_visible
+PRODUCT_SEARCH_TRACE:result_identity=552811DUDABA00
+PRODUCT_SEARCH_TRACE:result_verified
+"""
+    trace = parse_param_trace_output("", stderr)
+    assert trace["product_search_page_ready"] == "true"
+    assert trace["product_search_sku_filled"] == "552811DUDABA00"
+    assert trace["product_search_result_verified"] == "true"

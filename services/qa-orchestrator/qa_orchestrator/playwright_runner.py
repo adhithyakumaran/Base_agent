@@ -74,6 +74,7 @@ def classify_playwright_output(stdout: str, stderr: str, returncode: int) -> tup
 
 
 _PARAM_TRACE_RE = re.compile(r"^PARAM_TRACE:([a-z_]+)=(.*)$", re.MULTILINE)
+_PRODUCT_SEARCH_TRACE_RE = re.compile(r"^PRODUCT_SEARCH_TRACE:([^=\n]+)(?:=(.*))?$", re.MULTILINE)
 
 
 def parse_param_trace_output(stdout: str, stderr: str) -> dict[str, str]:
@@ -81,6 +82,10 @@ def parse_param_trace_output(stdout: str, stderr: str) -> dict[str, str]:
     trace: dict[str, str] = {}
     for match in _PARAM_TRACE_RE.finditer(combined):
         trace[match.group(1)] = match.group(2).strip()
+    for match in _PRODUCT_SEARCH_TRACE_RE.finditer(combined):
+        key = match.group(1).strip()
+        val = (match.group(2) or "true").strip()
+        trace[f"product_search_{key}"] = val
     return trace
 
 

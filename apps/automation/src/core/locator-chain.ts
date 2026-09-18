@@ -84,6 +84,20 @@ export const LOCATORS = {
     sku: ['#P6_SKU', "input[name='P6_SKU']", "input[placeholder='Enter item code or scan the QR']"],
     search: ['#btn_search', 'button[title="Search"]', 'button[aria-label="Search"]'],
     scan: ['#B24029796092184015', 'button[aria-label="Scan"]'],
+    itemIdentity: ['#P6_ITEM', "input[name='P6_ITEM']", "input[id='P6_ITEM']"],
+    resultRegion: [
+      '.t-Body-content .t-Region-body',
+      '.t-Body-content .a-Report-report',
+      '.t-Body-content .t-Form-fieldContainer',
+      '.t-Body-content',
+    ],
+    stockStatus: [
+      'text=/Sold Out/i',
+      'text=/Not in Stock/i',
+      'text=/No Stock/i',
+      'text=/STORE STOCK/i',
+      'text=/Factory/i',
+    ],
   },
   stockVisibility: {
     sku: [
