@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from qa_orchestrator.gt_eval import evaluate_gt_expectations, goal_matches_gt
+from qa_orchestrator.flow_intent import flow_id_from_test_case_id
 from qa_orchestrator.kb_rag import KbRag
 from qa_orchestrator.models import (
     DiscoveryResult,
@@ -39,8 +40,13 @@ class Validator:
         discovery: DiscoveryResult | None = None,
         diagnostic_context: dict[str, Any] | None = None,
     ) -> ValidationResult:
-        matched_gt = self._matching_gt(goal)
         ctx = dict(diagnostic_context or {})
+        matched_gt = self._matching_gt(
+            goal,
+            intent=intent,
+            suite_plan=suite_plan,
+            diagnostic_context=ctx,
+        )
         if matched_gt:
             result = self._validate_phase_b(goal, plan, execution, matched_gt, diagnostic_context=ctx)
             return result
@@ -238,6 +244,37 @@ class Validator:
         findings: list[ValidationFinding] = []
         meta_list = [o.meta or {} for o in execution.observations if o.meta]
 
+        executed_tc = _executed_test_case_ids(diagnostic_context)
+        if executed_tc:
+            for tc in executed_tc:
+                flow_from_tc = flow_id_from_test_case_id(tc)
+                gt_flow = str(fact.get("flow_id") or "")
+                if flow_from_tc and gt_flow and flow_from_tc != gt_flow:
+                    result = ValidationResult(
+                        phase="B",
+                        conclusion="FAIL",
+                        reason_code="validator.gt_flow_mismatch",
+                        summary=(
+                            f"Executed test {tc} ({flow_from_tc}) cannot satisfy GT for {gt_flow}"
+                        ),
+                        findings=[
+                            ValidationFinding(
+                                code="gt.flow_mismatch",
+                                severity="error",
+                                message=f"execution={flow_from_tc} gt={gt_flow}",
+                            )
+                        ],
+                        gt_refs=[gt_id],
+                    )
+                    result.decision_diagnostics = build_validation_phase_b_diagnostic(
+                        run_id=diagnostic_context.get("run_id") if diagnostic_context else None,
+                        validation=result,
+                        gt_id=gt_id,
+                        state=diagnostic_context.get("state") if diagnostic_context else None,
+                        execution=execution,
+                    )
+                    return result
+
         passed, failures = evaluate_gt_expectations(fact, execution.ok, meta_list)
         if not passed:
             result = ValidationResult(
@@ -290,8 +327,39 @@ class Validator:
                 approved[path.stem] = doc
         return approved
 
-    def _matching_gt(self, goal: str) -> tuple[str, dict[str, Any]] | None:
+    def _matching_gt(
+        self,
+        goal: str,
+        *,
+        intent: IntentClassification | None = None,
+        suite_plan: SuiteSelectionPlan | None = None,
+        diagnostic_context: dict[str, Any] | None = None,
+    ) -> tuple[str, dict[str, Any]] | None:
+        primary: str | None = None
+        if suite_plan:
+            primary = suite_plan.primary_executable_flow_id or (
+                suite_plan.flow_ids[0] if suite_plan.flow_ids else None
+            )
+        elif intent and intent.flow_ids:
+            primary = intent.flow_ids[0]
+        executed_tc = _executed_test_case_ids(diagnostic_context)
         for gid, fact in self._approved_gt.items():
-            if goal_matches_gt(goal, fact):
+            if goal_matches_gt(
+                goal,
+                fact,
+                primary_flow_id=primary,
+                executed_test_case_ids=executed_tc or None,
+            ):
                 return gid, fact
         return None
+
+
+def _executed_test_case_ids(diagnostic_context: dict[str, Any] | None) -> list[str]:
+    if not diagnostic_context:
+        return []
+    from qa_orchestrator.decision_diagnostics import _selected_test_case_ids
+
+    state = diagnostic_context.get("state")
+    if state is None:
+        return []
+    return _selected_test_case_ids(state)

@@ -7,6 +7,7 @@ export type AgentInsights = {
   reasoning?: string;
   suiteTopic?: string;
   flowIds?: string[];
+  primaryExecutableFlow?: string;
   supportingFlows?: string[];
   suiteIds?: string[];
   commands?: string[];
@@ -62,16 +63,24 @@ export function parseInsights(run: AgentRun | null): AgentInsights {
     : [];
   const lastDecision = journal[journal.length - 1];
 
+  const supporting = [
+    ...(Array.isArray(intent.supporting_flow_ids) ? intent.supporting_flow_ids.map(String) : []),
+    ...(Array.isArray(suite.supporting_flow_ids) ? suite.supporting_flow_ids.map(String) : []),
+  ];
+  const flowIds = Array.isArray(intent.flow_ids) ? intent.flow_ids.map(String) : [];
+  const primaryExecutableFlow = suite.primary_executable_flow_id
+    ? String(suite.primary_executable_flow_id)
+    : flowIds[0];
+
   return {
     executionMode: String(intent.execution_mode || ""),
     capability: intent.capability ? String(intent.capability) : undefined,
     confidence: typeof intent.confidence === "number" ? intent.confidence : undefined,
     reasoning: intent.reasoning ? String(intent.reasoning) : undefined,
     suiteTopic: intent.suite_topic ? String(intent.suite_topic) : undefined,
-    flowIds: Array.isArray(intent.flow_ids) ? intent.flow_ids.map(String) : [],
-    supportingFlows: Array.isArray(intent.supporting_flow_ids)
-      ? intent.supporting_flow_ids.map(String)
-      : [],
+    flowIds,
+    primaryExecutableFlow,
+    supportingFlows: [...new Set(supporting.filter((f) => f && f !== primaryExecutableFlow))],
     suiteIds: Array.isArray(suite.suite_ids) ? suite.suite_ids.map(String) : [],
     commands: Array.isArray(suite.commands) ? suite.commands.map(String) : [],
     discoverySuggestions,

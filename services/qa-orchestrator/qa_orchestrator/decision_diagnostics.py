@@ -224,6 +224,10 @@ def build_validation_phase_a_diagnostic(
         "failed_checks": list(dict.fromkeys(failed_checks)),
         "run_status": state.status if state else None,
         "selected_flow_ids": selected_flows,
+        "primary_executable_flow_id": (
+            suite_plan.primary_executable_flow_id if suite_plan else (selected_flows[0] if selected_flows else None)
+        ),
+        "supporting_flow_ids": list(suite_plan.supporting_flow_ids) if suite_plan else [],
         "selected_test_case_ids": _selected_test_case_ids(state),
         "current_action": current_action,
         "gate_decisions": gate_rows,

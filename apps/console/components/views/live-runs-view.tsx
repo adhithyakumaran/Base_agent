@@ -158,8 +158,15 @@ export function LiveRunsView({
         <div>
           <h1>{run.goal}</h1>
           <p className="view-subtitle font-mono">
-            {insights.flowIds?.[0] || "Flow pending"} · {run.executionMode || "LIVE_DEMO"} · UAT
+            Primary: {insights.primaryExecutableFlow || insights.flowIds?.[0] || "Flow pending"}
+            {insights.supportingFlows?.length
+              ? ` · Supporting: ${insights.supportingFlows.join(", ")}`
+              : ""}{" "}
+            · {run.executionMode || "LIVE_DEMO"} · UAT
           </p>
+          {insights.commands?.[0] ? (
+            <p className="text-sm text-muted font-mono">Command: {insights.commands[0]}</p>
+          ) : null}
         </div>
         <div className="run-detail-header__status">
           <StatusBadge status={runDisplayBadge(run)} />

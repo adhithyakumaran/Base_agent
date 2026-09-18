@@ -5,18 +5,72 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from qa_orchestrator.flow_intent import (
+    FLOW_SEARCH_PRODUCT,
+    FLOW_VIEW_PRODUCT,
+    extract_sku,
+    flow_id_from_test_case_id,
+    resolve_product_intent_kind,
+)
+
 _TC_ID_RE = re.compile(r"TC-BF-[A-Z0-9-]+(?:-[A-Z0-9]+)*")
 
+_PARAM_ONLY_TAGS = frozenset({"sku", "itemcode", "item_code"})
 
-def goal_matches_gt(goal: str, fact: dict[str, Any]) -> bool:
+
+def goal_matches_gt(
+    goal: str,
+    fact: dict[str, Any],
+    *,
+    primary_flow_id: str | None = None,
+    executed_test_case_ids: list[str] | None = None,
+) -> bool:
+    gt_flow = str(fact.get("flow_id") or "").strip()
+    if primary_flow_id and gt_flow and gt_flow != primary_flow_id:
+        return False
+
+    if executed_test_case_ids and gt_flow:
+        exec_flows = {f for f in (flow_id_from_test_case_id(tc) for tc in executed_test_case_ids) if f}
+        if exec_flows and gt_flow not in exec_flows:
+            return False
+
+    kind = resolve_product_intent_kind(goal)
+    if kind == "view_product" and gt_flow == FLOW_SEARCH_PRODUCT:
+        return False
+    if kind == "search_product" and gt_flow == FLOW_VIEW_PRODUCT:
+        return False
+
     g = goal.lower()
-    candidates = [
-        str(fact.get("subject", "")),
-        str(fact.get("id", "")),
-        str(fact.get("flow_id", "")),
-    ]
-    candidates.extend(str(t) for t in fact.get("tags", []))
-    return any(c and c.lower() in g for c in candidates)
+    if gt_flow == FLOW_SEARCH_PRODUCT and any(
+        p in g for p in ("view product", "product detail", "product details", "open product")
+    ):
+        return False
+
+    if gt_flow and gt_flow.lower() in g:
+        return True
+
+    subject = str(fact.get("subject") or "").strip().lower()
+    if subject and subject in g:
+        return True
+
+    for tag in fact.get("tags") or []:
+        t = str(tag).strip()
+        if not t:
+            continue
+        tl = t.lower()
+        if tl in _PARAM_ONLY_TAGS:
+            continue
+        if tl.startswith("tc-bf-"):
+            continue
+        if len(tl) < 4 and not tl.startswith("bf-"):
+            continue
+        if tl in g:
+            return True
+
+    if kind == "search_product" and gt_flow == FLOW_SEARCH_PRODUCT and extract_sku(goal):
+        return True
+
+    return False
 
 
 def evaluate_gt_expectations(
@@ -87,6 +141,8 @@ def parse_executed_test_case_ids(report_data: dict[str, Any]) -> list[str]:
 
 def infer_test_case_ids_for_flow(flow_id: str) -> list[str]:
     """Fallback when report JSON lacks titles — primary positive case only."""
-    if flow_id == "BF-PRODUCT-003":
+    if flow_id == FLOW_SEARCH_PRODUCT:
         return ["TC-BF-PRODUCT-003-P01"]
+    if flow_id == FLOW_VIEW_PRODUCT:
+        return ["TC-BF-PRODUCT-004-P01"]
     return []

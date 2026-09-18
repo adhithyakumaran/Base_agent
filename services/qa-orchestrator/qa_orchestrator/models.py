@@ -79,6 +79,8 @@ class SuiteSelectionPlan(BaseModel):
     params: dict[str, Any] = Field(default_factory=dict)
     runner: str = "playwright"
     primary_only: bool = True
+    primary_executable_flow_id: str | None = None
+    supporting_flow_ids: list[str] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
 
 

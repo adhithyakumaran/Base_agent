@@ -172,7 +172,16 @@ def test_draft_gt_not_loaded_for_phase_b():
 
 def test_goal_matches_product_search_gt():
     fact = json.loads((DISCOVERY_ROOT / "gt" / "gt-bf-product-003-positive.json").read_text(encoding="utf-8"))
-    assert goal_matches_gt("Search SKU 552811DUDABA00", fact)
+    assert goal_matches_gt("Search SKU 552811DUDABA00", fact, primary_flow_id="BF-PRODUCT-003")
+
+
+def test_goal_does_not_match_view_product_with_search_gt():
+    fact = json.loads((DISCOVERY_ROOT / "gt" / "gt-bf-product-003-positive.json").read_text(encoding="utf-8"))
+    assert not goal_matches_gt(
+        "View product using SKU 552811DUDABA00",
+        fact,
+        primary_flow_id="BF-PRODUCT-004",
+    )
 
 
 def test_parse_executed_test_case_ids_from_report():
