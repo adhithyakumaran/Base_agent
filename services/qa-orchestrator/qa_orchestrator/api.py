@@ -3,7 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 
-from qa_orchestrator.orchestrator import QaOrchestrator, RunRequest
+from qa_orchestrator.run_request import RunRequest
+from qa_orchestrator.orchestrator import QaOrchestrator
 
 
 def main() -> None:

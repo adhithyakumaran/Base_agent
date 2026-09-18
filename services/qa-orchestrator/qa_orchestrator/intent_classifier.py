@@ -3,6 +3,12 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from qa_orchestrator.flow_intent import (
+    extract_sku,
+    primary_flow_for_product_kind,
+    resolve_product_intent_kind,
+    supporting_flows_for_product_kind,
+)
 from qa_orchestrator.knowledge_graph import FlowKnowledgeGraph
 from qa_orchestrator.llm_client import PlannerLlmClient
 from qa_orchestrator.models import ExecutionMode, IntentClassification
@@ -46,9 +52,10 @@ class IntentClassifier:
         if llm_data:
             intent = self._from_llm(goal, run_type, llm_data)
             if intent.flow_ids or intent.execution_mode == "morning_sanity":
-                return intent
+                return self._apply_product_capability_routing(intent)
 
-        return self._classify_deterministic(goal, run_type=run_type, llm_error=llm_resp.error)
+        intent = self._classify_deterministic(goal, run_type=run_type, llm_error=llm_resp.error)
+        return self._apply_product_capability_routing(intent)
 
     def _classify_llm(
         self,
@@ -124,6 +131,7 @@ class IntentClassifier:
         params: dict[str, Any] = {}
         capability: str | None = None
         flow_ids: list[str] = []
+        supporting: list[str] = []
         suite_ids: list[str] = []
         reasoning = "Deterministic keyword + graph classification"
 
@@ -171,13 +179,33 @@ class IntentClassifier:
             flow_ids = self._filter_primary(self.graph.search_flows(goal, limit=1))
             reasoning = "Discovery/crawl request"
         else:
-            sku = _extract_sku(goal)
-            if sku:
+            product_kind = resolve_product_intent_kind(goal)
+            sku = extract_sku(goal)
+            if product_kind == "view_product" or (sku and any(p in g for p in ("view product", "product detail", "open product"))):
                 mode = "adhoc_parameterized"
-                params["sku"] = sku
-                flow_ids = self._primary_or(["BF-PRODUCT-003", "BF-HOME-010-01"])
+                if sku:
+                    params["sku"] = sku
+                primary = primary_flow_for_product_kind("view_product")
+                flow_ids = self._primary_or([primary])
+                supporting = list(
+                    dict.fromkeys(
+                        [
+                            *supporting_flows_for_product_kind("view_product"),
+                            *[f for f in self.graph.supporting_for_query(goal) if f != primary],
+                        ]
+                    )
+                )
+                capability = "Product Management"
+                reasoning = (
+                    f"Product view/detail for SKU {sku}" if sku else "Product view/detail — execute View Product flow"
+                )
+            elif sku or product_kind == "search_product":
+                mode = "adhoc_parameterized"
+                if sku:
+                    params["sku"] = sku
+                flow_ids = self._primary_or([primary_flow_for_product_kind("search_product"), "BF-HOME-010-01"])
                 capability = "Product Search"
-                reasoning = f"Parameterized product search for SKU/item {sku}"
+                reasoning = f"Parameterized product search for SKU/item {sku or 'from request'}"
             elif "find price" in g or "findprice" in g:
                 mode = "adhoc_existing"
                 flow_ids = self._primary_or(["BF-FINDPRICE-004"])
@@ -211,9 +239,20 @@ class IntentClassifier:
             elif "best deal" in g:
                 flow_ids = self._primary_or(["BF-BEST-DEAL-008"])
                 capability = "Product Browse"
-            elif "search" in g or "product" in g or "sku" in g:
+            elif any(p in g for p in ("search product", "product search", "item search", "search sku")) or (
+                "search" in g and "sku" in g
+            ):
+                flow_ids = self._primary_or([primary_flow_for_product_kind("search_product"), "BF-HOME-010-01"])
+                capability = "Product Search"
+                mode = "adhoc_parameterized" if sku else mode
+                if sku:
+                    params["sku"] = sku
+            elif "search" in g and "product" not in g and "detail" not in g:
                 flow_ids = self._primary_or(["BF-PRODUCT-003", "BF-HOME-010-01"])
                 capability = "Product Search"
+            elif "product" in g and any(p in g for p in ("view", "detail", "open")):
+                flow_ids = self._primary_or([primary_flow_for_product_kind("view_product")])
+                capability = "Product Management"
             elif "home" in g or "navigation" in g:
                 flow_ids = self._primary_or(["BF-HOME-010"])
                 capability = "Application Navigation"
@@ -221,7 +260,7 @@ class IntentClassifier:
                 hits = self.graph.search_flows(goal, limit=2)
                 flow_ids = self._filter_primary(hits)
 
-        supporting = self.graph.supporting_for_query(goal)
+        supporting = list(dict.fromkeys([*supporting, *self.graph.supporting_for_query(goal)]))
         if not capability and flow_ids:
             capability = self.graph.capability_for_flow(flow_ids[0])
 
@@ -247,6 +286,38 @@ class IntentClassifier:
         primary = [f for f in candidates if self.graph._is_primary(f)]
         return primary or candidates[:1]
 
+    def _apply_product_capability_routing(self, intent: IntentClassification) -> IntentClassification:
+        kind = resolve_product_intent_kind(intent.goal)
+        if not kind:
+            return intent
+        primary = primary_flow_for_product_kind(kind)
+        supporting = list(
+            dict.fromkeys(
+                [
+                    *intent.supporting_flow_ids,
+                    *supporting_flows_for_product_kind(kind),
+                    *[f for f in intent.flow_ids if f != primary],
+                ]
+            )
+        )
+        capability = "Product Management" if kind == "view_product" else "Product Search"
+        mode = intent.execution_mode
+        if kind in {"search_product", "view_product"} and mode == "adhoc_existing":
+            mode = "adhoc_parameterized"
+        params = dict(intent.params)
+        sku = extract_sku(intent.goal)
+        if sku and "sku" not in params:
+            params["sku"] = sku
+        return intent.model_copy(
+            update={
+                "execution_mode": mode,
+                "flow_ids": [primary],
+                "supporting_flow_ids": supporting,
+                "capability": capability,
+                "params": params,
+            }
+        )
+
 
 def _extract_param(text: str, pattern: str) -> str | None:
     m = re.search(pattern, text, re.IGNORECASE)
@@ -254,9 +325,5 @@ def _extract_param(text: str, pattern: str) -> str | None:
 
 
 def _extract_sku(goal: str) -> str | None:
-    m = re.search(
-        r"\b(?:search\s+)?(?:sku|item\s*code|itemcode|product\s*id)[:\s#-]*([A-Za-z0-9-]{3,32})\b",
-        goal,
-        re.IGNORECASE,
-    )
-    return m.group(1) if m else None
+    """Backward-compatible alias for knowledge_retriever and legacy imports."""
+    return extract_sku(goal)

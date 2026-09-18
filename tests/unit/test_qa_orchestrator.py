@@ -31,6 +31,14 @@ DISCOVERY_ROOT = "data/discovery-kb"
 FLOWS_DIR = f"{DISCOVERY_ROOT}/flows"
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _ensure_execution_baseline_for_orchestrator_tests() -> None:
+    from qa_orchestrator.bootstrap_approval import bootstrap_approve_sme_ready_flows
+
+    os.environ["QA_BOOTSTRAP_APPROVALS"] = "true"
+    bootstrap_approve_sme_ready_flows(enabled=True)
+
+
 @pytest.fixture(autouse=True)
 def dry_run_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("QA_RUNNER", "dry_run")
@@ -107,9 +115,9 @@ def test_suite_selector_picks_positive_sanity():
     intent = classifier.classify("morning sanity", run_type="sanity")
     plan = SuiteSelector(graph).select(intent)
     assert plan.commands == ["npm run test:sanity:positive"]
-    assert plan.flow_ids == []
-    assert len(plan.blocked_flows) >= 1
-    assert any(g.reason_code == "approval.pending" for g in plan.execution_gates)
+    assert len(plan.flow_ids) >= 1
+    assert plan.blocked_flows == []
+    assert all(g.executable for g in plan.execution_gates if g.flow_id in plan.flow_ids)
 
 
 def test_suite_selector_positive_login_flow():
@@ -117,9 +125,9 @@ def test_suite_selector_positive_login_flow():
     classifier = IntentClassifier(graph, PlannerLlmClient(enabled=False))
     intent = classifier.classify("run positive login")
     plan = SuiteSelector(graph).select(intent)
-    assert "BF-LOGIN-001" in plan.blocked_flows
-    assert "BF-LOGIN-001" not in plan.flow_ids
-    assert plan.commands == []
+    assert "BF-LOGIN-001" in plan.flow_ids
+    assert "BF-LOGIN-001" not in plan.blocked_flows
+    assert plan.commands == ["npm run test:flow:positive -- BF-LOGIN-001"]
 
 
 def test_suite_selector_negative_login_flow():
@@ -127,9 +135,9 @@ def test_suite_selector_negative_login_flow():
     classifier = IntentClassifier(graph, PlannerLlmClient(enabled=False))
     intent = classifier.classify("run negative login invalid credentials")
     plan = SuiteSelector(graph).select(intent)
-    assert "BF-LOGIN-001" in plan.blocked_flows
-    assert "BF-LOGIN-001" not in plan.flow_ids
-    assert plan.commands == []
+    assert "BF-LOGIN-001" in plan.flow_ids
+    assert "BF-LOGIN-001" not in plan.blocked_flows
+    assert plan.commands == ["npm run test:flow:negative -- BF-LOGIN-001"]
 
 
 def test_suite_selector_parameterized_sku_command():
@@ -138,8 +146,8 @@ def test_suite_selector_parameterized_sku_command():
     intent = classifier.classify("Search SKU ABC123")
     plan = SuiteSelector(graph).select(intent)
     assert plan.params["sku"] == "ABC123"
-    assert "BF-PRODUCT-003" in plan.blocked_flows
-    assert plan.commands == []
+    assert "BF-PRODUCT-003" in plan.flow_ids
+    assert plan.commands == ["npm run test:flow:positive -- BF-PRODUCT-003"]
 
 
 def test_playwright_runner_rejects_invalid_params(tmp_path: Path):

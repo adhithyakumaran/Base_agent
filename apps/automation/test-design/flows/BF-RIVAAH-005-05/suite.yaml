@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-RIVAAH-005-05
 flow_id: BF-RIVAAH-005-05
 flow_name: Rivaah Wedding Wishlist
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-rivaah-005-05

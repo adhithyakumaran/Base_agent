@@ -1,0 +1,868 @@
+{
+  "runs": 30,
+  "planning_success_rate": 1.0,
+  "terminal_state_accuracy": 0.9667,
+  "execution_attempt_rate": 0.4333,
+  "execution_attempt_success_rate": 1.0,
+  "verification_success_rate": 0.0,
+  "approval_routing_accuracy": 0.9667,
+  "recovery_attempt_rate": 0.0,
+  "recovery_success_rate": 0.0,
+  "recovery_failure_rate": 0.0,
+  "false_recovery_rate": 0.0,
+  "average_recoveries_per_failed_run": 0.0,
+  "waiting_for_approval_rate": 0.4667,
+  "blocked_rate": 0.0,
+  "needs_review_rate": 0.1667,
+  "decision_trace_completeness": 1.0,
+  "p6": {
+    "passed": 17,
+    "total": 17,
+    "scenarios": [
+      {
+        "id": "check_login",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "invalid_login",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "search_sku",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "approved_flow_execution",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "COMPLETED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "pending_approval",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "blocked_flow",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "exploration_required",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL",
+          "READY",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "generation_requires_approval",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "locator_healing",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "NEEDS_REVIEW",
+          "COMPLETED"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "application_no_healing",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "NEEDS_REVIEW",
+          "COMPLETED"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "ambiguous_verification",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "max_recovery_limit",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "NEEDS_REVIEW",
+          "COMPLETED"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "max_iteration_limit",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "NEEDS_REVIEW",
+          "COMPLETED"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "qdrant_unavailable",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "embedding_unavailable",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "exact_flow_id",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "unknown_request",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      }
+    ]
+  },
+  "p61": {
+    "passed": 12,
+    "total": 13,
+    "scenarios": [
+      {
+        "id": "p61_approval_pause_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "COMPLETED",
+          "FAILED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "PASS",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_healing_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "NEEDS_REVIEW",
+          "COMPLETED",
+          "FAILED",
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "NEEDS_REVIEW",
+        "expected_outcome": "NEEDS_REVIEW",
+        "actual_outcome": "NEEDS_REVIEW",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST",
+          "RESUME"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "NEEDS_REVIEW",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_generation_resume",
+        "passed": false,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL",
+          "NEEDS_REVIEW",
+          "COMPLETED",
+          "FAILED"
+        ],
+        "actual_status": "NEEDS_REVIEW",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "NEEDS_REVIEW",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "NEEDS_REVIEW",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": false,
+        "plan_ok": true,
+        "approval_routed_correctly": false
+      },
+      {
+        "id": "p61_stale_approval",
+        "passed": true,
+        "expected_terminal_states": [
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "NEEDS_REVIEW",
+        "expected_outcome": "NEEDS_REVIEW",
+        "actual_outcome": "NEEDS_REVIEW",
+        "decisions": [
+          "PLAN",
+          "RESUME"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "NEEDS_REVIEW",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_changed_artifact",
+        "passed": true,
+        "expected_terminal_states": [
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "NEEDS_REVIEW",
+        "expected_outcome": "NEEDS_REVIEW",
+        "actual_outcome": "NEEDS_REVIEW",
+        "decisions": [
+          "PLAN",
+          "RESUME"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "NEEDS_REVIEW",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_duplicate_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "COMPLETED",
+          "FAILED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "PASS",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_process_restart",
+        "passed": true,
+        "expected_terminal_states": [
+          "COMPLETED",
+          "FAILED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "PASS",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_corrupt_state",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_gate_blocked_on_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "NEEDS_REVIEW",
+        "expected_outcome": "NEEDS_REVIEW",
+        "actual_outcome": "NEEDS_REVIEW",
+        "decisions": [
+          "PLAN",
+          "RESUME"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "NEEDS_REVIEW",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_terminal_resume",
+        "passed": true,
+        "expected_terminal_states": [
+          "FAILED",
+          "COMPLETED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "FAIL",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 2,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_evidence_same_run",
+        "passed": true,
+        "expected_terminal_states": [
+          "COMPLETED",
+          "FAILED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "PASS",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_journal_continuity",
+        "passed": true,
+        "expected_terminal_states": [
+          "COMPLETED",
+          "FAILED",
+          "NEEDS_REVIEW"
+        ],
+        "actual_status": "FAILED",
+        "expected_outcome": "PASS",
+        "actual_outcome": "FAIL",
+        "decisions": [
+          "PLAN",
+          "RESUME",
+          "RUN_EXISTING_TEST"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 3,
+        "terminal_status": "FAILED",
+        "reached_executing": true,
+        "execution_ok": true,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      },
+      {
+        "id": "p61_legacy_guard",
+        "passed": true,
+        "expected_terminal_states": [
+          "WAITING_FOR_APPROVAL"
+        ],
+        "actual_status": "WAITING_FOR_APPROVAL",
+        "expected_outcome": "WAITING_FOR_APPROVAL",
+        "actual_outcome": "WAITING_FOR_APPROVAL",
+        "decisions": [
+          "PLAN"
+        ],
+        "flow_ok": true,
+        "action_ok": true,
+        "journal_entries": 1,
+        "terminal_status": "WAITING_FOR_APPROVAL",
+        "reached_executing": false,
+        "execution_ok": false,
+        "verification_pass": false,
+        "recovery_attempted": false,
+        "recovery_count": 0,
+        "recovery_verified": false,
+        "terminal_accurate": true,
+        "plan_ok": true,
+        "approval_routed_correctly": true
+      }
+    ]
+  },
+  "passed": 29,
+  "total": 30
+}

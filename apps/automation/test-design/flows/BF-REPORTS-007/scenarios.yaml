@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-REPORTS-007
 flow_name: Reports
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-REPORTS-007-001
   title: Reports — primary business path

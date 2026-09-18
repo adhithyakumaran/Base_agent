@@ -1,0 +1,38 @@
+{
+  "id": "gt-bf-product-003-positive",
+  "status": "pending_sme_approval",
+  "subject": "product search",
+  "flow_id": "BF-PRODUCT-003",
+  "tags": [
+    "BF-PRODUCT-003",
+    "product-search",
+    "search product",
+    "search sku",
+    "sku",
+    "item search",
+    "TC-BF-PRODUCT-003-P01"
+  ],
+  "description": "Draft GT: parameterized product search — page ready, runtime SKU used, search executed, populated result with matching product identity.",
+  "business_contract": [
+    "Product Search page becomes ready",
+    "Requested runtime SKU is used (validated suite parameter — never hard-coded in GT)",
+    "Search is executed",
+    "Populated search result appears",
+    "Returned product identity matches requested SKU when exposed by the application"
+  ],
+  "parameterization": {
+    "sku_source": "validated_parameters.sku",
+    "env_keys": ["QA_PARAM_SKU"],
+    "notes": "Expected SKU value comes from orchestrator param validation, not from this GT file."
+  },
+  "expectations": {
+    "execution_ok": true,
+    "min_passed_tests": 1,
+    "require_product_search_verified": true
+  },
+  "approval": {
+    "state": "pending_sme_approval",
+    "approver_role": "SME Reviewer",
+    "approve_command": "python scripts/approve-ground-truth.py gt-bf-product-003-positive --approver \"SME Reviewer\""
+  }
+}

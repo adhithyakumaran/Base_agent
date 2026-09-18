@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-RIVAAH-005-05
 flow_name: Rivaah Wedding Wishlist
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-RIVAAH-005-05-P01
   title: Rivaah Wedding Wishlist — primary path succeeds
