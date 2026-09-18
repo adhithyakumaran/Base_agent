@@ -1,0 +1,3578 @@
+{
+  "timestamp": "2026-09-13T16:53:12.673727+00:00",
+  "benchmark_version": "p5.1-v1",
+  "query_count": 33,
+  "production_status": "success",
+  "provider": "production",
+  "model": "all-MiniLM-L6-v2",
+  "dimensions": 384,
+  "embedding_api_url_host": "127.0.0.1:8765",
+  "indexing": {
+    "deterministic": {
+      "flows": 31,
+      "test_cases": 76,
+      "business_rules": 38,
+      "steps": 24,
+      "exploration": 42,
+      "healing": 0,
+      "created": 211,
+      "updated": 0,
+      "unchanged": 0,
+      "deleted": 0,
+      "failed": 0,
+      "errors": [],
+      "documents_seen": 211,
+      "embedded": 211,
+      "upserted": 211,
+      "embedding_failed": 0,
+      "batches": 7
+    },
+    "production": {
+      "flows": 31,
+      "test_cases": 76,
+      "business_rules": 38,
+      "steps": 24,
+      "exploration": 42,
+      "healing": 0,
+      "created": 211,
+      "updated": 0,
+      "unchanged": 0,
+      "deleted": 0,
+      "failed": 0,
+      "errors": [],
+      "documents_seen": 211,
+      "embedded": 211,
+      "upserted": 211,
+      "embedding_failed": 0,
+      "batches": 7
+    }
+  },
+  "metrics_by_mode": {
+    "lexical": {
+      "method": "lexical",
+      "recall_at_1": 0.3636,
+      "recall_at_3": 0.4242,
+      "recall_at_5": 0.4242,
+      "recall_at_10": 0.4242,
+      "mrr": 0.3939,
+      "exact_id_hit_rate": 0.3939,
+      "exact_document_hit_rate": 0.4242,
+      "exact_id_benchmark_pass_rate": 0.5,
+      "irrelevant_rate": 0.0,
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 0,
+      "latency_ms": 66,
+      "failures": []
+    },
+    "deterministic_dense": {
+      "method": "dense",
+      "recall_at_1": 0.303,
+      "recall_at_3": 0.3333,
+      "recall_at_5": 0.4242,
+      "recall_at_10": 0.4242,
+      "mrr": 0.3394,
+      "exact_id_hit_rate": 0.9697,
+      "exact_document_hit_rate": 0.4242,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 24,
+      "failures": []
+    },
+    "deterministic_hybrid": {
+      "method": "hybrid",
+      "recall_at_1": 0.3333,
+      "recall_at_3": 0.3636,
+      "recall_at_5": 0.4545,
+      "recall_at_10": 0.5455,
+      "mrr": 0.3816,
+      "exact_id_hit_rate": 1.0,
+      "exact_document_hit_rate": 0.5455,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 26,
+      "failures": []
+    },
+    "production_dense": {
+      "method": "dense",
+      "recall_at_1": 0.303,
+      "recall_at_3": 0.4545,
+      "recall_at_5": 0.5152,
+      "recall_at_10": 0.7273,
+      "mrr": 0.4079,
+      "exact_id_hit_rate": 0.9697,
+      "exact_document_hit_rate": 0.7273,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "production",
+      "model": "all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 316,
+      "failures": []
+    },
+    "production_hybrid": {
+      "method": "hybrid",
+      "recall_at_1": 0.3333,
+      "recall_at_3": 0.4242,
+      "recall_at_5": 0.5455,
+      "recall_at_10": 0.6667,
+      "mrr": 0.42,
+      "exact_id_hit_rate": 1.0,
+      "exact_document_hit_rate": 0.6667,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "production",
+      "model": "all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 327,
+      "failures": []
+    }
+  },
+  "comparison_table": [
+    {
+      "method": "lexical",
+      "recall_at_1": 0.3636,
+      "recall_at_3": 0.4242,
+      "recall_at_5": 0.4242,
+      "recall_at_10": 0.4242,
+      "mrr": 0.3939,
+      "exact_id_hit_rate": 0.3939,
+      "exact_document_hit_rate": 0.4242,
+      "exact_id_benchmark_pass_rate": 0.5,
+      "irrelevant_rate": 0.0,
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 0,
+      "latency_ms": 66,
+      "failures": []
+    },
+    {
+      "method": "deterministic_dense",
+      "recall_at_1": 0.303,
+      "recall_at_3": 0.3333,
+      "recall_at_5": 0.4242,
+      "recall_at_10": 0.4242,
+      "mrr": 0.3394,
+      "exact_id_hit_rate": 0.9697,
+      "exact_document_hit_rate": 0.4242,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 24,
+      "failures": []
+    },
+    {
+      "method": "deterministic_hybrid",
+      "recall_at_1": 0.3333,
+      "recall_at_3": 0.3636,
+      "recall_at_5": 0.4545,
+      "recall_at_10": 0.5455,
+      "mrr": 0.3816,
+      "exact_id_hit_rate": 1.0,
+      "exact_document_hit_rate": 0.5455,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 26,
+      "failures": []
+    },
+    {
+      "method": "production_dense",
+      "recall_at_1": 0.303,
+      "recall_at_3": 0.4545,
+      "recall_at_5": 0.5152,
+      "recall_at_10": 0.7273,
+      "mrr": 0.4079,
+      "exact_id_hit_rate": 0.9697,
+      "exact_document_hit_rate": 0.7273,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "production",
+      "model": "all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 316,
+      "failures": []
+    },
+    {
+      "method": "production_hybrid",
+      "recall_at_1": 0.3333,
+      "recall_at_3": 0.4242,
+      "recall_at_5": 0.5455,
+      "recall_at_10": 0.6667,
+      "mrr": 0.42,
+      "exact_id_hit_rate": 1.0,
+      "exact_document_hit_rate": 0.6667,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "provider": "production",
+      "model": "all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "latency_ms": 327,
+      "failures": []
+    }
+  ],
+  "semantic_analysis": {
+    "production_dense_beats_deterministic_dense": true,
+    "production_hybrid_beats_deterministic_hybrid": true,
+    "intent_recall_at_5": {
+      "deterministic_hybrid": {
+        "recall_at_5": 0.2667,
+        "mrr": 0.1561,
+        "count": 15
+      },
+      "production_hybrid": {
+        "recall_at_5": 0.4667,
+        "mrr": 0.2034,
+        "count": 15
+      }
+    },
+    "exact_id_preserved": true,
+    "difficult_queries": [
+      "check login",
+      "invalid login",
+      "search product",
+      "find a product by SKU",
+      "logout user",
+      "sign in",
+      "product lookup",
+      "item search",
+      "Search SKU ABC123",
+      "Search product using item code ABC123",
+      "discover product search",
+      "explore login page",
+      "run negative login",
+      "product search",
+      "rivaah wedding wishlist"
+    ]
+  },
+  "exact_id_results": {
+    "cases": [
+      {
+        "query": "BF-PRODUCT-003",
+        "expected_document_id": "flow:BF-PRODUCT-003",
+        "top_document_id": "flow:BF-PRODUCT-003",
+        "method": "EXACT_ID",
+        "pass": true
+      },
+      {
+        "query": "TC-BF-PRODUCT-003-P01",
+        "expected_document_id": "test:TC-BF-PRODUCT-003-P01",
+        "top_document_id": "test:TC-BF-PRODUCT-003-P01",
+        "method": "EXACT_ID",
+        "pass": true
+      },
+      {
+        "query": "BF-LOGIN-001",
+        "expected_document_id": "flow:BF-LOGIN-001",
+        "top_document_id": "flow:BF-LOGIN-001",
+        "method": "EXACT_ID",
+        "pass": true
+      },
+      {
+        "query": "TC-BF-LOGIN-001-P01",
+        "expected_document_id": "test:TC-BF-LOGIN-001-P01",
+        "top_document_id": "test:TC-BF-LOGIN-001-P01",
+        "method": "EXACT_ID",
+        "pass": true
+      }
+    ],
+    "pass_rate": 1.0,
+    "production_hybrid": {
+      "cases": [
+        {
+          "query": "BF-PRODUCT-003",
+          "expected_document_id": "flow:BF-PRODUCT-003",
+          "top_document_id": "flow:BF-PRODUCT-003",
+          "method": "EXACT_ID",
+          "pass": true
+        },
+        {
+          "query": "TC-BF-PRODUCT-003-P01",
+          "expected_document_id": "test:TC-BF-PRODUCT-003-P01",
+          "top_document_id": "test:TC-BF-PRODUCT-003-P01",
+          "method": "EXACT_ID",
+          "pass": true
+        },
+        {
+          "query": "BF-LOGIN-001",
+          "expected_document_id": "flow:BF-LOGIN-001",
+          "top_document_id": "flow:BF-LOGIN-001",
+          "method": "EXACT_ID",
+          "pass": true
+        },
+        {
+          "query": "TC-BF-LOGIN-001-P01",
+          "expected_document_id": "test:TC-BF-LOGIN-001-P01",
+          "top_document_id": "test:TC-BF-LOGIN-001-P01",
+          "method": "EXACT_ID",
+          "pass": true
+        }
+      ],
+      "pass_rate": 1.0
+    }
+  },
+  "planner_regression": {
+    "cases": [
+      {
+        "goal": "Check login",
+        "candidate_flows": [
+          "BF-LOGIN-001",
+          "BF-LOGIN-HOME-005"
+        ],
+        "validated_parameters": {},
+        "validated_env_keys": [],
+        "execution_allowed": false,
+        "polarity": "positive",
+        "param_error": null
+      },
+      {
+        "goal": "Test invalid login",
+        "candidate_flows": [
+          "BF-LOGIN-001"
+        ],
+        "validated_parameters": {},
+        "validated_env_keys": [],
+        "execution_allowed": false,
+        "polarity": "negative",
+        "param_error": null
+      },
+      {
+        "goal": "Search SKU ABC123",
+        "candidate_flows": [
+          "BF-PRODUCT-003"
+        ],
+        "validated_parameters": {
+          "sku": "ABC123"
+        },
+        "validated_env_keys": [
+          "QA_PARAM_SKU"
+        ],
+        "execution_allowed": false,
+        "polarity": "parameterized",
+        "param_error": null,
+        "sku_trace_ok": true
+      },
+      {
+        "goal": "test product search",
+        "candidate_flows": [
+          "BF-PRODUCT-003"
+        ],
+        "validated_parameters": {},
+        "validated_env_keys": [],
+        "execution_allowed": false,
+        "polarity": "positive",
+        "param_error": null
+      },
+      {
+        "goal": "test a new product filter",
+        "candidate_flows": [
+          "BF-PRODUCT-003",
+          "BF-PRODUCT-004"
+        ],
+        "validated_parameters": {},
+        "validated_env_keys": [],
+        "execution_allowed": false,
+        "polarity": "positive",
+        "param_error": null
+      }
+    ],
+    "pass": true
+  },
+  "failure_test": {
+    "controlled_failure": true,
+    "error_type": "EmbeddingProviderError",
+    "message": "embedding request failed: ConnectError",
+    "test": "unavailable_provider",
+    "indexer_embedding_failed": 211,
+    "indexer_errors_recorded": true
+  },
+  "qdrant_validation": {
+    "attempted": false,
+    "available": false,
+    "notes": []
+  },
+  "totals": {
+    "embedding_calls_documents": 422,
+    "embedding_calls_queries": 132,
+    "benchmark_latency_ms": 5555,
+    "failure_count": 0
+  },
+  "failures": [],
+  "mode_reports": {
+    "lexical": {
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_version": "f127a501b60328a6",
+      "retrieval_mode": "lexical",
+      "queries": 33,
+      "recall_at_1": 0.3636,
+      "recall_at_3": 0.4242,
+      "recall_at_5": 0.4242,
+      "recall_at_10": 0.4242,
+      "mrr": 0.3939,
+      "exact_id_hit_rate": 0.3939,
+      "exact_document_hit_rate": 0.4242,
+      "exact_id_benchmark_pass_rate": 0.5,
+      "irrelevant_rate": 0.0,
+      "cases": [
+        {
+          "query": "BF-PRODUCT-003",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-PRODUCT-003-P01",
+          "category": "exact_id",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011"
+          ],
+          "exact_id_required_pass": false
+        },
+        {
+          "query": "BF-LOGIN-001",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-LOGIN-001-P01",
+          "category": "exact_id",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": false
+        },
+        {
+          "query": "check login",
+          "category": "intent",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "invalid login",
+          "category": "intent",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "search product",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "find a product by SKU",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-FINDPRICE-004",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "product stock visibility",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "logout user",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "home navigation",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-BROWSE-009",
+            "BF-CAT-EAR-010"
+          ]
+        },
+        {
+          "query": "manual invoice",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "sign in",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "product lookup",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-FINDPRICE-004",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "item search",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-CAT-EAR-010",
+            "BF-FINDPRICE-004"
+          ]
+        },
+        {
+          "query": "Search SKU ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-HOME-010-01",
+            "BF-PRODUCT-003",
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "Search product using item code ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-HOME-010-01",
+            "BF-PRODUCT-003",
+            "BF-ITEMCODE-011",
+            "BF-CAT-EAR-010",
+            "BF-STD-BROWSE-015",
+            "BF-FINDPRICE-004"
+          ]
+        },
+        {
+          "query": "discover product search",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "explore login page",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "find the search control",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-FINDPRICE-004",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "search button",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "generate quarterly tax report for martian colony",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "test a new product filter",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "checkout martian payment gateway",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "autonomous agent swarm migration",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "run negative login",
+          "category": "intent",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "product search",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-ITEMCODE-011",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "rivaah wedding wishlist",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "best deal browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-BROWSE-009",
+            "BF-CAT-EAR-010"
+          ]
+        },
+        {
+          "query": "reports dashboard",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "administration settings",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        },
+        {
+          "query": "product catalogue browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": [
+            "BF-CAT-EAR-010",
+            "BF-STD-BROWSE-015",
+            "BF-BROWSE-009",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "stock visibility for SKU",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "LEXICAL_FALLBACK",
+          "selected": []
+        }
+      ],
+      "case_count": 33,
+      "k": 5,
+      "recall_at_k": 0.4242,
+      "latency_ms": 66,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 0,
+      "failures": []
+    },
+    "deterministic_dense": {
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_version": "f127a501b60328a6",
+      "retrieval_mode": "dense",
+      "queries": 33,
+      "recall_at_1": 0.303,
+      "recall_at_3": 0.3333,
+      "recall_at_5": 0.4242,
+      "recall_at_10": 0.4242,
+      "mrr": 0.3394,
+      "exact_id_hit_rate": 0.9697,
+      "exact_document_hit_rate": 0.4242,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "cases": [
+        {
+          "query": "BF-PRODUCT-003",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-PRODUCT-003-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-BEST-DEAL-008",
+            "BF-FINDPRICE-004"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "BF-LOGIN-001",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-LOGIN-001-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-RIVAAH-005",
+            "BF-LOGIN-HOME-005",
+            "BF-FINDPRICE-004"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "check login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "invalid login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-BESTDEAL-008",
+            "BF-LOGIN-001",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "search product",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "find a product by SKU",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-STD-BROWSE-015",
+            "BF-ITEMCODE-011",
+            "BF-PRODUCT-003",
+            "BF-ITEMSEARCH-007",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "product stock visibility",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-HOME-010"
+          ]
+        },
+        {
+          "query": "logout user",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002",
+            "BF-HOME-010-01",
+            "BF-RIVAAH-005-05",
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "home navigation",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002",
+            "BF-HOME-010",
+            "BF-HOME-010-C01",
+            "BF-RIVAAH-005-02"
+          ]
+        },
+        {
+          "query": "manual invoice",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-RIVAAH-005",
+            "BF-RIVAAH-005-02",
+            "BF-RIVAAH-005-03",
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "sign in",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-REPORTS-007",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "product lookup",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-BESTDEAL-008",
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "item search",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-ITEMSEARCH-007"
+          ]
+        },
+        {
+          "query": "Search SKU ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "Search product using item code ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-STD-BROWSE-015",
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-RIVAAH-005",
+            "BF-HOME-010-01",
+            "BF-RIVAAH-005-05",
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "discover product search",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "explore login page",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-REPORTS-012",
+            "BF-LOGIN-HOME-005",
+            "BF-REPORTS-007"
+          ]
+        },
+        {
+          "query": "find the search control",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-004",
+            "BF-RIVAAH-005-03",
+            "BF-ITEMCODE-011",
+            "BF-PRODUCT-003",
+            "BF-RIVAAH-005"
+          ]
+        },
+        {
+          "query": "search button",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "generate quarterly tax report for martian colony",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-HOME-010",
+            "BF-LOGIN-001",
+            "BF-HOME-010-C01",
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-STOCK-VISIBILITY-009"
+          ]
+        },
+        {
+          "query": "test a new product filter",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-BEST-DEAL-008"
+          ]
+        },
+        {
+          "query": "checkout martian payment gateway",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-LOGIN-001",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-RIVAAH-005-02",
+            "BF-ADMINISTRATION-009",
+            "BF-HOME-010-C01"
+          ]
+        },
+        {
+          "query": "autonomous agent swarm migration",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-RIVAAH-005",
+            "BF-PRODUCT-004",
+            "BF-LOGIN-001",
+            "BF-FINDPRICE-004",
+            "BF-RIVAAH-005-03"
+          ]
+        },
+        {
+          "query": "run negative login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "product search",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "rivaah wedding wishlist",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.2,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-RIVAAH-005",
+            "BF-RIVAAH-005-05",
+            "BF-RIVAAH-013",
+            "BF-RIVAAH-TRO-014",
+            "BF-RIVAAH-005-01"
+          ]
+        },
+        {
+          "query": "best deal browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-BEST-DEAL-008",
+            "BF-RIVAAH-013",
+            "BF-PRODUCT-004",
+            "BF-RIVAAH-005",
+            "BF-LOGIN-001",
+            "BF-LOGOUT-002",
+            "BF-ITEMSEARCH-007"
+          ]
+        },
+        {
+          "query": "reports dashboard",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-007",
+            "BF-LOGIN-001",
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "administration settings",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-RIVAAH-005-05",
+            "BF-RIVAAH-005",
+            "BF-ADMINISTRATION-009",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-CATALOGUE-006"
+          ]
+        },
+        {
+          "query": "product catalogue browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-STD-BROWSE-015",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "stock visibility for SKU",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-PRODUCT-004",
+            "BF-RIVAAH-005-03",
+            "BF-LOGOUT-002",
+            "BF-HOME-010",
+            "BF-RIVAAH-005",
+            "BF-HOME-010-01",
+            "BF-LOGIN-001"
+          ]
+        }
+      ],
+      "case_count": 33,
+      "k": 5,
+      "recall_at_k": 0.4242,
+      "latency_ms": 24,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "failures": []
+    },
+    "deterministic_hybrid": {
+      "provider": "deterministic",
+      "model": "hash-v1",
+      "dimensions": 64,
+      "embedding_version": "f127a501b60328a6",
+      "retrieval_mode": "hybrid",
+      "queries": 33,
+      "recall_at_1": 0.3333,
+      "recall_at_3": 0.3636,
+      "recall_at_5": 0.4545,
+      "recall_at_10": 0.5455,
+      "mrr": 0.3816,
+      "exact_id_hit_rate": 1.0,
+      "exact_document_hit_rate": 0.5455,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "cases": [
+        {
+          "query": "BF-PRODUCT-003",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-PRODUCT-003-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "BF-LOGIN-001",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-LOGIN-001-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "check login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "invalid login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "search product",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "find a product by SKU",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-STD-BROWSE-015",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "product stock visibility",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-STOCKVIS-006",
+            "BF-HOME-010",
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "logout user",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "home navigation",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.125,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-HOME-010",
+            "BF-HOME-010-C01",
+            "BF-HOME-010-01",
+            "BF-BROWSE-009",
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "manual invoice",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.2,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-RIVAAH-005-03",
+            "BF-RIVAAH-005-02",
+            "BF-RIVAAH-005-01",
+            "BF-RIVAAH-005-05",
+            "BF-ADMINISTRATION-009"
+          ]
+        },
+        {
+          "query": "sign in",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002",
+            "BF-REPORTS-007",
+            "BF-MANUAL-INVOICE-009",
+            "BF-BEST-DEAL-008",
+            "BF-HOME-010-C01",
+            "BF-ADMINISTRATION-009",
+            "BF-LOGIN-001",
+            "BF-RIVAAH-005"
+          ]
+        },
+        {
+          "query": "product lookup",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-BESTDEAL-008",
+            "BF-PRODUCT-004",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "item search",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-ITEMSEARCH-007",
+            "BF-HOME-010-01",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "Search SKU ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "Search product using item code ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-PRODUCT-003",
+            "BF-HOME-010-01",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "discover product search",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "explore login page",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "find the search control",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-RIVAAH-005-03"
+          ]
+        },
+        {
+          "query": "search button",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "generate quarterly tax report for martian colony",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-007",
+            "BF-HOME-010",
+            "BF-HOME-010-C01",
+            "BF-HOME-010-01",
+            "BF-LOGIN-001",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-LOGOUT-002",
+            "BF-ADMINISTRATION-009",
+            "BF-RIVAAH-005-03",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "test a new product filter",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "checkout martian payment gateway",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-ADMINISTRATION-009",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-RIVAAH-005-02",
+            "BF-HOME-010-C01",
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "autonomous agent swarm migration",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-BESTDEAL-008",
+            "BF-HOME-010-C01",
+            "BF-FINDPRICE-004",
+            "BF-BROWSE-009",
+            "BF-BEST-DEAL-008",
+            "BF-LOGIN-HOME-005",
+            "BF-LOGIN-001",
+            "BF-CAT-EAR-010"
+          ]
+        },
+        {
+          "query": "run negative login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "product search",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "rivaah wedding wishlist",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1667,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-RIVAAH-005",
+            "BF-RIVAAH-TRO-014",
+            "BF-RIVAAH-013",
+            "BF-RIVAAH-005-05"
+          ]
+        },
+        {
+          "query": "best deal browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-BEST-DEAL-008",
+            "BF-RIVAAH-013",
+            "BF-ITEMSEARCH-007",
+            "BF-REPORTS-012",
+            "BF-RIVAAH-TRO-014",
+            "BF-LOGOUT-002",
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "reports dashboard",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-007",
+            "BF-BEST-DEAL-008",
+            "BF-REPORTS-012",
+            "BF-ADMINISTRATION-009",
+            "BF-LOGIN-001",
+            "BF-BESTDEAL-008",
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "administration settings",
+          "category": "intent",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ADMINISTRATION-009",
+            "BF-RIVAAH-005-05",
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-HOME-010-C01",
+            "BF-MANUAL-INVOICE-009",
+            "BF-HOME-010-01",
+            "BF-PRODUCT-004",
+            "BF-CAT-EAR-010"
+          ]
+        },
+        {
+          "query": "product catalogue browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-STD-BROWSE-015",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "stock visibility for SKU",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-PRODUCT-004",
+            "BF-HOME-010",
+            "BF-RIVAAH-005-03"
+          ]
+        }
+      ],
+      "case_count": 33,
+      "k": 5,
+      "recall_at_k": 0.4545,
+      "latency_ms": 26,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "failures": []
+    },
+    "production_dense": {
+      "provider": "production",
+      "model": "all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "embedding_version": "a4d8bd357c9b0f59",
+      "retrieval_mode": "dense",
+      "queries": 33,
+      "recall_at_1": 0.303,
+      "recall_at_3": 0.4545,
+      "recall_at_5": 0.5152,
+      "recall_at_10": 0.7273,
+      "mrr": 0.4079,
+      "exact_id_hit_rate": 0.9697,
+      "exact_document_hit_rate": 0.7273,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "cases": [
+        {
+          "query": "BF-PRODUCT-003",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-PRODUCT-003-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-PRODUCT-004",
+            "BF-BEST-DEAL-008",
+            "BF-PRODUCT-STOCK-VISIBILITY-009"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "BF-LOGIN-001",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-LOGIN-001-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "check login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "invalid login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "search product",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-ITEMCODE-011"
+          ]
+        },
+        {
+          "query": "find a product by SKU",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "product stock visibility",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "logout user",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.125,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "home navigation",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.2,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-RIVAAH-005",
+            "BF-HOME-010",
+            "BF-LOGIN-001",
+            "BF-RIVAAH-013",
+            "BF-BROWSE-009",
+            "BF-HOME-010-C01"
+          ]
+        },
+        {
+          "query": "manual invoice",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-PRODUCT-004",
+            "BF-FINDPRICE-004",
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-RIVAAH-005-04"
+          ]
+        },
+        {
+          "query": "sign in",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "product lookup",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "item search",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-PRODUCT-003",
+            "BF-CAT-EAR-010",
+            "BF-ITEMSEARCH-007",
+            "BF-HOME-010-01",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "Search SKU ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "Search product using item code ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-ITEMCODE-011",
+            "BF-HOME-010-01"
+          ]
+        },
+        {
+          "query": "discover product search",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1667,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "explore login page",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 0.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": []
+        },
+        {
+          "query": "find the search control",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "search button",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "generate quarterly tax report for martian colony",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-007",
+            "BF-REPORTS-012",
+            "BF-MANUAL-INVOICE-009",
+            "BF-PRODUCT-004",
+            "BF-FINDPRICE-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "test a new product filter",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-HOME-010-01",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "checkout martian payment gateway",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-LOGIN-001",
+            "BF-BEST-DEAL-008",
+            "BF-RIVAAH-005-04",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003",
+            "BF-HOME-010-01",
+            "BF-RIVAAH-005-03"
+          ]
+        },
+        {
+          "query": "autonomous agent swarm migration",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ADMINISTRATION-009",
+            "BF-RIVAAH-005",
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-STOCKVIS-006",
+            "BF-REPORTS-007"
+          ]
+        },
+        {
+          "query": "run negative login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002",
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "product search",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1429,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "rivaah wedding wishlist",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-RIVAAH-005",
+            "BF-RIVAAH-013",
+            "BF-RIVAAH-005-05",
+            "BF-RIVAAH-TRO-014"
+          ]
+        },
+        {
+          "query": "best deal browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.3333,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-BESTDEAL-008",
+            "BF-BEST-DEAL-008",
+            "BF-PRODUCT-004",
+            "BF-RIVAAH-013",
+            "BF-FINDPRICE-004",
+            "BF-CAT-EAR-010"
+          ]
+        },
+        {
+          "query": "reports dashboard",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.3333,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-007",
+            "BF-REPORTS-012",
+            "BF-ADMINISTRATION-009",
+            "BF-PRODUCT-004",
+            "BF-HOME-010"
+          ]
+        },
+        {
+          "query": "administration settings",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ADMINISTRATION-009",
+            "BF-MANUAL-INVOICE-009",
+            "BF-HOME-010-C01",
+            "BF-HOME-010"
+          ]
+        },
+        {
+          "query": "product catalogue browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1111,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "stock visibility for SKU",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-PRODUCT-003"
+          ]
+        }
+      ],
+      "case_count": 33,
+      "k": 5,
+      "recall_at_k": 0.5152,
+      "latency_ms": 316,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "failures": []
+    },
+    "production_hybrid": {
+      "provider": "production",
+      "model": "all-MiniLM-L6-v2",
+      "dimensions": 384,
+      "embedding_version": "a4d8bd357c9b0f59",
+      "retrieval_mode": "hybrid",
+      "queries": 33,
+      "recall_at_1": 0.3333,
+      "recall_at_3": 0.4242,
+      "recall_at_5": 0.5455,
+      "recall_at_10": 0.6667,
+      "mrr": 0.42,
+      "exact_id_hit_rate": 1.0,
+      "exact_document_hit_rate": 0.6667,
+      "exact_id_benchmark_pass_rate": 1.0,
+      "irrelevant_rate": 0.0,
+      "cases": [
+        {
+          "query": "BF-PRODUCT-003",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-PRODUCT-003-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-CATALOGUE-006"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "BF-LOGIN-001",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "TC-BF-LOGIN-001-P01",
+          "category": "exact_id",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ],
+          "exact_id_required_pass": true
+        },
+        {
+          "query": "check login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "invalid login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "search product",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "find a product by SKU",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "product stock visibility",
+          "category": "intent",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "logout user",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.125,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002"
+          ]
+        },
+        {
+          "query": "home navigation",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-HOME-010",
+            "BF-HOME-010-C01",
+            "BF-HOME-010-01",
+            "BF-BROWSE-009",
+            "BF-RIVAAH-013",
+            "BF-RIVAAH-005"
+          ]
+        },
+        {
+          "query": "manual invoice",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.3333,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-ADMINISTRATION-009",
+            "BF-RIVAAH-005-04",
+            "BF-RIVAAH-005-05",
+            "BF-RIVAAH-005-01",
+            "BF-FINDPRICE-004"
+          ]
+        },
+        {
+          "query": "sign in",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1667,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGOUT-002",
+            "BF-LOGIN-001",
+            "BF-RIVAAH-005-05",
+            "BF-HOME-010",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "product lookup",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "item search",
+          "category": "synonym",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-ITEMCODE-011",
+            "BF-ITEMSEARCH-007",
+            "BF-HOME-010-01",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "Search SKU ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "Search product using item code ABC123",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1429,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-ITEMCODE-011",
+            "BF-HOME-010-01"
+          ]
+        },
+        {
+          "query": "discover product search",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "explore login page",
+          "category": "exploration",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "find the search control",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "search button",
+          "category": "exploration",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "generate quarterly tax report for martian colony",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-007",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003",
+            "BF-REPORTS-012",
+            "BF-MANUAL-INVOICE-009",
+            "BF-FINDPRICE-004",
+            "BF-CAT-EAR-010"
+          ]
+        },
+        {
+          "query": "test a new product filter",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-003",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-STOCK-VISIBILITY-009"
+          ]
+        },
+        {
+          "query": "checkout martian payment gateway",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-MANUAL-INVOICE-009",
+            "BF-BEST-DEAL-008",
+            "BF-HOME-010-01",
+            "BF-HOME-010",
+            "BF-FINDPRICE-004",
+            "BF-LOGIN-001",
+            "BF-HOME-010-C01"
+          ]
+        },
+        {
+          "query": "autonomous agent swarm migration",
+          "category": "negative",
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 1.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ADMINISTRATION-009",
+            "BF-ITEMSEARCH-007",
+            "BF-REPORTS-007",
+            "BF-LOGIN-HOME-005",
+            "BF-HOME-010-01",
+            "BF-HOME-010",
+            "BF-FINDPRICE-004",
+            "BF-LOGIN-001"
+          ]
+        },
+        {
+          "query": "run negative login",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-LOGIN-001",
+            "BF-LOGIN-HOME-005"
+          ]
+        },
+        {
+          "query": "product search",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0,
+          "mrr": 0.0,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 0.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "rivaah wedding wishlist",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.1429,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-RIVAAH-005",
+            "BF-RIVAAH-013",
+            "BF-RIVAAH-TRO-014",
+            "BF-RIVAAH-005-05"
+          ]
+        },
+        {
+          "query": "best deal browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.2,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-BEST-DEAL-008",
+            "BF-BESTDEAL-008",
+            "BF-RIVAAH-013",
+            "BF-CAT-EAR-010",
+            "BF-BROWSE-009",
+            "BF-STD-BROWSE-015"
+          ]
+        },
+        {
+          "query": "reports dashboard",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-REPORTS-012",
+            "BF-REPORTS-007",
+            "BF-ADMINISTRATION-009",
+            "BF-HOME-010",
+            "BF-BEST-DEAL-008",
+            "BF-PRODUCT-004"
+          ]
+        },
+        {
+          "query": "administration settings",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-ADMINISTRATION-009",
+            "BF-HOME-010-C01",
+            "BF-LOGOUT-002",
+            "BF-LOGIN-001",
+            "BF-HOME-010",
+            "BF-BEST-DEAL-008"
+          ]
+        },
+        {
+          "query": "product catalogue browse",
+          "category": "intent",
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.25,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "SPARSE",
+          "selected": [
+            "BF-PRODUCT-CATALOGUE-006",
+            "BF-PRODUCT-004",
+            "BF-STD-BROWSE-015",
+            "BF-CAT-EAR-010",
+            "BF-PRODUCT-003"
+          ]
+        },
+        {
+          "query": "stock visibility for SKU",
+          "category": "parameterized",
+          "recall_at_1": 0.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr": 0.5,
+          "exact_id_hit_rate": 1.0,
+          "exact_document_hit_rate": 1.0,
+          "irrelevant_rate": 0.0,
+          "method": "DENSE",
+          "selected": [
+            "BF-STOCKVIS-006",
+            "BF-PRODUCT-STOCK-VISIBILITY-009",
+            "BF-PRODUCT-004",
+            "BF-PRODUCT-003",
+            "BF-ITEMSEARCH-007"
+          ]
+        }
+      ],
+      "case_count": 33,
+      "k": 5,
+      "recall_at_k": 0.5455,
+      "latency_ms": 327,
+      "embedding_calls_documents": 0,
+      "embedding_calls_queries": 33,
+      "failures": []
+    }
+  }
+}

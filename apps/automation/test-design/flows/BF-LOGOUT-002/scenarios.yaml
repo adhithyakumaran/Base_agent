@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-LOGOUT-002
 flow_name: User Logout
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-LOGOUT-002-001
   title: User Logout — primary business path

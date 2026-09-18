@@ -6,6 +6,7 @@
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildFlowGrep, normalizeFlowId } from './run-flow-grep.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -16,23 +17,15 @@ if (!polarity || !rawFlowId) {
   process.exit(2);
 }
 
-const flowId = rawFlowId.replace(/^@/, '');
-if (!/^BF-[A-Z0-9-]+$/.test(flowId)) {
-  console.error(`Invalid flow id: ${rawFlowId}`);
+let flowId;
+try {
+  flowId = normalizeFlowId(rawFlowId);
+} catch (err) {
+  console.error(err.message);
   process.exit(2);
 }
 
-const flowTag = `@${flowId}`;
-const playwrightArgs = ['playwright', 'test'];
-
-if (polarity === 'positive') {
-  playwrightArgs.push('--grep', `(?=.*${flowTag})(?=.*@positive)`);
-} else if (polarity === 'negative') {
-  playwrightArgs.push('--grep', `(?=.*${flowTag})(?=.*@negative)`);
-} else {
-  console.error(`Unknown polarity: ${polarity}`);
-  process.exit(2);
-}
+const playwrightArgs = ['playwright', 'test', '--grep', buildFlowGrep(polarity, flowId)];
 
 const result = spawnSync('npx', playwrightArgs, {
   cwd: root,

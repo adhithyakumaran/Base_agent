@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-RIVAAH-005
 flow_name: Rivaah Main Menu
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-RIVAAH-005-001
   title: Rivaah Main Menu — primary business path

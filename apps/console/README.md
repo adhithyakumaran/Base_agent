@@ -14,7 +14,8 @@ Or:
 ```bash
 # Terminal 1 — agent API (requires .env with GROQ_API_KEY)
 cd .. && set -a && source .env && set +a
-PYTHONPATH=src:. python3 scripts/local_agent_server.py --port 43124
+export PYTHONPATH=services/agent-runtime:services/qa-orchestrator:.
+python scripts/local_agent_server.py --host 127.0.0.1 --port 43124
 
 # Terminal 2 — console
 npm install

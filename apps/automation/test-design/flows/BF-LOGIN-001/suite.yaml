@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-LOGIN-001
 flow_id: BF-LOGIN-001
 flow_name: User Login
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-login-001

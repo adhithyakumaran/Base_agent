@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-PRODUCT-003
 flow_name: Search Product
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-PRODUCT-003-001
   title: Search Product — primary business path
