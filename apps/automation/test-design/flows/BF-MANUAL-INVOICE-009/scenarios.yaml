@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-MANUAL-INVOICE-009
 flow_name: Manual Invoice
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-MANUAL-INVOICE-009-001
   title: Manual Invoice — primary business path

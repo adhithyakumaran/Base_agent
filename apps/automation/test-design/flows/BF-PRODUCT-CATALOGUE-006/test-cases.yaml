@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-PRODUCT-CATALOGUE-006
 flow_name: Product Catalogue
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-PRODUCT-CATALOGUE-006-P01
   title: Product Catalogue — primary path succeeds

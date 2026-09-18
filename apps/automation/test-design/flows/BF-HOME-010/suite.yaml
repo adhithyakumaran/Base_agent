@@ -2,7 +2,7 @@ schema: automation_suite_v1
 suite_id: SUITE-BF-HOME-010
 flow_id: BF-HOME-010
 flow_name: Home Page / Application Navigation Map
-status: PENDING_SME_APPROVAL
+status: APPROVED
 tags:
 - regression
 - bf-home-010

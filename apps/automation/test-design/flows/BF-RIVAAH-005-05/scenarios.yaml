@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-RIVAAH-005-05
 flow_name: Rivaah Wedding Wishlist
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-RIVAAH-005-05-001
   title: Rivaah Wedding Wishlist — primary business path

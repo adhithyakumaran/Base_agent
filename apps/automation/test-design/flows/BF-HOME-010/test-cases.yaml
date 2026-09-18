@@ -1,7 +1,7 @@
 schema: automation_test_cases_v1
 flow_id: BF-HOME-010
 flow_name: Home Page / Application Navigation Map
-status: PENDING_SME_APPROVAL
+status: APPROVED
 test_cases:
 - id: TC-BF-HOME-010-P01
   title: Home Page / Application Navigation Map — primary path succeeds

@@ -23,12 +23,19 @@ if (!/^BF-[A-Z0-9-]+$/.test(flowId)) {
 }
 
 const flowTag = `@${flowId}`;
+const escapedTag = flowTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const playwrightArgs = ['playwright', 'test'];
 
+/** Exclude @param-test harness specs from flow positive runs (see docs/P11_7_LIVE_DEMO_SINGLE_BROWSER.md). */
+const excludeParamHarness = '(?!.*@param-test)';
+
 if (polarity === 'positive') {
-  playwrightArgs.push('--grep', `(?=.*${flowTag})(?=.*@positive)`);
+  playwrightArgs.push(
+    '--grep',
+    `(?=.*${escapedTag})(?=.*@positive)${excludeParamHarness}`
+  );
 } else if (polarity === 'negative') {
-  playwrightArgs.push('--grep', `(?=.*${flowTag})(?=.*@negative)`);
+  playwrightArgs.push('--grep', `(?=.*${escapedTag})(?=.*@negative)`);
 } else {
   console.error(`Unknown polarity: ${polarity}`);
   process.exit(2);

@@ -1,7 +1,7 @@
 schema: automation_scenarios_v1
 flow_id: BF-ADMINISTRATION-009
 flow_name: Administration
-status: PENDING_SME_APPROVAL
+status: APPROVED
 scenarios:
 - id: SC-BF-ADMINISTRATION-009-001
   title: Administration — primary business path

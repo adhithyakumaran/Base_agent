@@ -32,4 +32,7 @@ def redact_event_payload(payload: dict[str, Any]) -> dict[str, Any]:
             out[key] = [redact_value(key, v) for v in value]
         else:
             out[key] = redact_value(key, value)
+    target = str(payload.get("target") or "")
+    if _SENSITIVE_KEYS.search(target) and "value_summary" in out:
+        out["value_summary"] = "[redacted]"
     return out
