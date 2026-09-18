@@ -139,6 +139,15 @@ def parse_executed_test_case_ids(report_data: dict[str, Any]) -> list[str]:
     return list(dict.fromkeys(found))
 
 
+def executed_test_case_ids_from_playwright_report(report_data: dict[str, Any]) -> list[str]:
+    """Only return executed TC ids when Playwright stats prove tests ran."""
+    stats = report_data.get("stats") or {}
+    expected = stats.get("expected")
+    if not isinstance(expected, int) or expected <= 0:
+        return []
+    return parse_executed_test_case_ids(report_data)
+
+
 def infer_test_case_ids_for_flow(flow_id: str) -> list[str]:
     """Fallback when report JSON lacks titles — primary positive case only."""
     if flow_id == FLOW_SEARCH_PRODUCT:

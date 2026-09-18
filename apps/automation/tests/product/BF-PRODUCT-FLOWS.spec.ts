@@ -19,17 +19,29 @@ test.describe('BF-PRODUCT-CATALOGUE-006 Product Catalogue @BF-PRODUCT-CATALOGUE-
 });
 
 test.describe('BF-PRODUCT-004 View Product @BF-PRODUCT-004 @regression @product-management', () => {
-  test('TC-BF-PRODUCT-004-P01 product detail reachable from search @sanity', async ({
+  test('TC-BF-PRODUCT-004-P01 product detail reachable from search @sanity @positive', async ({
     authenticatedPage,
     productSearchPage,
     page,
-  }) => {
-    const item = process.env.EA_VALID_ITEM_CODE;
-    test.skip(!item, 'EA_VALID_ITEM_CODE not configured');
+  }, testInfo) => {
+    const requestSku = getSkuParam();
+    emitParamTrace({
+      request_sku: requestSku,
+      validated_sku: requestSku,
+      suite_parameter: requestSku,
+      test_parameter: requestSku,
+    });
+
     await authenticatedPage.openItemSearch();
     await productSearchPage.expectPageReady();
-    await productSearchPage.searchAndVerifyProduct(item!);
-    await expect(page.locator('.t-Body-content')).toBeVisible();
+
+    const sku = requestSku || process.env.EA_VALID_ITEM_CODE;
+    test.skip(!sku, 'QA_PARAM_SKU or EA_VALID_ITEM_CODE required');
+
+    await productSearchPage.searchAndVerifyProduct(sku!);
+    await productSearchPage.openProductDetailFromSearchResult(sku!);
+    await productSearchPage.expectProductDetailForSku(sku!);
+    await attachEvidence(page, testInfo, 'product-detail-visible');
   });
 });
 

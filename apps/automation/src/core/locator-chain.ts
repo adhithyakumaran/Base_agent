@@ -98,6 +98,35 @@ export const LOCATORS = {
       'text=/STORE STOCK/i',
       'text=/Factory/i',
     ],
+    openDetail: [
+      "a[href*='/ea/product-detail']:not([href*='product-detail-item-search'])",
+      "button:has-text('View Product')",
+      "button:has-text('View Details')",
+      "a:has-text('View Product')",
+      "a:has-text('View Details')",
+      '.t-Body-content a[href*="product-detail"] img',
+      '.t-Body-content .t-Region-body a',
+      '.t-Body-content img[alt*="product" i]',
+    ],
+  },
+  productDetail: {
+    detailPagePath: /\/ea\/product-detail(?:[/?#]|$)/i,
+    identifier: [
+      'text=/Item\\s*Code/i',
+      'text=/SKU/i',
+      '[class*="item" i][class*="code" i]',
+      '.t-Body-content',
+    ],
+    imagery: ['.t-Body-content img', 'section.fs.gallery img', 'img.pimg', 'img[src*="product" i]'],
+    price: ['text=/Price/i', 'text=/MRP/i', 'text=/₹/', 'text=/INR/i'],
+    availability: [
+      'text=/Sold Out/i',
+      'text=/Not in Stock/i',
+      'text=/No Stock/i',
+      'text=/In Stock/i',
+      'text=/STORE STOCK/i',
+    ],
+    backToProducts: ['text=/Back to Products/i', 'button:has-text("Back to Products")', 'a:has-text("Back to Products")'],
   },
   stockVisibility: {
     sku: [

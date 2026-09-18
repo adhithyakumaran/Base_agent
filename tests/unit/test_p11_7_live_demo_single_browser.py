@@ -22,13 +22,14 @@ from qa_orchestrator.suite_commands import build_flow_command, build_positive_fl
 REPO = Path(__file__).resolve().parents[2]
 AUTOMATION = REPO / "apps" / "automation"
 RUN_FLOW = AUTOMATION / "scripts" / "run-flow.mjs"
+RUN_FLOW_GREP = AUTOMATION / "scripts" / "run-flow-grep.mjs"
 RUN_LIVE = AUTOMATION / "scripts" / "run-live-playwright.mjs"
 
 
 def test_sku_positive_grep_excludes_param_harness():
-    text = RUN_FLOW.read_text(encoding="utf-8")
+    text = RUN_FLOW_GREP.read_text(encoding="utf-8")
     assert "@param-test" in text
-    assert "excludeParamHarness" in text or "(?!.*@param-test)" in text
+    assert "excludeParamHarness" in text or "(?!.*@param-test)" in text or "EXCLUDE_PARAM_HARNESS" in text
 
 
 def test_parse_flow_command():

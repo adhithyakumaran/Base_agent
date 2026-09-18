@@ -127,6 +127,61 @@ export class ProductSearchPage {
     await this.searchAndVerifyProduct(itemCode);
   }
 
+  /** Open Product Detail from a populated search result (search page → detail page). */
+  async openProductDetailFromSearchResult(expectedSku: string): Promise<void> {
+    const want = normalizeSku(expectedSku);
+    emitProductSearchTrace('open_detail_started');
+
+    const alreadyDetail =
+      LOCATORS.productDetail.detailPagePath.test(this.page.url()) &&
+      !this.page.url().includes('product-detail-item-search');
+    if (alreadyDetail) {
+      emitProductSearchTrace('open_detail_already_on_page');
+      return;
+    }
+
+    const detailLink = this.page.locator(
+      "a[href*='/ea/product-detail']:not([href*='product-detail-item-search'])"
+    );
+    if (await detailLink.first().isVisible().catch(() => false)) {
+      await detailLink.first().click();
+    } else {
+      const openControl = await this.resolver.firstVisible(
+        [...LOCATORS.productSearch.openDetail],
+        'open product detail',
+        15_000
+      );
+      await openControl.click();
+    }
+
+    await this.page.waitForURL(LOCATORS.productDetail.detailPagePath, { timeout: 45_000 });
+    emitProductSearchTrace('open_detail_navigated', this.page.url().slice(0, 120));
+    await this.expectProductDetailForSku(want);
+  }
+
+  /** Assert Product Detail page shows the requested product (not search-result-only state). */
+  async expectProductDetailForSku(expectedSku: string): Promise<void> {
+    const want = normalizeSku(expectedSku);
+    await expect(this.page).toHaveURL(LOCATORS.productDetail.detailPagePath);
+    await expect(this.page.locator('.t-Body-content').first()).toBeVisible();
+
+    await expect(async () => {
+      const bodyText = normalizeSku((await this.page.locator('.t-Body-content').innerText()) || '');
+      expect(bodyText.includes(want) || bodyText.includes(want.replace(/-/g, ''))).toBeTruthy();
+    }).toPass({ timeout: 30_000 });
+
+    const image = this.page.locator(LOCATORS.productDetail.imagery.join(', ')).first();
+    await expect(image).toBeVisible({ timeout: 20_000 });
+
+    await expect(async () => {
+      const bodyText = (await this.page.locator('.t-Body-content').innerText()) || '';
+      expect(/Price|MRP|₹|INR|Stock|Sold Out|Not in Stock|No Stock|STORE STOCK/i.test(bodyText)).toBeTruthy();
+    }).toPass({ timeout: 20_000 });
+
+    emitProductSearchTrace('product_detail_verified', want);
+    emitParamTrace({ result_url: this.page.url(), product_detail_sku: want });
+  }
+
   async expectResultRegion(expectedSku?: string): Promise<void> {
     const code = expectedSku ?? getSkuParam() ?? process.env.EA_VALID_ITEM_CODE;
     if (code) {

@@ -3,7 +3,7 @@ import path from "path";
 import type { AppState, HistoryItem } from "@/lib/types";
 import { MODEL_OPTIONS } from "@/lib/types";
 import { TEST_REPORT_EMAIL, TEST_REPORT_WHATSAPP } from "@/lib/channel-defaults";
-import { atomicWriteJson, withFileLock } from "@/lib/fs-atomic";
+import { atomicWriteJson, readTextWithRetry, withFileLock } from "@/lib/fs-atomic";
 import { uid } from "@/lib/utils";
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -68,7 +68,7 @@ function migrate(state: AppState): AppState {
 export async function readState(): Promise<AppState> {
   await fs.mkdir(DATA_DIR, { recursive: true });
   try {
-    const raw = JSON.parse(await fs.readFile(STATE_FILE, "utf8")) as Partial<AppState>;
+    const raw = JSON.parse(await readTextWithRetry(STATE_FILE)) as Partial<AppState>;
     const base = defaultState();
     const merged: AppState = {
       ...base,
@@ -89,7 +89,18 @@ export async function readState(): Promise<AppState> {
 }
 
 export async function writeState(state: AppState): Promise<void> {
-  await atomicWriteJson(STATE_FILE, state);
+  const backoffMs = [0, 25, 75, 150, 300];
+  let lastErr: unknown;
+  for (const wait of backoffMs) {
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    try {
+      await atomicWriteJson(STATE_FILE, state);
+      return;
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
 }
 
 export async function mutateState(fn: (s: AppState) => void | Promise<void>): Promise<AppState> {
