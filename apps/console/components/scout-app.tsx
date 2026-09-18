@@ -26,6 +26,7 @@ import { LiveRunsView } from "@/components/views/live-runs-view";
 import { RecorderView } from "@/components/views/recorder-view";
 import { AgentChatFab } from "@/components/agent-chat-panel";
 import { useOrchestratorStatus } from "@/lib/use-orchestrator";
+import { useLatestRunSync } from "@/lib/use-run-sync";
 import type { AgentRun } from "@/lib/types";
 
 export type ScoutView =
@@ -81,6 +82,8 @@ export function ScoutApp() {
   const [notifyChannels] = useState(["email", "whatsapp"]);
   const { status: orchestrator } = useOrchestratorStatus();
 
+  useLatestRunSync(activeRun, setActiveRun);
+
   const runAgent = useCallback(
     async (goal: string, type: "adhoc" | "sanity" = "adhoc") => {
       if (busy) return;
@@ -125,7 +128,13 @@ export function ScoutApp() {
           />
         );
       case "runs":
-        return <LiveRunsView runId={chatRunId || activeRun?.id} initialRun={activeRun} />;
+        return (
+          <LiveRunsView
+            runId={chatRunId || activeRun?.id}
+            initialRun={activeRun}
+            onRunUpdated={setActiveRun}
+          />
+        );
       case "flows":
         return (
           <FlowsView

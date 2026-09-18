@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { parseInsights } from "@/lib/parse-run-insights";
+import { buildRunTimelineStages, runDisplayBadge, runSummaryMetrics } from "@/lib/run-display";
 import type { OrchestratorStatus } from "@/lib/use-orchestrator";
 import type { AgentRun } from "@/lib/types";
 
@@ -15,51 +15,6 @@ const SUGGESTIONS: { label: string; text: string }[] = [
   { label: "Verify cart flow", text: "Verify cart flow on UAT" },
   { label: "Run a sanity suite", text: "morning sanity check — Endless Aisle login and home modules" },
 ];
-
-function buildStages(run: AgentRun | null) {
-  const insights = parseInsights(run);
-  const traces = run?.traces || [];
-  const hasPlan = traces.some((t) => /plan|intent|classif/i.test(t.message));
-  const hasExecute = traces.some((t) => /execut|playwright|suite/i.test(t.message));
-  const hasObserve =
-    (insights.evidence?.length || 0) > 0 || traces.some((t) => /evidence|observe|capture/i.test(t.message));
-  const hasVerify =
-    traces.some((t) => /verif|ground truth|validation/i.test(t.message)) || Boolean(run?.conclusion);
-  const running = run?.status === "running" || run?.status === "resuming";
-
-  const stateFor = (done: boolean, active: boolean): "done" | "active" | "waiting" => {
-    if (done) return "done";
-    if (active) return "active";
-    return "waiting";
-  };
-
-  return [
-    {
-      label: "Plan",
-      state: stateFor(hasPlan, running && !hasPlan),
-      detail: insights.reasoning || "Intent classified · flow selected",
-      time: run?.createdAt,
-    },
-    {
-      label: "Execute",
-      state: stateFor(hasExecute, running && hasPlan && !hasExecute),
-      detail: insights.commands?.[0] || "Playwright execution",
-      time: run?.updatedAt,
-    },
-    {
-      label: "Observe",
-      state: stateFor(hasObserve, running && hasExecute && !hasObserve),
-      detail: hasObserve ? `${insights.evidence?.length || 0} evidence captures` : "Capturing evidence",
-      time: run?.updatedAt,
-    },
-    {
-      label: "Verify",
-      state: stateFor(hasVerify, running && hasObserve && !hasVerify),
-      detail: run?.conclusion ? `Result ${run.conclusion}` : "Ground-truth verification",
-      time: run?.updatedAt,
-    },
-  ];
-}
 
 export function AskAgentView({
   orchestrator,
@@ -82,7 +37,8 @@ export function AskAgentView({
 }) {
   const env = orchestrator?.environment || "UAT";
   const connected = orchestrator?.connected;
-  const stages = buildStages(activeRun);
+  const stages = buildRunTimelineStages(activeRun);
+  const metrics = runSummaryMetrics(activeRun);
 
   return (
     <div className="view-stack ask-page">
@@ -185,13 +141,37 @@ export function AskAgentView({
             Latest run
           </h2>
           <p className="latest-run-card__goal">{activeRun.goal}</p>
+          <div className="run-summary-metrics run-summary-metrics--compact" aria-label="Execution summary">
+            <div className="run-metric">
+              <strong>{metrics.playwrightProcesses}</strong>
+              <span>Playwright process</span>
+            </div>
+            <div className="run-metric">
+              <strong>{metrics.browsers}</strong>
+              <span>Browser</span>
+            </div>
+            <div className="run-metric">
+              <strong>{metrics.contexts}</strong>
+              <span>Context</span>
+            </div>
+            <div className="run-metric">
+              <strong>{metrics.logins}</strong>
+              <span>Login</span>
+            </div>
+            <div className="run-metric">
+              <strong>{metrics.selectedTests}</strong>
+              <span>Selected test</span>
+            </div>
+            <div className="run-metric">
+              <strong>{metrics.evidenceCaptures}</strong>
+              <span>Evidence captures</span>
+            </div>
+          </div>
           <div className="timeline-horizontal">
             {stages.map((stage) => (
-              <div key={stage.label} className={`timeline-step timeline-step--${stage.state}`}>
+              <div key={stage.id} className={`timeline-step timeline-step--${stage.state}`}>
                 <div className="timeline-step__label">{stage.label}</div>
-                <div className="timeline-step__state">
-                  {stage.state === "done" ? "Complete" : stage.state === "active" ? "In progress" : "Pending"}
-                </div>
+                <div className="timeline-step__state">{stage.statusLabel}</div>
                 <p className="text-sm text-muted">{stage.detail}</p>
                 {stage.time ? (
                   <p className="font-mono text-xs text-muted">{new Date(stage.time).toLocaleString()}</p>
@@ -200,7 +180,7 @@ export function AskAgentView({
             ))}
           </div>
           <div className="latest-run-footer">
-            <StatusBadge status={activeRun.conclusion || activeRun.status} />
+            <StatusBadge status={runDisplayBadge(activeRun)} />
             {onViewRun ? (
               <Button variant="secondary" className="btn-outline-dark" size="sm" onClick={onViewRun}>
                 View run

@@ -1,103 +1,50 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { GroundTruthApprovalModal } from "@/components/ground-truth-approval-modal";
 import { RunApprovalPanel } from "@/components/run-approval-panel";
 import { RunReportExport } from "@/components/run-report-export";
+import type { GroundTruthDoc } from "@/lib/ground-truth-approve";
+import {
+  buildRunTimelineStages,
+  isRunTerminal,
+  runDisplayBadge,
+  runSummaryMetrics,
+} from "@/lib/run-display";
 import { parseInsights } from "@/lib/parse-run-insights";
 import type { AgentRun } from "@/lib/types";
-
-type Stage = {
-  id: string;
-  label: string;
-  state: "done" | "active" | "waiting";
-  detail?: string;
-};
-
-function buildStages(run: AgentRun | null): Stage[] {
-  const insights = parseInsights(run);
-  const traces = run?.traces || [];
-  const hasPlan = traces.some((t) => /plan|intent|classif/i.test(t.message));
-  const hasExecute = traces.some((t) => /execut|playwright|suite/i.test(t.message));
-  const hasObserve = (insights.evidence?.length || 0) > 0 || traces.some((t) => /evidence|observe|capture/i.test(t.message));
-  const hasVerify = traces.some((t) => /verif|ground truth|validation/i.test(t.message)) || run?.conclusion;
-
-  const running = run?.status === "running" || run?.status === "resuming";
-  const completed =
-    run?.status === "completed" ||
-    run?.status === "failed" ||
-    run?.status === "needs_review" ||
-    run?.status === "blocked";
-  const waiting = run?.status === "waiting_approval" || run?.conclusion === "WAITING_FOR_APPROVAL";
-
-  return [
-    {
-      id: "plan",
-      label: "Plan",
-      state: hasPlan || completed ? "done" : running ? "active" : "waiting",
-      detail: insights.reasoning || "Intent classified · flow selected · execution gate",
-    },
-    {
-      id: "execute",
-      label: "Execute",
-      state: waiting ? "waiting" : hasExecute ? "done" : running && hasPlan ? "active" : "waiting",
-      detail: waiting
-        ? "Awaiting operator Approve & Resume"
-        : insights.commands?.[0] || insights.executor || "Playwright execution",
-    },
-    {
-      id: "observe",
-      label: "Observe",
-      state: hasObserve ? "done" : running && hasExecute ? "active" : "waiting",
-      detail: hasObserve ? `${insights.evidence?.length || 0} evidence captures` : "Capturing evidence",
-    },
-    {
-      id: "verify",
-      label: "Verify",
-      state: hasVerify ? "done" : running && hasObserve ? "active" : "waiting",
-      detail: (() => {
-        const diag = run?.decisionDiagnostics as
-          | { reason_code?: string; message?: string; failed_checks?: string[]; failed_condition?: string }
-          | undefined;
-        if (diag?.reason_code) {
-          const failed = (diag.failed_checks || []).join(", ") || diag.failed_condition || "see trace";
-          const msg = diag.message ? String(diag.message).slice(0, 120) : "";
-          return [
-            `NEEDS_REVIEW`,
-            `Reason: ${diag.reason_code}`,
-            `Failed check: ${failed}`,
-            msg ? `Detail: ${msg}` : "",
-          ]
-            .filter(Boolean)
-            .join(" · ");
-        }
-        return run?.conclusion ? `Result ${run.conclusion}` : "Waiting for ground-truth verification";
-      })(),
-    },
-  ];
-}
-
-function runStatusBadge(run: AgentRun) {
-  if (run.status === "resuming") return "RUNNING";
-  if (run.status === "waiting_approval" || run.conclusion === "WAITING_FOR_APPROVAL") {
-    return "WAITING_FOR_APPROVAL";
-  }
-  if (run.status === "running") return "RUNNING";
-  return run.conclusion || run.status;
-}
 
 export function LiveRunsView({
   runId,
   initialRun,
+  onRunUpdated,
 }: {
   runId?: string | null;
   initialRun?: AgentRun | null;
+  onRunUpdated?: (run: AgentRun) => void;
 }) {
   const [run, setRun] = useState<AgentRun | null>(initialRun || null);
   const [error, setError] = useState<string | null>(null);
+  const [gtEligible, setGtEligible] = useState(false);
+  const [gtDoc, setGtDoc] = useState<GroundTruthDoc | null>(null);
+  const [gtModalOpen, setGtModalOpen] = useState(false);
+  const [gtBusy, setGtBusy] = useState(false);
+  const [gtError, setGtError] = useState<string | null>(null);
+
   const insights = useMemo(() => parseInsights(run), [run]);
-  const stages = useMemo(() => buildStages(run), [run]);
+  const stages = useMemo(() => buildRunTimelineStages(run), [run]);
+  const metrics = useMemo(() => runSummaryMetrics(run), [run]);
+
+  const applyRun = useCallback(
+    (next: AgentRun) => {
+      setRun(next);
+      onRunUpdated?.(next);
+    },
+    [onRunUpdated]
+  );
 
   useEffect(() => {
     if (initialRun) setRun(initialRun);
@@ -107,28 +54,89 @@ export function LiveRunsView({
     const id = runId || run?.id;
     if (!id) return;
     let cancelled = false;
+    let timer: number | undefined;
 
-    async function poll() {
+    async function poll(): Promise<boolean> {
       try {
         const res = await fetch(`/api/runs/${id}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`Run ${id} unavailable`);
         const json = await res.json();
         if (!cancelled) {
-          setRun(json.run);
+          const fresh = json.run as AgentRun;
+          applyRun(fresh);
           setError(null);
+          return isRunTerminal(fresh);
         }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : String(e));
       }
+      return false;
     }
 
-    poll();
-    const timer = window.setInterval(poll, 2500);
+    void poll().then((done) => {
+      if (done || cancelled) return;
+      timer = window.setInterval(async () => {
+        const finished = await poll();
+        if (finished && timer) {
+          window.clearInterval(timer);
+          timer = undefined;
+        }
+      }, 2500);
+    });
+
     return () => {
       cancelled = true;
-      window.clearInterval(timer);
+      if (timer) window.clearInterval(timer);
     };
-  }, [runId, run?.id]);
+  }, [runId, run?.id, applyRun]);
+
+  useEffect(() => {
+    const id = run?.id;
+    if (!id || run.conclusion !== "NEEDS_REVIEW") {
+      setGtEligible(false);
+      setGtDoc(null);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/runs/${id}/ground-truth/approve`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((json) => {
+        if (cancelled) return;
+        setGtEligible(Boolean(json.eligible));
+        setGtDoc(json.gt || null);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setGtEligible(false);
+          setGtDoc(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [run?.id, run?.conclusion, run?.decisionDiagnostics]);
+
+  async function submitGtApproval() {
+    if (!run || !gtDoc) return;
+    setGtBusy(true);
+    setGtError(null);
+    try {
+      const res = await fetch(`/api/runs/${run.id}/ground-truth/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gt_id: gtDoc.id }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Approval failed");
+      applyRun(json.run as AgentRun);
+      setGtModalOpen(false);
+      setGtEligible(false);
+    } catch (e) {
+      setGtError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setGtBusy(false);
+    }
+  }
 
   if (!run) {
     return (
@@ -138,6 +146,11 @@ export function LiveRunsView({
       />
     );
   }
+
+  const gtMeta = run.decisionDiagnostics?.ground_truth as
+    | { gt_id?: string; approved_by?: string; approved_at?: string }
+    | undefined;
+  const showGtApprovedBanner = run.conclusion === "PASS" && gtMeta?.approved_by;
 
   return (
     <div className="view-stack run-console">
@@ -149,41 +162,83 @@ export function LiveRunsView({
           </p>
         </div>
         <div className="run-detail-header__status">
-          <StatusBadge status={runStatusBadge(run)} />
+          <StatusBadge status={runDisplayBadge(run)} />
           <RunReportExport run={run} />
         </div>
       </header>
 
       {error ? <div className="inline-alert">{error}</div> : null}
 
+      {gtEligible && gtDoc ? (
+        <section className="panel gt-approval-callout" aria-label="Ground Truth approval">
+          <div>
+            <h2 className="section-label">Ground Truth review</h2>
+            <p className="text-sm text-muted">
+              Execution completed. Approve Ground Truth <span className="font-mono">{gtDoc.id}</span> to revalidate
+              this run without rerunning Playwright.
+            </p>
+          </div>
+          <Button className="btn-black" onClick={() => setGtModalOpen(true)}>
+            Approve Ground Truth
+          </Button>
+        </section>
+      ) : null}
+
+      {showGtApprovedBanner ? (
+        <section className="panel panel--muted gt-approved-banner">
+          <StatusBadge status="PASS" />
+          <div>
+            <p className="section-label">Ground Truth approved</p>
+            <p className="font-mono text-sm">GT: {gtMeta?.gt_id || "—"}</p>
+            <p className="text-sm">
+              Approved by: <strong>{gtMeta?.approved_by}</strong>
+            </p>
+            <p className="text-sm text-muted">
+              Approved at: {gtMeta?.approved_at ? new Date(String(gtMeta.approved_at)).toLocaleString() : "—"}
+            </p>
+            <ul className="gt-checklist gt-checklist--inline">
+              <li>
+                <span aria-hidden>✓</span> Execution successful
+              </li>
+              <li>
+                <span aria-hidden>✓</span> Ground Truth approved
+              </li>
+              <li>
+                <span aria-hidden>✓</span> Business validation complete
+              </li>
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
       <div className="run-summary-metrics" aria-label="Execution summary">
         <div className="run-metric">
-          <strong>1</strong>
+          <strong>{metrics.playwrightProcesses}</strong>
           <span>Playwright process</span>
         </div>
         <div className="run-metric">
-          <strong>1</strong>
+          <strong>{metrics.browsers}</strong>
           <span>Browser</span>
         </div>
         <div className="run-metric">
-          <strong>1</strong>
+          <strong>{metrics.contexts}</strong>
           <span>Context</span>
         </div>
         <div className="run-metric">
-          <strong>1</strong>
+          <strong>{metrics.logins}</strong>
           <span>Login</span>
         </div>
         <div className="run-metric">
-          <strong>1</strong>
+          <strong>{metrics.selectedTests}</strong>
           <span>Selected test</span>
         </div>
         <div className="run-metric">
-          <strong>{insights.evidence?.length || 0}</strong>
+          <strong>{metrics.evidenceCaptures}</strong>
           <span>Evidence captures</span>
         </div>
       </div>
 
-      <RunApprovalPanel run={run} onRunUpdated={setRun} />
+      <RunApprovalPanel run={run} onRunUpdated={applyRun} />
 
       <section aria-labelledby="timeline-heading">
         <h2 id="timeline-heading" className="section-label">
@@ -193,9 +248,7 @@ export function LiveRunsView({
           {stages.map((stage) => (
             <div key={stage.id} className={`timeline-step timeline-step--${stage.state}`}>
               <div className="timeline-step__label">{stage.label}</div>
-              <div className="timeline-step__state">
-                {stage.state === "done" ? "Complete" : stage.state === "active" ? "In progress" : "Pending"}
-              </div>
+              <div className="timeline-step__state">{stage.statusLabel}</div>
               <p className="text-sm text-muted">{stage.detail}</p>
             </div>
           ))}
@@ -252,6 +305,21 @@ export function LiveRunsView({
           ))}
         </ul>
       </details>
+
+      {gtDoc ? (
+        <GroundTruthApprovalModal
+          open={gtModalOpen}
+          run={run}
+          gt={gtDoc}
+          busy={gtBusy}
+          error={gtError}
+          onCancel={() => {
+            setGtModalOpen(false);
+            setGtError(null);
+          }}
+          onConfirm={() => void submitGtApproval()}
+        />
+      ) : null}
     </div>
   );
 }
